@@ -41,3 +41,35 @@ var ce = {
         am.timeline.registerRow(TimelineRow);
     }
 };
+
+//WindooMan
+
+var Windoo = require('windoo');
+
+function WindooMan(opt)  {
+
+    this._windows = [];
+}
+
+var p = WindooMan.prototype();
+
+p.useWorkspace = function (ws) {
+
+};
+
+p.getCurrentWorkspace = function () {
+
+};
+
+p.saveWorkspace = function (name) {
+
+};
+
+p.addWindow (opt) {
+
+    var win = opt instanceof Windoo ? opt : new Windoo(opt);
+
+    this._windows.push(opt);
+
+    return win; 
+}

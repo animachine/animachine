@@ -2,21 +2,15 @@
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var connect = require('gulp-connect');
+var concat = require('gulp-concat');
 var rimraf = require('gulp-rimraf');
+var size = require('gulp-size');
 var source = require('vinyl-source-stream');
 var browserify = require('browserify');
 var watchify = require('watchify');
 
-// var coffee = require('gulp-coffee');
-// var concat = require('gulp-concat');
-// var uglify = require('gulp-uglify');
-// var imagemin = require('gulp-imagemin');
-// var sourcemaps = require('gulp-sourcemaps');
-// var del = require('del');
-
 var paths = {
-  scripts: ['client/js/**/*.coffee', '!client/external/**/*.coffee'],
-  images: 'client/img/**/*'
+  bower: 'bower_components/'
 };
 
 // Not all tasks need to use streams
@@ -26,18 +20,29 @@ gulp.task('clean', function(cb) {
   rimraf(['./build'], cb);
 });
 
+gulp.task('vendor', function () {
+  return gulp.src([
+      paths.bower + 'svg.js/dist/svg.js',
+    ])
+    .pipe(concat('vendor.js'))
+    // .pipe($.uglify())
+    .pipe(gulp.dest('build'))
+    .pipe(size());
+});
+
 gulp.task('extension', function () {
   return gulp.src('src/chrome_ext/**/*')
     .pipe(gulp.dest('./build'));
 });
 
-gulp.task('init-build', function () {
+gulp.task('init-build', ['vendor'], function () {
   gulp.src('src/editor/index.html')
     .pipe(gulp.dest('./build'));
 });
 
 gulp.task('js', function () {
 
+  watchify.args.debug = true;
   var bundler = watchify(browserify('./src/editor/main.js', watchify.args));
 
   bundler.on('update', rebundle)
@@ -58,7 +63,7 @@ gulp.task('js', function () {
 
 gulp.task('connect', function() {
   connect.server({
-    root: 'dist',
+    root: 'build',
     livereload: true,
     port: 9630
   });

@@ -1,21 +1,47 @@
 var Bund = require('./hands/Bund');
+var EventEmitter = require('events').EventEmitter;
+var inherits = require('inherits');
 
 function Transhand() {
 
+    EventEmitter.call(this);
+
     this.hands = {};
 
-    [Bund, Zebra, Circ3D].forEach(function (Hand) {
+    [Bund].forEach(function (Hand) {
 
-        this.hands[Hand.id] = new Hand();
-    });
+        var hand = new Hand();
+
+        hand.on('change', this.emit.bind(this, 'change'));
+
+        this.hands[Hand.id] = hand;
+    }, this);
 }
+
+inherits(Transhand, EventEmitter);
 
 var p = Transhand.prototype;
 
-p.setup = function () {
+p.setup = function (opt) {
 
     var hand = this.hands[opt.hand.type];
-    hand.setup(opt.hand);
+
+    if (hand) {
+
+        hand.setup(opt.hand);
+        document.body.appendChild(hand.domElem)
+    }
+    else {
+        throw 'Unknown hand type: ' + opt.hand.type
+    }
+
+    if (typeof(opt.on) === 'object') {
+
+        Object.keys(opt.on).forEach(function (eventType) {
+
+            this.on(eventType, opt.on[eventType]);
+        }, this);
+    }
 }
 
 module.exports = Transhand;

@@ -25,6 +25,7 @@
     "domready": "^1.0.5",
     "gulp-size": "^1.0.0",
     "gulp-concat": "^2.3.4",
-    "lodash": "^2.4.1"
+    "lodash": "^2.4.1",
+    "gulp-watch": "^0.6.9"
   }
 }

@@ -5,7 +5,7 @@ var Transhand = require('./transhand/Transhand');
 var transhand = window.transhand = new Transhand();
 
 domready(function () {
-
+console.log('form main.js')
     var de = document.createElement('div');
     de.style.position = 'absolute';
     de.style.backgroundColor = 'blue';

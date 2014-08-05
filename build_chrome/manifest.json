@@ -11,14 +11,13 @@
   },
   "default_locale": "en",
   "background": {
-    "page": "src/bg/background.js",
+    "scripts": ["src/bg/background.js"],
     "persistent": true
   },
   "options_page": "src/options/index.html",
   "browser_action": {
     "default_icon": "icons/icon19.png",
-    "default_title": "page action demo",
-    "default_popup": "src/page_action/page_action.html"
+    "default_title": "open animachine"
   },
   "permissions": [
     "clipboardRead",

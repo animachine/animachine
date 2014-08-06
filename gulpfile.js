@@ -9,13 +9,17 @@ var watch = require('gulp-watch');
 var source = require('vinyl-source-stream');
 var browserify = require('browserify');
 var watchify = require('watchify');
+var runSequence = require('run-sequence');
 
 var paths = {
   bower: 'bower_components/'
 };
 
 gulp.task('clean', function(cb) {
-  rimraf(['./build/**/*', './build_chrome/**/*'], cb);
+
+  return gulp.src(['./build/**/*', './build_chrome/**/*'])
+    .pipe(rimraf());
+  // rimraf(['./build/**/*', './build_chrome/**/*'], cb);
 });
 
 gulp.task('vendor', function () {
@@ -25,7 +29,7 @@ gulp.task('vendor', function () {
     .pipe(concat('vendor.js'))
     // .pipe($.uglify())
     .pipe(gulp.dest('build'))
-    .pipe(size());
+    // .pipe(size());
 });
 
 gulp.task('extension', function () {
@@ -33,13 +37,14 @@ gulp.task('extension', function () {
     .pipe(gulp.dest('./build'));
 });
 
-gulp.task('init-build', ['vendor'], function () {
-  gulp.src('src/editor/index.html')
+gulp.task('init-build', function () {
+  return gulp.src('src/editor/index.html')
     .pipe(gulp.dest('./build'));
+});
 
-  gulp.src('src/chrome/**/*.*')
+gulp.task('init-build-chrome', function () {
+  return gulp.src('src/chrome/**/*.*')
     .pipe(gulp.dest('./build_chrome'));
-
 });
 
 
@@ -58,8 +63,7 @@ gulp.task('js', function () {
       })
       .pipe(source('main.js'))
       .pipe(gulp.dest('./build'))
-      .pipe(connect.reload())
-
+      .pipe(connect.reload());
   }
 
   return rebundle();
@@ -67,10 +71,10 @@ gulp.task('js', function () {
 
 gulp.task('js-chrome', function () {
 
-  var files = ['build/vendor.js', 'build/main.js', 'src/chrome/js/content_script.js'];
+  var files = ['./build/vendor.js', './build/main.js', './src/chrome/js/content_script_footer.js'];
 
-  chromeJs();
-  return watch(files, chromeJs);
+  watch(files, chromeJs);
+  return chromeJs();
 
   function chromeJs() {
     console.log('chrome js...')
@@ -78,14 +82,16 @@ gulp.task('js-chrome', function () {
       .pipe(concat('content_script.js'))
       .pipe(gulp.dest('./build_chrome/js/'));
   }
-})
+});
 
 gulp.task('connect', function() {
-  connect.server({
+  return connect.server({
     root: 'build',
     livereload: true,
     port: 9630
   });
 });
 
-gulp.task('dev',  ['clean', 'init-build', 'connect', 'js-chrome', 'js']);
+gulp.task('dev',  function (cb) {
+  runSequence('clean', ['init-build', 'init-build-chrome'], 'vendor', 'connect', 'js', 'js-chrome', cb);
+});

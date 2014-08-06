@@ -1,0 +1,19 @@
+{
+  "name": "seed-element",
+  "version": "0.0.0",
+  "authors": [
+    "Anonymous <anonymous@example.com>"
+  ],
+  "description": "Element providing solution to no problem in particular.",
+  "keywords": "seed, polymer, web-components",
+  "main": "seed-element.html",
+  "license": "MIT",
+  "homepage": "https://github.com/<USERNAME>/seed-element/",
+  "ignore": [
+    "**/.*"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~0.3.4",
+    "polymer-test-tools": "Polymer/polymer-test-tools#~0.3.3"
+  }
+}

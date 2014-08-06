@@ -26,6 +26,7 @@
     "gulp-size": "^1.0.0",
     "gulp-concat": "^2.3.4",
     "lodash": "^2.4.1",
-    "gulp-watch": "^0.6.9"
+    "gulp-watch": "^0.6.9",
+    "run-sequence": "^0.3.6"
   }
 }

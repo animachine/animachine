@@ -2,10 +2,13 @@
 
 var domready = require('domready');
 var Transhand = require('./transhand/Transhand');
+var Timeline = require('./timeline/Timeline');
+
 var transhand = window.transhand = new Transhand();
+var timeline = window.timeline = new Timeline();
 
 domready(function () {
-console.log('form main.js')
+
     var de = document.createElement('div');
     de.style.position = 'absolute';
     de.style.backgroundColor = 'blue';
@@ -14,6 +17,12 @@ console.log('form main.js')
     de.style.width = '55px';
     de.style.height = '55px';
     document.body.appendChild(de);
+
+    timeline.domElem.style.position = 'fixed';
+    timeline.domElem.style.width = '100%';
+    timeline.domElem.style.height = '230px';
+    timeline.domElem.style.bottom = '0px';
+    document.body.appendChild(timeline.domElem);
 
 
     document.body.addEventListener('click', function (e) {

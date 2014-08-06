@@ -9,7 +9,6 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "default_locale": "en",
   "background": {
     "scripts": ["src/bg/background.js"],
     "persistent": true

@@ -6,6 +6,7 @@ var concat = require('gulp-concat');
 var rimraf = require('gulp-rimraf');
 var size = require('gulp-size');
 var watch = require('gulp-watch');
+var vulcanize = require('gulp-vulcanize');
 var source = require('vinyl-source-stream');
 var browserify = require('browserify');
 var watchify = require('watchify');
@@ -19,7 +20,6 @@ gulp.task('clean', function(cb) {
 
   return gulp.src(['./build/**/*', './build_chrome/**/*'])
     .pipe(rimraf());
-  // rimraf(['./build/**/*', './build_chrome/**/*'], cb);
 });
 
 gulp.task('vendor', function () {
@@ -37,8 +37,15 @@ gulp.task('extension', function () {
     .pipe(gulp.dest('./build'));
 });
 
+gulp.task('imports', function () {
+  return gulp.src('src/editor/imports.html')
+    .pipe(vulcanize({dest: 'build_chrome/'}))
+    .pipe(gulp.dest('./build_chrome'));
+});
+
 gulp.task('init-build', function () {
   return gulp.src('src/editor/index.html')
+    .pipe(vulcanize({dest: 'build'}))
     .pipe(gulp.dest('./build'));
 });
 
@@ -91,6 +98,11 @@ gulp.task('connect', function() {
     port: 9630
   });
 });
+
+gulp.task('watch', function () {
+
+  gulp.watch('./src/editor/windooman/**/*.*', ['imports', 'init-build']);
+})
 
 gulp.task('dev',  function (cb) {
   runSequence('clean', ['init-build', 'init-build-chrome'], 'vendor', 'connect', 'js', 'js-chrome', cb);

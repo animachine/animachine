@@ -1,7 +1,7 @@
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 
-function TimeBar(opt) {
+function Timebar(opt) {
 
     opt = opt || {};
 
@@ -46,9 +46,10 @@ p._createBase = function () {
 
     this._canvasTape = document.createElement('canvas');
     this._ctxTape = this._canvasTape.getContext('2d');
+    this.domElem.appendChild(this._canvasTape); 
 }
 
-p.createPointer = function () {
+p._createPointer = function () {
 
     var radius = 4;
     this._dePointer = document.createElement('div');
@@ -58,10 +59,10 @@ p.createPointer = function () {
     pointer.style.width = 2*radius + 'px';
     pointer.style.height = 2*radius + 'px';
     pointer.style.border = 'solid red 1px';
-    pointer.style.borderRadius = r + 'px';
+    pointer.style.borderRadius = radius + 'px';
 }
 
-p.showTime(start, end, width) {
+p.showTime = function(start, end, width) {
 
     var full = end - start,
         scale = width / full * scale, 

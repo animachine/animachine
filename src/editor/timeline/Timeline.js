@@ -2,24 +2,60 @@ var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var Timebar = require('./Timebar');
 
-function Timeline() {
+function Timeline(am) {
 
     this._headerH = 32;
     
     this._createBase();
+    this._createSettingsHead();
+    this._createTimeline();
     
     this._timebar = new Timebar({height: this._headerH});
-    this.de = timebar.domElem()
+    this._deRight.appendChild(this._timebar.domElem);
+
+    this._btnNewSequ.addEventListener('click', function () {
+
+        this.addSequence(am.sequenceTypes[0].create());
+    }.bind(this));
 }
 
 inherits(Timeline, EventEmitter);
 var p = Timeline.prototype;
 module.exports = Timeline;
 
+p.addSequence = function (sequ) {
+
+    var deContOpt = createCont(sequData.deOptions, this._deLeft),
+        deContKf = createCont(sequData.deKeyframes, this._deRight);
+
+    this._sequences.push(sequ);
+
+    sequ.on('heightChange', function () {
+
+        deContOpt.height = sequ.height();
+        deContKf.height = sequ.height();
+    });
+
+    this._sequences.push(sequ, parent);
+
+    function createCont(content) {
+
+        var de = document.createElement('div');
+        de.style.width = '100%';
+        de.style.height = sequ.height();
+        de.style.transform = 'height 0.12 easeOut';
+        de.appendChild(content);
+        parent.appendChild(de);
+
+        return de;
+    }
+}
+
+
 p._createBase = function () {
 
     this.domElem = document.createElement('div');
-    this.domElem.style.backgroundColor = 'green';
+    this.domElem.style.backgroundColor = 'green'; 
 
     this._deLeft = document.createElement('div');
     this._deLeft.style.backgroundColor = 'black';
@@ -43,7 +79,7 @@ p._createBase = function () {
 p._createTimeline = function () {
 
     var c = document.createElement('canvas');
-    var ctx = c.;
+    var ctx = c.getContext('2d');
     this._deRight.style.backgroundColor = 'black';
     this._deRight.position = 'absolute';
     this._deRight.style.top = '0px';
@@ -52,25 +88,19 @@ p._createTimeline = function () {
     this._deRight.style.height = '100%';
 }
 
-p.addSequence = function (sequ) {
 
-    var deContOpt = createCont(sequData.deOptions),
-        deContKf = createCont(sequData.deKeyframes);
+p._createSettingsHead = function () {
 
-    sequ.on('heightChange', function () {
+    this._deSettingsHead = document.createElement('div');
+    this._deSettingsHead.style.backgroundColor = 'darkgreey';
+    this._deSettingsHead.style.width = '100%';
+    this._deSettingsHead.style.height = this._headerH + 'px';
+    this._deLeft.appendChild(this._deSettingsHead);
 
-        deContOpt.height = sequ.height();
-        deContKf.height = sequ.height();
-    });
-
-    this._sequences.push(sequ);
-
-    function createCont(content) {
-
-        var de = document.createElement('div');
-        de.style.width = '100%';
-        de.style.height = sequ.height();
-        de.style.transform = 'height 0.12 easeOut';
-        de.appendChild(content);
-    }
+    this._btnNewSequ = document.createElement('div');
+    this._btnNewSequ.style.backgroundColor = 'white';
+    this._btnNewSequ.style.borderRadius = '10px';
+    this._btnNewSequ.style.width = (this._headerH-2) + 'px';
+    this._btnNewSequ.style.height = (this._headerH-2) + 'px';
+    this._deSettingsHead.appendChild(this._btnNewSequ);
 }

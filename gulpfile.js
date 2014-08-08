@@ -18,13 +18,16 @@ var paths = {
 
 gulp.task('clean', function(cb) {
 
-  return gulp.src(['./build/**/*', './build_chrome/**/*'])
+  return gulp.src(['./build/**/*'])
+  // return gulp.src(['./build/**/*', './build_chrome/**/*'])
     .pipe(rimraf());
 });
 
 gulp.task('vendor', function () {
   return gulp.src([
       paths.bower + 'svg.js/dist/svg.js',
+      paths.bower + 'jquery/dist/jquery.min.js',
+      paths.bower + 'jQuery.Autosize.Input/jquery.autosize.input.js',
     ])
     .pipe(concat('vendor.js'))
     // .pipe($.uglify())
@@ -63,6 +66,7 @@ gulp.task('js', function () {
   bundler.on('update', rebundle);
 
   function rebundle () {
+    console.log('rebundle...')
     return bundler.bundle()
       // log errors if they happen
       .on('error', function(e) {

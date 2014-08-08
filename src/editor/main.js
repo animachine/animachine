@@ -3,20 +3,30 @@
 var domready = require('domready');
 var Transhand = require('./transhand/Transhand');
 var Timeline = require('./timeline/Timeline');
+var modules = {
+    css: require('./modules/css')
+}
 
 var transhand = window.transhand = new Transhand();
 var timeline = window.timeline = new Timeline();
 
+var am = module.exports = {
+
+    transhand: transhand,
+
+    timeline: timeline,
+
+    sequenceTypes: [],
+
+    registerSequenceType: function (sequType) {
+
+        this.sequenceTypes.push(sequType);
+    }
+}
+
 domready(function () {
 
-    var de = document.createElement('div');
-    de.style.position = 'absolute';
-    de.style.backgroundColor = 'blue';
-    de.style.left = '55px';
-    de.style.top = '55px';
-    de.style.width = '55px';
-    de.style.height = '55px';
-    document.body.appendChild(de);
+    debugRect();
 
     timeline.domElem.style.position = 'fixed';
     timeline.domElem.style.width = '100%';
@@ -55,4 +65,17 @@ domready(function () {
             }
         });
     });
+
+    modules.css.init(am)
 });
+
+function debugRect() {
+    var de = document.createElement('div');
+    de.style.position = 'absolute';
+    de.style.backgroundColor = 'blue';
+    de.style.left = '55px';
+    de.style.top = '55px';
+    de.style.width = '55px';
+    de.style.height = '55px';
+    document.body.appendChild(de);
+}

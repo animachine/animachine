@@ -3,7 +3,15 @@ function CssTimelineRow(src) {
     this._selectors = [];
     this._keyframes = [];
 
-    this.domElement = new window.AmguiTimelineRow({color: '#7ED40F'});
+    this.deKeyframes = document.createElement('div');
+    this.deKeyframes.style.width = '100%';
+    this.deKeyframes.style.height = '100%';
+    this.deKeyframes.style.background = 'orangered';
+
+    this.deOptions = document.createElement('div');
+    this.deOptions.style.width = '100%';
+    this.deOptions.style.height = '100%';
+    this.deOptions.style.background = 'orange';
 
     this._handlerChange = this._handlerChange.bind(this);
 }
@@ -61,12 +69,10 @@ p.generateAst = function (src) {
 
 }
 
-var ce = {
+module.exports = {
 
-    init: function (_am) {
+    create: function () {
 
-        am = _am;
-
-        am.timeline.registerRow(CssTimelineRow);
+        return new CssTimelineRow();
     }
 };

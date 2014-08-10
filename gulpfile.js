@@ -18,8 +18,8 @@ var paths = {
 
 gulp.task('clean', function(cb) {
 
-  return gulp.src(['./build/**/*'])
-  // return gulp.src(['./build/**/*', './build_chrome/**/*'])
+  return gulp.src(['./build/**/*.*'])
+  // return gulp.src(['./build/**/*.*', './build_chrome/**/*.*'])
     .pipe(rimraf());
 });
 
@@ -31,7 +31,7 @@ gulp.task('vendor', function () {
     ])
     .pipe(concat('vendor.js'))
     // .pipe($.uglify())
-    .pipe(gulp.dest('build'))
+    .pipe(gulp.dest('./build'))
     // .pipe(size());
 });
 
@@ -47,8 +47,8 @@ gulp.task('imports', function () {
 });
 
 gulp.task('init-build', function () {
-  return gulp.src('src/editor/index.html')
-    .pipe(vulcanize({dest: 'build'}))
+  return gulp.src(['./src/editor/index.html', './src/editor/assets/**/*.*'], {base:'./src/editor/'})
+    // .pipe(vulcanize({dest: 'build'}))
     .pipe(gulp.dest('./build'));
 });
 

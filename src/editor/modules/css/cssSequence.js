@@ -1,4 +1,4 @@
-function CssTimelineRow(src) {
+function CssSequence(src) {
 
     this._selectors = [];
     this._keyframes = [];
@@ -16,7 +16,7 @@ function CssTimelineRow(src) {
     this._handlerChange = this._handlerChange.bind(this);
 }
 
-var p = CssTimelineRow.prototype;
+var p = CssSequence.prototype;
 
 p.select = function () {
 
@@ -73,6 +73,6 @@ module.exports = {
 
     create: function () {
 
-        return new CssTimelineRow();
+        return new CssSequence();
     }
 };

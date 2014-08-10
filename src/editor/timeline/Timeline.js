@@ -1,6 +1,7 @@
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var Timebar = require('./Timebar');
+var amgui = require('../amgui');
 
 function Timeline(am) {
 
@@ -13,8 +14,8 @@ function Timeline(am) {
     this._timebar = new Timebar({height: this._headerH});
     this._deRight.appendChild(this._timebar.domElem);
 
-    this._btnNewSequ.addEventListener('click', function () {
-
+    this._dropdownNewSequ.addEventListener('select', function (e) {
+        console.log(e);
         this.addSequence(am.sequenceTypes[0].create());
     }.bind(this));
 }
@@ -97,10 +98,8 @@ p._createSettingsHead = function () {
     this._deSettingsHead.style.height = this._headerH + 'px';
     this._deLeft.appendChild(this._deSettingsHead);
 
-    this._btnNewSequ = document.createElement('div');
-    this._btnNewSequ.style.backgroundColor = 'white';
-    this._btnNewSequ.style.borderRadius = '10px';
-    this._btnNewSequ.style.width = (this._headerH-2) + 'px';
-    this._btnNewSequ.style.height = (this._headerH-2) + 'px';
+    this._btnNewSequ = amgui.createIconBtn({});
     this._deSettingsHead.appendChild(this._btnNewSequ);
+    this._dropdownNewSequ = amgui.createDropdown({options: ['css', 'script']});
+    amgui.bindDropdown(this._btnNewSequ, this._dropdownNewSequ);
 }

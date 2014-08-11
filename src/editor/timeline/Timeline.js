@@ -5,6 +5,8 @@ var amgui = require('../amgui');
 
 function Timeline(am) {
 
+    EventEmitter.call(this);
+
     this._headerH = 32;
     
     this._createBase();
@@ -13,6 +15,9 @@ function Timeline(am) {
     
     this._timebar = new Timebar({height: this._headerH});
     this._deRight.appendChild(this._timebar.domElem);
+    this._timebar.showTime(0, 1000 * 20, this._deRight.offsetWidth || 1000)
+
+    this._sequences = [];
 
     this._dropdownNewSequ.addEventListener('select', function (e) {
         console.log(e);
@@ -26,8 +31,8 @@ module.exports = Timeline;
 
 p.addSequence = function (sequ) {
 
-    var deContOpt = createCont(sequData.deOptions, this._deLeft),
-        deContKf = createCont(sequData.deKeyframes, this._deRight);
+    var deContOpt = createCont(sequ.deOptions, this._deLeft),
+        deContKf = createCont(sequ.deKeys, this._deRight);
 
     this._sequences.push(sequ);
 
@@ -39,11 +44,11 @@ p.addSequence = function (sequ) {
 
     this._sequences.push(sequ, parent);
 
-    function createCont(content) {
+    function createCont(content, parent) {
 
         var de = document.createElement('div');
         de.style.width = '100%';
-        de.style.height = sequ.height();
+        de.style.height = sequ.getHeight();
         de.style.transform = 'height 0.12 easeOut';
         de.appendChild(content);
         parent.appendChild(de);
@@ -56,10 +61,11 @@ p.addSequence = function (sequ) {
 p._createBase = function () {
 
     this.domElem = document.createElement('div');
-    this.domElem.style.backgroundColor = 'green'; 
+    this.domElem.style.backgroundColor = 'red'; 
+    this.domElem.style.display = 'flex'; 
 
     this._deLeft = document.createElement('div');
-    this._deLeft.style.backgroundColor = 'black';
+    this._deLeft.style.backgroundColor = 'blue';
     this._deLeft.style.width = '230px';
     this._deLeft.style.height = '100%';
     this.domElem.appendChild(this._deLeft);
@@ -81,7 +87,7 @@ p._createTimeline = function () {
 
     var c = document.createElement('canvas');
     var ctx = c.getContext('2d');
-    this._deRight.style.backgroundColor = 'black';
+    this._deRight.style.backgroundColor = 'tomato';
     this._deRight.position = 'absolute';
     this._deRight.style.top = '0px';
     this._deRight.style.right = '0px';

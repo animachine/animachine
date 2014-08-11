@@ -26,13 +26,14 @@ gulp.task('clean', function(cb) {
 gulp.task('vendor', function () {
   return gulp.src([
       paths.bower + 'svg.js/dist/svg.js',
+      paths.bower + 'lodash/dist/lodash.min.js',
       paths.bower + 'jquery/dist/jquery.min.js',
       paths.bower + 'jQuery.Autosize.Input/jquery.autosize.input.js',
     ])
     .pipe(concat('vendor.js'))
     // .pipe($.uglify())
     .pipe(gulp.dest('./build'))
-    // .pipe(size());
+    .pipe(size());
 });
 
 gulp.task('extension', function () {

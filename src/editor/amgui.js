@@ -2,7 +2,7 @@
 
 var amgui = {
 
-    createKeyframeline: function (opt) {
+    createKeyline: function (opt) {
 
         var timescale = opt.timescale || 0.2,
             keyframes = {};
@@ -47,7 +47,7 @@ var amgui = {
 
         function positionKeys() {
 
-            Object.keys(keyframes).foreach(function () {
+            Object.keys(keyframes).forEach(function () {
 
                 keyframes[time].style.left = (timescale * time) + 'px';
             });
@@ -81,6 +81,47 @@ var amgui = {
         de.style.color = 'white';
         de.className = 'icon-' + (opt.icon || 'cog');
 
+        de.addEventListener('mouseenter', onMOver);
+        de.addEventListener('mouseleave', onMOut);
+
+        function onMOver() {
+
+            this.style.background = 'darkgrey';
+        }
+
+        function onMOut() {
+            
+            this.style.background = 'none';
+        }
+
+        return de;
+    },
+
+    createToggleIconBtn: function (opt) {
+
+        var isOn = false;
+        var de = amgui.createIconBtn(opt);
+        setIcon();
+
+        de.addEventListener('click', onClick);
+
+        de.setToggle = function (on) {
+
+            isOn = !!on;
+            setIcon();
+        }
+
+        function onClick() {
+            
+            isOn = !isOn
+            setIcon();
+        }
+
+        function setIcon() {
+
+            de.className = 'icon-' + (isOn ? opt.iconOn : opt.iconOff || 'cog');
+        }
+
         return de;
     },
 
@@ -93,10 +134,12 @@ var amgui = {
         de.style.margin = 0;
         de.style.padding = 0;
 
-        options.foreach(function (text) {
+        options.forEach(function (text) {
 
             var li = document.createElement('li');
             li.textContent = text;
+            li.style.cursor = 'pointer';
+            li.style.color = 'white';
             li.style.fontFamily = 'monospace';
 
             li.addEventListener('click', function () {
@@ -109,7 +152,7 @@ var amgui = {
         return de;
     },
 
-    addDropdpwn: function(deBtn, deDropdown) {
+    bindDropdown: function(deBtn, deDropdown) {
 
         var isOpened = false;
 
@@ -127,8 +170,8 @@ var amgui = {
             isOpened = true;
 
             var bcr = deBtn.getBoundingClientRect();
-            deDropdown.style.left = brc.left + 'px';
-            deDropdown.style.top = brc.bottom + 'px';
+            deDropdown.style.left = bcr.left + 'px';
+            deDropdown.style.top = bcr.bottom + 'px';
 
             document.body.appendChild(deDropdown);
         }
@@ -142,6 +185,50 @@ var amgui = {
                 deDropdown.parentElement.removeChild(deDropdown);
             }
         }
+    },
+
+    createKeyValueInput: function (opt) {
+
+        var de = document.createElement('div');
+
+        var inpKey = createInput();
+
+        var divider = document.createElement('span');
+        divider.textContent = ':';
+        divider.appendChild(inp);
+        
+        var inpValue = createInput();
+
+        de.getKey = function () {
+            return inpKey.value;
+        };
+
+        de.getValue = function () {
+            return inpValue.value;
+        };
+
+        function onChange() {
+
+            de.dispatchEvent(new CustomEvent({
+                key: de.getKey(),
+                value: de.getValue()
+            }));
+        }
+
+        function createInput() {
+
+            var inp = document.createElement('input');
+            inp.type = 'text';
+            inp.style.width = '123px';
+            inp.style.border = 'none';
+            inp.style.background = 'none';
+            inp.addEventListener('change', onChange);
+            $(inp).autosizeInput({space: 0});
+            de.appendChild(inp);
+            return inp;
+        }
+
+        return de;
     }
 }
 

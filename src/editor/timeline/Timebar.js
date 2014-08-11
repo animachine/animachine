@@ -39,33 +39,10 @@ inherits(Timebar, EventEmitter);
 var p = Timebar.prototype;
 module.exports = Timebar;
 
-p._createBase = function () {
-
-    this.domElem = document.createElement('div');
-    this.domElem.style.backgroundColor = 'green';
-
-    this._canvasTape = document.createElement('canvas');
-    this._ctxTape = this._canvasTape.getContext('2d');
-    this.domElem.appendChild(this._canvasTape); 
-}
-
-p._createPointer = function () {
-
-    var radius = 4;
-    this._dePointer = document.createElement('div');
-    var pointer = document.createElement('div');
-    pointer.style.position = 'absolute';
-    pointer.style.left = -radius + 'px';
-    pointer.style.width = 2*radius + 'px';
-    pointer.style.height = 2*radius + 'px';
-    pointer.style.border = 'solid red 1px';
-    pointer.style.borderRadius = radius + 'px';
-}
-
 p.showTime = function(start, end, width) {
 
     var full = end - start,
-        scale = width / full * scale, 
+        scale = width / full, 
         maxMarkers = width / 4,
         step, i, 
         ctx = this._ctxTape;
@@ -151,3 +128,27 @@ function onMUp() {
     window.removeEventListener('mouseup', this._onMUp);
     window.removeEventListener('mouseleave', this._onMUp);
 }
+
+
+p._createBase = function () {
+
+    this.domElem = document.createElement('div');
+    this.domElem.style.backgroundColor = 'green';
+
+    this._canvasTape = document.createElement('canvas');
+    this._ctxTape = this._canvasTape.getContext('2d');
+    this.domElem.appendChild(this._canvasTape); 
+};
+
+p._createPointer = function () {
+
+    var radius = 4;
+    this._dePointer = document.createElement('div');
+    var pointer = document.createElement('div');
+    pointer.style.position = 'absolute';
+    pointer.style.left = -radius + 'px';
+    pointer.style.width = 2*radius + 'px';
+    pointer.style.height = 2*radius + 'px';
+    pointer.style.border = 'solid red 1px';
+    pointer.style.borderRadius = radius + 'px';
+};

@@ -7,14 +7,8 @@ var modules = {
     css: require('./modules/css')
 }
 
-var transhand = window.transhand = new Transhand();
-var timeline = window.timeline = new Timeline();
 
-var am = module.exports = {
-
-    transhand: transhand,
-
-    timeline: timeline,
+var am = window.dam = module.exports = {
 
     sequenceTypes: [],
 
@@ -24,22 +18,25 @@ var am = module.exports = {
     }
 }
 
+am.transhand = new Transhand();
+am.timeline = new Timeline(am);
+
 domready(function () {
 
     debugRect();
 
-    timeline.domElem.style.position = 'fixed';
-    timeline.domElem.style.width = '100%';
-    timeline.domElem.style.height = '230px';
-    timeline.domElem.style.bottom = '0px';
-    document.body.appendChild(timeline.domElem);
+    am.timeline.domElem.style.position = 'fixed';
+    am.timeline.domElem.style.width = '100%';
+    am.timeline.domElem.style.height = '230px';
+    am.timeline.domElem.style.bottom = '0px';
+    document.body.appendChild(am.timeline.domElem);
 
 
     document.body.addEventListener('click', function (e) {
 
         var de = e.target;
         var br = de.getBoundingClientRect();
-        transhand.setup({
+        am.transhand.setup({
             hand: {
                 type: 'bund',
                 params: {

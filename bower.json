@@ -1,0 +1,23 @@
+{
+  "name": "animachine",
+  "version": "0.0.0",
+  "authors": [
+    "azazdeaz <azazdeaz@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jQuery.Autosize.Input": "https://github.com/MartinF/jQuery.Autosize.Input.git",
+    "jquery": "~2.1.1",
+    "svg.js": "~1.0.0-rc.9",
+    "polymer": "~0.3.3",
+    "lodash": "~2.4.1"
+  }
+}

@@ -35,6 +35,11 @@ domready(function () {
     // document.body.addEventListener('click', function (e) {
 
     //     var de = e.target;
+    //     
+    //     if (!isPickable(de)) {
+    //         return;
+    //     }
+    //     
     //     var br = de.getBoundingClientRect();
     //     am.transhand.setup({
     //         hand: {
@@ -75,4 +80,24 @@ function debugRect() {
     de.style.width = '55px';
     de.style.height = '55px';
     document.body.appendChild(de);
+}
+
+function isPickable() {
+
+    var deAm = am.timeline.domElem;
+
+    return step(deTest);
+
+    function step(de) {
+
+        if (de === document.body) {
+            return true;
+        }
+        else if (de === deAm) {
+            return false;
+        }
+        else {
+            return step(de.parentNode);
+        }
+    }
 }

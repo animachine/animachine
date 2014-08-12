@@ -1,4 +1,5 @@
 var uncalc = require('./uncalc');
+var amgui = require('../../amgui');
 
 function CssParameter (opt) {
     
@@ -15,13 +16,9 @@ function CssParameter (opt) {
 
     this.deOptions = this._createParameterOptions();
     this.deKeyline = amgui.createKeyline({});
-
-    this._parameters.push(param);
-
-    this._refreshMainKeyline();
 }
 
-var p = CssParameter;
+var p = CssParameter.prototype;
 
 p.getValue = function (time) {
 

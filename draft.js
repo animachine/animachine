@@ -107,6 +107,15 @@ var ce = {
 };
 
 
+API
+
+am
+.registerSequenceType();
+=>'pick'
+
+sequence
+create():Sequence
+
 
 
 

@@ -137,6 +137,7 @@ p._createBase = function () {
 
     this._canvasTape = document.createElement('canvas');
     this._ctxTape = this._canvasTape.getContext('2d');
+    this._canvasTape.style.display = 'block';
     this.domElem.appendChild(this._canvasTape); 
 };
 

@@ -32,36 +32,36 @@ domready(function () {
     document.body.appendChild(am.timeline.domElem);
 
 
-    document.body.addEventListener('click', function (e) {
+    // document.body.addEventListener('click', function (e) {
 
-        var de = e.target;
-        var br = de.getBoundingClientRect();
-        am.transhand.setup({
-            hand: {
-                type: 'bund',
-                params: {
-                    x: br.left, 
-                    y: br.top, 
-                    w: br.width, 
-                    h: br.height,
-                }
-            },
-            on: {
-                change: function (params, correct) {
+    //     var de = e.target;
+    //     var br = de.getBoundingClientRect();
+    //     am.transhand.setup({
+    //         hand: {
+    //             type: 'bund',
+    //             params: {
+    //                 x: br.left, 
+    //                 y: br.top, 
+    //                 w: br.width, 
+    //                 h: br.height,
+    //             }
+    //         },
+    //         on: {
+    //             change: function (params, correct) {
                     
-                    Object.keys(params).forEach(function (key) {
+    //                 Object.keys(params).forEach(function (key) {
 
-                        switch (key) {
-                            case 'x': de.style.left = params[key] + 'px'; break;
-                            case 'y': de.style.top = params[key] + 'px'; break;
-                            case 'w': de.style.width = params[key] + 'px'; break;
-                            case 'h': de.style.height = params[key] + 'px'; break;
-                        }
-                    });
-                }
-            }
-        });
-    });
+    //                     switch (key) {
+    //                         case 'x': de.style.left = params[key] + 'px'; break;
+    //                         case 'y': de.style.top = params[key] + 'px'; break;
+    //                         case 'w': de.style.width = params[key] + 'px'; break;
+    //                         case 'h': de.style.height = params[key] + 'px'; break;
+    //                     }
+    //                 });
+    //             }
+    //         }
+    //     });
+    // });
 
     modules.css.init(am)
 });

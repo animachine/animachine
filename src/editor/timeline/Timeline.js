@@ -38,8 +38,8 @@ p.addSequence = function (sequ) {
 
     sequ.on('heightChange', function () {
 
-        deContOpt.height = sequ.height();
-        deContKf.height = sequ.height();
+        deContOpt.style.height = sequ.height() + 'px';
+        deContKf.style.height = sequ.height() + 'px';
     });
 
     this._sequences.push(sequ, parent);
@@ -48,7 +48,8 @@ p.addSequence = function (sequ) {
 
         var de = document.createElement('div');
         de.style.width = '100%';
-        de.style.height = sequ.getHeight();
+        de.style.height = sequ.height() + 'px';
+        de.style.overflow = 'hidden';
         de.style.transform = 'height 0.12 easeOut';
         de.appendChild(content);
         parent.appendChild(de);
@@ -65,7 +66,7 @@ p._createBase = function () {
     this.domElem.style.display = 'flex'; 
 
     this._deLeft = document.createElement('div');
-    this._deLeft.style.backgroundColor = 'blue';
+    this._deLeft.style.backgroundColor = 'turquoise';
     this._deLeft.style.width = '230px';
     this._deLeft.style.height = '100%';
     this.domElem.appendChild(this._deLeft);

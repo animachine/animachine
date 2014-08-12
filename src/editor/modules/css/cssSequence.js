@@ -12,6 +12,7 @@ function CssSequence(src, opt) {
 
     this._opt = _.extend({baseH: 21}, opt);
 
+    this._isOpened = false;
 
     this.deOptions = document.createElement('div');
     this.deKeys = document.createElement('div');
@@ -21,6 +22,8 @@ function CssSequence(src, opt) {
     this.deKeys.appendChild(this._deHeadKeyline);
 
     this._handlerChange = this._handlerChange.bind(this);
+
+    this.addParameter();
 }
 
 inherits(CssSequence, EventEmitter);
@@ -47,9 +50,9 @@ p.renderTime = function (time) {
     });
 };
 
-p.getHeight = function () {
+p.height = function () {
 
-    return this._opt.baseH;
+    return this._opt.baseH * (this._isOpened ? this._parameters.length + 1 : 1);
 }
 
 p._handlerChange = function(prop, value, correct) {
@@ -60,20 +63,22 @@ p._handlerChange = function(prop, value, correct) {
     keyframe.css[prop] = value;
 };
 
-p.addKeyframe = function (src) {
+// p.addKeyframe = function (src) {
 
-    var keyframe = _.extend({}, src, {
-        time: 0,
-        css: {},
-        attr: {}
-    });
+//     var keyframe = _.extend({}, src, {
+//         time: 0,
+//         css: {},
+//         attr: {}
+//     });
 
-    keyframe.domElem = this.deKeyline.addKey(keyframe.time);
+//     keyframe.domElem = this.deKeyline.addKey(keyframe.time);
 
-    return keyframe;
-};
+//     return keyframe;
+// };
 
 p.addParameter = function (opt) {
+
+    opt = opt || {};
 
     var param = new CssParameter(opt);
     this._parameters.push(param);
@@ -109,10 +114,33 @@ p.generateAst = function (src) {
 p._createHeadOptions = function (){
 
     var de = document.createElement('div');
+    de.style.position = 'relative';
     de.style.width = '100%';
     de.style.height = this._opt.baseH + 'px';
-    de.style.background = 'orange';
+    de.style.background = 'tomato';
     this.deOptions.appendChild(de);
+
+    this._deToggleDropDown = amgui.createToggleIconBtn({
+        iconOn: 'angle-down',
+        iconOff: 'angle-right'
+    });
+    this._deToggleDropDown.addEventListener('toggle', function (e) {
+        this._isOpened = e.detail.state;
+        this.emit('heightChange', this.height());
+    }.bind(this));
+    de.appendChild(this._deToggleDropDown);
+
+    this._deOptionsBtn = amgui.createIconBtn({icon: 'cog'});
+    this._deOptionsBtn.style.position = 'absolute';
+    this._deOptionsBtn.style.right = '21px';
+    this._deOptionsBtn.style.top = '0px';
+    de.appendChild(this._deOptionsBtn);
+
+    this._deKeyBtn = amgui.createIconBtn({icon: 'key'});
+    this._deKeyBtn.style.position = 'absolute';
+    this._deKeyBtn.style.right = '0px';
+    this._deKeyBtn.style.top = '0px';
+    de.appendChild(this._deKeyBtn);
 
     return de;
 };

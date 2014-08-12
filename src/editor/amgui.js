@@ -42,7 +42,7 @@ var amgui = {
                 }
             }, this);
 
-            de.dispatchEvent(new CustomEvent('selectKey', {time: time}));
+            de.dispatchEvent(new CustomEvent('selectKey', {detail: {time: time}}));
         }
 
         function positionKeys() {
@@ -107,14 +107,25 @@ var amgui = {
 
         de.setToggle = function (on) {
 
-            isOn = !!on;
+            on = !!on;
+            if (on === isOn) {
+                return;
+            }
+            isOn = on;
             setIcon();
+
+            de.dispatchEvent(new CustomEvent('toggle', {detail: {state: isOn}}));
+            de.dispatchEvent(new CustomEvent(isOn ? 'toggleOn' : 'toggleOff'));
+        };
+
+        de.state = function () {
+
+            return isOn;
         }
 
         function onClick() {
             
-            isOn = !isOn
-            setIcon();
+            de.setToggle(!isOn);
         }
 
         function setIcon() {
@@ -140,11 +151,12 @@ var amgui = {
             li.textContent = text;
             li.style.cursor = 'pointer';
             li.style.color = 'white';
+            li.style.background = 'darkcyan';
             li.style.fontFamily = 'monospace';
 
             li.addEventListener('click', function () {
 
-                de.dispatchEvent(new CustomEvent('select', {selection: text}));
+                de.dispatchEvent(new CustomEvent('select', {detail: {selection: text}}));
             });
             de.appendChild(li);
         });
@@ -189,15 +201,25 @@ var amgui = {
 
     createKeyValueInput: function (opt) {
 
+        opt = opt || {};
+
         var de = document.createElement('div');
 
+        var keyOn = false;
+
         var inpKey = createInput();
+        inpKey.addEventListener('keypress', onKeyPress);
 
         var divider = document.createElement('span');
         divider.textContent = ':';
-        divider.appendChild(inp);
-        
+        divider.style.color = 'white';
+        divider.style.fontFamily = 'monospace';
+        de.appendChild(divider);
+
         var inpValue = createInput();
+        inpValue.style.color = 'lightblue';
+
+        showHideValue(keyOn);
 
         de.getKey = function () {
             return inpKey.value;
@@ -207,12 +229,44 @@ var amgui = {
             return inpValue.value;
         };
 
-        function onChange() {
+        de.setValue = function (opt) {
+            
+            if (opt.hasOwnProperty('key')) {
+                inpKey.value = inp.key;
+            }
+            
+            if (opt.hasOwnProperty('value')) {
+                inpValue.value = inp.value;
+            }
+        };
 
-            de.dispatchEvent(new CustomEvent({
+        function onChange(e) {
+            
+            console.log("onChange", e.type, inpKey.value)
+            if (!!inpKey.value !== keyOn) {
+                
+                keyOn = !!inpKey.value;
+                showHideValue(keyOn);
+            }
+
+            de.dispatchEvent(new CustomEvent({detail: {
                 key: de.getKey(),
                 value: de.getValue()
-            }));
+            }}));
+        }
+
+        function onKeyPress(e) {
+            if (e.keyCode === 13) {
+                
+                inpValue.focus();
+            }
+        }
+
+        function showHideValue(show) {
+            
+            divider.style.display = show ? 'inline' : 'none';
+            inpValue.style.display = show ? 'inline-block' : 'none';
+            inpKey.style.width = show ? '123px' : '100%';
         }
 
         function createInput() {
@@ -221,8 +275,11 @@ var amgui = {
             inp.type = 'text';
             inp.style.width = '123px';
             inp.style.border = 'none';
+            inp.style.color = 'white';
+            inp.style.fontFamily = 'monospace';
             inp.style.background = 'none';
             inp.addEventListener('change', onChange);
+            inp.addEventListener('keyup', onChange);
             $(inp).autosizeInput({space: 0});
             de.appendChild(inp);
             return inp;

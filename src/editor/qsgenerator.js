@@ -1,10 +1,15 @@
+
+document.body.addEventListener('click', function(e){
+    console.log(generate(e.target));
+});
+
 function generate(de, root) {
+
+    root = root || document;
 
     var deCurr = de,
         rootCurr = root, 
         qsCurr, qsParent = '';
-
-    root = root || document;
 
     while (true) {
 
@@ -41,7 +46,7 @@ function generate(de, root) {
     }
 }
 
-function gen(de, root, qsParent) {
+function gen(de, root) {
 
 
     var singles, selectors, matches = [];
@@ -56,31 +61,17 @@ function gen(de, root, qsParent) {
 
         selectors.forEach(function (selector) {
 
-            if (root.querySelectorAll(qsParent + ' ' + selector).length === 1) {
+            if (root.querySelectorAll(selector).length === 1) {
                 matches.push(selector);
             };
         });
 
         if (matches.length) {
 
-            break;
+            matches[0];
         }
         else {
             selectors = combine(selectors, singles);
-        }
-    }
-
-    if (matches.length) {
-
-        return qsParent + ' ' + matches[0];
-    }
-    else if (de.parentNode) {
-
-        qsNewParent = generate(de.parentNode, root, qsParent);
-
-        if (qsNewParent) {
-
-            return generate(de.parent, root, qsParent + ' ' + qsNewParent);
         }
     }
 }
@@ -102,7 +93,11 @@ function possibleAttributes(de) {
 
     return Array.prototype.slice.call(de.attributes, 0)
         .map(function (attr) {
-            return '[' + attr.name + (attr.value ? '=' + attr.value : '') + ']';
+            
+            if (attr.name !== 'id' && attr.name !== 'class') {
+
+                return '[' + attr.name + (attr.value ? '=' + attr.value : '') + ']';
+            }
         });
 }
 

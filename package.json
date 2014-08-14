@@ -28,6 +28,7 @@
     "lodash": "^2.4.1",
     "gulp-watch": "^0.6.9",
     "run-sequence": "^0.3.6",
-    "gulp-vulcanize": "^0.2.1"
+    "gulp-vulcanize": "^0.2.1",
+    "css.escape": "^0.2.1"
   }
 }

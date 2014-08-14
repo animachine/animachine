@@ -1,3 +1,5 @@
+var cssescape = require('css.escape');
+
 
 document.body.addEventListener('click', function(e){
     console.log(generate(e.target));
@@ -78,39 +80,38 @@ function gen(de, root) {
 
 function possibleIds(de) {
 
-    return de.id ? [de.id] : [];
+    return de.id ? ['#' + cssescape(de.id)] : [];
 }
 
 function possibleClasses(de, max) {
 
     return Array.prototype.slice.call(de.classList, 0)
         .map(function (className) {
-            return '.' + className
+            return '.' + cssescape(className)
         });
 }
 
 function possibleAttributes(de) {
 
     return Array.prototype.slice.call(de.attributes, 0)
+        .filter(function(attr) {
+            return attr.name !== 'id' && attr.name !== 'class';
+        })
         .map(function (attr) {
-            
-            if (attr.name !== 'id' && attr.name !== 'class') {
-
-                return '[' + attr.name + (attr.value ? '=' + attr.value : '') + ']';
-            }
+            return '[' + cssescape(attr.name) + (attr.value ? '="' + attr.value : '') + '"]';
         });
 }
 
-function variate(_list, length) {
+// function variate(_list, length) {
 
-    return step(_list, 2);
+//     return step(_list, 2);
 
-    function step(list, back) {
+//     function step(list, back) {
 
-        var combined = combine(attributes, list);
-        return list.concat(back === 0 ? combined : step(combined, --back));
-    }
-}
+//         var combined = combine(attributes, list);
+//         return list.concat(back === 0 ? combined : step(combined, --back));
+//     }
+// }
 
 function combine(sourceA, sourceB) {
 
@@ -118,7 +119,9 @@ function combine(sourceA, sourceB) {
 
     sourceA.forEach(function (a) {
         sourceB.forEach(function (b) {
-            if (a.indexOf(b) === -1 && b.indexOf(a) === -1) {
+            if (a.indexOf(b) === -1 && b.indexOf(a) === -1 &&
+                '#.[:'.indexOf(b.charAt(0)) !== -1) 
+            {
                 combined.push(a + b);
             }
         });

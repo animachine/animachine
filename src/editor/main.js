@@ -1,6 +1,7 @@
 'use strict';
 
 var domready = require('domready');
+var EventEmitter = require('events').EventEmitter;
 var Transhand = require('./transhand/Transhand');
 var Timeline = require('./timeline/Timeline');
 var modules = {
@@ -8,7 +9,11 @@ var modules = {
 }
 
 
-var am = window.dam = module.exports = {
+
+var handlerBuff = [];
+
+
+var am = window.dam = module.exports = _.extend(new EventEmitter(), {
 
     sequenceTypes: [],
 
@@ -16,10 +21,26 @@ var am = window.dam = module.exports = {
 
         this.sequenceTypes.push(sequType);
     }
+});
+
+am.timeline = new Timeline(am);
+am.deRoot = document.body;
+
+am.getHandler = function () {
+
+    if (handlerBuff.length) {
+
+        return handlerBuff.pop();
+    }
+    else {
+        return new Transhand();
+    }
 }
 
-am.transhand = new Transhand();
-am.timeline = new Timeline(am);
+am.throwHandler = function (handler) {
+
+    handlerBuff.push(handler);
+} 
 
 domready(function () {
 
@@ -31,42 +52,13 @@ domready(function () {
     am.timeline.domElem.style.bottom = '0px';
     document.body.appendChild(am.timeline.domElem);
 
+    document.body.addEventListener(function (e) {
 
-    // document.body.addEventListener('click', function (e) {
+        if (isPickable(e.target)) {
 
-    //     var de = e.target;
-    //     
-    //     if (!isPickable(de)) {
-    //         return;
-    //     }
-    //     
-    //     var br = de.getBoundingClientRect();
-    //     am.transhand.setup({
-    //         hand: {
-    //             type: 'bund',
-    //             params: {
-    //                 x: br.left, 
-    //                 y: br.top, 
-    //                 w: br.width, 
-    //                 h: br.height,
-    //             }
-    //         },
-    //         on: {
-    //             change: function (params, correct) {
-                    
-    //                 Object.keys(params).forEach(function (key) {
-
-    //                     switch (key) {
-    //                         case 'x': de.style.left = params[key] + 'px'; break;
-    //                         case 'y': de.style.top = params[key] + 'px'; break;
-    //                         case 'w': de.style.width = params[key] + 'px'; break;
-    //                         case 'h': de.style.height = params[key] + 'px'; break;
-    //                     }
-    //                 });
-    //             }
-    //         }
-    //     });
-    // });
+            am.emit('pick', e.target);
+        }
+    });
 
     modules.css.init(am)
 });
@@ -80,7 +72,7 @@ function debugRect() {
     de.style.width = '55px';
     de.style.height = '55px';
     document.body.appendChild(de);
-}
+};
 
 function isPickable() {
 

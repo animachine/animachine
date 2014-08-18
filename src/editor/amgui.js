@@ -1,5 +1,8 @@
 'use strict';
 
+var FONT_FAMILY = '"Open Sans", sans-serif';
+var FONT_SIZE = '15px'; 
+
 var amgui = {
 
     createKeyline: function (opt) {
@@ -72,6 +75,58 @@ var amgui = {
         return de;
     },
 
+    createDialog: function (opt) {
+
+        var de = document.createElement('dialog');
+
+        var title = document.createElement('div');
+        title.textContent = opt.title || 'Dialog';
+        title.style.height = '34px';
+        title.style.fontSize = '23px';
+        title.style.fontFamily = FONT_FAMILY;
+        de.appendChild(de);
+
+        de.appendChild(opt.content);
+
+        if (opt.actionButtons) {
+
+            opt.actionButtons.forEach(function (caption) {
+
+                var btn = this.createBtn({caption: caption});
+                btn.style.display = 'inline-block';
+                de.appendChild(btn);
+            }, this);
+        }
+
+        return de;
+    },
+
+    createBtn: function (opt) {
+
+        var de = document.createElement('div');
+        de.style.height = (opt.height || 21) + 'px';
+        de.style.cursor = 'pointer';
+        de.style.color = 'white';
+        de.style.fontFamily = FONT_FAMILY;
+        de.textContent = opt.caption || 'button';
+        de.className = 'icon-' + (opt.icon || 'cog');
+
+        de.addEventListener('mouseenter', onMOver);
+        de.addEventListener('mouseleave', onMOut);
+
+        function onMOver() {
+
+            this.style.background = 'darkgrey';
+        }
+
+        function onMOut() {
+            
+            this.style.background = 'none';
+        }
+
+        return de;
+    },
+
     createIconBtn: function (opt) {
 
         var de = document.createElement('div');
@@ -79,10 +134,18 @@ var amgui = {
         de.style.height = (opt.height || 21) + 'px';
         de.style.cursor = 'pointer';
         de.style.color = 'white';
+        de.style.overflow = 'hidden';
+        // de.style.fontSize = opt.fontSize || '16px';
+        de.style.fontSize = de.style.height;
         de.className = 'icon-' + (opt.icon || 'cog');
 
         de.addEventListener('mouseenter', onMOver);
         de.addEventListener('mouseleave', onMOut);
+
+        if (opt.onClick) {
+
+            de.addEventListener('click', opt.onClick);
+        }
 
         function onMOver() {
 
@@ -152,7 +215,7 @@ var amgui = {
             li.style.cursor = 'pointer';
             li.style.color = 'white';
             li.style.background = 'darkcyan';
-            li.style.fontFamily = 'monospace';
+            li.style.fontFamily = FONT_FAMILY;
 
             li.addEventListener('click', function () {
 
@@ -213,7 +276,8 @@ var amgui = {
         var divider = document.createElement('span');
         divider.textContent = ':';
         divider.style.color = 'white';
-        divider.style.fontFamily = 'monospace';
+        divider.style.fontFamily = FONT_FAMILY;
+        divider.style.fontSize = FONT_SIZE;
         de.appendChild(divider);
 
         var inpValue = createInput();
@@ -276,7 +340,7 @@ var amgui = {
             inp.style.width = '123px';
             inp.style.border = 'none';
             inp.style.color = 'white';
-            inp.style.fontFamily = 'monospace';
+            inp.style.fontFamily = FONT_FAMILY;
             inp.style.background = 'none';
             inp.addEventListener('change', onChange);
             inp.addEventListener('keyup', onChange);

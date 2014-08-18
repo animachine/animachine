@@ -3,15 +3,28 @@ var inherits = require('inherits');
 var amgui = require('../../amgui');
 var CssParameter = require('./CssParameter');
 
+var cssSequence = {
+
+    _instances: [],
+
+    create: function () {
+
+        return new CssSequence();
+    }
+}
+
 function CssSequence(src, opt) {
 
     EventEmitter.call(this);
+
+    cssSequence._instances.push(this);
 
     this._selectors = [];
     this._parameters = [];
 
     this._opt = _.extend({baseH: 21}, opt);
 
+    this._domElements = [];
     this._isOpened = false;
 
     this.deOptions = document.createElement('div');
@@ -145,10 +158,9 @@ p._createHeadOptions = function (){
     return de;
 };
 
-module.exports = {
+p.isOwnedDomElement = function (de) {
 
-    create: function () {
+    return this._domElements.indexOf(de) !== -1;
+}
 
-        return new CssSequence();
-    }
-};
+module.exports = cssSequence;

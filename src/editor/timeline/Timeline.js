@@ -20,7 +20,7 @@ function Timeline(am) {
     this._sequences = [];
 
     this._dropdownNewSequ.addEventListener('select', function (e) {
-        console.log(e);
+        
         this.addSequence(am.sequenceTypes[0].create());
     }.bind(this));
 }

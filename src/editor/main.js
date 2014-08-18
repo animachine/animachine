@@ -1,35 +1,47 @@
 'use strict';
 
 var domready = require('domready');
+var EventEmitter = require('events').EventEmitter;
 var Transhand = require('./transhand/Transhand');
 var Timeline = require('./timeline/Timeline');
+var Toolbar = require('./toolbar/Toolbar');
 var modules = {
     css: require('./modules/css')
 }
 
 
-var am = window.dam = module.exports = {
+var am = window.amam = module.exports = _.extend(new EventEmitter(), {
 
     sequenceTypes: [],
+
+    selectedElement: undefined,
 
     registerSequenceType: function (sequType) {
 
         this.sequenceTypes.push(sequType);
     }
-}
-
-am.transhand = new Transhand();
-am.timeline = new Timeline(am);
+});
 
 domready(function () {
 
     debugRect();
 
+    am.domElement = createRootDomElement();
+
+    am.transhand = new Transhand();
+    am.timeline = new Timeline(am);
+    am.toolbar = new Toolbar();
+    am.domElement.appendChild(am.toolbar.domElement);
+
+    am.toolbar.addIcon({icon: 'cog'});
+
     am.timeline.domElem.style.position = 'fixed';
     am.timeline.domElem.style.width = '100%';
     am.timeline.domElem.style.height = '230px';
     am.timeline.domElem.style.bottom = '0px';
-    document.body.appendChild(am.timeline.domElem);
+    am.domElement.appendChild(am.timeline.domElem);
+
+    document.body.addEventListener('click', onClickRoot)
 
 
     // document.body.addEventListener('click', function (e) {
@@ -73,6 +85,7 @@ domready(function () {
 
 function debugRect() {
     var de = document.createElement('div');
+    de.id = 'boxX';
     de.style.position = 'absolute';
     de.style.backgroundColor = 'blue';
     de.style.left = '55px';
@@ -82,9 +95,20 @@ function debugRect() {
     document.body.appendChild(de);
 }
 
-function isPickable() {
+function onClickRoot(e) {
 
-    var deAm = am.timeline.domElem;
+    var de = e.target;
+
+    if (am.selectedElement !== de && isPickable(de)) {
+
+        am.selectedElement = de;
+        am.emit('selectDomElement', am.selectedElement);
+    }
+}
+
+function isPickable(deTest) {
+
+    var deAm = am.domElement;
 
     return step(deTest);
 
@@ -100,4 +124,15 @@ function isPickable() {
             return step(de.parentNode);
         }
     }
+}
+
+function createRootDomElement() {
+
+    var de = document.createElement('div');
+    de.style.position = 'fixed';
+    de.style.width = '100%';
+    de.style.height = '100%';
+    document.body.appendChild(de);
+    var sr = de.createShadowRoot();
+    return sr;
 }

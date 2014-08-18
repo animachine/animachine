@@ -29,6 +29,8 @@ gulp.task('vendor', function () {
       paths.bower + 'lodash/dist/lodash.min.js',
       paths.bower + 'jquery/dist/jquery.min.js',
       paths.bower + 'jQuery.Autosize.Input/jquery.autosize.input.js',
+      paths.bower + 'jQuery.Autosize.Input/jquery.autosize.input.js',
+      paths.bower + 'dialog-polyfill/dialog-polyfill.js',
     ])
     .pipe(concat('vendor.js'))
     // .pipe($.uglify())
@@ -48,7 +50,8 @@ gulp.task('imports', function () {
 });
 
 gulp.task('init-build', function () {
-  return gulp.src(['./src/editor/index.html', './src/editor/assets/**/*.*'], {base:'./src/editor/'})
+  return gulp.src([
+    './src/editor/index.html', './src/editor/assets/**/*.*'], {base:'./src/editor/'})
     // .pipe(vulcanize({dest: 'build'}))
     .pipe(gulp.dest('./build'));
 });

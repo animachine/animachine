@@ -1,4 +1,3 @@
-
 // document.body.addEventListener('click', function(e){
 //     console.log(generate(e.target));
 // });
@@ -68,7 +67,7 @@ function gen(de, root) {
 
         if (matches.length) {
 
-            matches[0];
+            return matches[0];
         }
         else {
             selectors = combine(selectors, singles);
@@ -78,26 +77,25 @@ function gen(de, root) {
 
 function possibleIds(de) {
 
-    return de.id ? [de.id] : [];
+    return de.id ? ['#' + CSS.escape(de.id)] : [];
 }
 
 function possibleClasses(de, max) {
 
     return Array.prototype.slice.call(de.classList, 0)
         .map(function (className) {
-            return '.' + className
+            return '.' + CSS.escape(className)
         });
 }
 
 function possibleAttributes(de) {
 
     return Array.prototype.slice.call(de.attributes, 0)
+        .filter(function(attr) {
+            return attr.name !== 'id' && attr.name !== 'class';
+        })
         .map(function (attr) {
-            
-            if (attr.name !== 'id' && attr.name !== 'class') {
-
-                return '[' + attr.name + (attr.value ? '=' + attr.value : '') + ']';
-            }
+            return '[' + CSS.escape(attr.name) + (attr.value ? '="' + attr.value : '') + '"]';
         });
 }
 
@@ -118,7 +116,9 @@ function combine(sourceA, sourceB) {
 
     sourceA.forEach(function (a) {
         sourceB.forEach(function (b) {
-            if (a.indexOf(b) === -1 && b.indexOf(a) === -1) {
+            if (a.indexOf(b) === -1 && b.indexOf(a) === -1 &&
+                '#.[:'.indexOf(b.charAt(0)) !== -1) 
+            {
                 combined.push(a + b);
             }
         });

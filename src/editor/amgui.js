@@ -1,9 +1,9 @@
 'use strict';
 
-var FONT_FAMILY = '"Open Sans", sans-serif';
-var FONT_SIZE = '15px'; 
-
 var amgui = {
+
+    FONT_FAMILY = '"Open Sans", sans-serif',
+    FONT_SIZE = '15px',
 
     createKeyline: function (opt) {
 
@@ -83,18 +83,21 @@ var amgui = {
         title.textContent = opt.title || 'Dialog';
         title.style.height = '34px';
         title.style.fontSize = '23px';
-        title.style.fontFamily = FONT_FAMILY;
         de.appendChild(de);
 
         de.appendChild(opt.content);
 
-        if (opt.actionButtons) {
+        if (opt.buttons) {
 
-            opt.actionButtons.forEach(function (caption) {
+            opt.buttons.forEach(function (caption) {
 
                 var btn = this.createBtn({caption: caption});
                 btn.style.display = 'inline-block';
                 de.appendChild(btn);
+
+                btn.addEventListener('click', function () {
+                    de.dispatchEvent(new Event('click' + caption));
+                });
             }, this);
         }
 

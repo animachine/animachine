@@ -13,7 +13,8 @@ var watchify = require('watchify');
 var runSequence = require('run-sequence');
 
 var paths = {
-  bower: 'bower_components/'
+  bower: 'bower_components/',
+  node: 'node_modules/'
 };
 
 gulp.task('clean', function(cb) {
@@ -31,6 +32,7 @@ gulp.task('vendor', function () {
       paths.bower + 'jQuery.Autosize.Input/jquery.autosize.input.js',
       paths.bower + 'jQuery.Autosize.Input/jquery.autosize.input.js',
       paths.bower + 'dialog-polyfill/dialog-polyfill.js',
+      paths.node + 'css.escape/css.escape.js',
     ])
     .pipe(concat('vendor.js'))
     // .pipe($.uglify())

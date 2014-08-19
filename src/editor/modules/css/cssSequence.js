@@ -44,12 +44,19 @@ var p = CssSequence.prototype;
 
 p.select = function () {
 
-    am.handler.reset({type: 'css3'});
+    if (this._isSelected) return;
+    this._isSelected = true;
+
     am.on('change', this._handlerChange);
+
+    this.emit('select');
 };
 
 p.deselect = function () {
     
+    if (!this._isSelected) return;
+    this._isSelected = false;
+
     am.off('change', this._handlerChange);
 };
 
@@ -59,13 +66,56 @@ p.renderTime = function (time) {
 
     this._parameters.forEach(function (param) {
 
-        $selection.css(param.name, param.getValue(time))
+        $selection.css(param.name, param.getValue(time));
     });
 };
 
 p.height = function () {
 
     return this._opt.baseH * (this._isOpened ? this._parameters.length + 1 : 1);
+}
+
+p._onPick = function (de) {
+
+    var items = am.deRoot.querySelectorAll(this.selectors.join(','));
+
+    if (items.indexOf(de)) {
+
+        this.select();
+    }
+}
+
+p._focusHandler = function (de) {
+
+    var br = de.getBoundingClientRect();
+    
+    this._handler = am.getHandler();
+
+    handler.setup({
+        hand: {
+            type: 'bund',
+            params: {
+                x: br.left, 
+                y: br.top, 
+                w: br.width, 
+                h: br.height,
+            }
+        },
+        on: {
+            change: function (params, correct) {
+                
+                Object.keys(params).forEach(function (key) {
+
+                    switch (key) {
+                        case 'x': de.style.left = params[key] + 'px'; break;
+                        case 'y': de.style.top = params[key] + 'px'; break;
+                        case 'w': de.style.width = params[key] + 'px'; break;
+                        case 'h': de.style.height = params[key] + 'px'; break;
+                    }
+                });
+            }
+        }
+    });
 }
 
 p._handlerChange = function(prop, value, correct) {

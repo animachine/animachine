@@ -1,7 +1,7 @@
 var cssSequence = require('./cssSequence');
-var cssSequence = require('../qsgen');
+var qsgen = require('../../qsgen');
 
-var am, iconNew;
+var am, iconNew, qsModal;
 
 exports.init = function (_am) {
 
@@ -13,6 +13,8 @@ exports.init = function (_am) {
 }
 
 function onSelectDomElement(de) {
+
+    console.log(qsgen(de));
 
     if (!cssSequence._instances.some(testSequ)) {
 
@@ -41,4 +43,20 @@ function onSelectDomElement(de) {
             return true;
         }
     }
+}
+
+function createQsModal() {
+
+    var de = document.createElement('div');
+    de.style.width = '340px';
+
+    var inp = document.createElement('input');
+    inp.type = 'text';
+    de.appendChild(inp);
+
+    return amgui.createDialog({
+        content: de,
+        title: 'Selector',
+        buttons: ['ok']
+    });
 }

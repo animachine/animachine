@@ -12,6 +12,8 @@ function Timeline(am) {
     this._createBase();
     this._createSettingsHead();
     this._createTimeline();
+
+    this._currSequence;
     
     this._timebar = new Timebar({height: this._headerH});
     this._deRight.appendChild(this._timebar.domElem);
@@ -23,6 +25,8 @@ function Timeline(am) {
         
         this.addSequence(am.sequenceTypes[0].create());
     }.bind(this));
+
+    this._onSelectSequence = this.__onSelectSequence.bind(this);
 }
 
 inherits(Timeline, EventEmitter);
@@ -35,6 +39,8 @@ p.addSequence = function (sequ) {
         deContKf = createCont(sequ.deKeys, this._deRight);
 
     this._sequences.push(sequ);
+
+    sequ.on('select', this._onSelectSequence);
 
     sequ.on('heightChange', function () {
 
@@ -56,6 +62,17 @@ p.addSequence = function (sequ) {
 
         return de;
     }
+}
+
+p.__onSelectSequence = function(sequ) {
+
+    if (this._currSequence === sequ) 
+        return;
+
+    if (this._currSequence)
+        this._currSequence.deselect(); 
+
+    this._currSequence = sequ;
 }
 
 

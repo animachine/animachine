@@ -19,7 +19,7 @@ function CssSequence(src, opt) {
 
     cssSequence._instances.push(this);
 
-    this._selectors = [];
+    this._selectors = opt.selectors || [];
     this._parameters = [];
 
     this._opt = _.extend({baseH: 21}, opt);

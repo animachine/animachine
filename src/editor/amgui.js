@@ -136,7 +136,7 @@ var amgui = {
         de.style.color = 'white';
         de.style.overflow = 'hidden';
         // de.style.fontSize = opt.fontSize || '16px';
-        de.style.fontSize = de.style.height;
+        // de.style.fontSize = de.style.height;
         de.className = 'icon-' + (opt.icon || 'cog');
 
         de.addEventListener('mouseenter', onMOver);

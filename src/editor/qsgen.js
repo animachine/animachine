@@ -1,7 +1,7 @@
 
-document.body.addEventListener('click', function(e){
-    console.log(generate(e.target));
-});
+// document.body.addEventListener('click', function(e){
+//     console.log(generate(e.target));
+// });
 
 function generate(de, root) {
 
@@ -101,16 +101,16 @@ function possibleAttributes(de) {
         });
 }
 
-function variate(_list, length) {
+// function variate(_list, length) {
 
-    return step(_list, 2);
+//     return step(_list, 2);
 
-    function step(list, back) {
+//     function step(list, back) {
 
-        var combined = combine(attributes, list);
-        return list.concat(back === 0 ? combined : step(combined, --back));
-    }
-}
+//         var combined = combine(attributes, list);
+//         return list.concat(back === 0 ? combined : step(combined, --back));
+//     }
+// }
 
 function combine(sourceA, sourceB) {
 
@@ -126,3 +126,5 @@ function combine(sourceA, sourceB) {
 
     return combined;
 }
+
+module.exports = generate;

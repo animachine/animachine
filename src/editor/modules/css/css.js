@@ -1,4 +1,5 @@
 var cssSequence = require('./cssSequence');
+var cssSequence = require('../qsgen');
 
 var am, iconNew;
 
@@ -22,8 +23,12 @@ function onSelectDomElement(de) {
 
             icon: 'plus-squared',
             onClick: function () {
+
                 am.toolbar.removeIcon(iconNew);
-                am.timeline.addSequence(cssSequence.create());
+
+                am.timeline.addSequence(cssSequence.create({
+                    selectors: [qs]
+                }));
             }
         });
     };

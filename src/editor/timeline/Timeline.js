@@ -64,6 +64,7 @@ p._createBase = function () {
     this.domElem = document.createElement('div');
     this.domElem.style.backgroundColor = 'red'; 
     this.domElem.style.display = 'flex'; 
+    this.domElem.style.pointerEvents = 'auto'; 
 
     this._deLeft = document.createElement('div');
     this._deLeft.style.backgroundColor = 'turquoise';
@@ -86,8 +87,6 @@ p._createBase = function () {
 
 p._createTimeline = function () {
 
-    var c = document.createElement('canvas');
-    var ctx = c.getContext('2d');
     this._deRight.style.backgroundColor = 'tomato';
     this._deRight.position = 'absolute';
     this._deRight.style.top = '0px';

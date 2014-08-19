@@ -15,6 +15,7 @@ function Toolbar() {
     this.domElement = document.createElement('div');
     this.domElement.style.position = 'fixed';
     this.domElement.style.backgroundColor = 'darkslategrey';
+    this.domElement.style.pointerEvents = 'auto';
     this.domElement.style.height = this._height + 'px';
 
     this.addSeparator('tools');

@@ -132,7 +132,8 @@ function createRootDomElement() {
     de.style.position = 'fixed';
     de.style.width = '100%';
     de.style.height = '100%';
+    de.style.pointerEvents = 'none';
     document.body.appendChild(de);
-    var sr = de.createShadowRoot();
-    return sr;
+    // var sr = de.createShadowRoot();
+    return de;
 }

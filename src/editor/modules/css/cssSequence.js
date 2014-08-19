@@ -2,18 +2,28 @@ var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../../amgui');
 var CssParameter = require('./CssParameter');
+var Transhand = require('../../transhand/Transhand');
 
 var cssSequence = {
 
     _instances: [],
 
-    create: function () {
+    create: function (opt) {
 
-        return new CssSequence();
+        return new CssSequence(opt);
     }
 }
 
-function CssSequence(src, opt) {
+var HAND2CSS = {
+    'x': 'left',
+    'y': 'top',
+    'w': 'width',
+    'h': 'height',
+};
+
+function CssSequence(opt) {
+
+    opt = opt || {};
 
     EventEmitter.call(this);
 
@@ -24,7 +34,7 @@ function CssSequence(src, opt) {
 
     this._opt = _.extend({baseH: 21}, opt);
 
-    this._domElements = [];
+    this._selectedElements = [];
     this._isOpened = false;
 
     this.deOptions = document.createElement('div');
@@ -34,9 +44,10 @@ function CssSequence(src, opt) {
     this._deHeadKeyline = amgui.createKeyline({});
     this.deKeys.appendChild(this._deHeadKeyline);
 
-    this._handlerChange = this._handlerChange.bind(this);
+    this._onChangeHandler = this._onChangeHandler.bind(this);
+    this._onChangeTime = this._onChangeTime.bind(this);
 
-    this.addParameter();
+    am.timeline.on('changeTime', this._onChangeTime);
 }
 
 inherits(CssSequence, EventEmitter);
@@ -47,7 +58,19 @@ p.select = function () {
     if (this._isSelected) return;
     this._isSelected = true;
 
-    am.on('change', this._handlerChange);
+
+    if (!this._handler) {
+        this._handler = new Transhand();
+    }
+
+    this._handler.on('change', this._onChangeHandler);
+
+    this.selectElements();
+
+    if (this._selectedElements.length) {
+
+        this._focusHandler(this._selectedElements[0]);
+    }
 
     this.emit('select');
 };
@@ -57,16 +80,21 @@ p.deselect = function () {
     if (!this._isSelected) return;
     this._isSelected = false;
 
-    am.off('change', this._handlerChange);
+    this._blurHandler();
+
+    this._handler.off('change', this._onChangeHandler);
 };
 
 p.renderTime = function (time) {
 
-    var $selection = $(this._selectors);
+    var selection = _.toArray(am.deRoot.querySelectorAll(this._selectors.join(',')));
 
     this._parameters.forEach(function (param) {
 
-        $selection.css(param.name, param.getValue(time));
+        selection.forEach(function (de) {
+
+            de.style[param.name] = param.getValue(time);
+        });
     });
 };
 
@@ -87,11 +115,12 @@ p._onPick = function (de) {
 
 p._focusHandler = function (de) {
 
+    de = de || this._currHandledDe;
+    this._currHandledDe = de;
+
     var br = de.getBoundingClientRect();
     
-    this._handler = am.getHandler();
-
-    handler.setup({
+    this._handler.setup({
         hand: {
             type: 'bund',
             params: {
@@ -100,44 +129,54 @@ p._focusHandler = function (de) {
                 w: br.width, 
                 h: br.height,
             }
-        },
-        on: {
-            change: function (params, correct) {
-                
-                Object.keys(params).forEach(function (key) {
-
-                    switch (key) {
-                        case 'x': de.style.left = params[key] + 'px'; break;
-                        case 'y': de.style.top = params[key] + 'px'; break;
-                        case 'w': de.style.width = params[key] + 'px'; break;
-                        case 'h': de.style.height = params[key] + 'px'; break;
-                    }
-                });
-            }
         }
     });
-}
 
-p._handlerChange = function(prop, value, correct) {
-
-    var time = am.timeline.currTime,
-        keyframe = this._keyframes.findOne({time: time}) || this.createKeyframe(time);
-
-    keyframe.css[prop] = value;
+    am.deHandlerCont.appendChild(this._handler.domElement);
 };
 
-// p.addKeyframe = function (src) {
+p._blurHandler = function () {
 
-//     var keyframe = _.extend({}, src, {
-//         time: 0,
-//         css: {},
-//         attr: {}
-//     });
+    // this._currHandledDe = undefined;
 
-//     keyframe.domElem = this.deKeyline.addKey(keyframe.time);
+    if (this._handler && this._handler.domElement.parentNode) {
 
-//     return keyframe;
-// };
+        this._handler.domElement.parentNode.removeChild(this._handler.domElement);        
+    }
+};
+
+p._onChangeHandler = function(params) {
+
+    var time = am.timeline.currTime;
+
+    Object.keys(params).forEach(function (changeName) {
+
+        var name = HAND2CSS[changeName];
+        var cssProp = this.getParameter(name) || this.addParameter({name: name});
+        var key = cssProp.getKey(time) || cssProp.addKey({time: time, name: name, cssProp: cssProp});
+        key.value = params[changeName] + 'px';
+    }, this);
+
+    this.renderTime(time);
+    this._focusHandler();
+};
+
+p._onChangeTime = function (time) {
+
+    this._parameters.forEach(function (param) {
+
+        this.renderTime(time);
+        this._focusHandler();
+    }, this);
+}
+
+p.getParameter = function (name) {
+
+    return this._parameters.find(function(param) {
+
+        return param.name === name;
+    });
+};
 
 p.addParameter = function (opt) {
 
@@ -148,6 +187,8 @@ p.addParameter = function (opt) {
 
     this.deOptions.appendChild(param.deOptions);
     this.deKeys.appendChild(param.deKeyline);
+
+    return param;
 };
 
 p._refreshMainKeyline = function () {
@@ -158,21 +199,19 @@ p.generateSrc = function () {
 
     var src = {
         selectors: _.clone(this._selectors),
-        keyframes: []
+        keys: []
     };
 
-    this._keyframes.forEach(function (keyframe) {
+    this._keys.forEach(function (key) {
 
-        src.keyframes.push({
-            css: _.clone(keyframes.css),
-            attr: _.clone(keyframes.attr),
-        });
+        src.keys.push(key.getOptions());
     });
 };
 
-p.generateAst = function (src) {
 
-};
+
+
+
 
 p._createHeadOptions = function (){
 
@@ -210,7 +249,21 @@ p._createHeadOptions = function (){
 
 p.isOwnedDomElement = function (de) {
 
-    return this._domElements.indexOf(de) !== -1;
-}
+    return this._selectedElements.indexOf(de) !== -1;
+};
+
+p.selectElements = function () {
+
+    var list = [];
+
+    this._selectors.forEach(function (selector) {
+
+        var items = am.deRoot.querySelectorAll(selector);
+        items = Array.prototype.slice.call(items);
+        list = list.concat(items);
+    });
+
+    this._selectedElements = list;
+};
 
 module.exports = cssSequence;

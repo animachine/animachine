@@ -14,8 +14,6 @@ exports.init = function (_am) {
 
 function onSelectDomElement(de) {
 
-    console.log(qsgen(de));
-
     if (!cssSequence._instances.some(testSequ)) {
 
         iconNew = am.toolbar.addIcon(iconNew ? 
@@ -28,9 +26,13 @@ function onSelectDomElement(de) {
 
                 am.toolbar.removeIcon(iconNew);
 
-                am.timeline.addSequence(cssSequence.create({
-                    selectors: [qs]
-                }));
+                var sequ = cssSequence.create({
+                    selectors: [qsgen(de)]
+                });
+
+                am.timeline.addSequence(sequ);
+
+                sequ.select();
             }
         });
     };

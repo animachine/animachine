@@ -93,15 +93,26 @@ p.showTime = function(start, end, width) {
     }
 }
 
-this.setCurrentTime = function (time) {
+p.setCurrentTime = function (time) {
+
+    if (this._currTime === time) return;
 
     this._currTime = time;
 
     var full = this._end - this._start,
-        pos = time / full * this._width;
+        pos = time / full * this.width;
 
     this._dePointer.style.left = pos + 'px';
-}
+
+    this.emit('changeTime', this._currTime);
+};
+
+Object.defineProperty(p, 'timescale', {
+    get: function () {
+        var full = this._end - this._start;
+        return this.width / full;
+    }
+});
 
 function onMDown(e) {
 
@@ -116,10 +127,11 @@ function onMDown(e) {
 
 function onMMove(e) {
 
-    var full = this._end - this._start,
-        time = e.clientX / this._width * full;
+    var left = this._canvasTape.getBoundingClientRect().left,
+        full = this._end - this._start,
+        time = (e.pageX - left) / this.width * full;
 
-    this.setCurrentTime(this._end + time);
+    this.setCurrentTime(this._start + time);
 }
 
 function onMUp() {
@@ -134,6 +146,7 @@ p._createBase = function () {
 
     this.domElem = document.createElement('div');
     this.domElem.style.backgroundColor = 'green';
+    this.domElem.style.position = 'relative';
 
     this._canvasTape = document.createElement('canvas');
     this._ctxTape = this._canvasTape.getContext('2d');
@@ -145,6 +158,8 @@ p._createPointer = function () {
 
     var radius = 4;
     this._dePointer = document.createElement('div');
+    this._dePointer.style.position = 'absolute';
+    this._dePointer.style.top = '0px';
     var pointer = document.createElement('div');
     pointer.style.position = 'absolute';
     pointer.style.left = -radius + 'px';
@@ -152,4 +167,6 @@ p._createPointer = function () {
     pointer.style.height = 2*radius + 'px';
     pointer.style.border = 'solid red 1px';
     pointer.style.borderRadius = radius + 'px';
+    this._dePointer.appendChild(pointer); 
+    this.domElem.appendChild(this._dePointer); 
 };

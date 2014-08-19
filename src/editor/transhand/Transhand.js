@@ -29,7 +29,7 @@ p.setup = function (opt) {
     if (hand) {
 
         hand.setup(opt.hand);
-        document.body.appendChild(hand.domElem)
+        this.domElement = hand.domElem;
     }
     else {
         throw 'Unknown hand type: ' + opt.hand.type

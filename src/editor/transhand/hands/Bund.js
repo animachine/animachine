@@ -88,32 +88,33 @@ p._onDrag = function (e) {
         mx = e.pageX,
         my = e.pageY,
         dx = mx - this._mdPos.mx,
-        dy = my - this._mdPos.my;
+        dy = my - this._mdPos.my,
+        change = {};
 
     if (finger === '0000') {
-        p.x = sp.x + dx;
-        p.y = sp.y + dy;
+        change.x = p.x = sp.x + dx;
+        change.y = p.y = sp.y + dy;
     }
 
     if (finger.charAt(0) === '1') {
-        p.y = sp.y + dy;
-        p.h = sp.h - dy;
+        change.y = p.y = sp.y + dy;
+        change.h = p.h = sp.h - dy;
     }
 
     if (finger.charAt(1) === '1') {
-        p.w = sp.w + dx;
+        change.w = p.w = sp.w + dx;
     }
 
     if (finger.charAt(2) === '1') {
-        p.h = sp.h + dy;
+        change.h = p.h = sp.h + dy;
     }
 
     if (finger.charAt(3) === '1') {
-        p.x = sp.x + dx;
-        p.w = sp.w - dx;
+        change.x = p.x = sp.x + dx;
+        change.w = p.w = sp.w - dx;
     }
 
-    this.emit('change', this._params);
+    this.emit('change', change);
 }
 
 p._setFinger = function (e) {

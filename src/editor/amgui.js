@@ -2,8 +2,8 @@
 
 var amgui = {
 
-    FONT_FAMILY = '"Open Sans", sans-serif',
-    FONT_SIZE = '15px',
+    FONT_FAMILY: '"Open Sans", sans-serif',
+    FONT_SIZE: '15px',
 
     createKeyline: function (opt) {
 
@@ -14,8 +14,9 @@ var amgui = {
         de.style.width = '100%';
         de.style.height = (opt.height || 21) + 'px';
         de.style.background = opt.background || 'grey';
+        de.style.position = 'relative';
 
-        de.addKeyframe = function (time) {
+        de.addKey = function (time) {
 
             var key = amgui.createKey();
             keyframes[time] = key;
@@ -50,7 +51,7 @@ var amgui = {
 
         function positionKeys() {
 
-            Object.keys(keyframes).forEach(function () {
+            Object.keys(keyframes).forEach(function (time) {
 
                 keyframes[time].style.left = (timescale * time) + 'px';
             });
@@ -110,7 +111,6 @@ var amgui = {
         de.style.height = (opt.height || 21) + 'px';
         de.style.cursor = 'pointer';
         de.style.color = 'white';
-        de.style.fontFamily = FONT_FAMILY;
         de.textContent = opt.caption || 'button';
         de.className = 'icon-' + (opt.icon || 'cog');
 
@@ -218,7 +218,6 @@ var amgui = {
             li.style.cursor = 'pointer';
             li.style.color = 'white';
             li.style.background = 'darkcyan';
-            li.style.fontFamily = FONT_FAMILY;
 
             li.addEventListener('click', function () {
 
@@ -279,7 +278,6 @@ var amgui = {
         var divider = document.createElement('span');
         divider.textContent = ':';
         divider.style.color = 'white';
-        divider.style.fontFamily = FONT_FAMILY;
         divider.style.fontSize = FONT_SIZE;
         de.appendChild(divider);
 
@@ -343,7 +341,6 @@ var amgui = {
             inp.style.width = '123px';
             inp.style.border = 'none';
             inp.style.color = 'white';
-            inp.style.fontFamily = FONT_FAMILY;
             inp.style.background = 'none';
             inp.addEventListener('change', onChange);
             inp.addEventListener('keyup', onChange);

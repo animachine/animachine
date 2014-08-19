@@ -15,7 +15,9 @@ function CssParameter (opt) {
     this._keys = [];
 
     this.deOptions = this._createParameterOptions();
-    this.deKeyline = amgui.createKeyline({});
+    this.deKeyline = amgui.createKeyline({
+        timescale: am.timeline.timescale
+    });
 }
 
 var p = CssParameter.prototype;
@@ -48,10 +50,21 @@ p.getValue = function (time) {
     }
     else {
 
-        var p = (time - before.time) / (after.time - before.time), 
-            av = uncalc(after.value), bv = uncalc(before.value);
+        if (after && before) {
 
-        return 'calc(' + bv + ' + (' + av + ' - ' + bv + ')*' + p + ')';
+            var p = (time - before.time) / (after.time - before.time), 
+                av = uncalc(after.value), bv = uncalc(before.value);
+
+            return 'calc(' + bv + ' + (' + av + ' - ' + bv + ')*' + p + ')';
+        }
+        else if (before) {
+            
+            return before.value;
+        }
+        else if (after) {
+            
+            return after.value;
+        }
     }
 };
 
@@ -65,6 +78,16 @@ p.addKey = function (opt) {
     key.domElem = this.deKeyline.addKey(key.time);
 
     this._keys.push(key);
+
+    return key;
+};
+
+p.getKey = function (time) {
+
+    return this._keys.find(function(key) {
+
+        return key.time === time;
+    });
 };
 
 p._createParameterOptions = function () {

@@ -1,6 +1,7 @@
 'use strict';
 
 var domready = require('domready');
+var amgui = require('./amgui');
 var EventEmitter = require('events').EventEmitter;
 var Transhand = require('./transhand/Transhand');
 var Timeline = require('./timeline/Timeline');
@@ -14,7 +15,7 @@ var modules = {
 var handlerBuff = [];
 
 
-var am = window.dam = module.exports = _.extend(new EventEmitter(), {
+var am = window.am = module.exports = _.extend(new EventEmitter(), {
 
     sequenceTypes: [],
 
@@ -25,9 +26,6 @@ var am = window.dam = module.exports = _.extend(new EventEmitter(), {
         this.sequenceTypes.push(sequType);
     }
 });
-
-am.timeline = new Timeline(am);
-am.deRoot = document.body;
 
 am.getHandler = function () {
 
@@ -49,12 +47,14 @@ domready(function () {
 
     debugRect();
 
-    am.domElement = createRootDomElement();
+    am.domElement = createAmRoot();
 
     am.transhand = new Transhand();
     am.timeline = new Timeline(am);
     am.toolbar = new Toolbar();
     am.domElement.appendChild(am.toolbar.domElement);
+    am.deRoot = document.body;
+    am.deHandlerCont = document.body;
 
     am.toolbar.addIcon({icon: 'cog'});
 
@@ -64,17 +64,9 @@ domready(function () {
     am.timeline.domElem.style.bottom = '0px';
     am.domElement.appendChild(am.timeline.domElem);
 
-    document.body.addEventListener('click', onClickRoot)
+    document.body.addEventListener('click', onClickRoot);
 
-    document.body.addEventListener(function (e) {
-
-        if (isPickable(e.target)) {
-
-            am.emit('pick', e.target);
-        }
-    });
-
-    modules.css.init(am)
+    modules.css.init(am);
 });
 
 function debugRect() {
@@ -102,7 +94,7 @@ function onClickRoot(e) {
 
 function isPickable(deTest) {
 
-    var deAm = am.domElement;
+    var editors = [am.domElement, am.deHandlerCont];
 
     return step(deTest);
 
@@ -111,23 +103,59 @@ function isPickable(deTest) {
         if (de === document.body) {
             return true;
         }
-        else if (de === deAm) {
+        else if (editors.indexOf(de) !== -1) {
             return false;
         }
-        else {
+        else if (de) {
             return step(de.parentNode);
         }
     }
 }
 
-function createRootDomElement() {
+function createAmRoot() {
 
     var de = document.createElement('div');
     de.style.position = 'fixed';
     de.style.width = '100%';
     de.style.height = '100%';
     de.style.pointerEvents = 'none';
+    de.style.userSelect = 'none';
+    de.style.webktUserSelect = 'none';
+    de.style.fontFamily = amgui.FONT_FAMILY;
     document.body.appendChild(de);
     // var sr = de.createShadowRoot();
     return de;
+}
+
+
+
+///polyfills
+if (!Array.prototype.find) {
+  Object.defineProperty(Array.prototype, 'find', {
+    enumerable: false,
+    configurable: true,
+    writable: true,
+    value: function(predicate) {
+      if (this == null) {
+        throw new TypeError('Array.prototype.find called on null or undefined');
+      }
+      if (typeof predicate !== 'function') {
+        throw new TypeError('predicate must be a function');
+      }
+      var list = Object(this);
+      var length = list.length >>> 0;
+      var thisArg = arguments[1];
+      var value;
+
+      for (var i = 0; i < length; i++) {
+        if (i in list) {
+          value = list[i];
+          if (predicate.call(thisArg, value, i, list)) {
+            return value;
+          }
+        }
+      }
+      return undefined;
+    }
+  });
 }

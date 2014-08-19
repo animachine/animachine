@@ -17,7 +17,9 @@ function Timeline(am) {
     
     this._timebar = new Timebar({height: this._headerH});
     this._deRight.appendChild(this._timebar.domElem);
-    this._timebar.showTime(0, 1000 * 20, this._deRight.offsetWidth || 1000)
+    this._timebar.showTime(0, 1000 * 20, this._deRight.offsetWidth || 1000);
+
+    this._timebar.on('changeTime', this.emit.bind(this, 'changeTime'));
 
     this._sequences = [];
 
@@ -63,6 +65,18 @@ p.addSequence = function (sequ) {
         return de;
     }
 }
+
+Object.defineProperty(p, 'currTime', {
+    get: function () {
+        return this._timebar._currTime
+    }
+});
+
+Object.defineProperty(p, 'timescale', {
+    get: function () {
+        return this._timebar.timescale
+    }
+});
 
 p.__onSelectSequence = function(sequ) {
 

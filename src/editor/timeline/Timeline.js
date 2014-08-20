@@ -12,14 +12,13 @@ function Timeline(am) {
     this._createBase();
     this._createSettingsHead();
     this._createTimeline();
+    this._createPointerLine();
 
     this._currSequence;
     
     this._timebar = new Timebar({height: this._headerH});
     this._deRight.appendChild(this._timebar.domElem);
     this._timebar.showTime(0, 1000 * 20, this._deRight.offsetWidth || 1000);
-
-    this._timebar.on('changeTime', this.emit.bind(this, 'changeTime'));
 
     this._sequences = [];
 
@@ -28,7 +27,11 @@ function Timeline(am) {
         this.addSequence(am.sequenceTypes[0].create());
     }.bind(this));
 
-    this._onSelectSequence = this.__onSelectSequence.bind(this);
+    this._onSelectSequence = this._onSelectSequence.bind(this);
+    this._onChangeTime = this._onChangeTime.bind(this);
+
+    this._timebar.on('changeTime', this.emit.bind(this, 'changeTime'));
+    this._timebar.on('changeTime', this._onChangeTime)
 }
 
 inherits(Timeline, EventEmitter);
@@ -84,15 +87,23 @@ Object.defineProperty(p, 'length', {
     }
 });
 
-p.__onSelectSequence = function(sequ) {
+p._onSelectSequence = function(sequ) {
 
     if (this._currSequence === sequ) 
         return;
 
-    if (this._currSequence)
+    if (this._currSequence) {
+        
         this._currSequence.deselect(); 
+    }
 
     this._currSequence = sequ;
+}
+
+p._onChangeTime = function () {
+
+    var left = this.currTime * this.timescale;
+    this._dePointerLine.style.left = left + 'px';
 }
 
 
@@ -116,6 +127,7 @@ p._createBase = function () {
     this.domElem.appendChild(this._deDivider);
 
     this._deRight = document.createElement('div');
+    this._deRight.style.position = 'relative';
     this._deRight.style.backgroundColor = amgui.color.bg0;
     this._deRight.style.flex = '1';
     this._deRight.style.height = '100%';
@@ -145,4 +157,15 @@ p._createSettingsHead = function () {
     this._deSettingsHead.appendChild(this._btnNewSequ);
     this._dropdownNewSequ = amgui.createDropdown({options: ['css', 'script']});
     amgui.bindDropdown(this._btnNewSequ, this._dropdownNewSequ);
+}
+
+p._createPointerLine = function () {
+
+    this._dePointerLine = document.createElement('div');
+    this._dePointerLine.style.width = 0;
+    this._dePointerLine.style.position = 'absolute';
+    this._dePointerLine.style.userSelect = 'none';
+    this._dePointerLine.style.height = '100%';
+    this._dePointerLine.style.border = '1px solid red';
+    this._deRight.appendChild(this._dePointerLine);
 }

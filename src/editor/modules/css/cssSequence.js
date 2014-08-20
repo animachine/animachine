@@ -44,13 +44,16 @@ function CssSequence(opt) {
     this._deHeadKeyline = amgui.createKeyline({});
     this.deKeys.appendChild(this._deHeadKeyline);
 
+    this._onSelectClick = this._onSelectClick.bind(this);
     this._onChangeHandler = this._onChangeHandler.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
     this._onChangeParameter = this._onChangeParameter.bind(this);
 
     am.timeline.on('changeTime', this._onChangeTime);
+    this.deOptions.addEventListener('click', this._onSelectClick);
+    this.deKeys.addEventListener('click', this._onSelectClick);
 
-    am.toolbar.addIcon({icon: 'cog', onClick: function () {
+    am.toolbar.addIcon({icon: 'floppy', onClick: function () {
         this.generateSrc();
     }.bind(this)});
 }
@@ -77,17 +80,24 @@ p.select = function () {
         this._focusHandler(this._selectedElements[0]);
     }
 
-    this.emit('select');
+    this.deHighlight.style.opacity = 1;
+
+    this.emit('select', this);
 };
 
 p.deselect = function () {
-    
+    console.log('deselect')
     if (!this._isSelected) return;
     this._isSelected = false;
 
     this._blurHandler();
 
-    this._handler.off('change', this._onChangeHandler);
+    this.deHighlight.style.opacity = 0;
+
+    if (this._handler) {
+
+        this._handler.removeListener('change', this._onChangeHandler);
+    }
 };
 
 p.renderTime = function (time) {
@@ -137,18 +147,23 @@ p._focusHandler = function (de) {
         }
     });
 
-    am.deHandlerCont.appendChild(this._handler.domElement);
+    am.deHandlerCont.appendChild(this._handler.domElem);
 };
 
 p._blurHandler = function () {
 
     // this._currHandledDe = undefined;
 
-    if (this._handler && this._handler.domElement.parentNode) {
+    if (this._handler && this._handler.domElem && this._handler.domElem.parentNode) {
 
-        this._handler.domElement.parentNode.removeChild(this._handler.domElement);        
+        this._handler.domElem.parentNode.removeChild(this._handler.domElem);        
     }
 };
+
+p._onSelectClick = function () {
+
+    this.select();
+}
 
 p._onChangeHandler = function(params) {
 
@@ -262,8 +277,6 @@ p.generateSrc = function () {
     console.log(code);
 };
 
-
-
 p._createHeadOptions = function (){
 
     var de = document.createElement('div');
@@ -273,23 +286,33 @@ p._createHeadOptions = function (){
     de.style.background = 'linear-gradient(to bottom, #063501 18%,#064100 96%)';
     this.deOptions.appendChild(de);
 
+    this.deHighlight = document.createElement('div');
+    this.deHighlight.style.display = 'inline-block';
+    this.deHighlight.style.width = '2px';
+    this.deHighlight.style.height = this._opt.baseH + 'px';
+    this.deHighlight.style.background = 'gold';
+    this.deHighlight.style.opacity = 0;
+    de.appendChild(this.deHighlight);
+
     this._deToggleDropDown = amgui.createToggleIconBtn({
         iconOn: 'angle-down',
-        iconOff: 'angle-right'
+        iconOff: 'angle-right',
+        height: this._opt.baseH,
     });
     this._deToggleDropDown.addEventListener('toggle', function (e) {
         this._isOpened = e.detail.state;
         this.emit('changeHeight', this.height());
     }.bind(this));
+    this._deToggleDropDown.style.display = 'inline-block';
     de.appendChild(this._deToggleDropDown);
 
-    this._deOptionsBtn = amgui.createIconBtn({icon: 'cog'});
+    this._deOptionsBtn = amgui.createIconBtn({icon: 'cog', height: this._opt.baseH});
     this._deOptionsBtn.style.position = 'absolute';
     this._deOptionsBtn.style.right = '21px';
     this._deOptionsBtn.style.top = '0px';
     de.appendChild(this._deOptionsBtn);
 
-    this._deKeyBtn = amgui.createIconBtn({icon: 'key'});
+    this._deKeyBtn = amgui.createIconBtn({icon: 'key', height: this._opt.baseH});
     this._deKeyBtn.style.position = 'absolute';
     this._deKeyBtn.style.right = '0px';
     this._deKeyBtn.style.top = '0px';

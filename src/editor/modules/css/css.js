@@ -1,7 +1,7 @@
 var cssSequence = require('./cssSequence');
 var qsgen = require('../../qsgen');
 
-var am, iconNew, qsModal;
+var am, iconNew, qsModal, selectBox;
 
 exports.init = function (_am) {
 
@@ -10,6 +10,8 @@ exports.init = function (_am) {
     am.registerSequenceType(cssSequence, 'css');
 
     am.on('selectDomElement', onSelectDomElement);
+
+    selectBox = createSelectionBox();
 }
 
 function onSelectDomElement(de) {
@@ -22,12 +24,14 @@ function onSelectDomElement(de) {
         } : {
 
             icon: 'plus-squared',
+
             onClick: function () {
 
                 am.toolbar.removeIcon(iconNew);
+                selectBox.hide();
 
                 var sequ = cssSequence.create({
-                    selectors: [qsgen(de)]
+                    selectors: [qsgen(am.selectedElement)]
                 });
 
                 am.timeline.addSequence(sequ);
@@ -35,13 +39,16 @@ function onSelectDomElement(de) {
                 sequ.select();
             }
         });
-    };
+
+        selectBox.show(de);
+    }
 
     function testSequ(sequ) {
             
         if (sequ.isOwnedDomElement(de)) {
-
+            
             sequ.select();
+            selectBox.hide();
             return true;
         }
     }
@@ -67,11 +74,26 @@ function createSelectionBox() {
 
     var de = document.createElement('div');
     de.style.position = 'fixed';
-    de.style.border = 'outset 1px white';
+    de.style.boxSizing = 'border-box';
+    de.style.boxShadow = '0px 0px 1px 0px rgba(50, 50, 50, 0.75)';
+    de.style.display = 'none';
+    de.style.border = '2px dashed #eee';
+    am.deHandlerCont.appendChild(de);
     
-    de.focusDe = function (de) {
+    de.show = function (deTarget) {
 
-        var br = de.getBoundingClientRect;
-        de.style.width = br.width
+        var br = deTarget.getBoundingClientRect();
+        de.style.left = br.left + 'px';
+        de.style.top = br.top + 'px';
+        de.style.width = br.width + 'px';
+        de.style.height = br.height + 'px';
+        de.style.display = 'block';
     }
+
+    de.hide = function () {
+        
+        de.style.display = 'none';
+    }
+
+    return de;
 }

@@ -44,14 +44,11 @@ p.setup = function (opt) {
 
 p.generateGraphics = function () {
 
-    this.domElem = document.createElement('svg');
+    this.domElem = document.createElement('div');
     this.domElem.style.position = 'fixed';
-    var g = this._g = {};
-
-    g.svg = window.SVG(this.domElem).fixSubPixelOffset();
-    g.rect = g.svg.rect(0, 0)
-        .stroke({ color: '#f06', width: 2 })
-        .fill({ color: '#f06', opacity: 0 });
+    this.domElem.style.boxSizing = 'border-box';
+    this.domElem.style.pointerEvents = 'auto';
+    this.domElem.style.border = '1px solid red';
 
     this.domElem.addEventListener('mousemove', this._onMouseMove);
     this.domElem.addEventListener('mousedown', this._onMouseDown);
@@ -60,15 +57,12 @@ p.generateGraphics = function () {
 
 p._resize = function () {
 
-    var g = this._g, p = this._params;
+    var p = this._params;
 
     this.domElem.style.left = p.x + 'px';
     this.domElem.style.top = p.y + 'px';
     this.domElem.style.width = p.w + 'px';
     this.domElem.style.height = p.h + 'px';
-
-    g.svg.size(p.w, p.h).move(p.x, p.y);
-    g.rect.size(p.w, p.h);
 };
 
 
@@ -90,7 +84,7 @@ p._onDrag = function (e) {
         dx = mx - this._mdPos.mx,
         dy = my - this._mdPos.my,
         change = {};
-
+        
     if (finger === '0000') {
         change.x = p.x = sp.x + dx;
         change.y = p.y = sp.y + dy;
@@ -153,10 +147,11 @@ p._onMouseDown = function (e) {
 
 p._onMouseUp = function () {
 
-    this._isHandle = false;
     window.removeEventListener('mouseup', this._onMouseUp);
     window.removeEventListener('mouseleave', this._onMouseUp);
     window.removeEventListener('mousemove', this._onDrag);
+    
+    this._isHandle = false;
 }
 
 module.exports = Bund;

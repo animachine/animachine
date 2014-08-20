@@ -47,14 +47,15 @@ domready(function () {
 
     for (var i = 0; i < 15; ++i) debugRect();
 
-    am.domElement = createAmRoot();
+    am.domElem = createAmRoot();
+    am.deGuiCont = createAmLayer();
+    am.deHandlerCont = createAmLayer();
 
+    am.deRoot = document.body;
     am.transhand = new Transhand();
     am.timeline = new Timeline(am);
     am.toolbar = new Toolbar();
-    am.domElement.appendChild(am.toolbar.domElement);
-    am.deRoot = document.body;
-    am.deHandlerCont = document.body;
+    am.deGuiCont.appendChild(am.toolbar.domElem);
 
     am.toolbar.addIcon({icon: 'cog'});
 
@@ -62,7 +63,7 @@ domready(function () {
     am.timeline.domElem.style.width = '100%';
     am.timeline.domElem.style.height = '230px';
     am.timeline.domElem.style.bottom = '0px';
-    am.domElement.appendChild(am.timeline.domElem);
+    am.deGuiCont.appendChild(am.timeline.domElem);
 
     document.body.addEventListener('click', onClickRoot);
 
@@ -87,15 +88,15 @@ function onClickRoot(e) {
     var de = e.target;
 
     if (am.selectedElement !== de && isPickable(de)) {
-
         am.selectedElement = de;
+        
         am.emit('selectDomElement', am.selectedElement);
     }
 }
 
 function isPickable(deTest) {
 
-    var editors = [am.domElement, am.deHandlerCont];
+    var editors = [am.domElem, am.deHandlerCont];
 
     return step(deTest);
 
@@ -125,6 +126,16 @@ function createAmRoot() {
     de.style.fontFamily = amgui.FONT_FAMILY;
     document.body.appendChild(de);
     // var sr = de.createShadowRoot();
+    return de;
+}
+
+function createAmLayer() {
+
+    var de = document.createElement('div');
+    de.style.position = 'absolute';
+    de.style.width = '100%';
+    de.style.height = '100%';
+    am.domElem.appendChild(de);
     return de;
 }
 

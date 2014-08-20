@@ -216,9 +216,10 @@ var amgui = {
         de.style.color = '#fff';
         de.style.width = opt.size + 'px';
         de.style.height = opt.size + 'px';
+        de.style.lineHeight = opt.size + 'px';
         de.style.textAlign = 'center';
         de.style.fontFamily = 'amgui';
-        de.style.fontSize = Math.round(opt.size * 0.9) + 'px';
+        de.style.fontSize = Math.round(opt.size * 0.72) + 'px';
 
         de.setIcon = function (icon) {
 
@@ -249,11 +250,17 @@ var amgui = {
 
             var li = document.createElement('li');
             li.textContent = text;
+            li.style.textAlign = 'left';
+            li.style.fontFamily = amgui.FONT_FAMILY;
+            li.style.fontSize = '14px';
+            li.style.padding = '0 3px';
             li.style.cursor = 'pointer';
-            li.style.color = 'white';
-            li.style.background = 'darkcyan';
+            li.style.color = amgui.color.text;
+            li.style.background = amgui.color.bg2;
 
-            li.addEventListener('click', function () {
+            li.addEventListener('click', function (e) {
+
+                e.stopPropagation();
 
                 de.dispatchEvent(new CustomEvent('select', {detail: {selection: text}}));
             });
@@ -269,10 +276,12 @@ var amgui = {
 
         deDropdown.style.position = 'fixed';
 
-        deBtn.addEventListener('click', function () {
+        deBtn.addEventListener('click', function (e) {
 
+            e.stopPropagation();
             isOpened ? close() : open();
         });
+        
         deDropdown.addEventListener('select', close);
 
         function open() {
@@ -285,6 +294,7 @@ var amgui = {
             deDropdown.style.top = bcr.bottom + 'px';
 
             document.body.appendChild(deDropdown);
+            window.addEventListener('click', close);
         }
 
         function close() {
@@ -295,6 +305,7 @@ var amgui = {
             if (deDropdown.parentElement) {
                 deDropdown.parentElement.removeChild(deDropdown);
             }
+            window.removeEventListener('click', close);
         }
     },
 

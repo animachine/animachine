@@ -12,11 +12,11 @@ function Toolbar() {
     this._icons = [];
     this._separators = {};
 
-    this.domElement = document.createElement('div');
-    this.domElement.style.position = 'fixed';
-    this.domElement.style.backgroundColor = 'darkslategrey';
-    this.domElement.style.pointerEvents = 'auto';
-    this.domElement.style.height = this._height + 'px';
+    this.domElem = document.createElement('div');
+    this.domElem.style.position = 'fixed';
+    this.domElem.style.backgroundColor = 'darkslategrey';
+    this.domElem.style.pointerEvents = 'auto';
+    this.domElem.style.height = this._height + 'px';
 
     this.addSeparator('tools');
     this.addSeparator('handler');
@@ -41,7 +41,7 @@ p.addIcon = function (opt) {
 
     deIcon.style.display = 'inline-block';
 
-    this.domElement.insertBefore(deIcon, this._separators[opt.separator || 'rest']);
+    this.domElem.insertBefore(deIcon, this._separators[opt.separator || 'rest']);
 
     return deIcon;
 };
@@ -54,6 +54,6 @@ p.removeIcon = function (deIcon) {
 p.addSeparator = function (name) {
 
     var de = document.createElement('span');
-    this.domElement.appendChild(de);
+    this.domElem.appendChild(de);
     this._separators[name] = de;
 };

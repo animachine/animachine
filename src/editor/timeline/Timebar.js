@@ -83,7 +83,7 @@ p.showTime = function(start, end, width) {
         for (; i < end; i += step.big) {
 
             ctx.moveTo(~~(i * scale) + 0.5, this.height);
-            ctx.lineTo(~~(i * scale) + 0.5, this.height * 0.5);
+            ctx.lineTo(~~(i * scale) + 0.5, this.height * 0.62);
         }
         ctx.stroke();
 
@@ -92,7 +92,7 @@ p.showTime = function(start, end, width) {
 
             text = step.format(i);
             textW = ctx.measureText(text).width / 2;
-            ctx.fillText(text, i * scale - textW, 10);
+            ctx.fillText(text, i * scale - textW, 12);
         }
         ctx.stroke();
     }

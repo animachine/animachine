@@ -48,6 +48,10 @@ function CssSequence(opt) {
     this._onChangeTime = this._onChangeTime.bind(this);
 
     am.timeline.on('changeTime', this._onChangeTime);
+
+    am.toolbar.addIcon({icon: 'cog', onClick: function () {
+        this.generateSrc();
+    }.bind(this)});
 }
 
 inherits(CssSequence, EventEmitter);
@@ -197,19 +201,44 @@ p._refreshMainKeyline = function () {
 
 p.generateSrc = function () {
 
-    var src = {
-        selectors: _.clone(this._selectors),
-        keys: []
-    };
+    var keys = [], code = '', options;
+    this._parameters.forEach(function (prop) {
 
-    this._keys.forEach(function (key) {
+        prop._keys.forEach(function (key) {
 
-        src.keys.push(key.getOptions());
+            var offset = key.time / am.timeline.length;
+            getKey(offset)[prop.name] = key.value;
+        });
     });
+
+    keys.sort(function (a, b) {
+
+        return a.offset - b.offset;
+    });
+
+    function getKey(time) {
+
+        var key = keys.find(function (_key) {
+            return time === _key.offset;
+        });
+
+        if (!key) {
+            
+            key = {offset: time};
+            keys.push(key);
+        }
+
+        return key;
+    }
+
+    options = JSON.stringify({
+      direction: "alternate", duration: am.timeline.length, iterations: 4
+    });
+
+    code += 'var elem = document.querySelector("' + this._selectors.join(',') + '");\n';
+    code += 'var player = document.timeline.play(new Animation(elem, ' + JSON.stringify(keys) + ', ' + options + '));';
+    console.log(code);
 };
-
-
-
 
 
 

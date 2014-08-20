@@ -78,6 +78,12 @@ Object.defineProperty(p, 'timescale', {
     }
 });
 
+Object.defineProperty(p, 'length', {
+    get: function () {
+        return this._timebar._end - this._timebar._start;
+    }
+});
+
 p.__onSelectSequence = function(sequ) {
 
     if (this._currSequence === sequ) 

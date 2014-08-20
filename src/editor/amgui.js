@@ -1,5 +1,7 @@
 'use strict';
 
+var fontelloConf = require('./assets/fontello/config.json')
+
 var amgui = {
 
     FONT_FAMILY: '"Open Sans", sans-serif',
@@ -112,7 +114,6 @@ var amgui = {
         de.style.cursor = 'pointer';
         de.style.color = 'white';
         de.textContent = opt.caption || 'button';
-        de.className = 'icon-' + (opt.icon || 'cog');
 
         de.addEventListener('mouseenter', onMOver);
         de.addEventListener('mouseleave', onMOut);
@@ -132,15 +133,11 @@ var amgui = {
 
     createIconBtn: function (opt) {
 
-        var de = document.createElement('div');
+        var de = amgui.createIcon({size: opt.height, icon: opt.icon});
         de.style.width = (opt.width || 21) + 'px';
-        de.style.height = (opt.height || 21) + 'px';
         de.style.cursor = 'pointer';
         de.style.color = 'white';
         de.style.overflow = 'hidden';
-        // de.style.fontSize = opt.fontSize || '16px';
-        // de.style.fontSize = de.style.height;
-        de.className = 'icon-' + (opt.icon || 'cog');
 
         de.addEventListener('mouseenter', onMOver);
         de.addEventListener('mouseleave', onMOut);
@@ -196,11 +193,40 @@ var amgui = {
 
         function setIcon() {
 
-            de.className = 'icon-' + (isOn ? opt.iconOn : opt.iconOff || 'cog');
+            de.setIcon(isOn ? opt.iconOn : opt.iconOff);
         }
 
         return de;
     },
+
+    createIcon: function (opt) {
+
+        opt = opt || {};
+        opt.size = opt.size || 23;
+        
+        var de = document.createElement('div');
+        de.style.color = '#fff';
+        de.style.width = opt.size + 'px';
+        de.style.height = opt.size + 'px';
+        de.style.textAlign = 'center';
+        de.style.fontFamily = 'amgui';
+        de.style.fontSize = Math.round(opt.size * 0.9) + 'px';
+
+        de.setIcon = function (icon) {
+
+            var glyph = fontelloConf.glyphs.find(function (glyph) {
+
+                return glyph.css === icon
+            });
+
+            var code = glyph ? glyph.code : 59393;
+            de.textContent = String.fromCharCode(code);
+        };
+
+        de.setIcon(opt.icon);
+
+        return de;
+    },  
 
     createDropdown: function (opt) {
 

@@ -45,7 +45,7 @@ am.throwHandler = function (handler) {
 
 domready(function () {
 
-    debugRect();
+    for (var i = 0; i < 15; ++i) debugRect();
 
     am.domElement = createAmRoot();
 
@@ -71,11 +71,12 @@ domready(function () {
 
 function debugRect() {
     var de = document.createElement('div');
-    de.id = 'boxX';
+    de.id = ('boxX'+Math.random()).substr(0, 8);
+    de.className = 'boxer';
     de.style.position = 'absolute';
     de.style.backgroundColor = 'blue';
-    de.style.left = '55px';
-    de.style.top = '55px';
+    de.style.left = (Math.random()*100) + 'vw';
+    de.style.top = (Math.random()*100) + 'vh';
     de.style.width = '55px';
     de.style.height = '55px';
     document.body.appendChild(de);

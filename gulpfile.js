@@ -26,6 +26,7 @@ gulp.task('clean', function(cb) {
 
 gulp.task('vendor', function () {
   return gulp.src([
+      paths.bower + 'web-animations-js/web-animations.js',
       paths.bower + 'svg.js/dist/svg.js',
       paths.bower + 'lodash/dist/lodash.min.js',
       paths.bower + 'jquery/dist/jquery.min.js',

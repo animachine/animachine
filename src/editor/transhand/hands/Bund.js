@@ -135,6 +135,9 @@ p._setFinger = function (e) {
 
 p._onMouseDown = function (e) {
 
+    e.stopPropagation();
+    e.preventDefault();
+
     this._isHandle = true;
 
     this._mdPos = {

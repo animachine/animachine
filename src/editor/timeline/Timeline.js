@@ -7,7 +7,7 @@ function Timeline(am) {
 
     EventEmitter.call(this);
 
-    this._headerH = 32;
+    this._headerH = 23;
     
     this._createBase();
     this._createSettingsHead();
@@ -44,7 +44,7 @@ p.addSequence = function (sequ) {
 
     sequ.on('select', this._onSelectSequence);
 
-    sequ.on('heightChange', function () {
+    sequ.on('changeHeight', function () {
 
         deContOpt.style.height = sequ.height() + 'px';
         deContKf.style.height = sequ.height() + 'px';
@@ -99,24 +99,24 @@ p.__onSelectSequence = function(sequ) {
 p._createBase = function () {
 
     this.domElem = document.createElement('div');
-    this.domElem.style.backgroundColor = 'red'; 
+    this.domElem.style.backgroundColor = amgui.color.bg0; 
     this.domElem.style.display = 'flex'; 
     this.domElem.style.pointerEvents = 'auto'; 
 
     this._deLeft = document.createElement('div');
-    this._deLeft.style.backgroundColor = 'turquoise';
+    this._deLeft.style.backgroundColor = amgui.color.bg0;
     this._deLeft.style.width = '230px';
     this._deLeft.style.height = '100%';
     this.domElem.appendChild(this._deLeft);
 
     this._deDivider = document.createElement('div');
-    this._deDivider.style.backgroundColor = 'white';
+    this._deDivider.style.backgroundColor = amgui.color.bg3;
     this._deDivider.style.width = '1px';
     this._deDivider.style.height = '100%';
     this.domElem.appendChild(this._deDivider);
 
     this._deRight = document.createElement('div');
-    this._deRight.style.backgroundColor = 'black';
+    this._deRight.style.backgroundColor = amgui.color.bg0;
     this._deRight.style.flex = '1';
     this._deRight.style.height = '100%';
     this.domElem.appendChild(this._deRight);
@@ -124,7 +124,7 @@ p._createBase = function () {
 
 p._createTimeline = function () {
 
-    this._deRight.style.backgroundColor = 'tomato';
+    this._deRight.style.backgroundColor = amgui.color.bg1;
     this._deRight.position = 'absolute';
     this._deRight.style.top = '0px';
     this._deRight.style.right = '0px';

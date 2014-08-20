@@ -62,3 +62,16 @@ function createQsModal() {
         buttons: ['ok']
     });
 }
+
+function createSelectionBox() {
+
+    var de = document.createElement('div');
+    de.style.position = 'fixed';
+    de.style.border = 'outset 1px white';
+    
+    de.focusDe = function (de) {
+
+        var br = de.getBoundingClientRect;
+        de.style.width = br.width
+    }
+}

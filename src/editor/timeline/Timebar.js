@@ -1,5 +1,6 @@
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
+var amgui = require('../amgui');
 
 function Timebar(opt) {
 
@@ -9,7 +10,8 @@ function Timebar(opt) {
     this._end = 0;
     this._currTime = 0;
     this._createBase();
-    this.height = opt.height || 32;
+
+    this.height = opt.height || 21;
 
     this._onMDown = onMDown.bind(this);
     this._onMMove = onMMove.bind(this);
@@ -44,7 +46,7 @@ p.showTime = function(start, end, width) {
     var full = end - start,
         scale = width / full, 
         maxMarkers = width / 4,
-        step, i, 
+        step, i, text, textW,
         ctx = this._ctxTape;
 
     this._start = start;
@@ -64,30 +66,33 @@ p.showTime = function(start, end, width) {
 
     if (step) {
 
-        ctx.linweidth = 1;
-        ctx.strokeStyle = '#fff';
-        ctx.fillStyle = '#fff';
+        ctx.linweidth = 0.5;
+        ctx.strokeStyle = amgui.color.bg3;
+        ctx.fillStyle = amgui.color.bg3;
+        ctx.font = ~~(this.height * 0.5) + 'px "Open Sans"'
 
         i = step.small * parseInt(start / step.small + 1);
         for (; i < end; i += step.small) {
 
-            ctx.moveTo(i * scale, this.height);
-            ctx.lineTo(i * scale, this.height * 0.75);
+            ctx.moveTo(~~(i * scale) + 0.5, this.height);
+            ctx.lineTo(~~(i * scale) + 0.5, this.height * 0.75);
         }
         ctx.stroke();
 
         i = step.big * parseInt(start / step.big + 1);
         for (; i < end; i += step.big) {
 
-            ctx.moveTo(i * scale, this.height);
-            ctx.lineTo(i * scale, this.height * 0.5);
+            ctx.moveTo(~~(i * scale) + 0.5, this.height);
+            ctx.lineTo(~~(i * scale) + 0.5, this.height * 0.5);
         }
         ctx.stroke();
 
         i = step.time * parseInt(start / step.time + 1);
         for (; i < end; i += step.big) {
 
-            ctx.fillText(step.format(i), i * scale, 23)
+            text = step.format(i);
+            textW = ctx.measureText(text).width / 2;
+            ctx.fillText(text, i * scale - textW, 10);
         }
         ctx.stroke();
     }
@@ -115,6 +120,9 @@ Object.defineProperty(p, 'timescale', {
 });
 
 function onMDown(e) {
+
+    e.stopPropagation();
+    e.preventDefault();
 
     this._mdx = e.clientX;
 
@@ -145,7 +153,7 @@ function onMUp() {
 p._createBase = function () {
 
     this.domElem = document.createElement('div');
-    this.domElem.style.backgroundColor = 'green';
+    this.domElem.style.backgroundColor = amgui.color.bg0;
     this.domElem.style.position = 'relative';
 
     this._canvasTape = document.createElement('canvas');
@@ -156,12 +164,13 @@ p._createBase = function () {
 
 p._createPointer = function () {
 
-    var radius = 4;
+    var radius = 5.5;
     this._dePointer = document.createElement('div');
     this._dePointer.style.position = 'absolute';
-    this._dePointer.style.top = '0px';
+    this._dePointer.style.bottom = 2*radius + 'px';
     var pointer = document.createElement('div');
     pointer.style.position = 'absolute';
+    pointer.style.boxSizing = 'border-box';
     pointer.style.left = -radius + 'px';
     pointer.style.width = 2*radius + 'px';
     pointer.style.height = 2*radius + 'px';

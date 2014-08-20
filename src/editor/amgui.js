@@ -7,6 +7,14 @@ var amgui = {
     FONT_FAMILY: '"Open Sans", sans-serif',
     FONT_SIZE: '15px',
 
+    color: {
+        bg0: '#000',
+        bg1: '#222',
+        bg2: '#444',
+        bg3: '#666',
+        text: '#efe'
+    },
+
     createKeyline: function (opt) {
 
         var timescale = opt.timescale || 0.2,
@@ -295,20 +303,21 @@ var amgui = {
         opt = opt || {};
 
         var de = document.createElement('div');
+        de.style.margin = '0 1px';
 
         var keyOn = false;
+
+        var oldKey, oldValue;
 
         var inpKey = createInput();
         inpKey.addEventListener('keypress', onKeyPress);
 
-        var divider = document.createElement('span');
-        divider.textContent = ':';
-        divider.style.color = 'white';
-        divider.style.fontSize = FONT_SIZE;
-        de.appendChild(divider);
+        var divider = createDivider();
 
         var inpValue = createInput();
-        inpValue.style.color = 'lightblue';
+        // inpValue.style.color = 'lightblue';
+        inpValue.style.textAlign = 'right';
+        inpValue.style.right = '0px';
 
         showHideValue(keyOn);
 
@@ -316,34 +325,60 @@ var amgui = {
             return inpKey.value;
         };
 
+        de.setKey = function (v) {
+            
+            if (v === oldKey) return;
+            
+            oldKey = v;
+            inpKey.value = v;
+            checkKeyOn();
+        };
+
         de.getValue = function () {
             return inpValue.value;
         };
 
-        de.setValue = function (opt) {
+        de.setValue = function (v) {
             
-            if (opt.hasOwnProperty('key')) {
-                inpKey.value = inp.key;
-            }
-            
-            if (opt.hasOwnProperty('value')) {
-                inpValue.value = inp.value;
-            }
+            if (v === oldValue) return;
+
+            oldValue = v;
+            inpValue.value = v;
         };
+
+        if (opt.parent) {
+            opt.parent.appendChild(de);
+        }
+
+        if (opt.key) {
+            de.setKey(opt.key);
+        }
+
+        if (opt.value) {
+            de.setValue(opt.value);
+        }
+
+        if (opt.onChange) {
+            de.addEventListener('change', opt.onChange);
+        }
 
         function onChange(e) {
             
-            console.log("onChange", e.type, inpKey.value)
-            if (!!inpKey.value !== keyOn) {
-                
-                keyOn = !!inpKey.value;
-                showHideValue(keyOn);
+            checkKeyOn();
+
+            var detail = {};
+            
+            if (de.getKey() !== oldKey) {
+                oldKey = detail.key = de.getKey();
+            }
+            if (de.getValue() !== oldValue) {
+                oldValue = detail.value = de.getValue();
             }
 
-            de.dispatchEvent(new CustomEvent({detail: {
-                key: de.getKey(),
-                value: de.getValue()
-            }}));
+            if ('value' in detail || 'key' in detail) {
+
+                de.dispatchEvent(new CustomEvent('change', {detail: detail}));
+            }
         }
 
         function onKeyPress(e) {
@@ -353,26 +388,53 @@ var amgui = {
             }
         }
 
+        function checkKeyOn() {
+
+            var on = !!inpKey.value;
+
+            if (on !== keyOn) {
+                
+                keyOn = on;
+                showHideValue(keyOn);
+            }
+        }
+
         function showHideValue(show) {
             
             divider.style.display = show ? 'inline' : 'none';
             inpValue.style.display = show ? 'inline-block' : 'none';
-            inpKey.style.width = show ? '123px' : '100%';
+            inpKey.style.width = show ? 'calc(50% - 5px)' : '100%';
         }
 
         function createInput() {
 
             var inp = document.createElement('input');
             inp.type = 'text';
-            inp.style.width = '123px';
+            inp.style.width = '50%';
+            inp.style.height = '100%';
+            inp.style.fontSize = amgui.FONT_SIZE;
+            inp.style.fontFamily = amgui.FONT_FAMILY;
             inp.style.border = 'none';
             inp.style.color = 'white';
             inp.style.background = 'none';
             inp.addEventListener('change', onChange);
             inp.addEventListener('keyup', onChange);
-            $(inp).autosizeInput({space: 0});
+            // $(inp).autosizeInput({space: 0});
             de.appendChild(inp);
             return inp;
+        }
+
+        function createDivider () {
+
+            var divider = document.createElement('span');
+            divider.textContent = ':';
+            divider.style.color = 'white';
+            divider.style.width = '2px';
+            divider.style.fontSize = amgui.FONT_SIZE;
+            divider.style.fontFamily = amgui.FONT_FAMILY;
+            de.appendChild(divider);
+
+            return divider;
         }
 
         return de;

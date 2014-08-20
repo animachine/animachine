@@ -46,6 +46,7 @@ function CssSequence(opt) {
 
     this._onChangeHandler = this._onChangeHandler.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
+    this._onChangeParameter = this._onChangeParameter.bind(this);
 
     am.timeline.on('changeTime', this._onChangeTime);
 
@@ -156,9 +157,12 @@ p._onChangeHandler = function(params) {
     Object.keys(params).forEach(function (changeName) {
 
         var name = HAND2CSS[changeName];
-        var cssProp = this.getParameter(name) || this.addParameter({name: name});
-        var key = cssProp.getKey(time) || cssProp.addKey({time: time, name: name, cssProp: cssProp});
-        key.value = params[changeName] + 'px';
+        var cssProp = this.addParameter({name: name});
+        cssProp.addKey({
+            time: time, 
+            name: name, 
+            value: params[changeName] + 'px'
+        });
     }, this);
 
     this.renderTime(time);
@@ -174,6 +178,12 @@ p._onChangeTime = function (time) {
     }, this);
 }
 
+p._onChangeParameter = function () {
+
+    this.renderTime();
+    this._focusHandler();
+}
+
 p.getParameter = function (name) {
 
     return this._parameters.find(function(param) {
@@ -186,13 +196,25 @@ p.addParameter = function (opt) {
 
     opt = opt || {};
 
-    var param = new CssParameter(opt);
-    this._parameters.push(param);
+    var param = this.getParameter(opt.name);
 
-    this.deOptions.appendChild(param.deOptions);
-    this.deKeys.appendChild(param.deKeyline);
+    if (param) {
 
-    return param;
+        return param
+    }
+    else {
+
+        param = new CssParameter(opt);
+        this._parameters.push(param);
+        param.on('change', this._onChangeParameter);
+
+        this.deOptions.appendChild(param.deOptions);
+        this.deKeys.appendChild(param.deKeyline);
+        this.emit('changeHeight');
+
+        return param;
+    }    
+
 };
 
 p._refreshMainKeyline = function () {
@@ -248,7 +270,7 @@ p._createHeadOptions = function (){
     de.style.position = 'relative';
     de.style.width = '100%';
     de.style.height = this._opt.baseH + 'px';
-    de.style.background = 'tomato';
+    de.style.background = 'linear-gradient(to bottom, #063501 18%,#064100 96%)';
     this.deOptions.appendChild(de);
 
     this._deToggleDropDown = amgui.createToggleIconBtn({
@@ -257,7 +279,7 @@ p._createHeadOptions = function (){
     });
     this._deToggleDropDown.addEventListener('toggle', function (e) {
         this._isOpened = e.detail.state;
-        this.emit('heightChange', this.height());
+        this.emit('changeHeight', this.height());
     }.bind(this));
     de.appendChild(this._deToggleDropDown);
 

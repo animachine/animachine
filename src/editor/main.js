@@ -8,7 +8,11 @@ var Timeline = require('./timeline/Timeline');
 var Toolbar = require('./toolbar/Toolbar');
 var modules = {
     css: require('./modules/css')
-}
+};
+var externalStylesheets = [
+    require('./assets/fontello/css/amgui-embedded.css'),
+    require('./assets/dialog-polyfill.css'),
+];
 
 
 
@@ -125,8 +129,18 @@ function createAmRoot() {
     de.style.webktUserSelect = 'none';
     de.style.fontFamily = amgui.FONT_FAMILY;
     document.body.appendChild(de);
-    // var sr = de.createShadowRoot();
-    return de;
+
+    var sr = de.createShadowRoot();
+
+    externalStylesheets.forEach(function (css) {
+
+        var style = document.createElement('style');
+        style.innerHTML = css;
+        // sr.appendChild(style);
+        document.head.appendChild(style);
+    });
+
+    return sr;
 }
 
 function createAmLayer() {

@@ -11,10 +11,12 @@ var source = require('vinyl-source-stream');
 var browserify = require('browserify');
 var watchify = require('watchify');
 var runSequence = require('run-sequence');
+var stringify = require('stringify');
 
 var paths = {
   bower: 'bower_components/',
-  node: 'node_modules/'
+  node: 'node_modules/',
+  assets: 'src/editor/assets/',
 };
 
 gulp.task('clean', function(cb) {
@@ -26,6 +28,7 @@ gulp.task('clean', function(cb) {
 
 gulp.task('vendor', function () {
   return gulp.src([
+      paths.assets + 'js/webfont.js',
       paths.bower + 'web-animations-js/web-animations.js',
       paths.bower + 'svg.js/dist/svg.js',
       paths.bower + 'lodash/dist/lodash.min.js',
@@ -54,7 +57,7 @@ gulp.task('imports', function () {
 
 gulp.task('init-build', function () {
   return gulp.src([
-    './src/editor/index.html', './src/editor/assets/**/*.*'], {base:'./src/editor/'})
+    './src/editor/index.html', paths.assets + '**/*.*'], {base:'./src/editor/'})
     // .pipe(vulcanize({dest: 'build'}))
     .pipe(gulp.dest('./build'));
 });
@@ -68,7 +71,8 @@ gulp.task('init-build-chrome', function () {
 gulp.task('js', function () {
 
   watchify.args.debug = true;
-  var bundler = watchify(browserify('./src/editor/main.js', watchify.args));
+  var bundler = watchify(browserify('./src/editor/main.js', watchify.args))
+    .transform(stringify(['.css']));
 
   bundler.on('update', rebundle);
 

@@ -1,7 +1,13 @@
 'use strict';
 
 var EventEmitter = require('events').EventEmitter;
-var fontelloConf = require('./assets/fontello/config.json')
+var fontelloConf = require('./assets/fontello/config.json');
+
+WebFont.load({
+    google: {
+      families: ['Open Sans']
+    }
+});
 
 var amgui = _.extend(new EventEmitter, {
 

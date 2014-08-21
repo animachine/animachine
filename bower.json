@@ -20,6 +20,7 @@
     "polymer": "~0.3.3",
     "lodash": "~2.4.1",
     "dialog-polyfill": "~0.2.0",
-    "web-animations-js": "https://github.com/web-animations/web-animations-js.git"
+    "web-animations-js": "https://github.com/web-animations/web-animations-js.git",
+    "webfontloader": "~1.5.5"
   }
 }

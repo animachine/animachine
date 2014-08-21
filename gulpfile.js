@@ -95,15 +95,13 @@ gulp.task('js-chrome', function () {
 
   var files = ['./build/vendor.js', './build/main.js', './src/chrome/js/content_script_footer.js'];
 
-  watch(files, chromeJs);
-  return chromeJs();
-
-  function chromeJs() {
-    console.log('chrome js...')
-    return gulp.src(files)
-      .pipe(concat('content_script.js'))
-      .pipe(gulp.dest('./build_chrome/js/'));
-  }
+  return gulp.src(files)
+    .pipe(watch(function () {
+      console.log('chrome js...')
+      return gulp.src(files)
+        .pipe(concat('content_script.js'))
+        .pipe(gulp.dest('./build_chrome/js/'));
+    }));
 });
 
 gulp.task('connect', function() {
@@ -114,10 +112,6 @@ gulp.task('connect', function() {
   });
 });
 
-gulp.task('watch', function () {
-
-  gulp.watch('./src/editor/windooman/**/*.*', ['imports', 'init-build']);
-})
 
 gulp.task('dev',  function (cb) {
   runSequence('clean', ['init-build', 'init-build-chrome'], 'vendor', 'connect', 'js', 'js-chrome', cb);

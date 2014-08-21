@@ -230,6 +230,7 @@ p._createPointer = function () {
     var pointer = document.createElement('div');
     pointer.style.position = 'absolute';
     pointer.style.boxSizing = 'border-box';
+    pointer.style.pointerEvents = 'none';
     pointer.style.left = -radius + 'px';
     pointer.style.width = 2*radius + 'px';
     pointer.style.height = 2*radius + 'px';

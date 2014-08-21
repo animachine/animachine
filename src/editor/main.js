@@ -52,13 +52,14 @@ domready(function () {
     for (var i = 0; i < 15; ++i) debugRect();
 
     am.domElem = createAmRoot();
-    am.deGuiCont = createAmLayer();
     am.deHandlerCont = createAmLayer();
+    am.deGuiCont = createAmLayer();
 
     am.deRoot = document.body;
     am.transhand = new Transhand();
     am.timeline = new Timeline(am);
     am.toolbar = new Toolbar();
+    am.toolbar.domElem.style.top = '0px';
     am.deGuiCont.appendChild(am.toolbar.domElem);
 
     am.toolbar.addIcon({icon: 'cog'});
@@ -136,17 +137,19 @@ function createAmRoot() {
 
         var style = document.createElement('style');
         style.innerHTML = css;
+        //TODO
         // sr.appendChild(style);
         document.head.appendChild(style);
     });
 
     return sr;
+    // return de;
 }
 
 function createAmLayer() {
 
     var de = document.createElement('div');
-    de.style.position = 'absolute';
+    de.style.position = 'fixed';
     de.style.width = '100%';
     de.style.height = '100%';
     am.domElem.appendChild(de);

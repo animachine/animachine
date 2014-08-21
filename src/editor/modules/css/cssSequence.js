@@ -48,6 +48,7 @@ function CssSequence(opt) {
     this._onChangeHandler = this._onChangeHandler.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
     this._onChangeParameter = this._onChangeParameter.bind(this);
+    this._onChangeBlankParameter = this._onChangeBlankParameter.bind(this);
 
     am.timeline.on('changeTime', this._onChangeTime);
     this.deOptions.addEventListener('click', this._onSelectClick);
@@ -56,6 +57,8 @@ function CssSequence(opt) {
     am.toolbar.addIcon({icon: 'floppy', onClick: function () {
         this.generateSrc();
     }.bind(this)});
+
+    this._onChangeBlankParameter();
 }
 
 inherits(CssSequence, EventEmitter);
@@ -86,7 +89,7 @@ p.select = function () {
 };
 
 p.deselect = function () {
-    console.log('deselect')
+
     if (!this._isSelected) return;
     this._isSelected = false;
 
@@ -132,6 +135,8 @@ p._focusHandler = function (de) {
 
     de = de || this._currHandledDe;
     this._currHandledDe = de;
+
+    if (!this._currHandledDe) return;
 
     var br = de.getBoundingClientRect();
     
@@ -191,13 +196,24 @@ p._onChangeTime = function (time) {
         this.renderTime(time);
         this._focusHandler();
     }, this);
-}
+};
 
 p._onChangeParameter = function () {
 
     this.renderTime();
     this._focusHandler();
-}
+};
+
+p._onChangeBlankParameter = function () {
+
+    if (this._blankParameter) {
+
+        this._blankParameter.removeListener('change', this._onChangeBlankParameter);
+    };
+
+    this._blankParameter = this.addParameter();
+    this._blankParameter.on('change', this._onChangeBlankParameter);
+};
 
 p.getParameter = function (name) {
 

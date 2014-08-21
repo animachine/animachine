@@ -16,9 +16,12 @@ function Timeline(am) {
 
     this._currSequence;
     
-    this._timebar = new Timebar({height: this._headerH});
+    this._timebar = new Timebar({
+        height: this._headerH,
+        width: this._deRight.offsetWidth || 1000,
+        timescale: 0.05
+    });
     this._deRight.appendChild(this._timebar.domElem);
-    this._timebar.showTime(0, 1000 * 20, this._deRight.offsetWidth || 1000);
 
     this._sequences = [];
 
@@ -31,6 +34,7 @@ function Timeline(am) {
     this._onChangeTime = this._onChangeTime.bind(this);
 
     this._timebar.on('changeTime', this.emit.bind(this, 'changeTime'));
+    this._timebar.on('changeTape', this.emit.bind(this, 'changeTape'));
     this._timebar.on('changeTime', this._onChangeTime)
 }
 

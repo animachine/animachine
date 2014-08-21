@@ -6,33 +6,22 @@ function Timebar(opt) {
 
     opt = opt || {};
 
-    this._start = 0;
-    this._end = 0;
-    this._currTime = 0;
-    this._createBase();
-
-    this.height = opt.height || 21;
+    this._start = opt.start || 0;
+    this._width = opt.width || 0;
+    this._height = opt.height || 21;
+    this._timescale = opt.timescale || 0;
+    this._currTime = opt.currTime || 0;
 
     this._onMDown = onMDown.bind(this);
     this._onMMove = onMMove.bind(this);
     this._onMUp = onMUp.bind(this);
 
-    this._steps = [
-        {
-            small: 100, 
-            big: 1000, 
-            time: 1000, 
-            format: function (t) {
-                var min = parseInt(t/60000);
-                var sec = parseInt(t/1000) % 60;
-
-                return (min ? min+':'+sec : sec) + 's';
-            } 
-        }
-    ]
+    this._steps = getSteps();
 
     this._createBase();
     this._createPointer();
+
+    this.renderTape();
 
     this._canvasTape.addEventListener('mousedown', this._onMDown)
 }
@@ -41,90 +30,148 @@ inherits(Timebar, EventEmitter);
 var p = Timebar.prototype;
 module.exports = Timebar;
 
-p.showTime = function(start, end, width) {
 
-    var full = end - start,
-        scale = width / full, 
+
+
+Object.defineProperties(p, {
+    
+    timescale: {
+        set: function (v) {
+            if (this._timescale === v) return;
+            this._timescale = Math.min(1, Math.max(0.0001, v));
+            console.log('>setts', v, this.timescale)
+            this.renderTape();
+            this.emit('changeTape');
+        },
+        get: function () {
+            return this._timescale;
+        }
+    },
+
+    start: {
+        set: function (v) {
+            if (this._start === v) return;
+            this._start = Math.min(0, v);
+            this.renderTape();
+            this.emit('changeTape');
+        },
+        get: function () {
+            return this._start;
+        }
+    }, 
+
+    width: {
+        set: function (v) {
+            if (this._width === v) return;
+            this._width = v;
+            this.renderTape();
+            this.emit('changeTape');
+        },
+        get: function () {
+            return this._width;
+        }
+    }, 
+    
+    end: {
+        get: function () {
+            return this._start + (this._width / this._timescale);
+        }
+    }, 
+    
+    length: {
+        get: function () {
+            return this._width / this._timescale;
+        }
+    },
+    
+    currTime: {
+        set: function (time) {
+
+            if (this._currTime === time) return;
+
+            this._currTime = time;
+
+            var pos = (time / this.length) * this.width;
+
+            this._dePointer.style.left = pos + 'px';
+
+            this.emit('changeTime', this._currTime);
+        },
+        get: function () {
+            return this._currTime;
+        }
+    },
+});
+
+
+
+
+p.renderTape = function () {
+
+    var start = this._start,
+        end = this.end,
+        length = this.length,
+        height = this._height,
+        scale = this.timescale, 
+        width = this._width,
         maxMarkers = width / 4,
         step, i, text, textW,
         ctx = this._ctxTape;
 
-    this._start = start;
-    this._end = end;
-    this.width = width;
-
-    this._canvasTape.width = this.width;
-    this._canvasTape.height = this.height;
+    this._canvasTape.width = width;
+    this._canvasTape.height = height;
 
     this._steps.forEach(function (s) {
 
-        if (full / s.small < maxMarkers && (!step || step.small > s.small)) {
+        if ((this.length / s.small) < maxMarkers && (!step || step.small > s.small)) {
 
             step = s;
         }
-    });
+    }, this);
 
     if (step) {
 
         ctx.linweidth = 0.5;
         ctx.strokeStyle = amgui.color.bg3;
         ctx.fillStyle = amgui.color.bg3;
-        ctx.font = ~~(this.height * 0.5) + 'px "Open Sans"'
+        ctx.font = ~~(this._height * 0.5) + 'px "Open Sans"'
 
-        i = step.small * parseInt(start / step.small + 1);
-        for (; i < end; i += step.small) {
+        for (i = start % step.small; i < length; i += step.small) {
 
-            ctx.moveTo(~~(i * scale) + 0.5, this.height);
-            ctx.lineTo(~~(i * scale) + 0.5, this.height * 0.75);
+            ctx.moveTo(~~(i * scale) + 0.5, height);
+            ctx.lineTo(~~(i * scale) + 0.5, height * 0.75);
         }
         ctx.stroke();
 
-        i = step.big * parseInt(start / step.big + 1);
-        for (; i < end; i += step.big) {
+        for (i = start % step.big; i < length; i += step.big) {
 
-            ctx.moveTo(~~(i * scale) + 0.5, this.height);
-            ctx.lineTo(~~(i * scale) + 0.5, this.height * 0.62);
+            ctx.moveTo(~~(i * scale) + 0.5, height);
+            ctx.lineTo(~~(i * scale) + 0.5, height * 0.62);
         }
         ctx.stroke();
 
-        i = step.time * parseInt(start / step.time + 1);
-        for (; i < end; i += step.big) {
+        for (i = start % step.time; i < length; i += step.time) {
 
-            text = step.format(i);
+            text = step.format(i - start);
             textW = ctx.measureText(text).width / 2;
             ctx.fillText(text, i * scale - textW, 12);
         }
         ctx.stroke();
     }
-}
-
-p.setCurrentTime = function (time) {
-
-    if (this._currTime === time) return;
-
-    this._currTime = time;
-
-    var full = this._end - this._start,
-        pos = time / full * this.width;
-
-    this._dePointer.style.left = pos + 'px';
-
-    this.emit('changeTime', this._currTime);
 };
-
-Object.defineProperty(p, 'timescale', {
-    get: function () {
-        var full = this._end - this._start;
-        return this.width / full;
-    }
-});
 
 function onMDown(e) {
 
     e.stopPropagation();
     e.preventDefault();
 
-    this._mdx = e.clientX;
+    if (e.shiftKey) this._dragMode = 'translate';
+    else if (e.ctrlKey) this._dragMode = 'scale';
+    else this._dragMode = 'seek';
+
+    this._mdX = e.pageX;
+    this._mdStart = this._start;
+    this._mdTimescale = this._timescale;
 
     this._onMMove(e);
 
@@ -136,10 +183,22 @@ function onMDown(e) {
 function onMMove(e) {
 
     var left = this._canvasTape.getBoundingClientRect().left,
-        full = this._end - this._start,
-        time = (e.pageX - left) / this.width * full;
+        mouseX = e.pageX - left,
+        move = e.pageX - this._mdX;
 
-    this.setCurrentTime(this._start + time);
+    if (this._dragMode === 'seek') {
+
+        var time = (mouseX / this.width) * this.length;
+        this.currTime = this._start + time;
+    }
+    else if (this._dragMode === 'translate') {
+
+        this.start = this._mdStart + (move / this.timescale);
+    }
+    else if (this._dragMode === 'scale') {
+
+        this.timescale = this._mdTimescale + (move/1000);
+    }
 }
 
 function onMUp() {
@@ -179,3 +238,83 @@ p._createPointer = function () {
     this._dePointer.appendChild(pointer); 
     this.domElem.appendChild(this._dePointer); 
 };
+
+function getSteps() {
+
+    return [
+        {
+            small: 5, 
+            big: 50, 
+            time: 50, 
+            format: function (ms) {
+                var sec = parseInt(ms/1000);
+
+                return (sec ? sec+':'+four(ms) : ms) + 'ms';
+            } 
+        },
+        {
+            small: 10, 
+            big: 100, 
+            time: 100, 
+            format: function (ms) {
+                var sec = parseInt(ms/1000);
+
+                return (sec ? sec+':'+four(ms) : ms) + 'ms';
+            } 
+        },
+        {
+            small: 100, 
+            big: 1000, 
+            time: 1000, 
+            format: function (ms) {
+                var min = parseInt(ms/60000);
+                var sec = parseInt(ms/1000) % 60;
+
+                return (min ? min+':'+two(sec) : sec) + 's';
+            } 
+        },
+        {
+            small: 500, 
+            big: 5000, 
+            time: 5000, 
+            format: function (ms) {
+                var min = parseInt(ms/60000);
+                var sec = parseInt(ms/1000) % 60;
+
+                return (min ? min+':'+two(sec) : sec) + 's';
+            } 
+        },
+        {
+            small: 10000, 
+            big: 60000, 
+            time: 60000, 
+            format: function (ms) {
+                var min = parseInt(ms/60000) % 60;
+                var hour = parseInt(ms/3600000);
+
+                return (hour ? hour+':'+two(min) : min) + 'm';
+            } 
+        },
+        {
+            small: 60000, 
+            big: 5*60000, 
+            time: 5*60000, 
+            format: function (ms) {
+                var min = parseInt(ms/60000) % 60;
+                var hour = parseInt(ms/3600000);
+
+                return (hour ? hour+':'+two(min) : min) + 'm';
+            } 
+        }
+    ];
+
+    function two(num) {
+
+        return ('00' + num).substr(-2);
+    }
+
+    function four(num) {
+
+        return ('0000' + num).substr(-4);
+    }
+}

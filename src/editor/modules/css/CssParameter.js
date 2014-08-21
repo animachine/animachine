@@ -9,10 +9,6 @@ function CssParameter (opt) {
     
     this.type = opt.type || '';
     this.name = opt.name || '';
-    this.value = opt.value || 0;
-    this.quantity = opt.quantity || undefined;
-    this.quantityOptions = opt.quantityOptions || undefined;
-    this.valueOptions = opt.valueOptions || undefined;
 
     this._lineH = opt.lineH || 21;
 
@@ -23,18 +19,21 @@ function CssParameter (opt) {
         timescale: am.timeline.timescale
     });
 
-    this._onInputChange = this._onInputChange.bind(this);
+    this._onChangeInput = this._onChangeInput.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
+    this._onChangeTape = this._onChangeTape.bind(this);
+    this._onChangeDeKeyTime = this._onChangeDeKeyTime.bind(this);
 
     this._input = amgui.createKeyValueInput({
         parent: this.deOptions,
         key: this.name,
-        value: this.value,
-        onChange: this._onInputChange,
+        value: opt.value,
+        onChange: this._onChangeInput,
         height: this._lineH
     });
 
     am.timeline.on('changeTime', this._onChangeTime);
+    am.timeline.on('changeTape', this._onChangeTape);
 }
 
 inherits(CssParameter, EventEmitter);
@@ -104,10 +103,15 @@ p.addKey = function (opt) {
     else {
         key = {
             time: opt.time || 0,
-            value: opt.value || 0
+            value: opt.value || ''
         };
 
-        key.domElem = this.deKeyline.addKey(key.time);
+        key.domElem = this.deKeyline.addKey({
+            timescale: am.timeline.timescale,
+            time: key.time
+        });
+
+        key.domElem.addEventListener('changeTime', this._onChangeDeKeyTime);
 
         this._keys.push(key);
     }
@@ -124,10 +128,10 @@ p.getKey = function (time) {
     });
 };
 
-p._onInputChange = function (e) {
+p._onChangeInput = function (e) {
 
     if ('key' in e.detail) {
-        this.key = e.detail.key;
+        this.name = e.detail.key;
     }
 
     if ('value' in e.detail) {
@@ -140,10 +144,27 @@ p._onInputChange = function (e) {
     this.emit('change');
 };
 
+p._onChangeDeKeyTime = function (e) {
+
+    var key = this._keys.find(function (key) {
+        return key.domElem === e.target;
+    });
+
+    key.time = e.detail.time;
+};
+
 p._onChangeTime = function () {
 
     this._refreshInput();
-}
+};
+
+p._onChangeTape = function () {
+
+    this._keys.forEach(function (key) {
+
+        key.domElem.setTimescale(am.timeline.timescale);
+    });
+};
 
 p._refreshInput = function () {
 

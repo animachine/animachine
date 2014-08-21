@@ -86,26 +86,26 @@ p._onDrag = function (e) {
         change = {};
         
     if (finger === '0000') {
-        change.x = p.x = sp.x + dx;
-        change.y = p.y = sp.y + dy;
+        change.x = p.x = ~~(sp.x + dx);
+        change.y = p.y = ~~(sp.y + dy);
     }
 
     if (finger.charAt(0) === '1') {
-        change.y = p.y = sp.y + dy;
-        change.h = p.h = sp.h - dy;
+        change.y = p.y = ~~(sp.y + dy);
+        change.h = p.h = ~~(sp.h - dy);
     }
 
     if (finger.charAt(1) === '1') {
-        change.w = p.w = sp.w + dx;
+        change.w = p.w = ~~(sp.w + dx);
     }
 
     if (finger.charAt(2) === '1') {
-        change.h = p.h = sp.h + dy;
+        change.h = p.h = ~~(sp.h + dy);
     }
 
     if (finger.charAt(3) === '1') {
-        change.x = p.x = sp.x + dx;
-        change.w = p.w = sp.w - dx;
+        change.x = p.x = ~~(sp.x + dx);
+        change.w = p.w = ~~(sp.w - dx);
     }
 
     this.emit('change', change);

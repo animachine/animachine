@@ -1,8 +1,9 @@
 'use strict';
 
+var EventEmitter = require('events').EventEmitter;
 var fontelloConf = require('./assets/fontello/config.json')
 
-var amgui = {
+var amgui = _.extend(new EventEmitter, {
 
     FONT_FAMILY: '"Open Sans", sans-serif',
     FONT_SIZE: '15px',
@@ -18,7 +19,7 @@ var amgui = {
     createKeyline: function (opt) {
 
         var timescale = opt.timescale || 0.2,
-            keyframes = {};
+            keys = [];
 
         var de = document.createElement('div');
         de.style.width = '100%';
@@ -26,51 +27,25 @@ var amgui = {
         de.style.background = opt.background || 'grey';
         de.style.position = 'relative';
 
-        de.addKey = function (time) {
+        de.addKey = function (opt) {
 
-            var key = amgui.createKey();
-            keyframes[time] = key;
-
-            key.addEventListener('click', onSelectKey);
+            var key = amgui.createKey(opt);
+            keys.push(key);
 
             de.appendChild(key);
 
-            positionKeys();
-        }
-
-        de.setTimescale = function (ts) {
-
-            timescale = ts;
-            positionKeys();
-        }
-
-        function onSelectKey () {
-
-            var time;
-
-            Object.keys(keyframes).some(function (t) {
-
-                if (keyframes[t] === this) {
-
-                    return time = t;
-                }
-            }, this);
-
-            de.dispatchEvent(new CustomEvent('selectKey', {detail: {time: time}}));
-        }
-
-        function positionKeys() {
-
-            Object.keys(keyframes).forEach(function (time) {
-
-                keyframes[time].style.left = (timescale * time) + 'px';
-            });
+            return key;
         }
 
         return de;
     },
 
     createKey: function (opt) {
+
+        var isUserSelected = false, 
+            mdX, mDragged,
+            time = opt.time || 0, 
+            timescale = opt.timescale || 1;
 
         var de = document.createElement('div');
         de.style.position = 'absolute';
@@ -79,11 +54,97 @@ var amgui = {
         key.style.width = '0';
         key.style.height = '0';
         key.style.borderStyle = 'solid';
-        key.style.borderWidth = '21px 3.5px 0 3.5px';
+        key.style.borderWidth = '21px 4px 0 4px';
         key.style.borderColor = '#7700ff transparent transparent transparent';
         de.appendChild(key);
 
+        setLeft();
+
+        de.addEventListener('mousedown', function (e) {
+
+            e.stopPropagation();
+            e.preventDefault();
+
+            mdX = p.pageX;
+            mDragged = 0;
+
+            if (!e.shiftKey && !e.ctrlKey) {
+                amgui.emit('deselectAllKeys');
+            }
+
+            if (e.ctrlKey) {
+                toggleUserSelected();
+            }
+            else {
+                userSelect(true);
+            }
+
+            window.addEventListener('mousemove', drag);
+            window.addEventListener('mouseup', dragEnd);
+            window.addEventListener('mouseleave', dragEnd);
+
+        });
+
+        de.setTime = function(t) {
+
+            time = t;
+            setLeft();
+
+            de.dispatchEvent(new CustomEvent('changeTime', {detail: {time: time}}));
+        };
+
+        de.setTimescale = function(ts) {
+
+            timescale = ts;
+            setLeft();
+        };
+
+        amgui.on('deselectAllKeys', userSelect.bind(null, false));
+
+        amgui.on('translateSelectedKeys', function (offset) {
+
+            if (isUserSelected) {
+
+                de.setTime(time + offset);
+            }
+        });
+
         return de;
+
+        ///////////////////////////////////////////////////////
+
+        function drag(e) {
+
+            var diff = e.pageX - mdx,
+                diffTime = (diff / timescale) - mDragged;
+
+            mDargged += diffTime;
+
+            amgui.emit('translateSelectedKeys', diffTime)
+        }
+
+        function dragEnd() {
+            
+            window.removeEventListener('mousemove', drag);
+            window.removeEventListener('mouseup', dragEnd);
+            window.removeEventListener('mouseleave', dragEnd);
+        }
+
+        function setLeft() {
+
+            de.style.left = ((time * timescale) - 4) + 'px';
+        }
+
+        function toggleUserSelected() {
+
+            userSelect(!isUserSelected);
+        }
+
+        function userSelect(on) {
+
+            isUserSelected = on;
+            de.style.background = isUserSelected ? 'white' : 'none';
+        }
     },
 
     createDialog: function (opt) {
@@ -320,12 +381,12 @@ var amgui = {
 
         var oldKey, oldValue;
 
-        var inpKey = createInput();
+        var inpKey = createInput('parameter name');
         inpKey.addEventListener('keypress', onKeyPress);
 
         var divider = createDivider();
 
-        var inpValue = createInput();
+        var inpValue = createInput('value');
         // inpValue.style.color = 'lightblue';
         inpValue.style.textAlign = 'right';
         inpValue.style.right = '0px';
@@ -374,6 +435,9 @@ var amgui = {
         }
 
         function onChange(e) {
+
+            e.preventDefault();
+            e.stopPropagation();
             
             checkKeyOn();
 
@@ -393,8 +457,12 @@ var amgui = {
         }
 
         function onKeyPress(e) {
+            
             if (e.keyCode === 13) {
                 
+                e.preventDefault();
+                e.stopPropagation();
+
                 inpValue.focus();
             }
         }
@@ -417,10 +485,11 @@ var amgui = {
             inpKey.style.width = show ? 'calc(50% - 5px)' : '100%';
         }
 
-        function createInput() {
+        function createInput(placeholder) {
 
             var inp = document.createElement('input');
             inp.type = 'text';
+            inp.placeholder = placeholder;
             inp.style.width = '50%';
             inp.style.height = '100%';
             inp.style.fontSize = amgui.FONT_SIZE;
@@ -450,7 +519,7 @@ var amgui = {
 
         return de;
     }
-}
+});
 
 
 module.exports = amgui;

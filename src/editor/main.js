@@ -10,8 +10,8 @@ var modules = {
     css: require('./modules/css')
 };
 var externalStylesheets = [
-    require('./assets/fontello/css/amgui-embedded.css'),
-    require('./assets/dialog-polyfill.css'),
+    // require('./assets/fontello/css/amgui.css'),
+    // require('./assets/dialog-polyfill.css'),
 ];
 
 
@@ -90,6 +90,8 @@ function debugRect() {
 
 function onClickRoot(e) {
 
+    e.stopPropagation();
+
     var de = e.target;
 
     if (am.selectedElement !== de && isPickable(de)) {
@@ -123,6 +125,8 @@ function createAmRoot() {
 
     var de = document.createElement('div');
     de.style.position = 'fixed';
+    de.style.left = '0px';
+    de.style.top = '0px';
     de.style.width = '100%';
     de.style.height = '100%';
     de.style.pointerEvents = 'none';
@@ -139,7 +143,7 @@ function createAmRoot() {
         style.innerHTML = css;
         //TODO
         // sr.appendChild(style);
-        document.head.appendChild(style);
+        // document.head.appendChild(style);
     });
 
     return sr;

@@ -67,6 +67,11 @@ gulp.task('init-build-chrome', function () {
     .pipe(gulp.dest('./build_chrome'));
 });
 
+gulp.task('init-build-chrome-assets', function () {
+  return gulp.src('src/editor/assets/**/*.*')
+    .pipe(gulp.dest('./build_chrome/assets'));
+});
+
 
 gulp.task('js', function () {
 
@@ -114,5 +119,5 @@ gulp.task('connect', function() {
 
 
 gulp.task('dev',  function (cb) {
-  runSequence('clean', ['init-build', 'init-build-chrome'], 'vendor', 'connect', 'js', 'js-chrome', cb);
+  runSequence('clean', ['init-build', 'init-build-chrome'], 'init-build-chrome-assets', 'vendor', 'connect', 'js', 'js-chrome', cb);
 });

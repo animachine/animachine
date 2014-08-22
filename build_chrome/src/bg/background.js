@@ -5,15 +5,12 @@
 // });
 
 console.log('fsdfsdfsd')
-//example of using a message handler from the inject scripts
-chrome.extension.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    chrome.pageAction.show(sender.tab.id);
-    sendResponse();
-  });
 
-chrome.browserAction.onClicked.addListener(function () {
-console.log('clicked');
+chrome.browserAction.onClicked.addListener(function (tab) {
+    
+    console.log('clicked', tab.id);
 
-    chrome.tabs.executeScript(null, {file: "js/content_script.js"});
+    chrome.tabs.executeScript(tab.id, {file: "js/content_script.js"});
+    chrome.tabs.insertCSS(tab.id, {file: "assets/fontello/css/amgui-embedded.css"});
+    chrome.tabs.insertCSS(tab.id, {file: "assets/dialog-polyfill.css"});
 });

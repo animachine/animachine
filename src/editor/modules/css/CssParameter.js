@@ -113,6 +113,13 @@ p.addKey = function (opt) {
 
         key.domElem.addEventListener('changeTime', this._onChangeDeKeyTime);
 
+        amgui.bindContextMenu({
+            deTarget: key.domElem,
+            deMenu: amgui.createDropdown({
+                options: ['ease', 'delete']
+            })
+        });
+
         this._keys.push(key);
     }
 

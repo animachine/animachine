@@ -68,10 +68,15 @@ var amgui = _.extend(new EventEmitter, {
 
         de.addEventListener('mousedown', function (e) {
 
+            if (e.button !== 0) {
+
+                return;
+            }
+
             e.stopPropagation();
             e.preventDefault();
 
-            mdX = p.pageX;
+            mdX = e.pageX;
             mDragged = 0;
 
             if (!e.shiftKey && !e.ctrlKey) {
@@ -334,6 +339,11 @@ var amgui = _.extend(new EventEmitter, {
             de.appendChild(li);
         });
 
+        if (opt.onSelect) {
+
+            de.addEventListener('select', opt.onSelect);
+        }
+
         return de;
     },
 
@@ -346,6 +356,48 @@ var amgui = _.extend(new EventEmitter, {
         deBtn.addEventListener('click', function (e) {
 
             e.stopPropagation();
+            isOpened ? close() : open();
+        });
+        
+        deDropdown.addEventListener('select', close);
+
+        function open() {
+
+            if (isOpened) return;
+            isOpened = true;
+
+            var bcr = deBtn.getBoundingClientRect();
+            deDropdown.style.left = bcr.left + 'px';
+            deDropdown.style.top = bcr.bottom + 'px';
+
+            document.body.appendChild(deDropdown);
+            window.addEventListener('click', close);
+        }
+
+        function close() {
+
+            if (!isOpened) return;
+            isOpened = false;
+            
+            if (deDropdown.parentElement) {
+                deDropdown.parentElement.removeChild(deDropdown);
+            }
+            window.removeEventListener('click', close);
+        }
+    },
+
+    bindContextMenu: function(opt) {
+
+        var isOpened = false;
+        var deBtn = opt.deTarget;
+        var deDropdown = opt.deMenu;
+
+        deDropdown.style.position = 'fixed';
+
+        deBtn.addEventListener('contextmenu', function (e) {
+
+            e.stopPropagation();
+            e.preventDefault();
             isOpened ? close() : open();
         });
         

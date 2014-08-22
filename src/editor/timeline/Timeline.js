@@ -21,7 +21,7 @@ function Timeline(am) {
         width: this._deRight.offsetWidth || 1000,
         timescale: 0.05
     });
-    this._deRight.appendChild(this._timebar.domElem);
+    this._deRight.insertBefore(this._timebar.domElem, this._deKeylineCont);
 
     this._sequences = [];
 
@@ -32,10 +32,12 @@ function Timeline(am) {
 
     this._onSelectSequence = this._onSelectSequence.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
+    this._onChangeTape = this._onChangeTape.bind(this);
 
     this._timebar.on('changeTime', this.emit.bind(this, 'changeTime'));
     this._timebar.on('changeTape', this.emit.bind(this, 'changeTape'));
-    this._timebar.on('changeTime', this._onChangeTime)
+    this._timebar.on('changeTime', this._onChangeTime);
+    this._timebar.on('changeTape', this._onChangeTape);
 }
 
 inherits(Timeline, EventEmitter);
@@ -45,7 +47,7 @@ module.exports = Timeline;
 p.addSequence = function (sequ) {
 
     var deContOpt = createCont(sequ.deOptions, this._deLeft),
-        deContKf = createCont(sequ.deKeys, this._deRight);
+        deContKf = createCont(sequ.deKeys, this._deKeylineCont);
 
     this._sequences.push(sequ);
 
@@ -102,13 +104,18 @@ p._onSelectSequence = function(sequ) {
     }
 
     this._currSequence = sequ;
-}
+};
 
 p._onChangeTime = function () {
 
     var left = this.currTime * this.timescale;
     this._dePointerLine.style.left = left + 'px';
-}
+};
+
+p._onChangeTape = function () {
+
+    this._deKeylineCont.style.left = (this._timebar.start * this.timescale) + 'px';
+};
 
 
 p._createBase = function () {
@@ -136,7 +143,12 @@ p._createBase = function () {
     this._deRight.style.flex = '1';
     this._deRight.style.height = '100%';
     this.domElem.appendChild(this._deRight);
-}
+
+    this._deKeylineCont = document.createElement('div');
+    this._deKeylineCont.style.position = 'relative';
+    this._deKeylineCont.style.height = '100%';
+    this._deRight.appendChild(this._deKeylineCont);
+};
 
 p._createTimeline = function () {
 
@@ -146,7 +158,7 @@ p._createTimeline = function () {
     this._deRight.style.right = '0px';
     this._deRight.style.width = '30%';
     this._deRight.style.height = '100%';
-}
+};
 
 
 p._createSettingsHead = function () {
@@ -161,7 +173,7 @@ p._createSettingsHead = function () {
     this._deSettingsHead.appendChild(this._btnNewSequ);
     this._dropdownNewSequ = amgui.createDropdown({options: ['css', 'script']});
     amgui.bindDropdown(this._btnNewSequ, this._dropdownNewSequ);
-}
+};
 
 p._createPointerLine = function () {
 
@@ -172,4 +184,4 @@ p._createPointerLine = function () {
     this._dePointerLine.style.height = '100%';
     this._dePointerLine.style.borderLeft = '1px solid red';
     this._deRight.appendChild(this._dePointerLine);
-}
+};

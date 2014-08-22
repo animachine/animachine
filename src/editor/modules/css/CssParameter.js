@@ -15,8 +15,6 @@ function CssParameter (opt) {
 
     this._keys = [];
 
-    dialogKeyOptions.show();
-
     this.deOptions = this._createParameterOptions();
     this.deKeyline = amgui.createKeyline({
         timescale: am.timeline.timescale
@@ -106,7 +104,8 @@ p.addKey = function (opt) {
     else {
         key = {
             time: opt.time || 0,
-            value: opt.value || ''
+            value: opt.value || '',
+            ease: 'linear'
         };
 
         key.domElem = this.deKeyline.addKey({
@@ -120,6 +119,12 @@ p.addKey = function (opt) {
             deTarget: key.domElem,
             deMenu: amgui.createDropdown({
                 options: ['ease', 'delete'],
+                onSelect: function (e) {
+                    if(e.detail.selection === 'ease') {
+                        dialogKeyOptions.show({ease: key.ease});
+                        dialogKeyOptions.on('changeEase', function (ease) {key.ease = ease;});
+                    }
+                }
             }),
             asContextMenu: true
         });

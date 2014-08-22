@@ -161,18 +161,36 @@ var amgui = _.extend(new EventEmitter, {
     createDialog: function (opt) {
 
         var de = document.createElement('dialog');
+        document.body.appendChild(de);
         
         if (!de.show) {
             window.dialogPolyfill.registerDialog(de);
         }
 
-        document.body.appendChild(de);
+        de.style.background = 'none';
+        de.style.border = 'none';
+        de.style.fontFamily = amgui.FONT_FAMILY;
+
 
         var title = document.createElement('div');
         title.textContent = opt.title || 'Dialog';
+        title.style.display = 'inline-block';
+        title.style.padding = '0 3px';
         title.style.height = '34px';
         title.style.fontSize = '23px';
+        title.style.background = amgui.color.bg0;
+        title.style.color = amgui.color.text;
         de.appendChild(title);
+
+        var titleEnd = document.createElement('div');
+        titleEnd.style.display = 'inline-block';
+        titleEnd.style.width = '0';
+        titleEnd.style.height = '0';
+        titleEnd.style.verticalAlign = 'bottom';
+        titleEnd.style.borderStyle = 'solid';
+        titleEnd.style.borderWidth = '34px 0 0 8px';
+        titleEnd.style.borderColor = 'transparent transparent transparent ' + amgui.color.bg0;;
+        de.appendChild(titleEnd);
 
         de.appendChild(opt.content);
 
@@ -182,6 +200,7 @@ var amgui = _.extend(new EventEmitter, {
 
                 var btn = this.createBtn({caption: caption});
                 btn.style.display = 'inline-block';
+                btn.style.float = 'right';
                 de.appendChild(btn);
 
                 btn.addEventListener('click', function () {
@@ -190,16 +209,37 @@ var amgui = _.extend(new EventEmitter, {
             }, this);
         }
 
+        var buttonsEnd = document.createElement('div');
+        buttonsEnd.style.display = 'inline-block';
+        buttonsEnd.style.float = 'right';
+        buttonsEnd.style.width = '0';
+        buttonsEnd.style.height = '0';
+        buttonsEnd.style.verticalAlign = 'top';
+        buttonsEnd.style.borderStyle = 'solid';
+        buttonsEnd.style.borderWidth = '0 6px 21px 0';
+        buttonsEnd.style.borderColor = 'transparent '+amgui.color.bg0+' transparent transparent';
+        de.appendChild(buttonsEnd);
+
         return de;
     },
 
     createBtn: function (opt) {
 
+        opt.backgroundColor = opt.backgroundColor || amgui.color.bg0;
+
         var de = document.createElement('div');
         de.style.height = (opt.height || 21) + 'px';
+        de.style.padding = '0 15px';
         de.style.cursor = 'pointer';
-        de.style.color = 'white';
-        de.textContent = opt.caption || 'button';
+        de.style.color = amgui.color.text;
+        de.style.backgroundColor = opt.backgroundColor;
+
+        de.setCaption = function (caption) {
+
+            de.textContent = caption;
+        }
+        
+        de.setCaption(opt.caption || 'button');
 
         de.addEventListener('mouseenter', onMOver);
         de.addEventListener('mouseleave', onMOut);
@@ -211,7 +251,7 @@ var amgui = _.extend(new EventEmitter, {
 
         function onMOut() {
             
-            this.style.background = 'none';
+            this.style.background = opt.backgroundColor;
         }
 
         return de;

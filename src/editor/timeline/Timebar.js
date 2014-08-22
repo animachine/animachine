@@ -183,7 +183,7 @@ function onMDown(e) {
 function onMMove(e) {
 
     var left = this._canvasTape.getBoundingClientRect().left,
-        mouseX = e.pageX - left,
+        mouseX = Math.max(0, Math.min(this.width, e.pageX - left)),
         move = e.pageX - this._mdX;
 
     if (this._dragMode === 'seek') {

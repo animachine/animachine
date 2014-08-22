@@ -1,5 +1,6 @@
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
+var dialogKeyOptions = require('./dialogKeyOptions');
 var uncalc = require('./uncalc');
 var amgui = require('../../amgui');
 
@@ -13,6 +14,8 @@ function CssParameter (opt) {
     this._lineH = opt.lineH || 21;
 
     this._keys = [];
+
+    dialogKeyOptions.show();
 
     this.deOptions = this._createParameterOptions();
     this.deKeyline = amgui.createKeyline({
@@ -113,11 +116,12 @@ p.addKey = function (opt) {
 
         key.domElem.addEventListener('changeTime', this._onChangeDeKeyTime);
 
-        amgui.bindContextMenu({
+        amgui.bindDropdown({
             deTarget: key.domElem,
             deMenu: amgui.createDropdown({
-                options: ['ease', 'delete']
-            })
+                options: ['ease', 'delete'],
+            }),
+            asContextMenu: true
         });
 
         this._keys.push(key);
@@ -158,6 +162,8 @@ p._onChangeDeKeyTime = function (e) {
     });
 
     key.time = e.detail.time;
+
+    this.emit('change');
 };
 
 p._onChangeTime = function () {

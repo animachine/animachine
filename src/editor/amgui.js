@@ -49,7 +49,7 @@ var amgui = _.extend(new EventEmitter, {
     createKey: function (opt) {
 
         var isUserSelected = false, 
-            mdX, mDragged,
+            mdx, mDragged,
             time = opt.time || 0, 
             timescale = opt.timescale || 1;
 
@@ -76,7 +76,7 @@ var amgui = _.extend(new EventEmitter, {
             e.stopPropagation();
             e.preventDefault();
 
-            mdX = e.pageX;
+            mdx = e.pageX;
             mDragged = 0;
 
             if (!e.shiftKey && !e.ctrlKey) {
@@ -129,7 +129,7 @@ var amgui = _.extend(new EventEmitter, {
             var diff = e.pageX - mdx,
                 diffTime = (diff / timescale) - mDragged;
 
-            mDargged += diffTime;
+            mDragged += diffTime;
 
             amgui.emit('translateSelectedKeys', diffTime)
         }
@@ -161,12 +161,18 @@ var amgui = _.extend(new EventEmitter, {
     createDialog: function (opt) {
 
         var de = document.createElement('dialog');
+        
+        if (!de.show) {
+            window.dialogPolyfill.registerDialog(de);
+        }
+
+        document.body.appendChild(de);
 
         var title = document.createElement('div');
         title.textContent = opt.title || 'Dialog';
         title.style.height = '34px';
         title.style.fontSize = '23px';
-        de.appendChild(de);
+        de.appendChild(title);
 
         de.appendChild(opt.content);
 
@@ -179,7 +185,7 @@ var amgui = _.extend(new EventEmitter, {
                 de.appendChild(btn);
 
                 btn.addEventListener('click', function () {
-                    de.dispatchEvent(new Event('click' + caption));
+                    de.dispatchEvent(new Event('click_' + caption.toLowerCase()));
                 });
             }, this);
         }
@@ -347,59 +353,31 @@ var amgui = _.extend(new EventEmitter, {
         return de;
     },
 
-    bindDropdown: function(deBtn, deDropdown) {
-
-        var isOpened = false;
-
-        deDropdown.style.position = 'fixed';
-
-        deBtn.addEventListener('click', function (e) {
-
-            e.stopPropagation();
-            isOpened ? close() : open();
-        });
-        
-        deDropdown.addEventListener('select', close);
-
-        function open() {
-
-            if (isOpened) return;
-            isOpened = true;
-
-            var bcr = deBtn.getBoundingClientRect();
-            deDropdown.style.left = bcr.left + 'px';
-            deDropdown.style.top = bcr.bottom + 'px';
-
-            document.body.appendChild(deDropdown);
-            window.addEventListener('click', close);
-        }
-
-        function close() {
-
-            if (!isOpened) return;
-            isOpened = false;
-            
-            if (deDropdown.parentElement) {
-                deDropdown.parentElement.removeChild(deDropdown);
-            }
-            window.removeEventListener('click', close);
-        }
-    },
-
-    bindContextMenu: function(opt) {
+    bindDropdown: function(opt) {
 
         var isOpened = false;
         var deBtn = opt.deTarget;
         var deDropdown = opt.deMenu;
 
+        if (opt.asContextMenu) {
+
+            deBtn.addEventListener('contextmenu', function (e) {
+
+                e.stopPropagation();
+                e.preventDefault();
+                isOpened ? close() : open();
+            });
+        }
+        else {
+            
+            deBtn.addEventListener('click', function (e) {
+
+                e.stopPropagation();
+                isOpened ? close() : open();
+            });
+        }
+
         deDropdown.style.position = 'fixed';
-
-        deBtn.addEventListener('contextmenu', function (e) {
-
-            e.stopPropagation();
-            e.preventDefault();
-            isOpened ? close() : open();
-        });
         
         deDropdown.addEventListener('select', close);
 
@@ -427,6 +405,8 @@ var amgui = _.extend(new EventEmitter, {
             window.removeEventListener('click', close);
         }
     },
+
+
 
     createKeyValueInput: function (opt) {
 

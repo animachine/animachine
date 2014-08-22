@@ -172,7 +172,10 @@ p._createSettingsHead = function () {
     this._btnNewSequ = amgui.createIconBtn({});
     this._deSettingsHead.appendChild(this._btnNewSequ);
     this._dropdownNewSequ = amgui.createDropdown({options: ['css', 'script']});
-    amgui.bindDropdown(this._btnNewSequ, this._dropdownNewSequ);
+    amgui.bindDropdown({
+        deTarget: this._btnNewSequ,
+        deMenu: this._dropdownNewSequ
+    });
 };
 
 p._createPointerLine = function () {

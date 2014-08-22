@@ -56,11 +56,10 @@ domready(function () {
     am.deGuiCont = createAmLayer();
 
     am.deRoot = document.body;
-    am.transhand = new Transhand();
-    am.timeline = new Timeline(am);
     am.toolbar = new Toolbar();
     am.toolbar.domElem.style.top = '0px';
     am.deGuiCont.appendChild(am.toolbar.domElem);
+    am.timeline = new Timeline(am);
 
     am.toolbar.addIcon({icon: 'cog'});
 

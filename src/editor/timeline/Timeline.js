@@ -38,6 +38,12 @@ function Timeline(am) {
     this._timebar.on('changeTape', this.emit.bind(this, 'changeTape'));
     this._timebar.on('changeTime', this._onChangeTime);
     this._timebar.on('changeTape', this._onChangeTape);
+
+    am.toolbar.addIcon({
+        icon: 'floppy',
+        onClick: this.getScript.bind(this),
+        separator: 'global'
+    });
 }
 
 inherits(Timeline, EventEmitter);
@@ -58,8 +64,6 @@ p.addSequence = function (sequ) {
         deContOpt.style.height = sequ.height() + 'px';
         deContKf.style.height = sequ.height() + 'px';
     });
-
-    this._sequences.push(sequ, parent);
 
     function createCont(content, parent) {
 
@@ -92,6 +96,22 @@ Object.defineProperty(p, 'length', {
         return this._timebar._end - this._timebar._start;
     }
 });
+
+p.getScript = function () {
+
+    var scripts = [];
+    this._sequences.forEach(function (sequ) {
+
+        scripts.push(sequ.getScript());
+    });
+
+    var script = 'document.timeline.play(new AnimationGroup([\n' + 
+        scripts.join(',\n') + ']));';
+    
+    console.log(script);
+
+    return script;
+};
 
 p._onSelectSequence = function(sequ) {
 
@@ -171,7 +191,7 @@ p._createSettingsHead = function () {
 
     this._btnNewSequ = amgui.createIconBtn({});
     this._deSettingsHead.appendChild(this._btnNewSequ);
-    this._dropdownNewSequ = amgui.createDropdown({options: ['css', 'script']});
+    this._dropdownNewSequ = amgui.createDropdown({options: ['css', 'script', 'attribute', 'media', 'timeline']});
     amgui.bindDropdown({
         deTarget: this._btnNewSequ,
         deMenu: this._dropdownNewSequ

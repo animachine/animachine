@@ -54,10 +54,6 @@ function CssSequence(opt) {
     this.deOptions.addEventListener('click', this._onSelectClick);
     this.deKeys.addEventListener('click', this._onSelectClick);
 
-    am.toolbar.addIcon({icon: 'floppy', onClick: function () {
-        this.generateSrc();
-    }.bind(this)});
-
     this._onChangeBlankParameter();
 }
 
@@ -252,16 +248,25 @@ p._refreshMainKeyline = function () {
 
 };
 
-p.generateSrc = function () {
+p.getScript = function () {
 
-    var keys = [], code = '', options;
+    var keys = [], code = '', options, selectors, 
+        longestOffset = 0;
+
     this._parameters.forEach(function (prop) {
 
         prop._keys.forEach(function (key) {
 
-            var offset = key.time / am.timeline.length;
+            var offset = key.time;
             getKey(offset)[prop.name] = key.value;
+
+            if (longestOffset < offset) longestOffset = offset; 
         });
+    });
+
+    keys.forEach(function (key) {
+
+        key.offset /= longestOffset; 
     });
 
     keys.sort(function (a, b) {
@@ -284,14 +289,33 @@ p.generateSrc = function () {
         return key;
     }
 
-    options = JSON.stringify({
-      direction: "alternate", duration: am.timeline.length, iterations: 4
-    });
+    options = {
+      direction: "norma;", 
+      duration: longestOffset, 
+      iterations: 1
+    };
 
-    code += 'var elem = document.querySelector("' + this._selectors.join(',') + '");\n';
-    code += 'var player = document.timeline.play(new Animation(elem, ' + JSON.stringify(keys) + ', ' + options + '));';
-    console.log(code);
+    selectors = this._selectors.join(',').replace('\\','\\\\');
+
+    code = '(function () {                                                                     \n' 
+         + '                                                                                   \n'
+         + '    var animations = [],                                                           \n'
+         + '        keys = ' + JSON.stringify(keys) + ',                                       \n'
+         + '        options = ' + JSON.stringify(options) + ',                                 \n'
+         + '        elems = document.querySelectorAll("' + selectors + '");                    \n'
+         + '                                                                                   \n'
+         + '    for (var i = 0; i < elems.length; ++i) {                                       \n'
+         + '                                                                                   \n'
+         + '        animations.push(new Animation(elems[i], keys, options));                   \n'
+         + '    }                                                                              \n'
+         + '                                                                                   \n'
+         + '    return new AnimationGroup(animations);                                         \n'
+         + '}())                                                                               \n';
+    
+    return code;
 };
+                                                                                   
+
 
 p._createHeadOptions = function (){
 
@@ -357,3 +381,7 @@ p.selectElements = function () {
 };
 
 module.exports = cssSequence;
+
+
+
+

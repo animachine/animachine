@@ -12,6 +12,11 @@ function Key (opt) {
     this._deKeyline = opt.deKeyline,
     this.ease = 'linear';
 
+    this._onChangeDeTime = this._onChangeDeTime.bind(this);
+    this._onSelectDropdown = this._onSelectDropdown.bind(this);
+    this._onChangeEase = this._onChangeEase.bind(this);
+    this._onChangeTape = this._onChangeTape.bind(this);
+
     this.domElem = this._deKeyline.addKey({
         timescale: am.timeline.timescale,
         time: this.time
@@ -21,11 +26,6 @@ function Key (opt) {
         options: ['ease', 'delete']
     });
     this._deMenu.addEventListener('select', this._onSelectDropdown);
-
-    this._onChangeDeTime = this._onChangeDeTime.bind(this);
-    this._onSelectDropdown = this._onSelectDropdown.bind(this);
-    this._onChangeEase = this._onChangeEase.bind(this);
-    this._onChangeTape = this._onChangeTape.bind(this);
 
     this.domElem.addEventListener('changeTime', this._onChangeDeTime);
     am.timeline.on('changeTape', this._onChangeTape);
@@ -91,7 +91,7 @@ p._onSelectDropdown = function (e) {
     }
     else if (selection === 'delete') {
 
-        this.emit('delete');
+        this.emit('delete', this);
     }
 };
 

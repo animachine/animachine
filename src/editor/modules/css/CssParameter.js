@@ -25,6 +25,7 @@ function CssParameter (opt) {
     this._onChangeTime = this._onChangeTime.bind(this);
     this._onChangeKeyTime = this._onChangeKeyTime.bind(this);
     this._onToggleKey = this._onToggleKey.bind(this);
+    this._onDeleteKey = this._onDeleteKey.bind(this);
 
     this._input = amgui.createKeyValueInput({
         parent: this.deOptions,
@@ -115,6 +116,7 @@ p.addKey = function (opt) {
         key = new Key(_.extend({deKeyline: this.deKeyline}, opt));
 
         key.on('changeTime', this._onChangeKeyTime);
+        key.on('delete', this._onDeleteKey);
 
         this._keys.push(key);
     }
@@ -168,6 +170,11 @@ p._onChangeKeyTime = function (e) {
     this.emit('change');
 };
 
+p._onDeleteKey = function (key) {
+
+    this.deleteKey(key);
+};
+
 p._onChangeTime = function () {
 
     this._refreshInput();
@@ -194,6 +201,11 @@ p.deleteKey = function (key) {
 
         var key = this._keys.splice(idx, 1)[0];
         key.dispose();
+
+        key.removeListener('changeTime', this._onChangeKeyTime);
+        key.removeListener('delete', this._onDeleteKey);
+
+        this._refreshBtnToggleKey();
 
         this.emit('change');
     }

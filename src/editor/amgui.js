@@ -258,6 +258,10 @@ var amgui = _.extend(new EventEmitter, {
             this.style.background = opt.backgroundColor;
         }
 
+        if (opt.parent) {
+            opt.parent.appendChild(de);
+        }
+
         return de;
     },
 
@@ -279,12 +283,16 @@ var amgui = _.extend(new EventEmitter, {
 
         function onMOver() {
 
-            this.style.background = 'darkgrey';
+            this.style.background = 'rgba(255,255,255,0.12)';
         }
 
         function onMOut() {
             
             this.style.background = 'none';
+        }
+
+        if (opt.parent) {
+            opt.parent.appendChild(de);
         }
 
         return de;

@@ -51,6 +51,7 @@ function CssSequence(opt) {
     this._onChangeTime = this._onChangeTime.bind(this);
     this._onChangeParameter = this._onChangeParameter.bind(this);
     this._onChangeBlankParameter = this._onChangeBlankParameter.bind(this);
+    this._onToggleKey = this._onToggleKey.bind(this);
 
     am.timeline.on('changeTime', this._onChangeTime);
     this.deOptions.addEventListener('click', this._onSelectClick);
@@ -214,6 +215,25 @@ p._onChangeBlankParameter = function () {
 
     this._blankParameter = this.addParameter();
     this._blankParameter.on('change', this._onChangeBlankParameter);
+};
+
+p._onToggleKey = function () {
+
+    var time = am.timeline.currTime;
+        allHaveKey = this.parameters.each(function (param) {
+
+            return param.getKey(time);
+        });
+
+    this.parameters.each(function (param) {
+
+        if (allHaveKey) {
+            param.deleteKey(param.getKey(time));
+        }
+        else {
+            param.addKey(time);
+        }
+    });
 };
 
 p.getParameter = function (name) {
@@ -389,11 +409,12 @@ p._createHeadOptions = function (){
     this._deOptionsBtn.style.top = '0px';
     de.appendChild(this._deOptionsBtn);
 
-    this._deKeyBtn = amgui.createIconBtn({icon: 'key', height: this._opt.baseH});
-    this._deKeyBtn.style.position = 'absolute';
-    this._deKeyBtn.style.right = '0px';
-    this._deKeyBtn.style.top = '0px';
-    de.appendChild(this._deKeyBtn);
+    this._deBtnToggleKey = amgui.createIconBtn({icon: 'key', height: this._opt.baseH});
+    this._deBtnToggleKey.style.position = 'absolute';
+    this._deBtnToggleKey.style.right = '0px';
+    this._deBtnToggleKey.style.top = '0px';
+    this._deBtnToggleKey.addEventListener('click', this._onToggleKey);
+    de.appendChild(this._deBtnToggleKey);
 
     return de;
 };

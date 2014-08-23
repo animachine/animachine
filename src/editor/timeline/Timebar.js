@@ -211,8 +211,8 @@ function onMMove(e) {
                 magnetPointDiff = diff;
             }
         });
-
-        if (magnetPointDiff < 2) {
+        console.log('magnetPointDiff', magnetPointDiff)
+        if ((magnetPointDiff * this._timescale) < 2) {
 
             time = magnetPoint;
         }

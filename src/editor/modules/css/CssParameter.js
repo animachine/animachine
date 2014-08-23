@@ -24,6 +24,7 @@ function CssParameter (opt) {
     this._onChangeInput = this._onChangeInput.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
     this._onChangeKeyTime = this._onChangeKeyTime.bind(this);
+    this._onToggleKey = this._onToggleKey.bind(this);
 
     this._input = amgui.createKeyValueInput({
         parent: this.deOptions,
@@ -32,6 +33,15 @@ function CssParameter (opt) {
         onChange: this._onChangeInput,
         height: this._lineH
     });
+    this._input.style.flex = 1;
+
+    this._btnToggleKey = amgui.createIconBtn({
+        icon: 'key',
+        height: 21,
+        parent: this.deOptions
+    });
+    this._btnToggleKey.addEventListener('click', this._onToggleKey);
+    this._refreshBtnToggleKey();
 
     am.timeline.on('changeTime', this._onChangeTime);
 }
@@ -110,9 +120,10 @@ p.addKey = function (opt) {
     }
 
     this._refreshInput();
+    this._refreshBtnToggleKey();
 
     this.emit('change');
-    
+
     return key;
 };
 
@@ -160,7 +171,33 @@ p._onChangeKeyTime = function (e) {
 p._onChangeTime = function () {
 
     this._refreshInput();
+    this._refreshBtnToggleKey();
 };
+
+p._onToggleKey = function () {
+
+    var key = this.getKey(am.timeline.currTime);
+
+    if (key) {
+        this._deleteKey(key);
+    }
+    else {
+        this.addKey({time: am.timeline.currTime});
+    }
+};
+
+p._deleteKey = function (key) {
+
+    var idx = this._keys.indexOf(key);
+
+    if (idx !== -1) {
+
+        var key = this._keys.splice(idx, 1)[0];
+        key.dispose();
+
+        this.emit('change');
+    }
+}
 
 p._refreshInput = function () {
 
@@ -168,9 +205,16 @@ p._refreshInput = function () {
     this._input.setValue(this.getValue());
 }
 
+p._refreshBtnToggleKey = function () {
+
+    var key = this.getKey(am.timeline.currTime);
+    this._btnToggleKey.style.color = key ? amgui.color.text : 'rgba(255,255,255,.23)';
+}
+
 p._createParameterOptions = function () {
 
     var de = document.createElement('div');
+    de.style.display = 'flex';
     de.style.width = '100%';
     de.style.height = this._lineH + 'px';
     de.style.background = 'linear-gradient(to bottom, #184F12 18%,#1B4417 96%)';

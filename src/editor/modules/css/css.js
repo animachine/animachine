@@ -30,8 +30,11 @@ function onSelectDomElement(de) {
                 am.toolbar.removeIcon(iconNew);
                 selectBox.hide();
 
+                var selector = qsgen(am.selectedElement);
+                console.log('selector:', selector);
+
                 var sequ = cssSequence.create({
-                    selectors: [qsgen(am.selectedElement)]
+                    selectors: [selector]
                 });
 
                 am.timeline.addSequence(sequ);

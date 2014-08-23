@@ -2,6 +2,7 @@ var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var dialogKeyOptions = require('./dialogKeyOptions');
 var uncalc = require('./uncalc');
+var Key = require('./Key');
 var amgui = require('../../amgui');
 
 function CssParameter (opt) {
@@ -22,8 +23,7 @@ function CssParameter (opt) {
 
     this._onChangeInput = this._onChangeInput.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
-    this._onChangeTape = this._onChangeTape.bind(this);
-    this._onChangeDeKeyTime = this._onChangeDeKeyTime.bind(this);
+    this._onChangeKeyTime = this._onChangeKeyTime.bind(this);
 
     this._input = amgui.createKeyValueInput({
         parent: this.deOptions,
@@ -34,7 +34,6 @@ function CssParameter (opt) {
     });
 
     am.timeline.on('changeTime', this._onChangeTime);
-    am.timeline.on('changeTape', this._onChangeTape);
 }
 
 inherits(CssParameter, EventEmitter);
@@ -102,37 +101,18 @@ p.addKey = function (opt) {
         }
     }
     else {
-        key = {
-            time: opt.time || 0,
-            value: opt.value || '',
-            ease: 'linear'
-        };
 
-        key.domElem = this.deKeyline.addKey({
-            timescale: am.timeline.timescale,
-            time: key.time
-        });
+        key = new Key(_.extend({deKeyline: this.deKeyline}, opt));
 
-        key.domElem.addEventListener('changeTime', this._onChangeDeKeyTime);
-
-        amgui.bindDropdown({
-            deTarget: key.domElem,
-            deMenu: amgui.createDropdown({
-                options: ['ease', 'delete'],
-                onSelect: function (e) {
-                    if(e.detail.selection === 'ease') {
-                        dialogKeyOptions.show({ease: key.ease});
-                        dialogKeyOptions.on('changeEase', function (ease) {key.ease = ease;});
-                    }
-                }
-            }),
-            asContextMenu: true
-        });
+        key.on('changeTime', this._onChangeKeyTime);
 
         this._keys.push(key);
     }
 
     this._refreshInput();
+
+    this.emit('change');
+    
     return key;
 };
 
@@ -143,6 +123,18 @@ p.getKey = function (time) {
         return key.time === time;
     });
 };
+
+p.getKeyTimes = function () {
+
+    var times = [];
+
+    this._keys.forEach(function (key) {
+
+        times.push(key.time);
+    });
+
+    return times;
+}
 
 p._onChangeInput = function (e) {
 
@@ -160,13 +152,7 @@ p._onChangeInput = function (e) {
     this.emit('change');
 };
 
-p._onChangeDeKeyTime = function (e) {
-
-    var key = this._keys.find(function (key) {
-        return key.domElem === e.target;
-    });
-
-    key.time = e.detail.time;
+p._onChangeKeyTime = function (e) {
 
     this.emit('change');
 };
@@ -174,14 +160,6 @@ p._onChangeDeKeyTime = function (e) {
 p._onChangeTime = function () {
 
     this._refreshInput();
-};
-
-p._onChangeTape = function () {
-
-    this._keys.forEach(function (key) {
-
-        key.domElem.setTimescale(am.timeline.timescale);
-    });
 };
 
 p._refreshInput = function () {

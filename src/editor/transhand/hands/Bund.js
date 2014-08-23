@@ -3,15 +3,15 @@ var inherits = require('inherits');
 var _ = require('lodash');
 
 MOUSESTATES = {
-    '0000': 'default',
-    '1000': 'n-resize',
-    '1100': 'ne-resize',
-    '0100': 'e-resize',
-    '0110': 'se-resize',
-    '0010': 's-resize',
-    '0011': 'sw-resize',
-    '0001': 'w-resize',
-    '1001': 'nw-resize'
+    '0000': 'move',
+    '1000': 'ns-resize',
+    '1100': 'nesw-resize',
+    '0100': 'ew-resize',
+    '0110': 'nwse-resize',
+    '0010': 'ns-resize',
+    '0011': 'nesw-resize',
+    '0001': 'ew-resize',
+    '1001': 'nwse-resize'
 }
 
 

@@ -6,6 +6,7 @@ var amgui = require('../amgui');
 function Timeline(am) {
 
     EventEmitter.call(this);
+    this.setMaxListeners(1100);
 
     this._headerH = 23;
     
@@ -31,6 +32,7 @@ function Timeline(am) {
     }.bind(this));
 
     this._onSelectSequence = this._onSelectSequence.bind(this);
+    this._onChangeSequence = this._onChangeSequence.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
     this._onChangeTape = this._onChangeTape.bind(this);
 
@@ -58,6 +60,7 @@ p.addSequence = function (sequ) {
     this._sequences.push(sequ);
 
     sequ.on('select', this._onSelectSequence);
+    sequ.on('change', this._onChangeSequence);
 
     sequ.on('changeHeight', function () {
 
@@ -126,6 +129,11 @@ p._onSelectSequence = function(sequ) {
     this._currSequence = sequ;
 };
 
+p._onChangeSequence = function(sequ) {
+
+    this._refreshMagnetPoints();
+};
+
 p._onChangeTime = function () {
 
     var left = this.currTime * this.timescale;
@@ -137,6 +145,22 @@ p._onChangeTape = function () {
     this._deKeylineCont.style.left = (this._timebar.start * this.timescale) + 'px';
 };
 
+p._refreshMagnetPoints = function () {
+
+    var magnetPoints = [];
+
+    this._sequences.forEach(function (sequ) {
+
+        if (typeof sequ.getMagnetPoints === 'function') {
+
+            magnetPoints = magnetPoints.concat(sequ.getMagnetPoints());
+        }
+    });
+
+    magnetPoints = _.uniq(magnetPoints);
+
+    this._timebar.magnetPoints = magnetPoints;
+}
 
 p._createBase = function () {
 
@@ -168,6 +192,8 @@ p._createBase = function () {
     this._deKeylineCont.style.position = 'relative';
     this._deKeylineCont.style.height = '100%';
     this._deRight.appendChild(this._deKeylineCont);
+
+    this._initDividerMoving();
 };
 
 p._createTimeline = function () {
@@ -208,4 +234,40 @@ p._createPointerLine = function () {
     this._dePointerLine.style.height = '100%';
     this._dePointerLine.style.borderLeft = '1px solid red';
     this._deRight.appendChild(this._dePointerLine);
+};
+
+
+
+p._initDividerMoving = function () {
+
+    that = this;
+
+    this._deDivider.style.cursor = 'ew-resize';
+
+    this._deDivider.addEventListener('mousedown', down);
+
+    function down(e) {
+
+        e.stopPropagation();
+        e.preventDefault();
+        
+        window.addEventListener('mousemove', drag);
+        window.addEventListener('mouseup', end);
+        window.addEventListener('mouseleave', end);
+    }
+
+    function drag(e) {
+
+        var left = e.pageX - that.domElem.getBoundingClientRect().left;
+
+        that._deDivider.style.left = left + 'px';
+        that._deLeft.style.width = left + 'px';
+    }
+
+    function end(e) {
+        
+        window.removeEventListener('mousemove', drag);
+        window.removeEventListener('mouseup', end);
+        window.removeEventListener('mouseleave', end);
+    }
 };

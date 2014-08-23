@@ -2,6 +2,7 @@ var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../../amgui');
 var CssParameter = require('./CssParameter');
+var Key = require('./Key');
 var Transhand = require('../../transhand/Transhand');
 
 var cssSequence = {
@@ -36,6 +37,7 @@ function CssSequence(opt) {
 
     this._selectedElements = [];
     this._isOpened = false;
+    this._headKeys = [];
 
     this.deOptions = document.createElement('div');
     this.deKeys = document.createElement('div');
@@ -198,6 +200,9 @@ p._onChangeParameter = function () {
 
     this.renderTime();
     this._focusHandler();
+    this._refreshHeadKeyline();
+
+    this.emit('change');
 };
 
 p._onChangeBlankParameter = function () {
@@ -240,12 +245,32 @@ p.addParameter = function (opt) {
         this.emit('changeHeight');
 
         return param;
-    }    
-
+    }
 };
 
-p._refreshMainKeyline = function () {
+p._refreshHeadKeyline = function () {
 
+    var times = [], oldKeys = this._headKeys.splice(0);
+
+    this._parameters.forEach(function (param) {
+
+        times = times.concat(param.getKeyTimes());
+    });
+
+    times = _.uniq(times);
+
+    times.forEach(function (time) {
+
+        var key = oldKeys.pop() || new Key({
+            deKeyline: this._deHeadKeyline
+        });
+
+        key.time = time;
+
+        this._headKeys.push(key);
+    }, this);
+
+    _.invoke(_.difference(oldKeys, this._headKeys), 'dispose');
 };
 
 p.getScript = function () {
@@ -313,6 +338,18 @@ p.getScript = function () {
          + '}())                                                                               \n';
     
     return code;
+};
+
+p.getMagnetPoints = function () {
+
+    var times = [];
+
+    this._headKeys.forEach(function (key) {
+
+        times.push(key.time);
+    });
+
+    return times;
 };
                                                                                    
 

@@ -98,6 +98,8 @@ var amgui = _.extend(new EventEmitter, {
 
         de.setTime = function(t) {
 
+            if (time === t) return;
+
             time = t;
             setLeft();
 
@@ -105,6 +107,8 @@ var amgui = _.extend(new EventEmitter, {
         };
 
         de.setTimescale = function(ts) {
+
+            if (timescale === ts) return;
 
             timescale = ts;
             setLeft();
@@ -599,5 +603,6 @@ var amgui = _.extend(new EventEmitter, {
     }
 });
 
+amgui.setMaxListeners(0);
 
 module.exports = amgui;

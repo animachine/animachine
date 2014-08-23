@@ -134,6 +134,11 @@ function createAmRoot() {
     de.style.fontFamily = amgui.FONT_FAMILY;
     document.body.appendChild(de);
 
+    de.addEventListener('mousedown', function (e) {
+
+        e.preventDefault();
+    });
+
     var sr = de.createShadowRoot();
 
     externalStylesheets.forEach(function (css) {

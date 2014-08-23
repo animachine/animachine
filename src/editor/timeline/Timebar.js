@@ -12,6 +12,8 @@ function Timebar(opt) {
     this._timescale = opt.timescale || 0;
     this._currTime = opt.currTime || 0;
 
+    this._magnetPoints = [];
+
     this._onMDown = onMDown.bind(this);
     this._onMMove = onMMove.bind(this);
     this._onMUp = onMUp.bind(this);
@@ -100,6 +102,15 @@ Object.defineProperties(p, {
         get: function () {
             return this._currTime;
         }
+    }, 
+    
+    magnetPoints: {
+        set: function (v) {
+            return this._magnetPoints = v;
+        },
+        get: function () {
+            return this._magnetPoints
+        }
     },
 });
 
@@ -184,11 +195,28 @@ function onMMove(e) {
 
     var left = this._canvasTape.getBoundingClientRect().left,
         mouseX = Math.max(0, Math.min(this.width, e.pageX - left)),
-        move = e.pageX - this._mdX;
+        move = e.pageX - this._mdX,
+        time, magnetPoint, magnetPointDiff;
 
     if (this._dragMode === 'seek') {
 
-        var time = (mouseX / this.width) * this.length;
+        time = (mouseX / this.width) * this.length;
+
+        this._magnetPoints.forEach(function (mp) {
+
+            var diff = Math.abs(mp - time);
+
+            if (diff < magnetPointDiff || magnetPointDiff === undefined) {
+                magnetPoint = mp;
+                magnetPointDiff = diff;
+            }
+        });
+
+        if (magnetPointDiff < 2) {
+
+            time = magnetPoint;
+        }
+
         this.currTime = this._start + time;
     }
     else if (this._dragMode === 'translate') {

@@ -39,19 +39,19 @@ function CssSequence(opt) {
     this._isOpened = false;
     this._headKeys = [];
 
-    this.deOptions = document.createElement('div');
-    this.deKeys = document.createElement('div');
-
-    this._deHeadOptinos = this._createHeadOptions();
-    this._deHeadKeyline = amgui.createKeyline({});
-    this.deKeys.appendChild(this._deHeadKeyline);
-
     this._onSelectClick = this._onSelectClick.bind(this);
     this._onChangeHandler = this._onChangeHandler.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
     this._onChangeParameter = this._onChangeParameter.bind(this);
     this._onChangeBlankParameter = this._onChangeBlankParameter.bind(this);
     this._onToggleKey = this._onToggleKey.bind(this);
+
+    this.deOptions = document.createElement('div');
+    this.deKeys = document.createElement('div');
+
+    this._deHeadOptinos = this._createHeadOptions();
+    this._deHeadKeyline = amgui.createKeyline({});
+    this.deKeys.appendChild(this._deHeadKeyline);
 
     am.timeline.on('changeTime', this._onChangeTime);
     this.deOptions.addEventListener('click', this._onSelectClick);
@@ -194,6 +194,7 @@ p._onChangeTime = function (time) {
 
         this.renderTime(time);
         this._focusHandler();
+        this._refreshBtnToggleKey();
     }, this);
 };
 
@@ -202,6 +203,7 @@ p._onChangeParameter = function () {
     this.renderTime();
     this._focusHandler();
     this._refreshHeadKeyline();
+    this._refreshBtnToggleKey();
 
     this.emit('change');
 };
@@ -220,21 +222,31 @@ p._onChangeBlankParameter = function () {
 p._onToggleKey = function () {
 
     var time = am.timeline.currTime;
-        allHaveKey = this.parameters.each(function (param) {
+        allHaveKey = this._isAllParamsHaveKey(time);
 
-            return param.getKey(time);
-        });
+    this._parameters.forEach(function (param) {
 
-    this.parameters.each(function (param) {
+        if (param.isValid()) {
 
-        if (allHaveKey) {
-            param.deleteKey(param.getKey(time));
-        }
-        else {
-            param.addKey(time);
+            if (allHaveKey) {
+                param.deleteKey(param.getKey(time));
+            }
+            else {
+                param.addKey({time: time});
+            }
         }
     });
+
+    this._refreshBtnToggleKey();
 };
+
+p._isAllParamsHaveKey = function (time) {
+
+    return this._parameters.every(function (param) {
+
+        return param.getKey(time) || !param.isValid();
+    });
+} 
 
 p.getParameter = function (name) {
 
@@ -267,6 +279,13 @@ p.addParameter = function (opt) {
         return param;
     }
 };
+
+p._refreshBtnToggleKey = function () {
+
+    var allHaveKey = this._isAllParamsHaveKey(am.timeline.currTime);
+    this._btnToggleKey.style.color = allHaveKey ? amgui.color.text : 'rgba(255,255,255,.23)';
+};
+
 
 p._refreshHeadKeyline = function () {
 
@@ -409,12 +428,13 @@ p._createHeadOptions = function (){
     this._deOptionsBtn.style.top = '0px';
     de.appendChild(this._deOptionsBtn);
 
-    this._deBtnToggleKey = amgui.createIconBtn({icon: 'key', height: this._opt.baseH});
-    this._deBtnToggleKey.style.position = 'absolute';
-    this._deBtnToggleKey.style.right = '0px';
-    this._deBtnToggleKey.style.top = '0px';
-    this._deBtnToggleKey.addEventListener('click', this._onToggleKey);
-    de.appendChild(this._deBtnToggleKey);
+    this._btnToggleKey = amgui.createIconBtn({icon: 'key', height: this._opt.baseH});
+    this._btnToggleKey.style.position = 'absolute';
+    this._btnToggleKey.style.right = '0px';
+    this._btnToggleKey.style.top = '0px';
+    this._btnToggleKey.addEventListener('click', this._onToggleKey);
+    de.appendChild(this._btnToggleKey);
+    this._refreshBtnToggleKey();
 
     return de;
 };

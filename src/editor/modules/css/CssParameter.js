@@ -179,14 +179,14 @@ p._onToggleKey = function () {
     var key = this.getKey(am.timeline.currTime);
 
     if (key) {
-        this._deleteKey(key);
+        this.deleteKey(key);
     }
     else {
         this.addKey({time: am.timeline.currTime});
     }
 };
 
-p._deleteKey = function (key) {
+p.deleteKey = function (key) {
 
     var idx = this._keys.indexOf(key);
 
@@ -197,6 +197,11 @@ p._deleteKey = function (key) {
 
         this.emit('change');
     }
+}
+
+p.isValid = function () {
+
+    return !!(this.name && this._keys.length);
 }
 
 p._refreshInput = function () {

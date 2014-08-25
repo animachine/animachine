@@ -272,6 +272,7 @@ var amgui = _.extend(new EventEmitter, {
         de.style.cursor = 'pointer';
         de.style.color = 'white';
         de.style.overflow = 'hidden';
+        de.style.display = opt.display || 'block';
 
         de.addEventListener('mouseenter', onMOver);
         de.addEventListener('mouseleave', onMOut);

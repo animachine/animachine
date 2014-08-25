@@ -24,6 +24,8 @@ function Timeline(am) {
     });
     this._deRight.insertBefore(this._timebar.domElem, this._deKeylineCont);
 
+    this._refreshTimebarWidth();
+
     this._sequences = [];
 
     this._dropdownNewSequ.addEventListener('select', function (e) {
@@ -35,6 +37,7 @@ function Timeline(am) {
     this._onChangeSequence = this._onChangeSequence.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
     this._onChangeTape = this._onChangeTape.bind(this);
+    this._onWindowResize = this._onWindowResize.bind(this);
 
     this._timebar.on('changeTime', this.emit.bind(this, 'changeTime'));
     this._timebar.on('changeTape', this.emit.bind(this, 'changeTape'));
@@ -46,6 +49,9 @@ function Timeline(am) {
         onClick: this.getScript.bind(this),
         separator: 'global'
     });
+
+
+    window.addEventListener('resize', this._onWindowResize);
 }
 
 inherits(Timeline, EventEmitter);
@@ -145,6 +151,11 @@ p._onChangeTape = function () {
     this._deKeylineCont.style.left = (this._timebar.start * this.timescale) + 'px';
 };
 
+p._onWindowResize = function () {
+
+    this._refreshTimebarWidth();
+};
+
 p._refreshMagnetPoints = function () {
 
     var magnetPoints = [];
@@ -160,7 +171,12 @@ p._refreshMagnetPoints = function () {
     magnetPoints = _.uniq(magnetPoints);
 
     this._timebar.magnetPoints = magnetPoints;
-}
+};
+
+p._refreshTimebarWidth = function () {
+
+    this._timebar.width = this._deRight.offsetWidth;
+};
 
 p._createBase = function () {
 
@@ -215,12 +231,23 @@ p._createSettingsHead = function () {
     this._deSettingsHead.style.height = this._headerH + 'px';
     this._deLeft.appendChild(this._deSettingsHead);
 
-    this._btnNewSequ = amgui.createIconBtn({});
-    this._deSettingsHead.appendChild(this._btnNewSequ);
+    this._btnNewSequ = amgui.createIconBtn({
+        icon: 'plus-squared',
+        parent: this._deSettingsHead,
+        display: 'inline-block'
+    });
     this._dropdownNewSequ = amgui.createDropdown({options: ['css', 'script', 'attribute', 'media', 'timeline']});
     amgui.bindDropdown({
         deTarget: this._btnNewSequ,
         deMenu: this._dropdownNewSequ
+    });
+
+    
+    this._btnPlay = amgui.createToggleIconBtn({
+        iconOn: 'pause', 
+        iconOff: 'play',
+        parent: this._deSettingsHead,
+        display: 'inline-block'
     });
 };
 
@@ -262,6 +289,8 @@ p._initDividerMoving = function () {
 
         that._deDivider.style.left = left + 'px';
         that._deLeft.style.width = left + 'px';
+
+        that._refreshTimebarWidth();
     }
 
     function end(e) {

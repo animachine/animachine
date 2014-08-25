@@ -102,7 +102,7 @@ function onClickRoot(e) {
 
 function isPickable(deTest) {
 
-    var editors = [am.domElem, am.deHandlerCont];
+    var editors = [am.domElem];
 
     return step(deTest);
 
@@ -121,7 +121,7 @@ function isPickable(deTest) {
 }
 
 function createAmRoot() {
-
+    
     var de = document.createElement('div');
     de.style.position = 'fixed';
     de.style.left = '0px';
@@ -132,6 +132,7 @@ function createAmRoot() {
     de.style.userSelect = 'none';
     de.style.webktUserSelect = 'none';
     de.style.fontFamily = amgui.FONT_FAMILY;
+    de.style.zIndex = getMaxZIndex() + 1000;
     document.body.appendChild(de);
 
     de.addEventListener('mousedown', function (e) {
@@ -165,6 +166,27 @@ function createAmLayer() {
 }
 
 
+
+
+function getMaxZIndex() {
+
+    var zIndex = 0, els, x, xLen, el, val;
+
+    els = document.querySelectorAll('*');
+    for (x = 0, xLen = els.length; x < xLen; x += 1) {
+      el = els[x];
+      if (window.getComputedStyle(el).getPropertyValue('position') !== 'static') {
+        val = window.getComputedStyle(el).getPropertyValue('z-index');
+        if (val) {
+          val = +val;
+          if (val > zIndex) {
+            zIndex = val;
+          }
+        }
+      }
+    }
+    return zIndex;    
+}
 
 ///polyfills
 if (!Array.prototype.find) {

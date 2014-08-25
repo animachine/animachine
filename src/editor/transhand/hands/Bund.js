@@ -114,7 +114,7 @@ p._onDrag = function (e) {
 p._setFinger = function (e) {
 
     var p = this._params,
-        diff = Math.min(3, p.w/2, p.h/2),
+        diff = 3,
         mx = e.pageX,
         my = e.pageY,
         top = Math.abs(p.y - my) <= diff,
@@ -122,7 +122,18 @@ p._setFinger = function (e) {
         bottom = Math.abs((p.y + p.h)- my) <= diff,
         right = Math.abs(p.x - mx) <= diff;
     
+    if (p.w < diff * 3 && p.x < mx && p.x + p.w > mx) {
+
+        left = right = false;
+    }
+
+    if (p.h < diff * 3 && p.y < my && p.y + p.h > my) {
+
+        top = bottom = false;
+    }
+    
     this._finger = ('000' + (top * 1000 + left * 100 + bottom * 10 + right * 1)).substr(-4);
+
 
     this.domElem.style.cursor = MOUSESTATES[this._finger];
 }

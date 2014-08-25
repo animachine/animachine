@@ -1,6 +1,4 @@
-// document.body.addEventListener('click', function(e){
-//     console.log(generate(e.target));
-// });
+var EXATTR = ['id', 'class', 'style'];
 
 function generate(de, root) {
 
@@ -92,7 +90,7 @@ function possibleAttributes(de) {
 
     return Array.prototype.slice.call(de.attributes, 0)
         .filter(function(attr) {
-            return attr.name !== 'id' && attr.name !== 'class';
+            return EXATTR.indexOf(attr.name) === -1;
         })
         .map(function (attr) {
             return '[' + CSS.escape(attr.name) + (attr.value ? '="' + attr.value : '') + '"]';

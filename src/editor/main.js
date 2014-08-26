@@ -6,6 +6,7 @@ var EventEmitter = require('events').EventEmitter;
 var Transhand = require('./transhand/Transhand');
 var Timeline = require('./timeline/Timeline');
 var Toolbar = require('./toolbar/Toolbar');
+var Windooman = require('./windooman/Windooman');
 var modules = {
     css: require('./modules/css')
 };
@@ -51,14 +52,22 @@ domready(function () {
 
     for (var i = 0; i < 15; ++i) debugRect();
 
+    am.workspace = new Windooman();
+    am.workspace.loadWorkspaces({
+        base: getBaseWorkspace();
+    });
+    am.workspace.load('base');
+
     am.domElem = createAmRoot();
     am.deHandlerCont = createAmLayer();
     am.deGuiCont = createAmLayer();
 
+    am.deGuiCont.appendChild(am.workspace.domElem);
+
     am.deRoot = document.body;
     am.toolbar = new Toolbar();
     am.toolbar.domElem.style.top = '0px';
-    am.deGuiCont.appendChild(am.toolbar.domElem);
+    am.workspace.fillTab('toolbar', am.toolbar.domElem);
     am.timeline = new Timeline(am);
 
     am.toolbar.addIcon({icon: 'cog'});
@@ -67,7 +76,7 @@ domready(function () {
     am.timeline.domElem.style.width = '100%';
     am.timeline.domElem.style.height = '230px';
     am.timeline.domElem.style.bottom = '0px';
-    am.deGuiCont.appendChild(am.timeline.domElem);
+    am.workspace.fillTab('timeline', am.timeline.domElem);
 
     document.body.addEventListener('click', onClickRoot);
 
@@ -186,6 +195,52 @@ function getMaxZIndex() {
       }
     }
     return zIndex;    
+}
+
+
+function getBaseWorkspace() {
+
+    return {
+        type: 'container',
+        direction: 'column',
+        children: [{
+                    type: 'panel'
+                    mode: 'tab',
+                    size: 23,
+                    scaleMode: 'fix',
+                    showTabEars: false,
+                    tabs: [{name: 'tools'}],
+                },{
+                    type: 'container',
+                    direction: 'row',
+                    size: 10,
+                    scaleMode: 'flex'
+                    children: [{                    
+                        type: 'panel',
+                        mode: 'tab',
+                        size: 3
+                        scaleMode: 'flex'
+                        tabs: [
+                            {name: 'Css Style'},
+                            {name: 'Dom Tree'}
+                        ]
+                    }, {                    
+                        type: 'panel',
+                        mode: 'empty',
+                        size: 12
+                        scaleMode: 'flex'
+                    }]
+                }, {
+                    type: 'panel'
+                    mode: 'tab',
+                    size: 4,
+                    scaleMode: 'flex'
+                    showTabEars: false,
+                    tabs: [{name: 'timeline'}],
+                }]
+            }
+        ]
+    }
 }
 
 ///polyfills

@@ -1,6 +1,7 @@
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../amgui');
+var decorTimebarNavigator = require('./decorTimebarNavigator');
 
 function Timebar(opt) {
 
@@ -11,6 +12,7 @@ function Timebar(opt) {
     this._height = opt.height || 21;
     this._timescale = opt.timescale || 0;
     this._currTime = opt.currTime || 0;
+    this._maxTime = opt.maxTime || 60000;
 
     this._magnetPoints = [];
 
@@ -23,9 +25,11 @@ function Timebar(opt) {
     this._createBase();
     this._createPointer();
 
-    this.renderTape();
+    amgui.callOnAdded(this.domElem, this.renderTape, this);
 
-    this._canvasTape.addEventListener('mousedown', this._onMDown)
+    this._canvasTape.addEventListener('mousedown', this._onMDown);
+
+    decorTimebarNavigator(this);
 }
 
 inherits(Timebar, EventEmitter);
@@ -81,6 +85,10 @@ Object.defineProperties(p, {
     }, 
     
     length: {
+        set: function (v) {
+            this.timescale = this._width / v;
+        },
+
         get: function () {
             return this._width / this._timescale;
         }
@@ -110,6 +118,17 @@ Object.defineProperties(p, {
         },
         get: function () {
             return this._magnetPoints
+        }
+    },
+
+    maxTime: {
+        set: function (v) {
+            if (this._maxTime === v) return;
+            return this._maxTime = v;
+            this.emit('changeTape');
+        },
+        get: function () {
+            return this._maxTime
         }
     },
 });
@@ -211,7 +230,7 @@ function onMMove(e) {
                 magnetPointDiff = diff;
             }
         });
-        console.log('magnetPointDiff', magnetPointDiff)
+        
         if ((magnetPointDiff * this._timescale) < 2) {
 
             time = magnetPoint;
@@ -268,6 +287,14 @@ p._createPointer = function () {
     this.domElem.appendChild(this._dePointer); 
 };
 
+
+
+
+
+
+
+
+//Steps
 function getSteps() {
 
     return [

@@ -92,20 +92,20 @@ p._onDrag = function (e) {
 
     if (finger.charAt(0) === '1') {
         change.y = p.y = ~~(sp.y + dy);
-        change.h = p.h = ~~(sp.h - dy);
+        change.h = p.h = Math.max(0, ~~(sp.h - dy));
     }
 
     if (finger.charAt(1) === '1') {
-        change.w = p.w = ~~(sp.w + dx);
+        change.w = p.w = Math.max(0, ~~(sp.w + dx));
     }
 
     if (finger.charAt(2) === '1') {
-        change.h = p.h = ~~(sp.h + dy);
+        change.h = p.h = Math.max(0, ~~(sp.h + dy));
     }
 
     if (finger.charAt(3) === '1') {
         change.x = p.x = ~~(sp.x + dx);
-        change.w = p.w = ~~(sp.w - dx);
+        change.w = p.w = Math.max(0, ~~(sp.w - dx));
     }
 
     this.emit('change', change);
@@ -122,14 +122,16 @@ p._setFinger = function (e) {
         bottom = Math.abs((p.y + p.h)- my) <= diff,
         right = Math.abs(p.x - mx) <= diff;
     
-    if (p.w < diff * 3 && p.x < mx && p.x + p.w > mx) {
+    if (p.w < diff * 3) {
 
-        left = right = false;
+        if (p.x <= mx) left = false;
+        if (p.x + p.w >= mx) right = false;
     }
 
-    if (p.h < diff * 3 && p.y < my && p.y + p.h > my) {
+    if (p.h < diff * 3) {
 
-        top = bottom = false;
+        if (p.y >= my) top = false;
+        if (p.y + p.h <= my) bottom = false;
     }
     
     this._finger = ('000' + (top * 1000 + left * 100 + bottom * 10 + right * 1)).substr(-4);

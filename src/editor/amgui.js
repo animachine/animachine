@@ -19,7 +19,8 @@ var amgui = _.extend(new EventEmitter, {
         bg1: '#222',
         bg2: '#444',
         bg3: '#666',
-        text: '#efe'
+        text: '#efe',
+        overlay: 'rgba(0,0,0,.545)'
     },
 
     createKeyline: function (opt) {
@@ -459,7 +460,64 @@ var amgui = _.extend(new EventEmitter, {
         }
     },
 
+    tooltip: function (opt) {
 
+        var showSetT, delay = 1200, mx = 0, my = 0;
+
+        var de = document.createElement('div');
+        de.textContent = opt.text;
+        de.style.position = 'absolute';
+        de.style.padding = '12px';
+        de.style.background = amgui.color.overlay;
+
+        opt.deTarget.addEventListener('mouseenter', onMEnter);
+        opt.deTarget.addEventListener('mouseleave', onMLeave);
+
+        function onMEnter(e) {
+
+            opt.deTarget.addEventListener('mousemove', onMMove);
+            onMMove(e);
+        }
+
+        function onMLeave(e) {
+
+            opt.deTarget.removeEventListener('mousemove', onMMove);
+            hide();
+            clearShowSetT();
+        }
+
+        function onMMove(e) {
+
+            hide();
+            refreshShowSetT();
+            mx = e.pageX;
+            my = e.pageY;
+        }
+
+        function refreshShowSetT() {
+
+            clearShowSetT();
+            showSetT = setTimeout(show, delay);
+        });
+
+        function clearShowSetT() {
+
+            clearTimeout(showSetT);
+        });
+
+        function show() {
+
+            document.body.appendChild(de);
+            amgui.placeToPoint(de, mx, my, opt.side);
+        }
+
+        function hide() {
+
+            if (de.parentElement) {
+                de.parentElement.removeChild(de);
+            }
+        }
+    },
 
     createKeyValueInput: function (opt) {
 
@@ -609,8 +667,78 @@ var amgui = _.extend(new EventEmitter, {
         }
 
         return de;
+    },
+
+    placeToPoint: function (de, mx, my, way) {
+
+        var px = 0, py = 0,
+            br = de.getBoundingClientRect(),
+            w = br.width,
+            h = br.height,
+            ww = window.innerWidth,
+            wh = window.innerHeight;
+
+        way = way || 'left';
+
+        switch (way) {
+
+            case 'top':
+                px = mx - (w / 2);
+                py = my - h;
+                break;
+
+            case 'right':
+                px = mx;
+                py = my - (h / 2);
+                break;
+
+            case 'bottom':
+                px = mx - (w / 2);
+                py = my;
+                break;
+
+            case 'left':
+                px = mx - w;
+                py = my - (h / 2);
+                break;
+        }
+
+        if (py < 0) py = 0;
+        if (px + w > ww) px -= (px + w) - ww;
+        if (py + h > wh) py -= (py + h) - wh;
+        if (px < 0) px = 0;
+
+        de.style.top = px + 'px';
+        de.style.height = py + 'px';
+    },
+
+    callOnAdded: function (de, cb, thisArg) {
+
+        var setI = setInterval(function () {
+
+            if (check()) {
+
+                clearInterval(setI);
+
+                cb.call(thisArg);
+            }
+        }, 234);
+
+        function check (node) {
+
+            while (node.parentNode) {
+
+                if (node.nodeName.toLowerCase() === 'body') {
+
+                    return true;
+                }
+
+                node = node.parentNode;
+            }
+        }
     }
 });
+
 
 amgui.setMaxListeners(0);
 

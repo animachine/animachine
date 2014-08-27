@@ -39,6 +39,12 @@ p.addIcon = function (opt) {
         onClick: opt.onClick
     });
 
+    amgui.addTooltip({
+        deTarget: deIcon,
+        text: 'tooltip',
+        side: 'bottom'
+    });
+
     deIcon.style.display = 'inline-block';
 
     this.domElem.insertBefore(deIcon, this._separators[opt.separator || 'rest']);

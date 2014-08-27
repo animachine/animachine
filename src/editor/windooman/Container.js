@@ -4,13 +4,13 @@ var Panel = require('./Panel');
 
 function Container(opt) {
 
-    this._direction = opt.direction || 'row';
+    this._createDomElem();
+
+    this.direction = opt.direction || 'row';
     this._children = [];
 
     this.size = opt.size;
     this.scaleMode = opt.scaleMode;
-
-    this._createDomElem();
 
     opt.children.forEach(function (cData) {
 
@@ -43,12 +43,12 @@ Object.defineProperty(p, 'direction', {
     }
 });
 
-p.addChild = function (child, size) {
+p.addChild = function (child) {
 
     this._children.push(child);
-    this._sizes.push(size);
-    child.style.flex = size;
-    this.domElem.appendChild(child);
+    this.domElem.appendChild(child.domElem);
+
+    this._scaleChildren();
 };
 
 
@@ -56,7 +56,7 @@ p.findTab = function (name) {
 
     var tab;
 
-    this.childrend.some(function (child) {
+    this._children.some(function (child) {
 
         tab = child.findTab(name);
         return tab;
@@ -88,13 +88,14 @@ p._scaleChildren = function () {
         child.domElem.style.width = width;
         child.domElem.style.height = height;
         child.domElem.style.flex = flex;
-    });
+    }, this);
 };
 
 p._createDomElem = function () {
 
     this.domElem = document.createElement('div');
     this.domElem.style.width = '100%';
+    this.domElem.style.height = '100%';
     this.domElem.style.display = 'flex';
     this.domElem.style.alignItems = 'stretch';
     this.domElem.style.pointerEvents = 'none';

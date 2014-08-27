@@ -99,8 +99,6 @@ p._createTabBase = function () {
     this._deTabContent.style.width = '100%';
     this._deTabContent.style.flex = 1;
     this._deTabBase.appendChild(this._deTabContent);
-
-    return de;
 };
 
 module.exports = Panel;

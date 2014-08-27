@@ -54,7 +54,7 @@ domready(function () {
 
     am.workspace = new Windooman();
     am.workspace.loadWorkspaces({
-        base: getBaseWorkspace();
+        base: getBaseWorkspace()
     });
     am.workspace.load('base');
 
@@ -67,7 +67,7 @@ domready(function () {
     am.deRoot = document.body;
     am.toolbar = new Toolbar();
     am.toolbar.domElem.style.top = '0px';
-    am.workspace.fillTab('toolbar', am.toolbar.domElem);
+    am.workspace.fillTab('tools', am.toolbar.domElem);
     am.timeline = new Timeline(am);
 
     am.toolbar.addIcon({icon: 'cog'});
@@ -204,43 +204,41 @@ function getBaseWorkspace() {
         type: 'container',
         direction: 'column',
         children: [{
-                    type: 'panel'
+                type: 'panel',
+                mode: 'tab',
+                size: 23,
+                scaleMode: 'fix',
+                showTabEars: false,
+                tabs: [{name: 'tools'}],
+            },{
+                type: 'container',
+                direction: 'row',
+                size: 10,
+                scaleMode: 'flex',
+                children: [{                    
+                    type: 'panel',
                     mode: 'tab',
-                    size: 23,
-                    scaleMode: 'fix',
-                    showTabEars: false,
-                    tabs: [{name: 'tools'}],
-                },{
-                    type: 'container',
-                    direction: 'row',
-                    size: 10,
+                    size: 3,
+                    scaleMode: 'flex',
+                    tabs: [
+                        {name: 'Css Style'},
+                        {name: 'Dom Tree'}
+                    ]
+                }, {                    
+                    type: 'panel',
+                    mode: 'empty',
+                    size: 12,
                     scaleMode: 'flex'
-                    children: [{                    
-                        type: 'panel',
-                        mode: 'tab',
-                        size: 3
-                        scaleMode: 'flex'
-                        tabs: [
-                            {name: 'Css Style'},
-                            {name: 'Dom Tree'}
-                        ]
-                    }, {                    
-                        type: 'panel',
-                        mode: 'empty',
-                        size: 12
-                        scaleMode: 'flex'
-                    }]
-                }, {
-                    type: 'panel'
-                    mode: 'tab',
-                    size: 4,
-                    scaleMode: 'flex'
-                    showTabEars: false,
-                    tabs: [{name: 'timeline'}],
                 }]
-            }
-        ]
-    }
+            }, {
+                type: 'panel',
+                mode: 'tab',
+                size: 4,
+                scaleMode: 'flex',
+                showTabEars: false,
+                tabs: [{name: 'timeline'}],
+            }]
+    };
 }
 
 ///polyfills

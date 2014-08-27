@@ -2,10 +2,10 @@
 
 function Tab(opt) {
 
-    this._name = opt.name;
+    this.name = opt.name;
     this.selected = opt.selected;
 
-
+    this._createDomElem();
     this.deEar = this._createTabEar();
 
     this[this.selected ? 'select' : 'deselect']();

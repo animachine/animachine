@@ -34,7 +34,7 @@ function decorTimebarNavigator (timebar) {
         e.preventDefault();
 
         if (e.target === deLeftHand) dragMode = 'start';
-        else (e.target === deRightHand) dragMode = 'end';
+        else if (e.target === deRightHand) dragMode = 'end';
         else dragMode = 'move';
 
         mdX = e.pageX;

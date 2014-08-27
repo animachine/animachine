@@ -498,12 +498,12 @@ var amgui = _.extend(new EventEmitter, {
 
             clearShowSetT();
             showSetT = setTimeout(show, delay);
-        });
+        }
 
         function clearShowSetT() {
 
             clearTimeout(showSetT);
-        });
+        }
 
         function show() {
 

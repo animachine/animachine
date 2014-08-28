@@ -98,7 +98,7 @@ p._createDomElem = function () {
     this.domElem.style.height = '100%';
     this.domElem.style.display = 'flex';
     this.domElem.style.alignItems = 'stretch';
-    this.domElem.style.pointerEvents = 'none';
+    // this.domElem.style.pointerEvents = 'none';
 };
 
 module.exports = Container;

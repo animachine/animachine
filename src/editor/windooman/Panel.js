@@ -6,6 +6,7 @@ function Panel(opt) {
 
     this._mode = opt.mode || 'tab';
     this._tabs = [];
+    this._showHead = 'showHead' in opt ? opt.showHead : true;
     
     this.size = opt.size;
     this.scaleMode = opt.scaleMode;
@@ -15,6 +16,12 @@ function Panel(opt) {
 
     if (opt.tabs) {
         opt.tabs.forEach(this.addTab, this);
+    }
+
+    if (!this._tabs.some(function (tab) {return tab.selected}) &&
+        this._tabs.length)
+    {
+        this._tabs[0].select();
     }
 }
 
@@ -93,7 +100,9 @@ p._createTabBase = function () {
     this._deTabHead.style.height = '23px';
     this._deTabHead.style.display = 'flex';
     this._deTabHead.style.alignItems = 'stretch';
-    this._deTabBase.appendChild(this._deTabHead);
+    if (this._showHead) {
+        this._deTabBase.appendChild(this._deTabHead);
+    }
 
     this._deTabContent = document.createElement('div');
     this._deTabContent.style.width = '100%';

@@ -86,7 +86,7 @@ function decorTimebarNavigator (timebar) {
 
     function createBase () {
 
-        deNav = document.createElement(div);
+        deNav = document.createElement('div');
         deNav.style.position = 'absolute';
         deNav.style.top = '0px';
         deNav.style.height = '3px';
@@ -100,7 +100,7 @@ function decorTimebarNavigator (timebar) {
 
     function createHandler(side) {
 
-        var de = document.createElement(div);
+        var de = document.createElement('div');
         de.style.position = 'absolute';
         de.style[side] = '0px';
         de.style.top = '0px';

@@ -208,7 +208,7 @@ function getBaseWorkspace() {
                 mode: 'tab',
                 size: 23,
                 scaleMode: 'fix',
-                showTabEars: false,
+                showHead: false,
                 tabs: [{name: 'tools'}],
             },{
                 type: 'container',
@@ -235,7 +235,7 @@ function getBaseWorkspace() {
                 mode: 'tab',
                 size: 4,
                 scaleMode: 'flex',
-                showTabEars: false,
+                showHead: false,
                 tabs: [{name: 'timeline'}],
             }]
     };

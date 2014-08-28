@@ -36,13 +36,14 @@ p._createDomElem = function () {
     this.domElem = document.createElement('div');
     this.domElem.style.width = '100%';
     this.domElem.style.height = '100%';
+    this.domElem.style.background = 'rgba(0,0,0,0.3)';
     this.domElem.style.pointerEvents = 'auto';
 };
 
 p._createTabEar = function () {
 
     var de = document.createElement('div');
-    de.textContent = this._name;
+    de.textContent = this.name;
     de.style.flex = 1;
     de.style.boxSizing = 'border-box';
     de.style.borderBottom = 'solid 1px white';

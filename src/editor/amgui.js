@@ -460,7 +460,7 @@ var amgui = _.extend(new EventEmitter, {
         }
     },
 
-    tooltip: function (opt) {
+    addTooltip: function (opt) {
 
         var showSetT, delay = 1200, mx = 0, my = 0;
 
@@ -716,7 +716,7 @@ var amgui = _.extend(new EventEmitter, {
 
         var setI = setInterval(function () {
 
-            if (check()) {
+            if (check(de)) {
 
                 clearInterval(setI);
 

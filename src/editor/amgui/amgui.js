@@ -9,7 +9,10 @@ WebFont.load({
     }
 });
 
-var amgui = _.extend(new EventEmitter, {
+var amgui = _.extend(
+    new EventEmitter, 
+    require('./amgui/bezierEditor'),
+    {
 
     FONT_FAMILY: '"Open Sans", sans-serif',
     FONT_SIZE: '15px',

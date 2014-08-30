@@ -138,17 +138,24 @@ p._focusHandler = function (de) {
     if (!this._currHandledDe) return;
 
     var br = de.getBoundingClientRect();
-    
-    this._handler.setup({
-        hand: {
-            type: 'bund',
-            params: {
-                x: br.left, 
-                y: br.top, 
-                w: br.width, 
-                h: br.height,
-            }
+    var handOpt = {
+        type: 'transform',
+        base: {
+            x: br.left, 
+            y: br.top, 
+            w: br.width, 
+            h: br.height,
         }
+    };
+    var transformParam = this.getParameter('transform');
+
+    if (transformParam) {
+
+        handOpt.params = transformParam.getParams();
+    }
+
+    this._handler.setup({
+        hand: handOpt
     });
 
     am.deHandlerCont.appendChild(this._handler.domElem);
@@ -169,20 +176,40 @@ p._onSelectClick = function () {
     this.select();
 }
 
-p._onChangeHandler = function(params) {
+p._onChangeHandler = function(params, type) {
 
-    var time = am.timeline.currTime;
+    var time = am.timeline.currTime,
+        name, prop;
 
-    Object.keys(params).forEach(function (changeName) {
 
-        var name = HAND2CSS[changeName];
-        var cssProp = this.addParameter({name: name});
-        cssProp.addKey({
-            time: time, 
-            name: name, 
-            value: params[changeName] + 'px'
-        });
-    }, this);
+    if (type === 'transform') {
+
+        Object.keys(params).forEach(function (name) {
+
+            if (name === 'tx' || name === 'ty' || name === 'ty' ||
+                name === 'rx' || name === 'ry' || name === 'ry' ||
+                name === 'sx' || name === 'sy' || name === 'sy')
+            {
+
+                prop = this.addParameter({name: 'transform'});
+                prop.addKey({
+                    time: time, 
+                    name: name, 
+                    value: {name: params[name]}
+                });
+            }
+            else if (name === 'ox' || name === 'oy') {
+
+                prop = this.addParameter({name: 'transform-origin'});
+                prop.addKey({
+                    time: time, 
+                    name: name, 
+                    value: {name: params[name]}
+                });
+            }
+        }, this);
+        
+    }
 
     this.renderTime(time);
     this._focusHandler();
@@ -268,7 +295,15 @@ p.addParameter = function (opt) {
     }
     else {
 
-        param = new CssParameter(opt);
+        if (opt.name === 'transform') {
+
+            param = new TransformCssParameter(opt);
+        }
+        else {
+
+            param = new CssParameter(opt);
+        }
+
         this._parameters.push(param);
         param.on('change', this._onChangeParameter);
 

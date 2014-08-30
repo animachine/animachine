@@ -112,7 +112,7 @@ function createBezierEditor(opt) {
 
         var deCp = document.createElement('div');
         deCp.style.position = 'absolute';
-        deCp.style.cursor = 'drag';
+        deCp.style.cursor = 'grab';
         deCp.style.boxSizing = 'border-box';
         deCp.style.width = r*2 + 'px';
         deCp.style.height = r*2 + 'px';
@@ -136,7 +136,7 @@ function createBezierEditor(opt) {
             mdMinY = minY();
             mdFullY = maxY() - mdMinY;
 
-            deCp.style.cursor = 'dragging';
+            deCp.style.cursor = 'grabbing';
 
             window.addEventListener('mousemove', onDrag);
             window.addEventListener('mouseup', onUp);
@@ -157,7 +157,7 @@ function createBezierEditor(opt) {
 
         function onUp() {
 
-            deCp.style.cursor = 'drag';
+            deCp.style.cursor = 'grab';
 
             window.removeEventListener('mousemove', onDrag);
             window.removeEventListener('mouseup', onUp);

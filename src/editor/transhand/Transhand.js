@@ -1,4 +1,4 @@
-var Bund = require('./hands/Bund');
+var Transformer = require('./hands/Transformer');
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 
@@ -8,7 +8,7 @@ function Transhand() {
 
     this.hands = {};
 
-    [Bund].forEach(function (Hand) {
+    [Transformer].forEach(function (Hand) {
 
         var hand = new Hand();
 
@@ -30,6 +30,7 @@ p.setup = function (opt) {
 
         hand.setup(opt.hand);
         this.domElem = hand.domElem;
+        this._currHand = hand;
     }
     else {
         throw 'Unknown hand type: ' + opt.hand.type
@@ -42,6 +43,22 @@ p.setup = function (opt) {
             this.on(eventType, opt.on[eventType]);
         }, this);
     }
-}
+};
+
+p.activate = function () {
+
+    if (this._currHand) {
+
+        this._currHand.activate();
+    }
+};
+
+p.deactivate = function () {
+
+    if (this._currHand) {
+
+        this._currHand.deactivate();
+    }
+};
 
 module.exports = Transhand;

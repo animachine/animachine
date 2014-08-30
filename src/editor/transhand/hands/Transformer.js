@@ -1,9 +1,10 @@
+'use strict';
 
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var _ = require('lodash');
 
-MOUSESTATES = {
+var MOUSESTATES = {
     'move': 'move',
     'rotate': 'grab',
     'origin': 'hairline',
@@ -15,10 +16,10 @@ MOUSESTATES = {
     '0011': 'nesw-resize',
     '0001': 'ew-resize',
     '1001': 'nwse-resize',
-}
+};
 
 
-function Transform() {
+function Transformer() {
 
     EventEmitter.call(this);
 
@@ -26,11 +27,11 @@ function Transform() {
         tx: 0, ty: 0,
         sx: 1, sy: 1,
         rz: 0,
-        ox: 50, oy: 50
+        ox: 0.5, oy: 0.5
     };
-
     this._base = {x: 0, y: 0, w: 0, h: 0};
-
+    this._points = [{}, {}, {}, {}];
+    this._pOrigin = {};
     this._originRadius = 6;
 
     this._onDrag = this._onDrag.bind(this);
@@ -39,14 +40,16 @@ function Transform() {
     this._onMouseDown = this._onMouseDown.bind(this);
 }
 
-inherits(Transform, EventEmitter);
+Transformer.id = 'transformer';
 
-var p = Transform.prototype;
+inherits(Transformer, EventEmitter);
+
+var p = Transformer.prototype;
 
 p.setup = function (opt) {
 
     if (!this.domElem) {
-        this.generateGraphics();
+        this.createGraphics();
     }
 
     _.extend(this._params, opt.params);
@@ -55,15 +58,30 @@ p.setup = function (opt) {
     this._renderHandler();
 };
 
-p.generateGraphics = function () {
+p.activate = function () {
+
+    if (this._isActivated) return;
+    this._isActivated = true;
+
+    window.addEventListener('mousemove', this._onMouseMove);
+    window.addEventListener('mousedown', this._onMouseDown);
+};
+
+p.deactivate = function () {
+
+    if (!this._isActivated) return;
+    this._isActivated = false;
+    
+    window.removeEventListener('mousemove', this._onMouseMove);
+    window.removeEventListener('mousedown', this._onMouseDown);
+};
+
+p.createGraphics = function () {
 
     this.domElem = document.createElement('canvas');
     this.domElem.style.position = 'fixed';
     this.domElem.style.pointerEvents = 'none';
-    this.domElem.style.border = '1px solid red';
-
-    window.addEventListener('mousemove', this._onMouseMove);
-    window.addEventListener('mousedown', this._onMouseDown);
+    // this.domElem.style.border = '1px solid red';
 };
 
 p._refreshPoints = function () {
@@ -76,43 +94,48 @@ p._refreshPoints = function () {
     po.x = base.x + base.w * params.ox;
     po.y = base.y + base.h * params.oy;
 
-    var tox = po.x * base.w,
-        toy = po.y * base.h;
+    var tox = base.x + params.ox * base.w,
+        toy = base.y + params.oy * base.h;
 
-    t(p[0], base.x, base.y)
-    t(p[1], base.x + base.w, base.y)
-    t(p[2], base.x + base.w, base.y + base.h)
-    t(p[3], base.x, base.y + base.h)
+    t(p[0], base.x, base.y);
+    t(p[1], base.x + base.w, base.y);
+    t(p[2], base.x + base.w, base.y + base.h);
+    t(p[3], base.x, base.y + base.h);
 
     function t(p, x, y) {
 
         var dx = x - tox,
-            dy = y - toy;
+            dy = y - toy,
+            d = Math.sqrt(dx*dx + dy*dy),
+            rad = Math.atan2(dy, dx) + params.rz,
+            cos = Math.cos(rad),
+            sin = Math.sin(rad);
 
-        p.x = tox + (dx * params.sx * Math.cos(params.rz));
-        p.y = toy + (dy * params.sy * Math.sin(params.rz));
+        p.x = tox + (d * params.sx * Math.cos(rad));
+        p.y = toy + (d * params.sy * Math.sin(rad));
     }
-}
+};
 
 p._renderHandler = function () {
 
-    var base = this._base, 
-        params = this._params,
-        p = this._points,
+    var p = this._points,
         po = this._pOrigin,
         c = this.domElem,
         or = this._originRadius,
         ctx = c.getContext('2d'),
+        margin = 2,
         minX = Math.min(p[0].x, p[1].x, p[2].x, p[3].x),
         maxX = Math.max(p[0].x, p[1].x, p[2].x, p[3].x),
         minY = Math.min(p[0].y, p[1].y, p[2].y, p[3].y),
         maxY = Math.max(p[0].y, p[1].y, p[2].y, p[3].y);
 
-    c.style.left = minX + 'px';
-    c.style.top = minY + 'px';
-    c.width = maxX - minX;
-    c.height = maxY - minY;
+    c.style.left = (minX - margin) + 'px';
+    c.style.top = (minY - margin) + 'px';
+    c.width = (maxX - minX) + (margin * 2);
+    c.height = (maxY - minY) + (margin * 2);
 
+    ctx.save();
+    ctx.translate(margin - minX, margin - minY);
     ctx.beginPath();
     ctx.moveTo(p[0].x, p[0].y);
     ctx.lineTo(p[1].x, p[1].y);
@@ -126,9 +149,10 @@ p._renderHandler = function () {
     ctx.lineTo(po.x, po.y + or);
     
 
-    ctx.strokeStye = '#4f2';
+    ctx.strokeStyle = '#4f2';
     ctx.lineWidth = 1;
     ctx.stroke();
+    ctx.restore();
 };
 
 
@@ -138,38 +162,44 @@ p._onMouseMove = function (e) {
 
         this._setFinger(e);
     }
-}
+};
 
 p._onDrag = function (e) {
 
-    var p = this._params,
-        sp = this._mdPos.params,//savedParams
+    var params = this._params,
+        md = this._mdPos,
         finger = this._finger,
-        mx = e.pageX,
-        my = e.pageY,
-        mr,
-        dx = mx - this._mdPos.mx,
-        dy = my - this._mdPos.my,
-        dr, 
-        mdsd, sd,//sideDistance
+        pMouse = {x: e.pageX, y: e.pageY},
+        dx = pMouse.x - md.pMouse.x,
+        dy = pMouse.y - md.pMouse.y,
+        mr, dr,
+        dragDist, mdDist, dragDistOrigin, mdDistOrigin,
         change = {};
 
     if (finger === 'origin') {
-        change.ox = p.ox = sp.ox + dx;
-        change.oy = p.oy = sp.oy + dy;
+        // change.ox = p.ox = sp.ox + (dx / this._base.w);
+        // change.oy = p.oy = sp.oy + (dy / this._base.h);
     }
         
     if (finger === 'move') {
-        change.tx = p.tx = sp.tx + dx);
-        change.ty = p.ty = sp.ty + dy);
+        change.tx = params.tx = md.params.tx + dx;
+        change.ty = params.ty = md.params.ty + dy;
     }
     //TODO
-    // if (finger.charAt(0) === '1') {
-    //     mdsd = sb.h * sp.sy * p.oy;
-    //     sd = base.h * sp.sy * p.oy;
-    //     change.y = p.y = ~~(sp.y + dy);
-    //     change.h = p.h = Math.max(0, ~~(sp.h - dy));
-    // }
+    if (finger.charAt(0) === '1') {
+
+
+        mdDist = distToLine(md.pMouse, md.points[0], md.points[1]);
+        dragDist = distToLine(pMouse, md.points[0], md.points[1]);
+        mdDistOrigin = dist2(md.pMouse, this._pOrigin);
+        dragDistOrigin = dist2(pMouse, this._pOrigin);
+
+        if (dragDistOrigin < mdDistOrigin) {
+            dragDist *= -1;
+        }
+
+        change.sy = params.sy = (mdDist / (mdDist + dragDist)) * md.params.sy;
+    }
 
     // if (finger.charAt(1) === '1') {
     //     change.w = p.w = Math.max(0, ~~(sp.w + dx));
@@ -186,21 +216,22 @@ p._onDrag = function (e) {
     //////
     if (finger === 'rotate') {
 
-        mr = Math.atan2(dy - p.oy, dx - p.ox);
-        dr = radDiff(sp.rz, mr)
-        change.rz = p.rz = sp.rz + dr;
+        mr = Math.atan2(dy - params.oy, dx - params.ox);
+        dr = radDiff(sp.rz, mr);
+        change.rz = params.rz = sp.rz + dr;
     }
-
+console.log(change);
     this.emit('change', change);
-}
+};
 
 p._setFinger = function (e) {
 
-    var params = this._params,
+    var base = this._base,
+        params = this._params,
         p = this._points,
         po = this._pOrigin,
         diff = 3,
-        rDiff = 7,
+        rDiff = 9,
         mx = e.pageX,
         my = e.pageY,
         mp = {x: mx, y: my},
@@ -244,7 +275,7 @@ p._setFinger = function (e) {
         this._finger = 'rotate';
     }
     else {
-        this._finger = false
+        this._finger = false;
     }
 
     if (this._finger) {
@@ -256,12 +287,13 @@ p._setFinger = function (e) {
         this.domElem.style.pointerEvents = 'none';
         this.domElem.style.cursor = 'auto';
     }
-}
+
+    console.log('finger', this._finger)
+};
 
 p._onMouseDown = function (e) {
 
     if (!this._finger) {
-
         return;
     }
 
@@ -271,15 +303,15 @@ p._onMouseDown = function (e) {
     this._isHandle = true;
 
     this._mdPos = {
-        mx: e.pageX,
-        my: e.pageY,
-        params: _.clone(this._params)
-    }
+        pMouse: {x: e.pageX, y: e.pageY},
+        params: _.cloneDeep(this._params),
+        points: _.cloneDeep(this._points)
+    };
 
     window.addEventListener('mouseup', this._onMouseUp);
     window.addEventListener('mouseup', this._onMouseUp);
     window.addEventListener('mousemove', this._onDrag);
-}
+};
 
 p._onMouseUp = function () {
 
@@ -288,7 +320,7 @@ p._onMouseUp = function () {
     window.removeEventListener('mousemove', this._onDrag);
     
     this._isHandle = false;
-}
+};
 
 function radDiff(r0, r1) {
 
@@ -301,17 +333,17 @@ function radDiff(r0, r1) {
 }
 
 function sqr(x) { 
-    return x * x 
+    return x * x;
 }
 
 function dist2(v, w) { 
-    return sqr(v.x - w.x) + sqr(v.y - w.y) 
+    return sqr(v.x - w.x) + sqr(v.y - w.y);
 }
 
 function distToSegmentSquared(p, v, w) {
   var l2 = dist2(v, w);
     
-  if (l2 == 0) return dist2(p, v);
+  if (l2 === 0) return dist2(p, v);
     
   var t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
     
@@ -325,30 +357,28 @@ function distToSegment(p, v, w) {
     return Math.sqrt(distToSegmentSquared(p, v, w));
 }
 
-var epsEqu = function () {
-    var EPSILON = Math.pow(2, -53);
-    return function epsEqu(x, y) {
-        return Math.abs(x - y) < EPSILON;
-    };
-}();
+function distToLine(p, v, w) {
+    //TODO
+    return distToSegment(p, v, w);
+}
 
 function isInside(point, vs) {
     // ray-casting algorithm based on
     // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
     
-    var x = point.x, y = point[1];
+    var x = point.x, y = point.y;
     
     var inside = false;
     for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
-        var xi = vs[i].x, yi = vs[i][1];
-        var xj = vs[j].x, yj = vs[j][1];
+        var xi = vs[i].x, yi = vs[i].y;
+        var xj = vs[j].x, yj = vs[j].y;
         
-        var intersect = ((yi > y) != (yj > y))
-            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+        var intersect = ((yi > y) !== (yj > y)) &&
+            (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
         if (intersect) inside = !inside;
     }
     
     return inside;
-};
+}
 
-module.exports = Transform;
+module.exports = Transformer;

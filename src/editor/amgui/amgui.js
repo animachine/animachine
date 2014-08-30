@@ -1,7 +1,7 @@
 'use strict';
 
 var EventEmitter = require('events').EventEmitter;
-var fontelloConf = require('./assets/fontello/config.json');
+var fontelloConf = require('../assets/fontello/config.json');
 
 WebFont.load({
     google: {
@@ -11,7 +11,7 @@ WebFont.load({
 
 var amgui = _.extend(
     new EventEmitter, 
-    require('./amgui/bezierEditor'),
+    require('./amgui.bezierEditor'),
     {
 
     FONT_FAMILY: '"Open Sans", sans-serif',

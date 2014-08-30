@@ -139,7 +139,7 @@ p._focusHandler = function (de) {
 
     var br = de.getBoundingClientRect();
     var handOpt = {
-        type: 'transform',
+        type: 'transformer',
         base: {
             x: br.left, 
             y: br.top, 
@@ -157,6 +157,7 @@ p._focusHandler = function (de) {
     this._handler.setup({
         hand: handOpt
     });
+    this._handler.activate();
 
     am.deHandlerCont.appendChild(this._handler.domElem);
 };
@@ -167,6 +168,7 @@ p._blurHandler = function () {
 
     if (this._handler && this._handler.domElem && this._handler.domElem.parentNode) {
 
+        this._handler.deactivate();
         this._handler.domElem.parentNode.removeChild(this._handler.domElem);        
     }
 };

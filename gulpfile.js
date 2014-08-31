@@ -37,6 +37,9 @@ gulp.task('vendor', function () {
       paths.bower + 'jQuery.Autosize.Input/jquery.autosize.input.js',
       paths.bower + 'dialog-polyfill/dialog-polyfill.js',
       paths.node + 'css.escape/css.escape.js',
+      paths.bower + 'pojoviz/build/pojoviz-vendor.js',
+      paths.bower + 'pojoviz/build/pojoviz.js',
+      paths.bower + 'pojoviz-renderers.js',
     ])
     .pipe(concat('vendor.js'))
     // .pipe($.uglify())

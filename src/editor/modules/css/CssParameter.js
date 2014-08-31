@@ -9,7 +9,6 @@ function CssParameter (opt) {
 
     EventEmitter.call(this);
     
-    this.type = opt.type || '';
     this.name = opt.name || '';
 
     this._lineH = opt.lineH || 21;

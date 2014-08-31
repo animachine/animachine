@@ -167,13 +167,14 @@ p._onMouseMove = function (e) {
 p._onDrag = function (e) {
 
     var params = this._params,
+        base = this._base,
+        pOrigin = this._pOrigin,
         md = this._mdPos,
         finger = this._finger,
         pMouse = {x: e.pageX, y: e.pageY},
         dx = pMouse.x - md.pMouse.x,
         dy = pMouse.y - md.pMouse.y,
         mr, dr,
-        dragDist, mdDist, dragDistOrigin, mdDistOrigin,
         change = {};
 
     if (finger === 'origin') {
@@ -188,40 +189,53 @@ p._onDrag = function (e) {
     //TODO
     if (finger.charAt(0) === '1') {
 
-
-        mdDist = distToLine(md.pMouse, md.points[0], md.points[1]);
-        dragDist = distToLine(pMouse, md.points[0], md.points[1]);
-        mdDistOrigin = dist2(md.pMouse, this._pOrigin);
-        dragDistOrigin = dist2(pMouse, this._pOrigin);
-
-        if (dragDistOrigin < mdDistOrigin) {
-            dragDist *= -1;
-        }
-
-        change.sy = params.sy = (mdDist / (mdDist + dragDist)) * md.params.sy;
+        setScale(-Math.PI/2, 'sy');
     }
 
-    // if (finger.charAt(1) === '1') {
-    //     change.w = p.w = Math.max(0, ~~(sp.w + dx));
-    // }
+    if (finger.charAt(1) === '1') {
 
-    // if (finger.charAt(2) === '1') {
-    //     change.h = p.h = Math.max(0, ~~(sp.h + dy));
-    // }
+        setScale(0, 'sx');
+    }
 
-    // if (finger.charAt(3) === '1') {
-    //     change.x = p.x = ~~(sp.x + dx);
-    //     change.w = p.w = Math.max(0, ~~(sp.w - dx));
-    // }
-    //////
+    if (finger.charAt(2) === '1') {
+
+        setScale(Math.PI/2, 'sy');
+    }
+
+    if (finger.charAt(3) === '1') {
+
+        setScale(Math.PI, 'sx');
+    }
+
     if (finger === 'rotate') {
 
-        mr = Math.atan2(dy - params.oy, dx - params.ox);
-        dr = radDiff(sp.rz, mr);
-        change.rz = params.rz = sp.rz + dr;
+        setRotation();
     }
 console.log(change);
-    this.emit('change', change);
+    this.emit('change', change, 'transform');
+
+    function setScale(r, s) {
+
+        var rad = r + md.params.rz,
+            mdDist = distToPointInAngle(pOrigin, md.pMouse, rad),
+            dragDist = distToPointInAngle(pOrigin, pMouse, rad);
+
+        change[s] = params[s] = (dragDist / mdDist) * md.params[s];
+    }
+
+    function setRotation() {
+
+        var opx = base.x + base.w * params.ox,
+            opy = base.x + base.w * params.oy,
+            mdx = md.pMouse.x - opx,
+            mdy = md.pMouse.y - opy,
+            mdr = Math.atan2(mdy, mdx),
+            mx = pMouse.x - opx,
+            my = pMouse.y - opy,
+            mr = Math.atan2(my, mx);
+
+        params.rz = md.params.rz + (mr - mdr);
+    }
 };
 
 p._setFinger = function (e) {
@@ -357,9 +371,19 @@ function distToSegment(p, v, w) {
     return Math.sqrt(distToSegmentSquared(p, v, w));
 }
 
-function distToLine(p, v, w) {
-    //TODO
-    return distToSegment(p, v, w);
+function distToPointInAngle(p0, p1, rad) {
+
+    var dx = p1.x - p0.x,
+        dy = p1.y - p0.y,
+        d = Math.sqrt(dx*dx + dy*dy),
+        mRad = Math.atan2(dy, dx);
+
+    rad = mRad - rad;
+
+    // console.log('dx', dx, 'dy', dy, 'd', d, 'mRad', mRad, 'rad', rad, 'return', Math.cos(rad) * d)
+
+    return Math.cos(rad) * d;
+
 }
 
 function isInside(point, vs) {

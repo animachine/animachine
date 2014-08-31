@@ -181,7 +181,7 @@ p._onSelectClick = function () {
 p._onChangeHandler = function(params, type) {
 
     var time = am.timeline.currTime,
-        name, prop;
+        name, prop, value;
 
 
     if (type === 'transform') {
@@ -192,25 +192,27 @@ p._onChangeHandler = function(params, type) {
                 name === 'rx' || name === 'ry' || name === 'ry' ||
                 name === 'sx' || name === 'sy' || name === 'sy')
             {
+                value = {};
+                value[name] = params[name];
 
                 prop = this.addParameter({name: 'transform'});
                 prop.addKey({
                     time: time, 
                     name: name, 
-                    value: {name: params[name]}
-                });
-            }
-            else if (name === 'ox' || name === 'oy') {
-
-                prop = this.addParameter({name: 'transform-origin'});
-                prop.addKey({
-                    time: time, 
-                    name: name, 
-                    value: {name: params[name]}
+                    value: value
                 });
             }
         }, this);
         
+        if ('ox' in params && 'oy' in params) {
+
+            prop = this.addParameter({name: 'transform-origin'});
+            prop.addKey({
+                time: time, 
+                name: name, 
+                value: (params.ox*100) + '% ' + (params.oy*100) + '%'
+            });
+        }
     }
 
     this.renderTime(time);

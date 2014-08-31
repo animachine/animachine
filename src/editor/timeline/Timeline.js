@@ -51,6 +51,8 @@ function Timeline(am) {
     });
 
 
+    amgui.callOnAdded(this.domElem, this._refreshTimebarWidth, this);
+    
     window.addEventListener('resize', this._onWindowResize);
 }
 

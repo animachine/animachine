@@ -2,6 +2,7 @@ var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../../amgui');
 var CssParameter = require('./CssParameter');
+var CssTransformParameter = require('./CssTransformParameter');
 var Key = require('./Key');
 var Transhand = require('../../transhand/Transhand');
 
@@ -137,7 +138,16 @@ p._focusHandler = function (de) {
 
     if (!this._currHandledDe) return;
 
+    var transformSave;
+    if (de.style.transform) {
+        transformSave = de.style.transform;
+        de.style.transform = '';
+    }
+
     var br = de.getBoundingClientRect();
+    
+    de.style.transform = transformSave;
+    
     var handOpt = {
         type: 'transformer',
         base: {
@@ -151,7 +161,7 @@ p._focusHandler = function (de) {
 
     if (transformParam) {
 
-        handOpt.params = transformParam.getParams();
+        handOpt.params = transformParam.getRawValue();
     }
 
     this._handler.setup({
@@ -188,9 +198,9 @@ p._onChangeHandler = function(params, type) {
 
         Object.keys(params).forEach(function (name) {
 
-            if (name === 'tx' || name === 'ty' || name === 'ty' ||
-                name === 'rx' || name === 'ry' || name === 'ry' ||
-                name === 'sx' || name === 'sy' || name === 'sy')
+            if (name === 'tx' || name === 'ty' || name === 'tz' ||
+                name === 'rx' || name === 'ry' || name === 'rz' ||
+                name === 'sx' || name === 'sy' || name === 'sz')
             {
                 value = {};
                 value[name] = params[name];
@@ -301,7 +311,7 @@ p.addParameter = function (opt) {
 
         if (opt.name === 'transform') {
 
-            param = new TransformCssParameter(opt);
+            param = new CssTransformParameter(opt);
         }
         else {
 

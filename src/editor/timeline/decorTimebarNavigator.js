@@ -22,7 +22,7 @@ function decorTimebarNavigator (timebar) {
         var width = timebar.width,
             max = timebar.maxTime,
             start = timebar.start,
-            end = timebar.start;
+            end = timebar.end;
 
         deNav.style.left = (width * (start / max)) + 'px';
         deNav.style.width = (width * ((end - start) / max)) + 'px';
@@ -81,7 +81,7 @@ function decorTimebarNavigator (timebar) {
 
     function onMLeave() {
 
-        deNav.style.transform = 'scaleY(0.3)';
+        deNav.style.transform = 'scaleY(0.7)';
     }
 
     function createBase () {

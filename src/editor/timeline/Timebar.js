@@ -24,8 +24,7 @@ function Timebar(opt) {
 
     this._createBase();
     this._createPointer();
-
-    amgui.callOnAdded(this.domElem, this.renderTape, this);
+    this._renderTape();
 
     this._canvasTape.addEventListener('mousedown', this._onMDown);
 
@@ -46,7 +45,7 @@ Object.defineProperties(p, {
             if (this._timescale === v) return;
             this._timescale = Math.min(1, Math.max(0.0001, v));
             console.log('>setts', v, this.timescale)
-            this.renderTape();
+            this._renderTape();
             this.emit('changeTape');
         },
         get: function () {
@@ -58,7 +57,7 @@ Object.defineProperties(p, {
         set: function (v) {
             if (this._start === v) return;
             this._start = Math.min(0, v);
-            this.renderTape();
+            this._renderTape();
             this.emit('changeTape');
         },
         get: function () {
@@ -70,7 +69,7 @@ Object.defineProperties(p, {
         set: function (v) {
             if (this._width === v) return;
             this._width = v;
-            this.renderTape();
+            this._renderTape();
             this.emit('changeTape');
         },
         get: function () {
@@ -136,7 +135,7 @@ Object.defineProperties(p, {
 
 
 
-p.renderTape = function () {
+p._renderTape = function () {
 
     var start = this._start,
         end = this.end,

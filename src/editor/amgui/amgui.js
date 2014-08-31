@@ -725,18 +725,19 @@ var amgui = _.extend(
 
                 cb.call(thisArg);
             }
+            
         }, 234);
-
+        
         function check (node) {
 
             while (node.parentNode) {
 
-                if (node.nodeName.toLowerCase() === 'body') {
+                node = node.parentNode;
+                
+                if (node.nodeType === 9 || node.nodeType === 11) {
 
                     return true;
                 }
-
-                node = node.parentNode;
             }
         }
     }

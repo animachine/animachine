@@ -91,8 +91,11 @@ p._refreshPoints = function () {
         p = this._points,
         po = this._pOrigin;
 
-    po.x = base.x + base.w * params.ox;
-    po.y = base.y + base.h * params.oy;
+    base.x += params.tx;
+    base.y += params.ty;
+
+    po.x = base.x + (base.w * params.ox);
+    po.y = base.y + (base.h * params.oy);
 
     var tox = base.x + params.ox * base.w,
         toy = base.y + params.oy * base.h;
@@ -104,15 +107,13 @@ p._refreshPoints = function () {
 
     function t(p, x, y) {
 
-        var dx = x - tox,
-            dy = y - toy,
+        var dx = (x - tox) * params.sx,
+            dy = (y - toy) * params.sy,
             d = Math.sqrt(dx*dx + dy*dy),
-            rad = Math.atan2(dy, dx) + params.rz,
-            cos = Math.cos(rad),
-            sin = Math.sin(rad);
+            rad = Math.atan2(dy, dx) + params.rz;
 
-        p.x = tox + (d * params.sx * Math.cos(rad));
-        p.y = toy + (d * params.sy * Math.sin(rad));
+        p.x = tox + (d * Math.cos(rad));
+        p.y = toy + (d * Math.sin(rad));
     }
 };
 
@@ -211,7 +212,7 @@ p._onDrag = function (e) {
 
         setRotation();
     }
-console.log(change);
+
     this.emit('change', change, 'transform');
 
     function setScale(r, s) {
@@ -226,7 +227,7 @@ console.log(change);
     function setRotation() {
 
         var opx = base.x + base.w * params.ox,
-            opy = base.x + base.w * params.oy,
+            opy = base.y + base.h * params.oy,
             mdx = md.pMouse.x - opx,
             mdy = md.pMouse.y - opy,
             mdr = Math.atan2(mdy, mdx),
@@ -234,7 +235,7 @@ console.log(change);
             my = pMouse.y - opy,
             mr = Math.atan2(my, mx);
 
-        params.rz = md.params.rz + (mr - mdr);
+        change.rz = params.rz = md.params.rz + (mr - mdr);
     }
 };
 
@@ -301,8 +302,6 @@ p._setFinger = function (e) {
         this.domElem.style.pointerEvents = 'none';
         this.domElem.style.cursor = 'auto';
     }
-
-    console.log('finger', this._finger)
 };
 
 p._onMouseDown = function (e) {

@@ -26,14 +26,17 @@ function CssParameter (opt) {
     this._onToggleKey = this._onToggleKey.bind(this);
     this._onDeleteKey = this._onDeleteKey.bind(this);
 
-    this._input = amgui.createKeyValueInput({
-        parent: this.deOptions,
-        key: this.name,
-        value: opt.value,
-        onChange: this._onChangeInput,
-        height: this._lineH
-    });
-    this._input.style.flex = 1;
+    if (!opt.skipKeyValueInput) {
+
+        this._input = amgui.createKeyValueInput({
+            parent: this.deOptions,
+            key: this.name,
+            value: opt.value,
+            onChange: this._onChangeInput,
+            height: this._lineH
+        });
+        this._input.style.flex = 1;
+    }
 
     this._btnToggleKey = amgui.createIconBtn({
         icon: 'key',
@@ -133,6 +136,19 @@ p.getKey = function (time) {
     return this._keys.find(function(key) {
 
         return key.time === time;
+    });
+};
+
+p.getPrevKey = function (time) {
+
+    var retKey;
+    
+    this._keys.forEach(function(key) {
+
+        if (key.time < time && (!retKey || retKey.time < key.time)) {
+
+            retKey = key;
+        }
     });
 };
 

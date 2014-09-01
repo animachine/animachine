@@ -23,7 +23,7 @@ var amgui = _.extend(
         bg2: '#444',
         bg3: '#666',
         text: '#efe',
-        overlay: 'rgba(0,0,0,.545)'
+        overlay: 'rgba(0,0,0,.785)'
     },
 
     createKeyline: function (opt) {
@@ -170,25 +170,20 @@ var amgui = _.extend(
 
         var de = document.createElement('dialog');
         document.body.appendChild(de);
-        
-        if (!de.show) {
-            window.dialogPolyfill.registerDialog(de);
-        }
 
         de.style.background = 'none';
         de.style.border = 'none';
         de.style.fontFamily = amgui.FONT_FAMILY;
 
 
-        var title = document.createElement('div');
-        title.textContent = opt.title || 'Dialog';
-        title.style.display = 'inline-block';
-        title.style.padding = '0 3px';
-        title.style.height = '34px';
-        title.style.fontSize = '23px';
-        title.style.background = amgui.color.bg0;
-        title.style.color = amgui.color.text;
-        de.appendChild(title);
+        var deTitle = document.createElement('div');
+        deTitle.style.display = 'inline-block';
+        deTitle.style.padding = '0 3px';
+        deTitle.style.height = '34px';
+        deTitle.style.fontSize = '23px';
+        deTitle.style.background = amgui.color.overlay;
+        deTitle.style.color = amgui.color.text;
+        de.appendChild(deTitle);
 
         var titleEnd = document.createElement('div');
         titleEnd.style.display = 'inline-block';
@@ -197,25 +192,60 @@ var amgui = _.extend(
         titleEnd.style.verticalAlign = 'bottom';
         titleEnd.style.borderStyle = 'solid';
         titleEnd.style.borderWidth = '34px 0 0 8px';
-        titleEnd.style.borderColor = 'transparent transparent transparent ' + amgui.color.bg0;;
+        titleEnd.style.borderColor = 'transparent transparent transparent ' + amgui.color.overlay;;
         de.appendChild(titleEnd);
 
-        de.appendChild(opt.content);
+        
 
-        if (opt.buttons) {
+        var contentCont = document.createElement('div');
+        contentCont.style.background = amgui.color.overlay;
+        de.appendChild(contentCont);
 
-            opt.buttons.forEach(function (caption) {
+        var buttonsCont = document.createElement('div');
+        buttonsCont.style.background = amgui.color.overlay;
+        buttonsCont.style.display = 'inline-block';
+        buttonsCont.style.float = 'right';
+        de.appendChild(buttonsCont);
 
-                var btn = this.createBtn({caption: caption});
+
+        de.setTitle = function (title) {
+
+            deTitle.textContent = title || 'Dialog';
+        };
+
+        de.setContent = function (content) {
+
+            if (!content) {
+                return;
+            }
+
+            contentCont.innerHTML = '';
+            contentCont.appendChild(content);
+        };
+
+        de.setButtons = function (buttons) {
+
+            if (!buttons) {
+                return
+            }
+
+            buttonsCont.innerHTML = '';
+
+            buttons.forEach(function (caption) {
+
+                var btn = amgui.createBtn({caption: caption});
                 btn.style.display = 'inline-block';
-                btn.style.float = 'right';
-                de.appendChild(btn);
+                buttonsCont.appendChild(btn);
 
                 btn.addEventListener('click', function () {
                     de.dispatchEvent(new Event('click_' + caption.toLowerCase()));
                 });
-            }, this);
-        }
+            });
+        };
+
+        de.setTitle(opt.title);
+        de.setContent(opt.content);
+        de.setButtons(opt.buttons);
 
         var buttonsEnd = document.createElement('div');
         buttonsEnd.style.display = 'inline-block';
@@ -363,7 +393,7 @@ var amgui = _.extend(
                 return glyph.css === icon
             });
 
-            var code = glyph ? glyph.code : 59393;
+            var code = glyph ? glyph.code : 59407;
             de.textContent = String.fromCharCode(code);
         };
 

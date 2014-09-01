@@ -3,10 +3,11 @@
 var domready = require('domready');
 var amgui = require('./amgui');
 var EventEmitter = require('events').EventEmitter;
-var Transhand = require('./transhand/Transhand');
-var Timeline = require('./timeline/Timeline');
-var Toolbar = require('./toolbar/Toolbar');
-var Windooman = require('./windooman/Windooman');
+var Transhand = require('./transhand');
+var Timeline = require('./timeline');
+var Toolbar = require('./toolbar');
+var Windooman = require('./windooman');
+var Warehouseman = require('./warehouseman');
 var modules = {
     css: require('./modules/css')
 };
@@ -41,12 +42,12 @@ am.getHandler = function () {
     else {
         return new Transhand();
     }
-}
+};
 
 am.throwHandler = function (handler) {
 
     handlerBuff.push(handler);
-} 
+};
 
 domready(function () {
 
@@ -57,6 +58,8 @@ domready(function () {
         base: getBaseWorkspace()
     });
     am.workspace.load('base');
+
+    am.storage = new Warehouseman();
 
     am.domElem = createAmRoot();
     am.deHandlerCont = createAmLayer();
@@ -70,7 +73,12 @@ domready(function () {
     am.workspace.fillTab('tools', am.toolbar.domElem);
     am.timeline = new Timeline(am);
 
-    am.toolbar.addIcon({icon: 'cog'});
+    am.toolbar.addIcon({
+        icon: 'upload-cloud',
+        onClick: function () {
+            am.storage.showSaveDialog();
+        }
+    });
 
     am.timeline.domElem.style.position = 'fixed';
     am.timeline.domElem.style.width = '100%';
@@ -141,7 +149,12 @@ function createAmRoot() {
     de.style.userSelect = 'none';
     de.style.webktUserSelect = 'none';
     de.style.fontFamily = amgui.FONT_FAMILY;
-    de.style.zIndex = getMaxZIndex() + 1000;
+
+    var zIndex = getMaxZIndex();
+    if (zIndex) {
+        de.style.zIndex = zIndex + 1000;
+    }
+    
     document.body.appendChild(de);
 
     de.addEventListener('mousedown', function (e) {

@@ -1,11 +1,4 @@
 {
   "name": "css",
-  "version": "0.0.0",
-  "description": "",
-  "main": "css.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC"
+  "main": "css.js"
 }

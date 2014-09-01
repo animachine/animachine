@@ -1,4 +1,6 @@
 
+.icon-download-cloud:before { content: '\73'; } /* 's' */
+.icon-upload-cloud:before { content: '\75'; } /* 'u' */
 .icon-key:before { content: '\e800'; } /* '' */
 .icon-cog:before { content: '\e801'; } /* '' */
 .icon-angle-right:before { content: '\e802'; } /* '' */
@@ -9,3 +11,13 @@
 .icon-pause:before { content: '\e807'; } /* '' */
 .icon-file-code:before { content: '\e808'; } /* '' */
 .icon-floppy:before { content: '\e809'; } /* '' */
+.icon-folder-add:before { content: '\e80a'; } /* '' */
+.icon-folder-empty:before { content: '\e80b'; } /* '' */
+.icon-folder-open-empty:before { content: '\e80c'; } /* '' */
+.icon-doc:before { content: '\e80d'; } /* '' */
+.icon-git:before { content: '\e80e'; } /* '' */
+.icon-blank:before { content: '\e80f'; } /* '' */
+.icon-bullseye:before { content: '\e810'; } /* '' */
+.icon-dropbox:before { content: '\e811'; } /* '' */
+.icon-evernote:before { content: '\e812'; } /* '' */
+.icon-hdd:before { content: '\e813'; } /* '' */

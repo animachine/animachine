@@ -56,7 +56,7 @@
     "shadow"        : false,     // true: Allows re-define variables later in code e.g. `var x=1; x=2;`
     "sub"           : false,     // true: Tolerate using `[]` notation when it can still be expressed in dot notation
     "supernew"      : false,     // true: Tolerate `new function () { ... };` and `new Object;`
-    "validthis"     : false,     // true: Tolerate using this in a non-constructor function
+    "validthis"     : true,     // true: Tolerate using this in a non-constructor function
 
     // Environments
     "browser"       : true,     // Web Browser (window, document, etc)
@@ -64,7 +64,7 @@
     "couch"         : false,    // CouchDB
     "devel"         : true,     // Development/debugging (alert, confirm, etc)
     "dojo"          : false,    // Dojo Toolkit
-    "jquery"        : false,    // jQuery
+    "jquery"        : true,    // jQuery
     "mootools"      : false,    // MooTools
     "node"          : true,    // Node.js
     "nonstandard"   : false,    // Widely adopted globals (escape, unescape, etc)
@@ -72,8 +72,5 @@
     "rhino"         : false,    // Rhino
     "worker"        : false,    // Web Workers
     "wsh"           : false,    // Windows Scripting Host
-    "yui"           : false,    // Yahoo User Interface
-
-    // Custom Globals
-    "globals"       : {}        // additional predefined global variables
+    "yui"           : false    // Yahoo User Interface
 }

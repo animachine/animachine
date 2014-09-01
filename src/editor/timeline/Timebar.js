@@ -1,9 +1,13 @@
+'use strict';
+
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../amgui');
 var decorTimebarNavigator = require('./decorTimebarNavigator');
 
 function Timebar(opt) {
+
+    EventEmitter.call(this);
 
     opt = opt || {};
 

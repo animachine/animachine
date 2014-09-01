@@ -1,6 +1,15 @@
 Font license info
 
 
+## Font Awesome
+
+   Copyright (C) 2012 by Dave Gandy
+
+   Author:    Dave Gandy
+   License:   SIL ()
+   Homepage:  http://fortawesome.github.com/Font-Awesome/
+
+
 ## Elusive
 
    Copyright (C) 2013 by Aristeides Stathopoulos
@@ -10,12 +19,21 @@ Font license info
    Homepage:  http://aristeides.com/
 
 
-## Font Awesome
+## Typicons
 
-   Copyright (C) 2012 by Dave Gandy
+   (c) Stephen Hutchings 2012
 
-   Author:    Dave Gandy
-   License:   SIL ()
-   Homepage:  http://fortawesome.github.com/Font-Awesome/
+   Author:    Stephen Hutchings
+   License:   SIL (http://scripts.sil.org/OFL)
+   Homepage:  http://typicons.com/
+
+
+## Zocial
+
+   Copyright (C) 2012 by Sam Collins
+
+   Author:    Sam Collins
+   License:   MIT (http://opensource.org/licenses/mit-license.php)
+   Homepage:  http://zocial.smcllns.com/
 
 

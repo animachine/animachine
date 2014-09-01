@@ -5,28 +5,18 @@ var amgui = require('../amgui');
 function decorDialog(whm) {
 
     var dialog, deRoot, deLeft, deHead, deBreadcrumbs, nameInput, 
-        deStorageSelector, deDirectory, btnNewFolder,
+        deStorageSelector, deDirectory, btnNewFolder, isInited,
         selectedPath = '', selectedFile = '';
 
-    createDialog();
-    createStorageSelector();
-    createBreadcrumbs();
-    createBtnNewFolder();
-    createNameInput();
-    createDirectory();
 
-    whm.on('changePath', function () {
+
+    whm.showSaveDialog = function() {
+
+        init();
 
         deBreadcrumbs.refresh();
         deDirectory.refresh();
-    });
-
-    whm.on('changeStorages', function () {
-
         deStorageSelector.refresh();
-    });
-
-    whm.showSaveDialog = function() {
 
         dialog.setTitle('Save');
         dialog.setButtons(['save', 'close']);
@@ -35,12 +25,31 @@ function decorDialog(whm) {
 
     whm.showOpenDialog = function() {
 
+        init();
+
+        deBreadcrumbs.refresh();
+        deDirectory.refresh();
+        deStorageSelector.refresh();
+
         dialog.setTitle('Save');
         dialog.setButtons(['open', 'close']);
         dialog.showModal();
     };
 
+    function init () {
 
+        if (isInited) {
+            return;
+        }
+        isInited = true;
+
+        createDialog();
+        createStorageSelector();
+        createBreadcrumbs();
+        createBtnNewFolder();
+        createNameInput();
+        createDirectory();
+    }
 
     function createDialog () {
 
@@ -64,7 +73,8 @@ function decorDialog(whm) {
         deLeft.appendChild(deHead);
 
         dialog = amgui.createDialog({
-            content: deRoot
+            content: deRoot,
+            parent: am.deDialogCont
         });
     }
 
@@ -92,7 +102,7 @@ function decorDialog(whm) {
 
         deBreadcrumbs.refresh = function () {
 
-            var crumbs = whm._path.split('/'),
+            var crumbs = selectedPath.split('/'),
                 value = '';
 
             deBreadcrumbs.innerHTML = '';
@@ -156,18 +166,24 @@ function decorDialog(whm) {
         nameInput.type = 'text';
         nameInput.style.width = '100%';
         nameInput.style.height = '21px';
+        nameInput.style.background = 'none';
+        nameInput.style.border = 'none';
+        nameInput.style.color = amgui.color.text;
+        nameInput.style.fontSize = amgui.FONT_SIZE;
+        nameInput.style.fontFamily = amgui.FONT_FAMILY;
+        nameInput.placeholder = 'File name';
         deLeft.appendChild(nameInput);
     }
 
 
     function createDirectory() {
 
-        deDirectory = document.createElement('ol');
+        deDirectory = document.createElement('div');
         deDirectory.style.listStyle = 'none';
         deDirectory.style.display = 'inline-block';
-        deDirectory.style.width = '50px';
-        deDirectory.style.height = '100%';
-        deRoot.appendChild(deDirectory);
+        deDirectory.style.width = '100%';
+        deDirectory.style.flex = '1';
+        deLeft.appendChild(deDirectory);
 
         deDirectory.addEventListener('click', onClick);
         deDirectory.addEventListener('dblclick', onClick);
@@ -217,12 +233,12 @@ function decorDialog(whm) {
 
         var btnSize = 52;
 
-        deStorageSelector = document.createElement('ol');
+        deStorageSelector = document.createElement('div');
         deStorageSelector.style.listStyle = 'none';
         deStorageSelector.style.display = 'inline-block';
         deStorageSelector.style.width = btnSize + 'px';
         deStorageSelector.style.height = '100%';
-        deRoot.appendChild(deStorageSelector);
+        deRoot.insertBefore(deStorageSelector, deLeft);
 
         deStorageSelector.addEventListener('click', function () {
 
@@ -249,7 +265,8 @@ function decorDialog(whm) {
             deItem = amgui.createIconBtn({
                 icon: icon,
                 parent: deStorageSelector,
-                width: btnSize
+                width: btnSize,
+                height: btnSize
             });
 
             deItem._storageIdx = value;

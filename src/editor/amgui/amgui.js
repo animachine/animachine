@@ -23,8 +23,18 @@ var amgui = _.extend(
         bg2: '#444',
         bg3: '#666',
         text: '#efe',
-        overlay: 'rgba(0,0,0,.785)'
+        overlay: 'rgba(0,0,0,.785)',
+        bgHover: 'rgba(255,255,255,0.12)',
     },
+
+    getStyleSheet: function () {
+
+        var style = document.createElement('style');
+
+        style.innerHTML = 'dialog::backdrop { background:'+amgui.color.bgHover+' }';
+
+        return style;
+    }, 
 
     createKeyline: function (opt) {
 
@@ -169,7 +179,7 @@ var amgui = _.extend(
     createDialog: function (opt) {
 
         var de = document.createElement('dialog');
-        document.body.appendChild(de);
+        (opt.parent || document.body).appendChild(de);
 
         de.style.background = 'none';
         de.style.border = 'none';
@@ -178,9 +188,10 @@ var amgui = _.extend(
 
         var deTitle = document.createElement('div');
         deTitle.style.display = 'inline-block';
-        deTitle.style.padding = '0 3px';
+        deTitle.style.padding = '0 18px';
         deTitle.style.height = '34px';
         deTitle.style.fontSize = '23px';
+        deTitle.style.fontWeight = 'bold';
         deTitle.style.background = amgui.color.overlay;
         deTitle.style.color = amgui.color.text;
         de.appendChild(deTitle);
@@ -235,6 +246,8 @@ var amgui = _.extend(
 
                 var btn = amgui.createBtn({caption: caption});
                 btn.style.display = 'inline-block';
+                btn.style.fontWeight = 'bold';
+                btn.style.fontSize = '18px';
                 buttonsCont.appendChild(btn);
 
                 btn.addEventListener('click', function () {
@@ -284,7 +297,7 @@ var amgui = _.extend(
 
         function onMOver() {
 
-            this.style.background = 'darkgrey';
+            this.style.background = amgui.color.bgHover;
         }
 
         function onMOut() {
@@ -318,7 +331,7 @@ var amgui = _.extend(
 
         function onMOver() {
 
-            this.style.background = 'rgba(255,255,255,0.12)';
+            this.style.background = amgui.color.bgHover;
         }
 
         function onMOut() {

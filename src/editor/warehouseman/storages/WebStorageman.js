@@ -13,7 +13,7 @@ function WebStorageman(opt) {
 
     this._root = opt.root || '_webstorageman/';
 
-    this.icon = 'bullseyel';
+    this.icon = 'bullseye';
 
     this._folders = window.localStorage.getItem(this._root + FOLDERS);
     

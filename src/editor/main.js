@@ -64,6 +64,7 @@ domready(function () {
     am.domElem = createAmRoot();
     am.deHandlerCont = createAmLayer();
     am.deGuiCont = createAmLayer();
+    am.deDialogCont = createAmLayer();
 
     am.deGuiCont.appendChild(am.workspace.domElem);
 
@@ -154,7 +155,7 @@ function createAmRoot() {
     if (zIndex) {
         de.style.zIndex = zIndex + 1000;
     }
-    
+
     document.body.appendChild(de);
 
     de.addEventListener('mousedown', function (e) {
@@ -163,6 +164,8 @@ function createAmRoot() {
     });
 
     var sr = de.createShadowRoot();
+        
+    sr.appendChild(amgui.getStyleSheet());
 
     externalStylesheets.forEach(function (css) {
 

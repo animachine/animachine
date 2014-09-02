@@ -21,7 +21,7 @@ p.show = function (opt) {
 
     this._btnSelectEase.setCaption(opt.ease);
 
-    this.domElem.show();
+    this.domElem.showModal();
 };
 
 p.hide = function () {
@@ -41,6 +41,7 @@ p._createDialog = function () {
     this.domElem = amgui.createDialog({
         title: 'Key',
         content: this._deContent,
+        parent: am.deDialogCont,
         buttons: ['ok'],
     });
 

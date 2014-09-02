@@ -23,13 +23,13 @@ var handlerBuff = [];
 
 var am = window.am = module.exports = _.extend(new EventEmitter(), {
 
-    sequenceTypes: [],
+    sequenceTypes: {},
 
     selectedElement: undefined,
 
-    registerSequenceType: function (sequType) {
+    registerSequenceType: function (Sequence, type) {
 
-        this.sequenceTypes.push(sequType);
+        this.sequenceTypes[type] = Sequence;
     }
 });
 
@@ -51,7 +51,7 @@ am.throwHandler = function (handler) {
 
 domready(function () {
 
-    for (var i = 0; i < 15; ++i) debugRect();
+    for (var i = 0; i < 15; ++i) debugRect(i);
 
     am.workspace = new Windooman();
     am.workspace.loadWorkspaces({
@@ -77,7 +77,66 @@ domready(function () {
     am.toolbar.addIcon({
         icon: 'upload-cloud',
         onClick: function () {
-            am.storage.showSaveDialog();
+            var data = {
+                script: am.timeline.getScript(),
+                timelineSave: am.timeline.getSave()
+            };
+            am.storage.showSaveDialog('filename', data);
+        }
+    });
+
+    am.toolbar.addIcon({
+        icon: 'download-cloud',
+        onClick: function () {
+            am.timeline.useSave({
+                "currTime": 1100,
+                "timescale": 0.05,
+                "sequences": [{
+                    "type": "css_sequ_type",
+                    "data": {
+                        "selectors": ["#boxX5"],
+                        "parameters": [{
+                            "name": "",
+                            "keys": []
+                        }, {
+                            "name": "transform",
+                            "keys": [{
+                                "value": {
+                                    "tx": 0,
+                                    "ty": 0,
+                                    "tz": 0,
+                                    "rx": 0,
+                                    "ry": 0,
+                                    "rz": 0,
+                                    "sx": 1,
+                                    "sy": 2.20250521920668,
+                                    "sz": 1,
+                                    "skewX": 0,
+                                    "skewY": 0,
+                                    "perspective": 0
+                                },
+                                "time": 0
+                            }, {
+                                "value": {
+                                    "tx": 0,
+                                    "ty": 0,
+                                    "tz": 0,
+                                    "rx": 0,
+                                    "ry": 0,
+                                    "rz": 0,
+                                    "sx": 3.4274496158006964,
+                                    "sy": 1.0196644138403999,
+                                    "sz": 1,
+                                    "skewX": 0,
+                                    "skewY": 0,
+                                    "perspective": 0
+                                },
+                                "time": 1380
+                            }]
+                        }]
+                    }
+                }]
+            })
         }
     });
 
@@ -92,9 +151,9 @@ domready(function () {
     modules.css.init(am);
 });
 
-function debugRect() {
+function debugRect(idx) {
     var de = document.createElement('div');
-    de.id = ('boxX'+Math.random()).substr(0, 8);
+    de.id = 'boxX'+idx;
     de.className = 'boxer';
     de.style.position = 'absolute';
     de.style.backgroundColor = 'blue';

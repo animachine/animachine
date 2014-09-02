@@ -6,30 +6,13 @@ var CssTransformParameter = require('./CssTransformParameter');
 var Key = require('./Key');
 var Transhand = require('../../transhand/Transhand');
 
-var cssSequence = {
-
-    _instances: [],
-
-    create: function (opt) {
-
-        return new CssSequence(opt);
-    }
-}
-
-var HAND2CSS = {
-    'x': 'left',
-    'y': 'top',
-    'w': 'width',
-    'h': 'height',
-};
-
 function CssSequence(opt) {
 
     opt = opt || {};
 
     EventEmitter.call(this);
 
-    cssSequence._instances.push(this);
+    CssSequence._instances.push(this);
 
     this._selectors = opt.selectors || [];
     this._parameters = [];
@@ -61,8 +44,12 @@ function CssSequence(opt) {
     this._onChangeBlankParameter();
 }
 
+CssSequence._instances = [];
+
 inherits(CssSequence, EventEmitter);
 var p = CssSequence.prototype;
+
+p.type = 'css_sequ_type';
 
 p.select = function () {
 
@@ -105,6 +92,10 @@ p.deselect = function () {
 
 p.renderTime = function (time) {
 
+    if (this._selectors.length === 0) {
+        return;
+    }
+
     var selection = _.toArray(am.deRoot.querySelectorAll(this._selectors.join(',')));
 
     this._parameters.forEach(function (param) {
@@ -119,7 +110,7 @@ p.renderTime = function (time) {
 p.height = function () {
 
     return this._opt.baseH * (this._isOpened ? this._parameters.length + 1 : 1);
-}
+};
 
 p._onPick = function (de) {
 
@@ -129,7 +120,7 @@ p._onPick = function (de) {
 
         this.select();
     }
-}
+};
 
 p._focusHandler = function (de) {
 
@@ -186,7 +177,7 @@ p._blurHandler = function () {
 p._onSelectClick = function () {
 
     this.select();
-}
+};
 
 p._onChangeHandler = function(params, type) {
 
@@ -287,7 +278,7 @@ p._isAllParamsHaveKey = function (time) {
 
         return param.getKey(time) || !param.isValid();
     });
-} 
+};
 
 p.getParameter = function (name) {
 
@@ -366,12 +357,12 @@ p.getScript = function () {
     var keys = [], code = '', options, selectors, 
         longestOffset = 0;
 
-    this._parameters.forEach(function (prop) {
+    this._parameters.forEach(function (param) {
 
-        prop._keys.forEach(function (key) {
+        param._keys.forEach(function (key) {
 
             var offset = key.time;
-            getKey(offset)[prop.name] = key.value;
+            getKey(offset)[param.name] = param.getValue(key.time);
 
             if (longestOffset < offset) longestOffset = offset; 
         });
@@ -403,29 +394,58 @@ p.getScript = function () {
     }
 
     options = {
-      direction: "norma;", 
+      direction: "normal", 
       duration: longestOffset, 
       iterations: 1
     };
 
     selectors = this._selectors.join(',').replace('\\','\\\\');
 
-    code = '(function () {                                                                     \n' 
-         + '                                                                                   \n'
-         + '    var animations = [],                                                           \n'
-         + '        keys = ' + JSON.stringify(keys) + ',                                       \n'
-         + '        options = ' + JSON.stringify(options) + ',                                 \n'
-         + '        elems = document.querySelectorAll("' + selectors + '");                    \n'
-         + '                                                                                   \n'
-         + '    for (var i = 0; i < elems.length; ++i) {                                       \n'
-         + '                                                                                   \n'
-         + '        animations.push(new Animation(elems[i], keys, options));                   \n'
-         + '    }                                                                              \n'
-         + '                                                                                   \n'
-         + '    return new AnimationGroup(animations);                                         \n'
-         + '}())                                                                               \n';
+    code = '(function () {                                                   \n' 
+         + '                                                                 \n'
+         + '    var animations = [],                                         \n'
+         + '        keys = ' + JSON.stringify(keys) + ',                     \n'
+         + '        options = ' + JSON.stringify(options) + ',               \n'
+         + '        elems = document.querySelectorAll("' + selectors + '");  \n'
+         + '                                                                 \n'
+         + '    for (var i = 0; i < elems.length; ++i) {                     \n'
+         + '                                                                 \n'
+         + '        animations.push(new Animation(elems[i], keys, options)); \n'
+         + '    }                                                            \n'
+         + '                                                                 \n'
+         + '    return new AnimationGroup(animations);                       \n'
+         + '}())                                                             \n';
     
     return code;
+};
+
+p.getSave = function () {
+
+    var save = {
+        selectors: _.clone(this._selectors),
+        parameters: [],
+    };
+
+    this._parameters.forEach(function (param) {
+
+        save.parameters.push(param.getSave());
+    });
+
+    return save;
+};
+
+p.useSave = function (save) {
+
+    this._selectors = save.selectors;
+
+    save.parameters.forEach(function (paramData) {
+        //hack: give the 'name' on creating the param to have 
+        //  the 'CssTransformParameter' instance for the 'transform' parameter
+        var param = this.addParameter({name: paramData.name});
+        param.useSave(paramData);
+    }, this);
+
+    return save;
 };
 
 p.getMagnetPoints = function () {
@@ -507,7 +527,7 @@ p.selectElements = function () {
     this._selectedElements = list;
 };
 
-module.exports = cssSequence;
+module.exports = CssSequence;
 
 
 

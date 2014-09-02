@@ -1,8 +1,18 @@
+'use strict';
+
 var inherits = require('inherits');
 var CssParameter = require('./CssParameter');
 var uncalc = require('./uncalc');
 var Key = require('./Key');
 var amgui = require('../../amgui');
+
+var BASE_VALUES = {
+    tx: 0, ty: 0, tz: 0,
+    rx: 0, ry: 0, rz: 0,
+    sx: 1, sy: 1, sz: 1,
+    skewX: 0, skewY: 0,
+    perspective: 0
+};
 
 function CssTransformParameter (opt) {
 
@@ -26,7 +36,7 @@ p.getRawValue = function (time) {
         time = am.timeline.currTime;
     }
 
-    var before, after, same, calculated;
+    var before, after, same;
 
     this._keys.forEach(function (key) {
 
@@ -74,11 +84,14 @@ p.getRawValue = function (time) {
         }
         else if (before) {
             
-            return before.value;
+            return _.clone(before.value);
         }
         else if (after) {
             
-            return after.value;
+            return _.clone(after.value);
+        }
+        else {
+            return _.clone(BASE_VALUES);
         }
     }
 };
@@ -95,9 +108,8 @@ p.addKey = function (opt) {
         }
     }
     else {
-
         key = new Key(_.extend({deKeyline: this.deKeyline}, opt));
-        key.value = {};
+        key.value = _.extend(this.getRawValue(opt.time), opt.value);
 
         key.on('changeTime', this._onChangeKeyTime);
         key.on('delete', this._onDeleteKey);
@@ -137,18 +149,18 @@ p._refreshInput = function () {
 
 function convertTransformValue(v) {
 
-    var tx = 'tx' in v,
-        ty = 'ty' in v,
-        tz = 'tz' in v,
-        rx = 'rx' in v,
-        ry = 'ry' in v,
-        rz = 'rz' in v,
-        sx = 'sx' in v,
-        sy = 'sy' in v,
-        sz = 'sz' in v,
-        skewX = 'skeewX' in v,
-        skewY = 'skeewY' in v,
-        perspective = 'perspective' in v,
+    var tx = 'tx' in v && v.tx !== BASE_VALUES.tx,
+        ty = 'ty' in v && v.ty !== BASE_VALUES.ty,
+        tz = 'tz' in v && v.tz !== BASE_VALUES.tz,
+        rx = 'rx' in v && v.rx !== BASE_VALUES.rx,
+        ry = 'ry' in v && v.ry !== BASE_VALUES.ry,
+        rz = 'rz' in v && v.rz !== BASE_VALUES.rz,
+        sx = 'sx' in v && v.sx !== BASE_VALUES.sx,
+        sy = 'sy' in v && v.sy !== BASE_VALUES.sy,
+        sz = 'sz' in v && v.sz !== BASE_VALUES.sz,
+        skewX = 'skeewX' in v && v.skewX !== BASE_VALUES.skewX,
+        skewY = 'skeewY' in v && v.skewY !== BASE_VALUES.skewY,
+        perspective = 'perspective' in v && v.perspective !== BASE_VALUES.perspective,
         ret = '';
 
     if (tx && ty && tz) ret += 'translate3d('+v.tx+'px,'+v.ty+'px,'+v.tz+'px) ';

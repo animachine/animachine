@@ -183,6 +183,7 @@ var amgui = _.extend(
 
         de.style.background = 'none';
         de.style.border = 'none';
+        de.style.pointerEvents = 'auto';
         de.style.fontFamily = amgui.FONT_FAMILY;
 
 
@@ -490,7 +491,7 @@ var amgui = _.extend(
             deDropdown.style.left = bcr.left + 'px';
             deDropdown.style.top = bcr.bottom + 'px';
 
-            document.body.appendChild(deDropdown);
+            deBtn.appendChild(deDropdown);
             window.addEventListener('click', close);
         }
 

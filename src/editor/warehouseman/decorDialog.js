@@ -4,32 +4,44 @@ var amgui = require('../amgui');
 
 function decorDialog(whm) {
 
-    var dialog, deRoot, deLeft, deHead, deBreadcrumbs, nameInput, 
+    var dialog, deRoot, deLeft, deHead, deBreadcrumbs, inpName, 
         deStorageSelector, deDirectory, btnNewFolder, isInited,
-        selectedPath = '', selectedFile = '';
+        selectedPath = '', selectedName = '', selectedData = '';
 
 
 
-    whm.showSaveDialog = function() {
+    whm.showSaveDialog = function(name, data, path) {
 
         init();
+
+        selectedName = name || '';
+        selectedData = data || '';
+        selectedPath = path || '';
 
         deBreadcrumbs.refresh();
         deDirectory.refresh();
         deStorageSelector.refresh();
+        inpName.refresh();
+
+        inpName.style.display = 'block';
 
         dialog.setTitle('Save');
         dialog.setButtons(['save', 'close']);
         dialog.showModal();
     };
 
-    whm.showOpenDialog = function() {
+    whm.showOpenDialog = function(name, path) {
 
         init();
+
+        selectedName = name || '';
+        selectedPath = path || '';
 
         deBreadcrumbs.refresh();
         deDirectory.refresh();
         deStorageSelector.refresh();
+
+        inpName.style.display = 'none';
 
         dialog.setTitle('Save');
         dialog.setButtons(['open', 'close']);
@@ -49,6 +61,16 @@ function decorDialog(whm) {
         createBtnNewFolder();
         createNameInput();
         createDirectory();
+    }
+
+    function onSave() {
+
+        whm.save(selectedName. selectedData, selectedPath);
+    }
+
+    function onOpen() {
+
+        whm.open(selectedName, selectedPath);
     }
 
     function createDialog () {
@@ -76,6 +98,9 @@ function decorDialog(whm) {
             content: deRoot,
             parent: am.deDialogCont
         });
+
+        dialog.addEventListener('click_save', onSave);
+        dialog.addEventListener('click_open', onOpen);
     }
 
 
@@ -162,17 +187,30 @@ function decorDialog(whm) {
 
     function createNameInput() {
 
-        nameInput = document.createElement('input');
-        nameInput.type = 'text';
-        nameInput.style.width = '100%';
-        nameInput.style.height = '21px';
-        nameInput.style.background = 'none';
-        nameInput.style.border = 'none';
-        nameInput.style.color = amgui.color.text;
-        nameInput.style.fontSize = amgui.FONT_SIZE;
-        nameInput.style.fontFamily = amgui.FONT_FAMILY;
-        nameInput.placeholder = 'File name';
-        deLeft.appendChild(nameInput);
+        inpName = document.createElement('input');
+        inpName.type = 'text';
+        inpName.style.width = '100%';
+        inpName.style.height = '21px';
+        inpName.style.background = 'none';
+        inpName.style.border = 'none';
+        inpName.style.color = amgui.color.text;
+        inpName.style.fontSize = amgui.FONT_SIZE;
+        inpName.style.fontFamily = amgui.FONT_FAMILY;
+        inpName.placeholder = 'File name';
+        deLeft.appendChild(inpName);
+
+        inpName.addEventListener('change', function () {
+
+            selectedName = inpName.value;
+        });
+
+        inpName.refresh = function () {
+
+            if (inpName.value !== selectedName) {
+
+                inpName.value = selectedName;
+            }
+        }
     }
 
 
@@ -192,12 +230,12 @@ function decorDialog(whm) {
             
             if (this._value) {
 
-                selectedFile = this._value;
+                selectedName = this._value;
             }
 
             if (e.type === 'dblclick') {
 
-                whm.open(selectedPath + selectedFile);
+                whm.open(selectedPath + selectedName);
             }
         }
 

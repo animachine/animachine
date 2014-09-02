@@ -1,4 +1,4 @@
 {
-  "name": "css",
-  "main": "css.js"
+  "name": "cssModule",
+  "main": "cssModule.js"
 }

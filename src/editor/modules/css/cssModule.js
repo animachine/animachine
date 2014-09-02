@@ -1,4 +1,4 @@
-var cssSequence = require('./cssSequence');
+var CssSequence = require('./CssSequence');
 var qsgen = require('../../qsgen');
 
 var am, iconNew, qsModal, selectBox;
@@ -7,7 +7,7 @@ exports.init = function (_am) {
 
     am = _am;
 
-    am.registerSequenceType(cssSequence, 'css');
+    am.registerSequenceType(CssSequence, CssSequence.prototype.type);
 
     am.on('selectDomElement', onSelectDomElement);
 
@@ -16,7 +16,7 @@ exports.init = function (_am) {
 
 function onSelectDomElement(de) {
 
-    if (!cssSequence._instances.some(testSequ)) {
+    if (!CssSequence._instances.some(testSequ)) {
 
         iconNew = am.toolbar.addIcon(iconNew ? 
         {
@@ -33,7 +33,7 @@ function onSelectDomElement(de) {
                 var selector = qsgen(am.selectedElement);
                 console.log('selector:', selector);
 
-                var sequ = cssSequence.create({
+                var sequ = new CssSequence({
                     selectors: [selector]
                 });
 

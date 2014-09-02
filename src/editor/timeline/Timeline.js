@@ -30,7 +30,7 @@ function Timeline(am) {
 
     this._dropdownNewSequ.addEventListener('select', function (e) {
         
-        this.addSequence(am.sequenceTypes[0].create());
+        // this.addSequence(am.sequenceTypes[0].create());
     }.bind(this));
 
     this._onSelectSequence = this._onSelectSequence.bind(this);
@@ -43,13 +43,6 @@ function Timeline(am) {
     this._timebar.on('changeTape', this.emit.bind(this, 'changeTape'));
     this._timebar.on('changeTime', this._onChangeTime);
     this._timebar.on('changeTape', this._onChangeTape);
-
-    am.toolbar.addIcon({
-        icon: 'floppy',
-        onClick: this.getScript.bind(this),
-        separator: 'global'
-    });
-
 
     amgui.callOnAdded(this.domElem, this._refreshTimebarWidth, this);
     
@@ -108,22 +101,6 @@ Object.defineProperty(p, 'length', {
     }
 });
 
-p.getScript = function () {
-
-    var scripts = [];
-    this._sequences.forEach(function (sequ) {
-
-        scripts.push(sequ.getScript());
-    });
-
-    var script = 'document.timeline.play(new AnimationGroup([\n' + 
-        scripts.join(',\n') + ']));';
-    
-    console.log(script);
-
-    return script;
-};
-
 p._onSelectSequence = function(sequ) {
 
     if (this._currSequence === sequ) 
@@ -179,6 +156,64 @@ p._refreshTimebarWidth = function () {
 
     this._timebar.width = this._deRight.offsetWidth;
 };
+
+
+
+p.getScript = function () {
+
+    var scripts = [];
+    this._sequences.forEach(function (sequ) {
+
+        scripts.push(sequ.getScript());
+    });
+
+    var script = 'document.timeline.play(new AnimationGroup([\n' + 
+        scripts.join(',\n') + ']));';
+    
+    console.log(script);
+
+    return script;
+};
+
+p.getSave = function () {
+
+    var save = {
+        currTime: this.currTime,
+        timescale: this.timescale,
+        sequences: []
+    };
+
+    this._sequences.forEach(function (sequ) {
+
+        save.sequences.push({
+            type: sequ.type,
+            data: sequ.getSave()
+        });
+    });
+
+    console.log(JSON.stringify(save));
+
+    return JSON.stringify(save);
+};
+
+p.useSave = function (save) {
+
+    this.currTime = save.currTime;
+    this.timescale = save.timescale;
+
+    save.sequences.forEach(function (sequData) {
+
+        var sequ = new am.sequenceTypes[sequData.type]();
+        sequ.useSave(sequData.data)
+        this.addSequence(sequ);
+    }, this);
+};
+
+
+
+
+
+
 
 p._createBase = function () {
 

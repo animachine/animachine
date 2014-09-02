@@ -1,6 +1,7 @@
+'use strict';
+
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
-var dialogKeyOptions = require('./dialogKeyOptions');
 var uncalc = require('./uncalc');
 var Key = require('./Key');
 var amgui = require('../../amgui');
@@ -150,6 +151,23 @@ p.getPrevKey = function (time) {
             retKey = key;
         }
     });
+
+    return retKey;
+};
+
+p.getNextKey = function (time) {
+
+    var retKey;
+    
+    this._keys.forEach(function(key) {
+
+        if (key.time > time && (!retKey || retKey.time > key.time)) {
+
+            retKey = key;
+        }
+    });
+
+    return retKey;
 };
 
 p.getKeyTimes = function () {
@@ -162,7 +180,35 @@ p.getKeyTimes = function () {
     });
 
     return times;
-}
+};
+
+p.getSave = function () {
+
+    var save = {
+        name: this.name,
+        keys: [],
+    }
+
+    this._keys.forEach(function (key) {
+
+        save.keys.push({
+            value: key.value,
+            time: key.time
+        });
+    });
+
+    return save;
+};
+
+p.useSave = function(save) {
+
+    this.name = save.name;
+
+    save.keys.forEach(function (keyData) {
+
+        this.addKey(keyData);
+    }, this);
+};
 
 p._onChangeInput = function (e) {
 
@@ -180,7 +226,7 @@ p._onChangeInput = function (e) {
     this.emit('change');
 };
 
-p._onChangeKeyTime = function (e) {
+p._onChangeKeyTime = function () {
 
     this.emit('change');
 };
@@ -214,7 +260,8 @@ p.deleteKey = function (key) {
 
     if (idx !== -1) {
 
-        var key = this._keys.splice(idx, 1)[0];
+        this._keys.splice(idx, 1);
+
         key.dispose();
 
         key.removeListener('changeTime', this._onChangeKeyTime);
@@ -224,24 +271,24 @@ p.deleteKey = function (key) {
 
         this.emit('change');
     }
-}
+};
 
 p.isValid = function () {
 
     return !!(this.name && this._keys.length);
-}
+};
 
 p._refreshInput = function () {
 
     this._input.setKey(this.name);
     this._input.setValue(this.getValue());
-}
+};
 
 p._refreshBtnToggleKey = function () {
 
     var key = this.getKey(am.timeline.currTime);
     this._btnToggleKey.style.color = key ? amgui.color.text : 'rgba(255,255,255,.23)';
-}
+};
 
 p._createParameterOptions = function () {
 

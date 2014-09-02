@@ -1,0 +1,48 @@
+function () {
+
+    var player,
+        animation,
+        isInited = false,
+        animations = [],
+        keys = {{{keys}}},
+        options = {{{options}}},
+        elems = document.querySelectorAll('{{{selectors}}}');
+
+    for (var i = 0; i < elems.length; ++i) {
+
+        animations.push(new Animation(elems[i], keys, options));
+    }
+
+    animation = new AnimationGroup(animations);
+
+    return {
+
+        play: function () {
+
+            if (!isInited) {
+
+                player = document.timeline.play(animation);
+                isInited = true;
+            }
+            else {
+                player.play();
+            }
+        },
+        pause: function () {
+
+            if (!player) {
+                return;
+            }
+
+            player.pause();
+        },
+        seek: function (time) {
+
+            if (!player) {
+                return;
+            }
+
+            player.currentTime = time;
+        }
+    };
+}

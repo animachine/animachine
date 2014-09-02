@@ -78,7 +78,7 @@ domready(function () {
         icon: 'upload-cloud',
         onClick: function () {
             var data = {
-                script: am.timeline.getScript(),
+                script: am.timeline.getScript({save: true, autoPlay: true}),
                 timelineSave: am.timeline.getSave()
             };
             am.storage.showSaveDialog('filename', data);

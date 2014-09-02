@@ -33,10 +33,11 @@ gulp.task('vendor', function () {
       paths.bower + 'lodash/dist/lodash.min.js',
       paths.bower + 'jquery/dist/jquery.min.js',
       paths.bower + 'jQuery.Autosize.Input/jquery.autosize.input.js',
+      paths.bower + 'mustache/mustache.js',
       paths.node + 'css.escape/css.escape.js',
       // paths.bower + 'pojoviz/build/pojoviz-vendor.js',
       // paths.bower + 'pojoviz/build/pojoviz.js',
-      paths.bower + 'pojoviz-renderers.js',
+      // paths.bower + 'pojoviz-renderers.js',
     ])
     .pipe(concat('vendor.js'))
     // .pipe($.uglify())
@@ -77,7 +78,7 @@ gulp.task('js', function () {
 
   watchify.args.debug = true;
   var bundler = watchify(browserify('./src/editor/main.js', watchify.args))
-    .transform(stringify(['.css']));
+    .transform(stringify(['.css', '.mst']));
 
   bundler.on('update', rebundle);
 

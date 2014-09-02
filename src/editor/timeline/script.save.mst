@@ -1,0 +1,52 @@
+;(function (root) {
+    'use strict';
+
+    root.am = root.am || {};
+    root.am.pageScripts = root.am.pageScripts || {};
+
+    var sequPlayerGens = [{{{sequPlayerGens}}}];
+
+    var reg = root.am.pageScripts.{{name}} = {
+        
+        createPlayer: function () {
+
+            var sequencePlayers = [];
+
+            sequPlayerGens.forEach(function (create) {
+
+                sequencePlayers.push(create());
+            });
+
+            return {
+                play: callPlayers.bind(null, 'play'),
+                pause: callPlayers.bind(null, 'pause'),
+                seek: callPlayers.bind(null, 'seek'),
+            };
+
+            function callPlayers(fnName, arg1) {
+
+                sequencePlayers.forEach(function (sequencePlayer) {
+
+                    sequencePlayer[fnName].call(null, arg1);
+                });
+            }
+        },
+        
+        {{#saveData}}
+        saveData: {{{saveData}}},
+        {{/saveData}}
+    };
+
+    {{#autoPlay}}
+    if (document.readyState == 'interactive' || document.readyState == 'complete') {
+
+        reg.createPlayer().play();
+    }
+    else {
+        document.addEventListener('DOMContentLoaded', function () {
+
+            reg.createPlayer().play();
+        });
+    }
+    {{/autoPlay}}
+}(this));

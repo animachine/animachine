@@ -2,6 +2,7 @@ var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var Timebar = require('./Timebar');
 var amgui = require('../amgui');
+var mstSaveScript = require('./script.save.mst');
 
 function Timeline(am) {
 
@@ -159,21 +160,28 @@ p._refreshTimebarWidth = function () {
 
 
 
-p.getScript = function () {
+p.getScript = function (opt) {
 
-    var scripts = [];
+    opt = opt || {};
+
+    var script, playerScripts = [];
+
     this._sequences.forEach(function (sequ) {
 
-        scripts.push(sequ.getScript());
+        playerScripts.push(sequ.getScript());
     });
 
-    var script = 'document.timeline.play(new AnimationGroup([\n' + 
-        scripts.join(',\n') + ']));';
-    
+    script = Mustache.render(mstSaveScript, {
+        name: 'anim1',
+        saveData: opt.save && this.getSave(),
+        sequPlayerGens: playerScripts.join(',\n'),
+        autoPlay: opt.autoPlay
+    });
+
     console.log(script);
 
     return script;
-};
+}
 
 p.getSave = function () {
 

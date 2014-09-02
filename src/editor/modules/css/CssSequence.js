@@ -5,6 +5,7 @@ var CssParameter = require('./CssParameter');
 var CssTransformParameter = require('./CssTransformParameter');
 var Key = require('./Key');
 var Transhand = require('../../transhand/Transhand');
+var mstPlayer = require('./script.player.mst');
 
 function CssSequence(opt) {
 
@@ -136,15 +137,15 @@ p._focusHandler = function (de) {
     }
 
     var br = de.getBoundingClientRect();
-    
+
     de.style.transform = transformSave;
-    
+
     var handOpt = {
         type: 'transformer',
         base: {
-            x: br.left, 
-            y: br.top, 
-            w: br.width, 
+            x: br.left,
+            y: br.top,
+            w: br.width,
             h: br.height,
         }
     };
@@ -170,7 +171,7 @@ p._blurHandler = function () {
     if (this._handler && this._handler.domElem && this._handler.domElem.parentNode) {
 
         this._handler.deactivate();
-        this._handler.domElem.parentNode.removeChild(this._handler.domElem);        
+        this._handler.domElem.parentNode.removeChild(this._handler.domElem);
     }
 };
 
@@ -198,19 +199,19 @@ p._onChangeHandler = function(params, type) {
 
                 prop = this.addParameter({name: 'transform'});
                 prop.addKey({
-                    time: time, 
-                    name: name, 
+                    time: time,
+                    name: name,
                     value: value
                 });
             }
         }, this);
-        
+
         if ('ox' in params && 'oy' in params) {
 
             prop = this.addParameter({name: 'transform-origin'});
             prop.addKey({
-                time: time, 
-                name: name, 
+                time: time,
+                name: name,
                 value: (params.ox*100) + '% ' + (params.oy*100) + '%'
             });
         }
@@ -354,7 +355,7 @@ p._refreshHeadKeyline = function () {
 
 p.getScript = function () {
 
-    var keys = [], code = '', options, selectors, 
+    var keys = [], code = '', options, selectors,
         longestOffset = 0;
 
     this._parameters.forEach(function (param) {
@@ -364,13 +365,13 @@ p.getScript = function () {
             var offset = key.time;
             getKey(offset)[param.name] = param.getValue(key.time);
 
-            if (longestOffset < offset) longestOffset = offset; 
+            if (longestOffset < offset) longestOffset = offset;
         });
     });
 
     keys.forEach(function (key) {
 
-        key.offset /= longestOffset; 
+        key.offset /= longestOffset;
     });
 
     keys.sort(function (a, b) {
@@ -385,7 +386,7 @@ p.getScript = function () {
         });
 
         if (!key) {
-            
+
             key = {offset: time};
             keys.push(key);
         }
@@ -394,28 +395,19 @@ p.getScript = function () {
     }
 
     options = {
-      direction: "normal", 
-      duration: longestOffset, 
+      direction: "normal",
+      duration: longestOffset,
       iterations: 1
     };
 
     selectors = this._selectors.join(',').replace('\\','\\\\');
 
-    code = '(function () {                                                   \n' 
-         + '                                                                 \n'
-         + '    var animations = [],                                         \n'
-         + '        keys = ' + JSON.stringify(keys) + ',                     \n'
-         + '        options = ' + JSON.stringify(options) + ',               \n'
-         + '        elems = document.querySelectorAll("' + selectors + '");  \n'
-         + '                                                                 \n'
-         + '    for (var i = 0; i < elems.length; ++i) {                     \n'
-         + '                                                                 \n'
-         + '        animations.push(new Animation(elems[i], keys, options)); \n'
-         + '    }                                                            \n'
-         + '                                                                 \n'
-         + '    return new AnimationGroup(animations);                       \n'
-         + '}())                                                             \n';
-    
+    code = Mustache.render(mstPlayer, {
+        keys: JSON.stringify(keys),
+        options: JSON.stringify(options),
+        selectors: selectors
+    });
+
     return code;
 };
 
@@ -439,7 +431,7 @@ p.useSave = function (save) {
     this._selectors = save.selectors;
 
     save.parameters.forEach(function (paramData) {
-        //hack: give the 'name' on creating the param to have 
+        //hack: give the 'name' on creating the param to have
         //  the 'CssTransformParameter' instance for the 'transform' parameter
         var param = this.addParameter({name: paramData.name});
         param.useSave(paramData);
@@ -459,7 +451,7 @@ p.getMagnetPoints = function () {
 
     return times;
 };
-                                                                                   
+
 
 
 p._createHeadOptions = function (){

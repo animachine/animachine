@@ -509,13 +509,15 @@ var amgui = _.extend(
 
     addTooltip: function (opt) {
 
-        var showSetT, delay = 1200, mx = 0, my = 0;
+        var showSetT, delay = 798, mx = 0, my = 0;
 
         var de = document.createElement('div');
         de.textContent = opt.text;
-        de.style.position = 'absolute';
+        de.style.position = 'fixed';
         de.style.padding = '12px';
+        de.style.display = 'inline-block';
         de.style.background = amgui.color.overlay;
+        de.style.color = amgui.color.text;
 
         opt.deTarget.addEventListener('mouseenter', onMEnter);
         opt.deTarget.addEventListener('mouseleave', onMLeave);
@@ -554,7 +556,7 @@ var amgui = _.extend(
 
         function show() {
 
-            document.body.appendChild(de);
+            amgui.deOverlayCont.appendChild(de);
             amgui.placeToPoint(de, mx, my, opt.side);
         }
 
@@ -745,6 +747,7 @@ var amgui = _.extend(
                 break;
 
             case 'left':
+            default:
                 px = mx - w;
                 py = my - (h / 2);
                 break;
@@ -755,8 +758,8 @@ var amgui = _.extend(
         if (py + h > wh) py -= (py + h) - wh;
         if (px < 0) px = 0;
 
-        de.style.top = px + 'px';
-        de.style.height = py + 'px';
+        de.style.left = px + 'px';
+        de.style.top = py + 'px';
     },
 
     callOnAdded: function (de, cb, thisArg) {

@@ -66,6 +66,9 @@ domready(function () {
     am.deGuiCont = createAmLayer();
     am.deDialogCont = createAmLayer();
 
+
+    amgui.deOverlayCont = am.deDialogCont;
+
     am.deGuiCont.appendChild(am.workspace.domElem);
 
     am.deRoot = document.body;

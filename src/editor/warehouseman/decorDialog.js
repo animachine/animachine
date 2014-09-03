@@ -5,7 +5,7 @@ var amgui = require('../amgui');
 function decorDialog(whm) {
 
     var dialog, deRoot, deLeft, deHead, deBreadcrumbs, inpName, 
-        deStorageSelector, deDirectory, btnNewFolder, isInited,
+        deStorageSelector, deDirectory, btnNewFolder, isInited, deOptions,
         selectedPath = '', selectedName = '', selectedData = '';
 
 
@@ -48,6 +48,16 @@ function decorDialog(whm) {
         dialog.showModal();
     };
 
+    whm.setSaveOtions = function (opt) {
+
+        deOptions.setOptions(opt);
+    };
+
+    whm.getSaveOtions = function () {
+
+        return deOptions.getOptions();
+    };
+
     function init () {
 
         if (isInited) {
@@ -59,8 +69,10 @@ function decorDialog(whm) {
         createStorageSelector();
         createBreadcrumbs();
         createBtnNewFolder();
+        createBtnSettings()
         createNameInput();
         createDirectory();
+        createOptions();
     }
 
     function onSave() {
@@ -91,7 +103,6 @@ function decorDialog(whm) {
         deHead.style.width = '100%';
         deHead.style.height = '21px';
         deHead.style.display = 'flex';
-        deHead.style.flexDirection = 'column';
         deLeft.appendChild(deHead);
 
         dialog = amgui.createDialog({
@@ -111,8 +122,7 @@ function decorDialog(whm) {
 
     function createBreadcrumbs() {
 
-        deBreadcrumbs = document.createElement('ol');
-        deBreadcrumbs.style.listStyle = 'none';
+        deBreadcrumbs = document.createElement('div');
         deBreadcrumbs.style.display = 'inline-block';
         deBreadcrumbs.style.flex = '1';
         deHead.appendChild(deBreadcrumbs);
@@ -159,8 +169,7 @@ function decorDialog(whm) {
   
         function createLi(content) {
 
-            var li = document.createElement('li');
-            li.style.display = 'inline-block';
+            var li = document.createElement('span');
             li.textContent = content;
 
             deBreadcrumbs.appendChild(li);
@@ -171,19 +180,28 @@ function decorDialog(whm) {
 
 
 
+    function createBtnSettings() {
+
+        btnNewFolder = amgui.createIconBtn({
+            parent: deHead,
+            icon: 'wrench',
+            width: 21,
+            onClick: function () {
+                deOptions.toggle();
+            }
+        });
+    }
+
 
 
     function createBtnNewFolder() {
 
         btnNewFolder = amgui.createIconBtn({
             parent: deHead,
-            icon: 'icon-folder-add',
+            icon: 'folder-add',
             width: 21
         });
     }
-
-
-
 
     function createNameInput() {
 
@@ -272,7 +290,6 @@ function decorDialog(whm) {
         var btnSize = 52;
 
         deStorageSelector = document.createElement('div');
-        deStorageSelector.style.listStyle = 'none';
         deStorageSelector.style.display = 'inline-block';
         deStorageSelector.style.width = btnSize + 'px';
         deStorageSelector.style.height = '100%';
@@ -308,6 +325,61 @@ function decorDialog(whm) {
             });
 
             deItem._storageIdx = value;
+        }
+    }
+
+    function createOptions() {
+
+        var isOpened = false;
+
+        deOptions = document.createElement('div');
+        deOptions.style.display = 'none';
+        deOptions.style.width = '138px';
+        deOptions.style.height = '100%';
+        deRoot.appendChild(deOptions);
+
+        var checkSave = createCheckbox('include save');
+        var checkMinify = createCheckbox('minify');
+        var checkAuto = createCheckbox('auto play');
+
+        deOptions.getOptions = function () {
+
+            return {
+                includeSave: checkSave.checked,
+                minify: checkMinify.checked,
+                autoPlay: checkAuto.checked
+            }
+        };
+
+        deOptions.setOptions = function (opt) {
+
+            checkSave.checked = otp.includeSave;
+            checkMinify.checked = otp.minify;
+            checkAuto.checked = otp.autoPlay;
+        };
+
+        deOptions.toggle = function () {
+
+            isOpened = !isOpened;
+
+            deOptions.style.display = isOpened ? 'block' : 'none';
+        }
+
+        function createCheckbox(name) {
+
+            var de = document.createElement('div');
+            deOptions.appendChild(de);
+
+            var cb = document.createElement('input');
+            cb.type = 'checkbox';
+            de.appendChild(cb);
+            
+            var label = document.createElement('label');
+            label.style.color = amgui.color.text;
+            label.textContent = name;
+            de.appendChild(label);
+
+            return cb;
         }
     }
 }

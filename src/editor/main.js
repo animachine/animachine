@@ -212,6 +212,7 @@ function createAmRoot() {
     de.style.userSelect = 'none';
     de.style.webktUserSelect = 'none';
     de.style.fontFamily = amgui.FONT_FAMILY;
+    de.style.color = amgui.color.text;
 
     var zIndex = getMaxZIndex();
     if (zIndex) {

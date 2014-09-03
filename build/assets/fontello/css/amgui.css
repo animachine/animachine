@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'amgui';
-  src: url('../font/amgui.eot?90647279');
-  src: url('../font/amgui.eot?90647279#iefix') format('embedded-opentype'),
-       url('../font/amgui.woff?90647279') format('woff'),
-       url('../font/amgui.ttf?90647279') format('truetype'),
-       url('../font/amgui.svg?90647279#amgui') format('svg');
+  src: url('../font/amgui.eot?56405463');
+  src: url('../font/amgui.eot?56405463#iefix') format('embedded-opentype'),
+       url('../font/amgui.woff?56405463') format('woff'),
+       url('../font/amgui.ttf?56405463') format('truetype'),
+       url('../font/amgui.svg?56405463#amgui') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -14,7 +14,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'amgui';
-    src: url('../font/amgui.svg?90647279#amgui') format('svg');
+    src: url('../font/amgui.svg?56405463#amgui') format('svg');
   }
 }
 */
@@ -72,3 +72,8 @@
 .icon-dropbox:before { content: '\e811'; } /* '' */
 .icon-evernote:before { content: '\e812'; } /* '' */
 .icon-hdd:before { content: '\e813'; } /* '' */
+.icon-emo-unhappy:before { content: '\e814'; } /* '' */
+.icon-marquee:before { content: '\e815'; } /* '' */
+.icon-down-circled2:before { content: '\e816'; } /* '' */
+.icon-wrench:before { content: '\e817'; } /* '' */
+.icon-sliders:before { content: '\e818'; } /* '' */

@@ -51,8 +51,6 @@ am.throwHandler = function (handler) {
 
 domready(function () {
 
-    for (var i = 0; i < 15; ++i) debugRect(i);
-
     am.workspace = new Windooman();
     am.workspace.loadWorkspaces({
         base: getBaseWorkspace()
@@ -179,19 +177,6 @@ domready(function () {
 
     modules.css.init(am);
 });
-
-function debugRect(idx) {
-    var de = document.createElement('div');
-    de.id = 'boxX'+idx;
-    de.className = 'boxer';
-    de.style.position = 'absolute';
-    de.style.backgroundColor = 'blue';
-    de.style.left = (Math.random()*100) + 'vw';
-    de.style.top = (Math.random()*100) + 'vh';
-    de.style.width = '55px';
-    de.style.height = '55px';
-    document.body.appendChild(de);
-};
 
 function onClickRoot(e) {
 

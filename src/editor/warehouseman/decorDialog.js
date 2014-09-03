@@ -69,7 +69,7 @@ function decorDialog(whm) {
 
     function refresh() {
 
-        var f = whm._currStorage.features;
+        var f = whm._currStorage.features || {};
 
         showHide(deDirectory, f.browse);
         showHide(deBreadcrumbs, f.browse);

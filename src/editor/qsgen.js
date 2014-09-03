@@ -93,7 +93,7 @@ function possibleAttributes(de) {
             return EXATTR.indexOf(attr.name) === -1;
         })
         .map(function (attr) {
-            return '[' + CSS.escape(attr.name) + (attr.value ? '="' + attr.value : '') + '"]';
+            return '[' + CSS.escape(attr.name) + (attr.value ? '="'+attr.value+'"': '') + ']';
         });
 }
 

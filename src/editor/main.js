@@ -193,17 +193,18 @@ function onClickRoot(e) {
 
 function isPickable(deTest) {
 
-    var editors = [am.domElem];
-
     return step(deTest);
 
     function step(de) {
 
-        if (de === document.body) {
+        if (de.hasAttribute('data-am-pick')) {
             return true;
         }
-        else if (editors.indexOf(de) !== -1) {
+        else if (de.hasAttribute('data-am-nopick')) {
             return false;
+        }
+        else if (de === document.body) {
+            return de !== deTest;
         }
         else if (de) {
             return step(de.parentNode);
@@ -224,6 +225,8 @@ function createAmRoot() {
     de.style.webktUserSelect = 'none';
     de.style.fontFamily = amgui.FONT_FAMILY;
     de.style.color = amgui.color.text;
+
+    de.setAttribute('data-am-nopick', '');
 
     var zIndex = getMaxZIndex();
     if (zIndex) {
@@ -260,6 +263,7 @@ function createAmLayer() {
     de.style.position = 'fixed';
     de.style.width = '100%';
     de.style.height = '100%';
+    de.setAttribute('data-am-nopick', '');
     am.domElem.appendChild(de);
     return de;
 }

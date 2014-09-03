@@ -401,6 +401,7 @@ function isInside(point, vs) {
         if (intersect) inside = !inside;
     }
     
+    console.log('inInside', inside)
     return inside;
 }
 

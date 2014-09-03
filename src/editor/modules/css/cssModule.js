@@ -22,7 +22,7 @@ function onSelectDomElement(de) {
         {
             deIcon: iconNew
         } : {
-
+            
             icon: 'plus-squared',
 
             onClick: function () {

@@ -217,6 +217,10 @@ p.useSave = function (save) {
     }, this);
 };
 
+p.clear = function () {
+    //TODO
+}
+
 
 
 

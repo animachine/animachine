@@ -6,17 +6,20 @@ function decorDialog(whm) {
 
     var dialog, deRoot, deLeft, deHead, deBreadcrumbs, inpName, 
         deStorageSelector, deDirectory, btnNewFolder, isInited, deOptions,
-        selectedPath = '', selectedName = '', selectedData = '';
+        selectedPath = '', selectedName = '', selectedData = '',
+        openOptions = {};
 
 
 
-    whm.showSaveDialog = function(name, data, path) {
+    whm.showSaveDialog = function(opt) {
 
         init();
 
-        selectedName = name || '';
-        selectedData = data || '';
-        selectedPath = path || '';
+        openOptions = opt;
+
+        selectedName = opt.name || '';
+        selectedData = opt.data || '';
+        selectedPath = opt.path || '';
 
         deBreadcrumbs.refresh();
         deDirectory.refresh();
@@ -27,6 +30,7 @@ function decorDialog(whm) {
 
         dialog.setTitle('Save');
         dialog.setButtons(['save', 'close']);
+        refresh();
         dialog.showModal();
     };
 
@@ -34,8 +38,10 @@ function decorDialog(whm) {
 
         init();
 
-        selectedName = name || '';
-        selectedPath = path || '';
+        openOptions = opt;
+
+        selectedName = opt.name || '';
+        selectedPath = opt.path || '';
 
         deBreadcrumbs.refresh();
         deDirectory.refresh();
@@ -45,6 +51,7 @@ function decorDialog(whm) {
 
         dialog.setTitle('Save');
         dialog.setButtons(['open', 'close']);
+        refresh();
         dialog.showModal();
     };
 
@@ -57,6 +64,22 @@ function decorDialog(whm) {
 
         return deOptions.getOptions();
     };
+
+    whm.on('changeSrorage', refresh);
+
+    function refresh() {
+
+        var f = whm._currStorage.features;
+
+        showHide(deDirectory, f.browse);
+        showHide(deBreadcrumbs, f.browse);
+        showHide(btnNewFolder, f.mkdir);
+
+        function showHide(de, show) {
+
+            de.style.display = show ? 'block' || de.baseDisplay : 'hidden'
+        }
+    }
 
     function init () {
 

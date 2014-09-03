@@ -3,6 +3,8 @@
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var WebStorageman = require('./storages/WebStorageman');
+var PageScript = require('./storages/PageScript');
+var Download = require('./storages/Download');
 var decorDialog = require('./decorDialog');
 
 function Warehouseeman(opt) {
@@ -14,7 +16,9 @@ function Warehouseeman(opt) {
     opt = opt || {};
 
     this._storages = [];
+    this.addStorage(new PageScript());
     this.addStorage(new WebStorageman());
+    this.addStorage(new Download());
     this.addStorage({icon: 'hdd'});
     this.addStorage({icon: 'git'});
     this.addStorage({icon: 'evernote'});

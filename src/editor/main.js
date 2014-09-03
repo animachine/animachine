@@ -81,15 +81,41 @@ domready(function () {
         icon: 'upload-cloud',
         onClick: function () {
             var data = {
-                script: am.timeline.getScript({save: true, autoPlay: true}),
-                timelineSave: am.timeline.getSave()
+                timelineSave: am.timeline.getScript()
             };
-            am.storage.showSaveDialog('filename', data);
+            am.storage.showSaveDialog('filename', {
+
+                getSave: function () {
+                    
+                    var opt = am.storage.getSaveOptions();
+
+                    return am.timeline.getScript(opt);
+                }
+            });
         }
     });
 
     am.toolbar.addIcon({
         icon: 'download-cloud',
+        onClick: function () {
+            am.storage.showOpenDialog({
+
+                onOpen: function (save) {
+
+                    if (typeog(save) === 'string') {
+                        save = JSON.parse(save);
+                    }
+
+                    am.timeline.clear();
+                    am.timeline.useSave(save);
+                }
+            });
+        }
+    });
+
+
+    am.toolbar.addIcon({
+        icon: 'blank',
         onClick: function () {
             am.timeline.useSave({
                 "currTime": 1100,

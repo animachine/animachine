@@ -24,7 +24,7 @@ function Warehouseeman(opt) {
     this.addStorage({icon: 'evernote'});
     this.addStorage({icon: 'dropbox'});
 
-    this.selecteStorage(this._storages[0]);
+    this.selectStorage(this._storages[0]);
 }
 
 inherits(Warehouseeman, EventEmitter);
@@ -32,11 +32,15 @@ var p = Warehouseeman.prototype;
 
 p.addStorage = function (storage) {
 
+    storage.features = storage.features || {
+        placeholder: true,
+    }
+
     this._storages.push(storage);
     this.emit('changeStorages');
 };
 
-p.selecteStorage = function (storage) {
+p.selectStorage = function (storage) {
 
     this._currStorage = storage;
 };

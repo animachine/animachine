@@ -76,12 +76,10 @@ domready(function () {
     am.timeline = new Timeline(am);
 
     am.toolbar.addIcon({
-        icon: 'upload-cloud',
+        icon: 'download-cloud',
         onClick: function () {
-            var data = {
-                timelineSave: am.timeline.getScript()
-            };
-            am.storage.showSaveDialog('filename', {
+            
+            am.storage.showSaveDialog({
 
                 getSave: function () {
                     
@@ -94,7 +92,7 @@ domready(function () {
     });
 
     am.toolbar.addIcon({
-        icon: 'download-cloud',
+        icon: 'upload-cloud',
         onClick: function () {
             am.storage.showOpenDialog({
 

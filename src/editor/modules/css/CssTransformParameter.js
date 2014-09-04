@@ -192,7 +192,7 @@ function convertTransformValue(v) {
     else if (skewY) ret += 'skewY('+v.skewY+'rad) ';
 
     if(perspective) ret += 'perspective('+v.perspective+') ';
-console.log(ret)
+// console.log(ret)
     return ret;
 }
 

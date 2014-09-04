@@ -6,7 +6,7 @@ var _ = require('lodash');
 
 var MOUSESTATES = {
     'move': 'move',
-    'rotate': 'grab',
+    'rotate': '-webkit-grab',
     'origin': 'hairline',
     '1000': 'ns-resize',
     '1100': 'nesw-resize',
@@ -86,7 +86,7 @@ p.createGraphics = function () {
 
 p._refreshPoints = function () {
 
-    var base = this._base, 
+    var base = _.clone(this._base), 
         params = this._params,
         p = this._points,
         po = this._pOrigin;
@@ -124,7 +124,7 @@ p._renderHandler = function () {
         c = this.domElem,
         or = this._originRadius,
         ctx = c.getContext('2d'),
-        margin = 2,
+        margin = 7,
         minX = Math.min(p[0].x, p[1].x, p[2].x, p[3].x),
         maxX = Math.max(p[0].x, p[1].x, p[2].x, p[3].x),
         minY = Math.min(p[0].y, p[1].y, p[2].y, p[3].y),
@@ -175,6 +175,8 @@ p._onDrag = function (e) {
         pMouse = {x: e.pageX, y: e.pageY},
         dx = pMouse.x - md.pMouse.x,
         dy = pMouse.y - md.pMouse.y,
+        alt = e.altKey,
+        shift = e.shiftKey,
         mr, dr,
         change = {};
 
@@ -187,25 +189,25 @@ p._onDrag = function (e) {
         change.tx = params.tx = md.params.tx + dx;
         change.ty = params.ty = md.params.ty + dy;
     }
-    //TODO
+    
     if (finger.charAt(0) === '1') {
 
-        setScale(-Math.PI/2, 'sy');
+        setScale(-Math.PI/2, 'sy', -1);
     }
 
     if (finger.charAt(1) === '1') {
 
-        setScale(0, 'sx');
+        setScale(0, 'sx', 1);
     }
 
     if (finger.charAt(2) === '1') {
 
-        setScale(Math.PI/2, 'sy');
+        setScale(Math.PI/2, 'sy', 1);
     }
 
     if (finger.charAt(3) === '1') {
 
-        setScale(Math.PI, 'sx');
+        setScale(Math.PI, 'sx', -1);
     }
 
     if (finger === 'rotate') {
@@ -215,13 +217,23 @@ p._onDrag = function (e) {
 
     this.emit('change', change, 'transform');
 
-    function setScale(r, s) {
+    function setScale(r, sName, way) {
 
         var rad = r + md.params.rz,
             mdDist = distToPointInAngle(pOrigin, md.pMouse, rad),
-            dragDist = distToPointInAngle(pOrigin, pMouse, rad);
+            dragDist = distToPointInAngle(pOrigin, pMouse, rad),
+            scale = (dragDist / mdDist) * md.params[sName];
 
-        change[s] = params[s] = (dragDist / mdDist) * md.params[s];
+        if (alt) {
+            var es = (scale - md.params[sName]) / 2,
+                tName = 't' + sName.charAt(1),
+                dName = sName.charAt(1) === 'x' ? 'w' : 'h';
+
+            scale -= es;
+            change[tName] = params[tName] = base[dName] * es * way;            
+        }
+
+        change[sName] = params[sName] = scale;
     }
 
     function setRotation() {
@@ -233,9 +245,15 @@ p._onDrag = function (e) {
             mdr = Math.atan2(mdy, mdx),
             mx = pMouse.x - opx,
             my = pMouse.y - opy,
-            mr = Math.atan2(my, mx);
+            mr = Math.atan2(my, mx),
+            r = mr - mdr;
 
-        change.rz = params.rz = md.params.rz + (mr - mdr);
+        if (shift) {
+
+            r = Math.floor(r / (Math.PI / 12)) * (Math.PI / 12);
+        }
+        
+        change.rz = params.rz = md.params.rz + r;
     }
 };
 
@@ -261,13 +279,13 @@ p._setFinger = function (e) {
         right = dRight < diff,
         inside = isInside(mp, p);
 
-    if (base.width * params.sx < diff * 2 && inside) {
+    if (base.w * params.sx < diff * 2 && inside) {
         
         left = false;
         right = false;
     }
 
-    if (base.height * params.sy < diff * 2 && inside) {
+    if (base.h * params.sy < diff * 2 && inside) {
     
         top = false;
         bottom = false;
@@ -401,7 +419,6 @@ function isInside(point, vs) {
         if (intersect) inside = !inside;
     }
     
-    console.log('inInside', inside)
     return inside;
 }
 

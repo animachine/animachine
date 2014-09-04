@@ -7,7 +7,7 @@ function decorDialog(whm) {
     var dialog, deRoot, deLeft, deHead, deBreadcrumbs, inpName, 
         deStorageSelector, deDirectory, btnNewFolder, isInited, deOptions,
         selectedPath = '', selectedName = '', selectedData = '',
-        openOptions = {};
+        openOptions = {}, mode;
 
 
 
@@ -16,6 +16,7 @@ function decorDialog(whm) {
         init();
 
         openOptions = opt;
+        mode = 'save';
 
         selectedName = opt.name || '';
         selectedData = opt.data || '';
@@ -34,11 +35,12 @@ function decorDialog(whm) {
         dialog.showModal();
     };
 
-    whm.showOpenDialog = function(name, path) {
+    whm.showOpenDialog = function(opt) {
 
         init();
 
         openOptions = opt;
+        mode = 'open';
 
         selectedName = opt.name || '';
         selectedPath = opt.path || '';
@@ -60,7 +62,7 @@ function decorDialog(whm) {
         deOptions.setOptions(opt);
     };
 
-    whm.getSaveOtions = function () {
+    whm.getSaveOptions = function () {
 
         return deOptions.getOptions();
     };
@@ -100,10 +102,23 @@ function decorDialog(whm) {
 
     function onSave() {
 
-        whm.save(selectedName. selectedData, selectedPath);
+        var save = openOptions.getSave(),
+            name = selectedName || 'anim.am.js';
+            
+        whm.save(name, save, selectedPath);
     }
 
     function onOpen() {
+
+        var save = whm.open(selectedName, selectedPath);
+
+        if (openOptions.onOpen) {
+
+            openOptions.onOpen(save);
+        }
+    }
+
+    function onClose() {
 
         whm.open(selectedName, selectedPath);
     }
@@ -318,11 +333,13 @@ function decorDialog(whm) {
         deStorageSelector.style.height = '100%';
         deRoot.insertBefore(deStorageSelector, deLeft);
 
-        deStorageSelector.addEventListener('click', function () {
+        deStorageSelector.addEventListener('click', function (e) {
 
-            if (this._storageIdx) {
+            var idx = e.target._storageIdx;
+            
+            if (idx !== undefined) {
 
-                whm.selectStorage(whm._storages[this._storageIdx]);
+                whm.selectStorage(whm._storages[idx]);
             }
         });
 
@@ -332,7 +349,10 @@ function decorDialog(whm) {
 
             whm._storages.forEach(function (storage, idx) {
 
-                createItem(storage.icon, idx);
+                if (storage.features.placeholder || storage.features[mode]) {
+
+                    createItem(storage.icon, idx);
+                }
             });
         };
   

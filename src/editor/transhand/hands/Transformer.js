@@ -163,6 +163,10 @@ p._onMouseMove = function (e) {
 
         this._setFinger(e);
     }
+
+    if (this._cursorFunc) {
+        this._setCursor(this._cursorFunc(e.pageX, e.pageY));
+    }
 };
 
 p._onDrag = function (e) {
@@ -252,7 +256,7 @@ p._onDrag = function (e) {
 
             r = Math.floor(r / (Math.PI / 12)) * (Math.PI / 12);
         }
-        
+
         change.rz = params.rz = md.params.rz + r;
     }
 };
@@ -264,7 +268,7 @@ p._setFinger = function (e) {
         p = this._points,
         po = this._pOrigin,
         diff = 3,
-        rDiff = 9,
+        rDiff = 16,
         mx = e.pageX,
         my = e.pageY,
         mp = {x: mx, y: my},
@@ -277,7 +281,8 @@ p._setFinger = function (e) {
         left = dLeft < diff,
         bottom = dBottom < diff,
         right = dRight < diff,
-        inside = isInside(mp, p);
+        inside = isInside(mp, p),
+        cursorScale;
 
     if (base.w * params.sx < diff * 2 && inside) {
         
@@ -298,6 +303,7 @@ p._setFinger = function (e) {
     else if (top || right || bottom || left) {
 
         this._finger = ('000' + (top * 1000 + left * 100 + bottom * 10 + right * 1)).substr(-4);
+        cursorScale = true;
     }
     else if (inside) {
 
@@ -311,16 +317,36 @@ p._setFinger = function (e) {
         this._finger = false;
     }
 
-    if (this._finger) {
 
-        this.domElem.style.pointerEvents = 'auto';
-        this.domElem.style.cursor = MOUSESTATES[this._finger];
+    if (this._finger === 'rotate') {
+
+        this._cursorFunc = this._getRotateCursor;
+    }
+    else if (cursorScale) {
+
+        this._cursorFunc = this._getScaleCursor;
     }
     else {
-        this.domElem.style.pointerEvents = 'none';
-        this.domElem.style.cursor = 'auto';
+        
+        this._cursorFunc = undefined
+        
+        if (this._finger) {
+
+            this.domElem.style.pointerEvents = 'auto';
+            this._setCursor(MOUSESTATES[this._finger]);
+        }
+        else {
+            this.domElem.style.pointerEvents = 'none';
+            this._setCursor('auto');
+        }
     }
 };
+
+p._setCursor = function (cursor) {
+
+    this.domElem.style.cursor = cursor;
+    document.body.style.cursor = cursor;//hack! TODO
+} 
 
 p._onMouseDown = function (e) {
 
@@ -352,6 +378,35 @@ p._onMouseUp = function () {
     
     this._isHandle = false;
 };
+
+
+
+p._getRotateCursor = function (mx, my) {
+
+    var r = Math.atan2(my - this._pOrigin.y, mx - this._pOrigin.x) / Math.PI * 180;
+    return 'url(\'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" ><path transform="rotate('+r+', 16, 16)" d="M18.907 3.238l-7.54-2.104s8.35 3.9 8.428 15.367c.08 11.794-7.807 14.49-7.807 14.49l7.363-1.725" stroke="#000" stroke-width="2.054" fill="none"/></svg>\') 16 16, auto';
+};
+
+p._getScaleCursor = (function () {
+
+    var FINGERS = ['0100', '0110', '0010', '0011', '0001', '1001', '1000', '1100'];
+
+    return function (mx, my) {
+
+        var rBase = FINGERS.indexOf(this._finger) * 45;
+
+        var r = rBase + (this._params.rz / Math.PI * 180);
+        return 'url(\'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><path transform="rotate('+r+', 16, 16)" d="M22.406 12.552l5.88 4.18H3.677l5.728 4.36" stroke="#000" stroke-width="2.254" fill="none"/></svg>\') 16 16, auto';
+    };
+}());
+
+
+module.exports = Transformer;
+
+
+
+
+//utils/////////////////////////////////////////////////////
 
 function radDiff(r0, r1) {
 
@@ -421,5 +476,3 @@ function isInside(point, vs) {
     
     return inside;
 }
-
-module.exports = Transformer;

@@ -42,7 +42,13 @@ p.addStorage = function (storage) {
 
 p.selectStorage = function (storage) {
 
+    if (this._currStorage === storage) {
+        return;
+    }
+
     this._currStorage = storage;
+
+    this.emit('changeSrorage');
 };
 
 p.save = function (name, data, path) {

@@ -76,7 +76,7 @@ domready(function () {
     am.timeline = new Timeline(am);
 
     am.toolbar.addIcon({
-        icon: 'download-cloud',
+        icon: 'upload-cloud',
         onClick: function () {
             
             am.storage.showSaveDialog({
@@ -92,13 +92,13 @@ domready(function () {
     });
 
     am.toolbar.addIcon({
-        icon: 'upload-cloud',
+        icon: 'download-cloud',
         onClick: function () {
             am.storage.showOpenDialog({
 
                 onOpen: function (save) {
 
-                    if (typeog(save) === 'string') {
+                    if (typeof(save) === 'string') {
                         save = JSON.parse(save);
                     }
 

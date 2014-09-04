@@ -22,11 +22,6 @@ function decorDialog(whm) {
         selectedData = opt.data || '';
         selectedPath = opt.path || '';
 
-        deBreadcrumbs.refresh();
-        deDirectory.refresh();
-        deStorageSelector.refresh();
-        inpName.refresh();
-
         inpName.style.display = 'block';
 
         dialog.setTitle('Save');
@@ -45,13 +40,9 @@ function decorDialog(whm) {
         selectedName = opt.name || '';
         selectedPath = opt.path || '';
 
-        deBreadcrumbs.refresh();
-        deDirectory.refresh();
-        deStorageSelector.refresh();
-
         inpName.style.display = 'none';
 
-        dialog.setTitle('Save');
+        dialog.setTitle('Open');
         dialog.setButtons(['open', 'close']);
         refresh();
         dialog.showModal();
@@ -67,11 +58,15 @@ function decorDialog(whm) {
         return deOptions.getOptions();
     };
 
-    whm.on('changeSrorage', refresh);
 
     function refresh() {
 
         var f = whm._currStorage.features || {};
+
+        deBreadcrumbs.refresh();
+        deDirectory.refresh();
+        deStorageSelector.refresh();
+        inpName.refresh();
 
         showHide(deDirectory, f.browse);
         showHide(deBreadcrumbs, f.browse);
@@ -98,19 +93,21 @@ function decorDialog(whm) {
         createNameInput();
         createDirectory();
         createOptions();
+
+        whm.on('changeSrorage', refresh);
     }
 
     function onSave() {
 
         var save = openOptions.getSave(),
             name = selectedName || 'anim.am.js';
-            
+            console.log('onSave', save, name)
         whm.save(name, save, selectedPath);
     }
 
     function onOpen() {
 
-        var save = whm.open(selectedName, selectedPath);
+        var save = whm.load(selectedName, selectedPath);
 
         if (openOptions.onOpen) {
 
@@ -120,7 +117,7 @@ function decorDialog(whm) {
 
     function onClose() {
 
-        whm.open(selectedName, selectedPath);
+        dialog.close();
     }
 
     function createDialog () {
@@ -129,6 +126,7 @@ function decorDialog(whm) {
         deRoot.style.width = '700px';
         deRoot.style.height = '400px';
         deRoot.style.display = 'flex';
+        deRoot.style.color = 'white';
 
         deLeft = document.createElement('div');
         deLeft.style.height = '100%';
@@ -150,6 +148,7 @@ function decorDialog(whm) {
 
         dialog.addEventListener('click_save', onSave);
         dialog.addEventListener('click_open', onOpen);
+        dialog.addEventListener('click_close', onClose);
     }
 
 
@@ -175,15 +174,17 @@ function decorDialog(whm) {
 
         deBreadcrumbs.refresh = function () {
 
-            var crumbs = selectedPath.split('/'),
+            var crumbs = selectedPath.split('/').filter(Boolean),
                 value = '';
 
             deBreadcrumbs.innerHTML = '';
+            
+            createCrumb((whm._currStorage.rootName || 'root') + '://', value);
 
             crumbs.forEach(function (crumbName) {
 
                 value += crumbName + '/';
-                createCrumb(crumbName);
+                createCrumb(crumbName, value);
                 createSlash();
             });
         };
@@ -279,30 +280,20 @@ function decorDialog(whm) {
         deDirectory.style.flex = '1';
         deLeft.appendChild(deDirectory);
 
-        deDirectory.addEventListener('click', onClick);
-        deDirectory.addEventListener('dblclick', onClick);
-
-        function onClick(e) {
-            
-            if (this._value) {
-
-                selectedName = this._value;
-            }
-
-            if (e.type === 'dblclick') {
-
-                whm.open(selectedPath + selectedName);
-            }
-        }
-
         deDirectory.refresh = function () {
 
+            var list = whm.dir();
 
+            list.forEach(function (item) {
+
+                createItem(item.name, item.type);
+            });
         };
   
         function createItem(name, type) {
 
             var deItem = document.createElement('div');
+            deItem._value = name;
             
             amgui.createIcon({
                 icon: type === 'folder' ? 'folder-empty' : 'doc',
@@ -316,7 +307,32 @@ function decorDialog(whm) {
 
             deDirectory.appendChild(deItem);
 
+            deItem.addEventListener('click', onClick);
+            deItem.addEventListener('dblclick', onClick);
+            deItem.addEventListener('mouseover', onMOver);
+            deItem.addEventListener('mouseout', onMOut);
+
             return deItem;
+        }
+
+        function onClick(e) {
+            
+            selectedName = this._value;
+
+            if (e.type === 'dblclick') {
+
+                onOpen(selectedPath, selectedName);
+            }
+        }
+
+        function onMOver() {
+            
+            this.style.background = amgui.color.bgHover;
+        }
+
+        function onMOut() {
+
+            this.style.background = 'none';
         }
     }
 
@@ -364,7 +380,8 @@ function decorDialog(whm) {
                 icon: icon,
                 parent: deStorageSelector,
                 width: btnSize,
-                height: btnSize
+                height: btnSize,
+                display: 'inline-block'
             });
 
             deItem._storageIdx = value;

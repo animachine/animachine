@@ -3,7 +3,8 @@
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 
-var FOLDERS = '<folders>';
+var ROOT = '_webstorageman/', 
+    FOLDERS = '<folders>';
 
 function WebStorageman(opt) {
 
@@ -11,18 +12,20 @@ function WebStorageman(opt) {
 
     opt = opt || {};
 
-    this._root = opt.root || '_webstorageman/';
-
     this.icon = 'bullseye';
+    this.rootName = 'webstorage';
 
-    this._folders = window.localStorage.getItem(this._root + FOLDERS);
+    this._folders = window.localStorage.getItem(ROOT + FOLDERS);
     
     try { 
-        this.folders = JSON.parse(this._folders); 
+        this._folders = JSON.parse(this._folders); 
     }
-    catch (e) {
+    catch (e) {}
+
+    if (!(this._folders instanceof Array)) {
+
         this._folders = [];
-    }
+    } 
 }
 
 inherits(WebStorageman, EventEmitter);
@@ -31,6 +34,7 @@ var p = WebStorageman.prototype;
 p.save = function (name, data, path) {
 
     name = this._validName(name);
+    path = this._validPath(path);
     
     this.mkdir(path);
     this._set(path + name, data);
@@ -48,40 +52,34 @@ p.load = function (name, path) {
 
 p.mkdir = function (path) {
 
-    path = this._validPath(path);
-    path = path.split('/');
+    path = this._validPath(path).split('/').filter(Boolean);
 
     var folderPath = '';
 
     path.forEach(function (folder) {
 
-        if (folder === '') {
-            return;
-        }
+        this._addFolder(folder + '/');
 
-        folderPath += folder + '/';
-
-        if (this._folders.indexOf(folderPath) !== -1) {
-
-            this._folders.push(folderPath);
-        }
-    });
+    }, this);
 };
 
 p.dir = function (path) {
 
-    path = this._root + this._validPath(path);
+    path = ROOT + this._validPath(path);
 
     var ret = [];
 
     Object.keys(window.localStorage).forEach(function (key) {
 
-        testKey(key, 'file');
+        if (key.indexOf(FOLDERS) === -1) {
+
+            testKey(key, 'file');
+        }
     });
 
-    this._folders.forEach(function (key) {
+    this._folders.forEach(function (path) {
 
-        testKey(key, 'folder');
+        testKey(ROOT + path.slice(0, -1), 'folder');
     });
 
     return ret;
@@ -111,25 +109,30 @@ p._addFolder = function(path) {
 
     this._folders.push(path);
 
+    window.localStorage.setItem(ROOT + FOLDERS, JSON.stringify(this._folders));
 };
 
 p._set = function(path, data) {
 
-    return window.localStorage.setItem(this._root + path, data);
+    return window.localStorage.setItem(ROOT + path, data);
 };
 
 p._get = function(path) {
 
-    return window.localStorage.getItem(this._root + path);
+    return window.localStorage.getItem(ROOT + path);
 };
 
 p._validPath = function(path) {
+
+    if (!path) {
+        path = '';
+    }
 
     if (path.charAt(0) === '/') {
         path = path.substr(1);
     }
 
-    if (path.charAt(path.length-1) !== '/') {
+    if (path.charAt(path.length-1) !== '/' && path.length) {
         path += '/';
     }
 

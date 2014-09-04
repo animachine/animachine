@@ -315,12 +315,16 @@ var amgui = _.extend(
 
     createIconBtn: function (opt) {
 
-        var de = amgui.createIcon({size: opt.height, icon: opt.icon});
+        var de = amgui.createIcon({
+            size: opt.height, 
+            icon: opt.icon,
+            parent: opt.parent,
+            display: opt.display
+        });
         de.style.width = (opt.width || 21) + 'px';
         de.style.cursor = 'pointer';
         de.style.color = 'white';
         de.style.overflow = 'hidden';
-        de.style.display = opt.display || 'block';
 
         de.addEventListener('mouseenter', onMOver);
         de.addEventListener('mouseleave', onMOut);
@@ -338,10 +342,6 @@ var amgui = _.extend(
         function onMOut() {
             
             this.style.background = 'none';
-        }
-
-        if (opt.parent) {
-            opt.parent.appendChild(de);
         }
 
         return de;
@@ -399,6 +399,7 @@ var amgui = _.extend(
         de.style.textAlign = 'center';
         de.style.fontFamily = 'amgui';
         de.style.fontSize = Math.round(opt.size * 0.72) + 'px';
+        de.style.display = opt.display || 'block';
 
         de.setIcon = function (icon) {
 
@@ -412,6 +413,10 @@ var amgui = _.extend(
         };
 
         de.setIcon(opt.icon);
+
+        if (opt.parent) {
+            opt.parent.appendChild(de);
+        }
 
         return de;
     },  

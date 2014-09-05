@@ -58,19 +58,23 @@ function decorDialog(whm) {
         return deOptions.getOptions();
     };
 
+    function feature(name) {
+
+        return whm._currStorage.features &&
+            whm._currStorage.features[name];
+    }
+
 
     function refresh() {
-
-        var f = whm._currStorage.features || {};
 
         deBreadcrumbs.refresh();
         deDirectory.refresh();
         deStorageSelector.refresh();
         inpName.refresh();
 
-        showHide(deDirectory, f.browse);
-        showHide(deBreadcrumbs, f.browse);
-        showHide(btnNewFolder, f.mkdir);
+        showHide(deDirectory, feature('browse'));
+        showHide(deBreadcrumbs, feature('browse'));
+        showHide(btnNewFolder, feature('mkdir'));
 
         function showHide(de, show) {
 
@@ -103,6 +107,8 @@ function decorDialog(whm) {
             name = selectedName || 'anim.am.js';
             console.log('onSave', save, name)
         whm.save(name, save, selectedPath);
+
+        onClose();
     }
 
     function onOpen() {
@@ -113,6 +119,8 @@ function decorDialog(whm) {
 
             openOptions.onOpen(save);
         }
+
+        onClose();
     }
 
     function onClose() {
@@ -282,6 +290,12 @@ function decorDialog(whm) {
 
         deDirectory.refresh = function () {
 
+            deDirectory.innerHTML = '';
+
+            if (!feature('browse')) {
+                return;
+            }
+
             var list = whm.dir();
 
             list.forEach(function (item) {
@@ -398,9 +412,9 @@ function decorDialog(whm) {
         deOptions.style.height = '100%';
         deRoot.appendChild(deOptions);
 
-        var checkSave = createCheckbox('include save');
+        var checkSave = createCheckbox('include save', true);
         var checkMinify = createCheckbox('minify');
-        var checkAuto = createCheckbox('auto play');
+        var checkAuto = createCheckbox('auto play', true);
 
         deOptions.getOptions = function () {
 
@@ -425,13 +439,14 @@ function decorDialog(whm) {
             deOptions.style.display = isOpened ? 'block' : 'none';
         }
 
-        function createCheckbox(name) {
+        function createCheckbox(name, checked) {
 
             var de = document.createElement('div');
             deOptions.appendChild(de);
 
             var cb = document.createElement('input');
             cb.type = 'checkbox';
+            cb.checked = checked;
             de.appendChild(cb);
             
             var label = document.createElement('label');

@@ -7,7 +7,7 @@ var _ = require('lodash');
 var MOUSESTATES = {
     'move': 'move',
     'rotate': '-webkit-grab',
-    'origin': 'hairline',
+    'origin': 'crosshair',
     '1000': 'ns-resize',
     '1100': 'nesw-resize',
     '0100': 'ew-resize',
@@ -185,8 +185,7 @@ p._onDrag = function (e) {
         change = {};
 
     if (finger === 'origin') {
-        // change.ox = p.ox = sp.ox + (dx / this._base.w);
-        // change.oy = p.oy = sp.oy + (dy / this._base.h);
+        setOrigin();
     }
         
     if (finger === 'move') {
@@ -221,34 +220,33 @@ p._onDrag = function (e) {
 
     this.emit('change', change, 'transform');
 
-    function setScale(r, sName, way) {
+    function setScale(r, sN, way) {
 
         var rad = r + md.params.rz,
-            mdDist = distToPointInAngle(pOrigin, md.pMouse, rad),
-            dragDist = distToPointInAngle(pOrigin, pMouse, rad),
-            scale = (dragDist / mdDist) * md.params[sName];
-
+            mdDist = distToPointInAngle(md.pOrigin, md.pMouse, rad),
+            dragDist = distToPointInAngle(md.pOrigin, pMouse, rad),
+            scale = (dragDist / mdDist) * md.params[sN];
+// console.log('pOrigin', pOrigin, 'pMouse', pMouse, 'md.pMouse', md.pMouse, 'rad', rad)
+// console.log('scale', scale, 'dragDist', dragDist, 'mdDist', mdDist, 'md.params.'+sN, md.params[sN])
         if (alt) {
-            var es = (scale - md.params[sName]) / 2,
-                tName = 't' + sName.charAt(1),
-                dName = sName.charAt(1) === 'x' ? 'w' : 'h';
+            var es = (scale - md.params[sN]) / 2,
+                tN = 't' + sN.charAt(1),
+                dN = sN.charAt(1) === 'x' ? 'w' : 'h';
 
             scale -= es;
-            change[tName] = params[tName] = base[dName] * es * way;            
+            change[tN] = params[tN] = md.params[tN] + base[dN] * es/2 * way;            
         }
 
-        change[sName] = params[sName] = scale;
+        change[sN] = params[sN] = scale;
     }
 
     function setRotation() {
 
-        var opx = base.x + base.w * params.ox,
-            opy = base.y + base.h * params.oy,
-            mdx = md.pMouse.x - opx,
-            mdy = md.pMouse.y - opy,
+        var mdx = md.pMouse.x - pOrigin.x,
+            mdy = md.pMouse.y - pOrigin.y,
             mdr = Math.atan2(mdy, mdx),
-            mx = pMouse.x - opx,
-            my = pMouse.y - opy,
+            mx = pMouse.x - pOrigin.x,
+            my = pMouse.y - pOrigin.y,
             mr = Math.atan2(my, mx),
             r = mr - mdr;
 
@@ -258,6 +256,22 @@ p._onDrag = function (e) {
         }
 
         change.rz = params.rz = md.params.rz + r;
+    }
+
+    function setOrigin() {
+
+        var diff = Math.sqrt(dx*dx + dy*dy),
+            mx = pMouse.x - pOrigin.x,
+            my = pMouse.y - pOrigin.y,
+            r = Math.atan2(my, mx) + params.rz,
+            x = Math.cos(r) * diff * params.sx,
+            y = Math.sin(r) * diff * params.sy;
+        console.log(x, y, dx, dy)
+        change.ox = params.ox = md.params.ox + (x / base.w);
+        change.oy = params.oy = md.params.oy + (y / base.h);
+        change.tx = params.tx = md.params.tx - x/2;
+        change.ty = params.ty = md.params.ty - y/2;
+
     }
 };
 
@@ -362,7 +376,8 @@ p._onMouseDown = function (e) {
     this._mdPos = {
         pMouse: {x: e.pageX, y: e.pageY},
         params: _.cloneDeep(this._params),
-        points: _.cloneDeep(this._points)
+        points: _.cloneDeep(this._points),
+        pOrigin: _.cloneDeep(this._pOrigin)
     };
 
     window.addEventListener('mouseup', this._onMouseUp);

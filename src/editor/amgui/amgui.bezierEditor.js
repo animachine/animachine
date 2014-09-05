@@ -15,12 +15,13 @@ function createBezierEditor(opt) {
 
     opt = opt || {};
 
-    var p0 = {x: 0.3, y: 0},
-        p1 = {x: 0.7, y: 1},
+    var p0 = {x: 0.3, y: 0.1},
+        p1 = {x: 0.7, y: 0.9},
         w = opt.width || 312,
         h = opt.height || 312;
 
     var de = document.createElement('div');
+    de.style.position = 'relative';
     de.style.width = w + 'px';
     de.style.height = h + 'px';
 
@@ -50,6 +51,14 @@ function createBezierEditor(opt) {
     };
     
     render();
+
+    if (opt.onChange) {
+        de.addEventListener('change', opt.onChange);
+    }
+
+    if (opt.parent) {
+        opt.parent.appendChild(de);
+    }
   
     return de;
   
@@ -116,6 +125,7 @@ function createBezierEditor(opt) {
         deCp.style.boxSizing = 'border-box';
         deCp.style.width = r*2 + 'px';
         deCp.style.height = r*2 + 'px';
+        deCp.style.transform = 'translate(-'+r+'px,-'+r+'px)';
         deCp.style.borderRadius = r + 'px';
         deCp.style.background = 'rgba(256, 256, 256, 1)';
         de.appendChild(deCp);
@@ -124,8 +134,8 @@ function createBezierEditor(opt) {
       
         deCp.refreshPosition = function () {
             
-            deCp.style.left = (x(point.x) ) + 'px';
-            deCp.style.top = (y(point.y)) + 'px';
+            deCp.style.left = x(point.x) + 'px';
+            deCp.style.top = y(point.y) + 'px';
         };
         deCp.refreshPosition();
       
@@ -149,7 +159,11 @@ function createBezierEditor(opt) {
 
             point.x = Math.max(0, Math.min(1, (e.pageX - br.left) / w));
             point.y = (((e.pageY - br.top) / h) * mdFullY) - mdMinY;
-          
+            
+            var fix = 1000;
+            point.x = parseInt(point.x * fix) / 1000;
+            point.y = parseInt(point.y * fix) / 1000;
+
             render();
           
             de.dispatchEvent(new CustomEvent('change', {detail: {value: de.getValue()}}));

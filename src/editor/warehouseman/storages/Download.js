@@ -13,16 +13,7 @@ function Download(opt) {
 
     this._root = opt.root || '_Download/';
 
-    this.icon = 'down-circled2';
-
-    this._folders = window.localStorage.getItem(this._root + FOLDERS);
-    
-    try { 
-        this.folders = JSON.parse(this._folders); 
-    }
-    catch (e) {
-        this._folders = [];
-    }
+    this.icon = 'download';
 }
 
 inherits(Download, EventEmitter);

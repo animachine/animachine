@@ -7,10 +7,10 @@ function Key (opt) {
 
     EventEmitter.call(this);
     
-    this._time = opt.time || 0,
-    this._value = opt.value || '',
-    this._deKeyline = opt.deKeyline,
-    this.ease = 'linear';
+    this._time = opt.time || 0;
+    this._value = opt.value || '';
+    this._ease = opt.ease || 'linear';
+    this._deKeyline = opt.deKeyline;
 
     this._onChangeDeTime = this._onChangeDeTime.bind(this);
     this._onSelectDropdown = this._onSelectDropdown.bind(this);
@@ -66,6 +66,18 @@ Object.defineProperties(p, {
         get: function () {
 
             return this._value;
+        }
+    },
+    ease: {
+        set: function (v) {
+
+            if (!v || this._ease === v) return;
+
+            this._ease = v;
+        },
+        get: function () {
+
+            return this._ease;
         }
     }
 })

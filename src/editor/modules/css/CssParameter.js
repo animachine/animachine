@@ -193,7 +193,8 @@ p.getSave = function () {
 
         save.keys.push({
             value: key.value,
-            time: key.time
+            time: key.time,
+            ease: key.ease
         });
     });
 

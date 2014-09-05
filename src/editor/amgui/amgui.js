@@ -185,6 +185,7 @@ var amgui = _.extend(
         de.style.border = 'none';
         de.style.pointerEvents = 'auto';
         de.style.fontFamily = amgui.FONT_FAMILY;
+        de.style.color = amgui.color.text;
 
 
         var deTitle = document.createElement('div');
@@ -697,9 +698,9 @@ var amgui = _.extend(
             inp.style.height = '100%';
             inp.style.fontSize = amgui.FONT_SIZE;
             inp.style.fontFamily = amgui.FONT_FAMILY;
-            inp.style.border = 'none';
-            inp.style.color = 'white';
             inp.style.background = 'none';
+            inp.style.border = 'none';
+            inp.style.color = amgui.color.text;
             inp.addEventListener('change', onChange);
             inp.addEventListener('keyup', onChange);
             // $(inp).autosizeInput({space: 0});
@@ -711,7 +712,7 @@ var amgui = _.extend(
 
             var divider = document.createElement('span');
             divider.textContent = ':';
-            divider.style.color = 'white';
+            divider.style.color = amgui.color.text;
             divider.style.width = '2px';
             divider.style.fontSize = amgui.FONT_SIZE;
             divider.style.fontFamily = amgui.FONT_FAMILY;

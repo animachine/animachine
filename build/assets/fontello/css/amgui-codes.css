@@ -23,7 +23,14 @@
 .icon-hdd:before { content: '\e813'; } /* '' */
 .icon-emo-unhappy:before { content: '\e814'; } /* '' */
 .icon-marquee:before { content: '\e815'; } /* '' */
-.icon-down-circled2:before { content: '\e816'; } /* '' */
+.icon-download:before { content: '\e816'; } /* '' */
 .icon-wrench:before { content: '\e817'; } /* '' */
 .icon-sliders:before { content: '\e818'; } /* '' */
 .icon-code:before { content: '\e819'; } /* '' */
+.icon-history:before { content: '\e81a'; } /* '' */
+.icon-chart-bar:before { content: '\e81b'; } /* '' */
+.icon-paw:before { content: '\e81c'; } /* '' */
+.icon-rebel:before { content: '\e81d'; } /* '' */
+.icon-empire:before { content: '\e81e'; } /* '' */
+.icon-rocket:before { content: '\e81f'; } /* '' */
+.icon-scissors:before { content: '\e820'; } /* '' */

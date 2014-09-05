@@ -362,8 +362,14 @@ p.getScript = function () {
 
         param._keys.forEach(function (key) {
 
-            var offset = key.time;
-            getKey(offset)[param.name] = param.getValue(key.time);
+            var offset = key.time,
+                kf = getKey(offset);
+            
+            kf[param.name] = param.getValue(key.time);
+
+            if (key.ease && key.ease !== 'linear') {
+               kf.easing = key.ease; 
+            }
 
             if (longestOffset < offset) longestOffset = offset;
         });

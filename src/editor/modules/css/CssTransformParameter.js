@@ -20,6 +20,11 @@ function CssTransformParameter (opt) {
         name: 'transform',
         skipKeyValueInput: true,
     }, opt));
+
+    this._inputs = {};
+    this._lineCount = 6;
+
+    this._createTransformInputs();
 }
 
 inherits(CssTransformParameter, CssParameter);
@@ -125,26 +130,108 @@ p.addKey = function (opt) {
     return key;
 };
 
-p._onChangeInput = function (e) {
-
-    if ('key' in e.detail) {
-        this.name = e.detail.key;
-    }
-
-    if ('paramName' in e.detail && 'value' in e.detail) {
-        
-        var key = this.addKey({
-            time: am.timeline.currTime,
-        });
-        
-        key.value[e.detail.paramName] = e.detail.value;
-    }
-
-    this.emit('change');
-};
-
 p._refreshInput = function () {
 
+    var inputs = this._inputs,
+        values = this.getRawValue();
+
+    Object.keys(inputs).forEach(function (key) {
+
+        if (inputs[key].value !== values[key]) {
+
+            inputs[key].value = values[key];
+        }
+    });
+};
+
+Object.defineProperty(p, 'height', {
+
+    get: function () {
+        
+        return this._lineH * this._lineCount;
+    }
+});
+
+p._onChangeInput = function (e) {
+
+    var inp = e.currentTarget,
+        value = {};
+
+    value[inp._key] = inp.value;
+
+    this.addKey({
+        time: am.timeline.currTime,
+        value: value,
+    });
+};
+
+p._createTransformInputs = function () {
+
+    var deOptions = this.deOptions,
+        lineH = this._lineH,
+        inputs = this._inputs,
+        onChangeInput = this._onChangeInput;
+
+    deOptions.style.height = lineH * this._lineCount + 'px';
+    deOptions.style.flexWrap = 'wrap';
+
+    var label = document.createElement('span');
+    label.textContent = 'transform';
+    label.style.flex = '1';
+    label.style.height = lineH + 'px';
+    $(deOptions).prepend(label);
+
+    var row = createRow();
+    createInput('tx', 'tx', row);
+    createInput('ty', 'y', row);
+    createInput('tz', 'z', row);
+    row = createRow();
+    createInput('rx', 'rx', row);
+    createInput('ry', 'y', row);
+    createInput('rz', 'z', row);
+    row = createRow();
+    createInput('sx', 'sx', row);
+    createInput('sy', 'y', row);
+    createInput('sz', 'z', row);
+    row = createRow();
+    createInput('skewX', 'skewX', row);
+    createInput('skewY', 'skewY', row);
+    row = createRow();
+    createInput('perspective', 'perspective', row);
+
+    function createRow() {
+
+        var de = document.createElement('div');
+        de.style.display = 'flex';
+        de.style.width = '100%';
+        de.style.height = lineH + 'px';
+        // de.style.background = 'linear-gradient(to bottom, #184F12 18%,#1B4417 96%)';
+
+        deOptions.appendChild(de);
+        return de;
+    }
+
+    function createInput(key, caption, parent) {
+
+        var label = document.createElement('span');
+        label.textContent = caption;
+        parent.appendChild(label);
+
+        var inp = document.createElement('input');
+        inp._key = key;
+        inp.type = 'number';
+        inp.value = BASE_VALUES[key];
+        inp.style.flex = '1';
+        inp.style.fontFamily = amgui.FONT_FAMILY;
+        inp.style.background = 'rgba(255,255,255,.12)';
+        inp.style.border = 'none';
+        inp.style.margin = '0 0 0 3px';
+        inp.style.color = amgui.color.text;
+        inp.addEventListener('change', onChangeInput);
+        parent.appendChild(inp);
+
+        inputs[key] = inp;
+    }
 };
 
 function convertTransformValue(v) {
@@ -191,7 +278,7 @@ function convertTransformValue(v) {
     else if (skewX) ret += 'skewX('+v.skewX+'rad) ';
     else if (skewY) ret += 'skewY('+v.skewY+'rad) ';
 
-    if(perspective) ret += 'perspective('+v.perspective+') ';
+    if(perspective) ret += 'perspective('+v.perspective+'px) ';
 // console.log(ret)
     return ret;
 }

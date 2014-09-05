@@ -114,7 +114,7 @@ p._onChangeEase = function (ease) {
 
 p._onChangeTape = function () {
 
-    domElem.setTimescale(am.timeline.timescale);
+    this.domElem.setTimescale(am.timeline.timescale);
 };
 
 p.dispose = function () {

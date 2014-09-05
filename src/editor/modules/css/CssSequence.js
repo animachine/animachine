@@ -108,10 +108,21 @@ p.renderTime = function (time) {
     });
 };
 
-p.height = function () {
+Object.defineProperty(p, 'height', {
 
-    return this._opt.baseH * (this._isOpened ? this._parameters.length + 1 : 1);
-};
+    get: function () {
+
+        var ret = this._opt.baseH;
+
+        if (this._isOpened) {
+
+            this._parameters.forEach(function (param) {
+
+                ret += param.height;
+            });
+        }
+    }
+});
 
 p._onPick = function (de) {
 
@@ -484,7 +495,7 @@ p._createHeadOptions = function (){
     });
     this._deToggleDropDown.addEventListener('toggle', function (e) {
         this._isOpened = e.detail.state;
-        this.emit('changeHeight', this.height());
+        this.emit('changeHeight', this.height);
     }.bind(this));
     this._deToggleDropDown.style.display = 'inline-block';
     de.appendChild(this._deToggleDropDown);

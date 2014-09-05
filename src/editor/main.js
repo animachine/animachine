@@ -235,7 +235,7 @@ function createAmRoot() {
 
     de.addEventListener('mousedown', function (e) {
 
-        e.preventDefault();
+        // e.preventDefault();
     });
 
     var sr = de.createShadowRoot();

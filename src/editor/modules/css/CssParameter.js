@@ -182,6 +182,15 @@ p.getKeyTimes = function () {
     return times;
 };
 
+
+Object.defineProperty(p, 'height', {
+
+    get: function () {
+        
+        return this._lineH;
+    }
+});
+
 p.getSave = function () {
 
     var save = {

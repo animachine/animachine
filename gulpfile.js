@@ -112,7 +112,7 @@ gulp.task('js-chrome', function () {
 
 gulp.task('connect', function() {
   return connect.server({
-    root: 'build',
+    // root: 'build',
     livereload: true,
     port: 9630
   });

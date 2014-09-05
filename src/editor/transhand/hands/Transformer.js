@@ -165,7 +165,7 @@ p._onMouseMove = function (e) {
     }
 
     if (this._cursorFunc) {
-        this._setCursor(this._cursorFunc(e.pageX, e.pageY));
+        this._setCursor(this._cursorFunc(e.screenX, e.screenY));
     }
 };
 
@@ -176,7 +176,7 @@ p._onDrag = function (e) {
         pOrigin = this._pOrigin,
         md = this._mdPos,
         finger = this._finger,
-        pMouse = {x: e.pageX, y: e.pageY},
+        pMouse = {x: e.screenX, y: e.screenY},
         dx = pMouse.x - md.pMouse.x,
         dy = pMouse.y - md.pMouse.y,
         alt = e.altKey,
@@ -283,8 +283,8 @@ p._setFinger = function (e) {
         po = this._pOrigin,
         diff = 3,
         rDiff = 16,
-        mx = e.pageX,
-        my = e.pageY,
+        mx = e.screenX,
+        my = e.screenY,
         mp = {x: mx, y: my},
         dTop = distToSegment(mp, p[0], p[1]),
         dLeft = distToSegment(mp, p[1], p[2]),
@@ -374,7 +374,7 @@ p._onMouseDown = function (e) {
     this._isHandle = true;
 
     this._mdPos = {
-        pMouse: {x: e.pageX, y: e.pageY},
+        pMouse: {x: e.screenX, y: e.screenY},
         params: _.cloneDeep(this._params),
         points: _.cloneDeep(this._points),
         pOrigin: _.cloneDeep(this._pOrigin)

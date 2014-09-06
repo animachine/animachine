@@ -23,6 +23,7 @@ var amgui = _.extend(
         bg2: '#444',
         bg3: '#666',
         text: '#efe',
+        textInactive: 'rgba(255,255,255,.23)',
         overlay: 'rgba(0,0,0,.785)',
         bgHover: 'rgba(255,255,255,0.12)',
     },

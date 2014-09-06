@@ -22,9 +22,22 @@ function CssTransformParameter (opt) {
     }, opt));
 
     this._inputs = {};
+    this._inputs3d = [];
     this._lineCount = 6;
 
+    this._onToggle3d = this._onToggle3d.bind(this);
+
     this._createTransformInputs();
+
+    this._btnToggle3d = amgui.createIconBtn({
+        icon: 'cube',
+        height: 21,
+        parent: this.deOptions,
+        onClick: this._onToggle3d,
+    });
+    this.deOptions.insertBefore(this._btnToggle3d, this._btnToggleKey);
+    this._showing3d = true;
+    this._showHide3d(false);
 }
 
 inherits(CssTransformParameter, CssParameter);
@@ -165,11 +178,33 @@ p._onChangeInput = function (e) {
     });
 };
 
+p._onToggle3d = function () {
+
+    this._showHide3d(!this._showing3d);
+};
+
+p._showHide3d = function (show) {
+
+    if (this._showHide3d === show) {
+        return;
+    }
+
+    this._showing3d = show;
+
+    this._btnToggle3d.style.color = show ? amgui.color.text : amgui.color.textInactive;
+
+    this._inputs3d.forEach(function (de) {
+
+        de.style.visibility = show ? $(de).show() : $(de).hide();
+    });
+};
+
 p._createTransformInputs = function () {
 
     var deOptions = this.deOptions,
         lineH = this._lineH,
         inputs = this._inputs,
+        inputs3d = this._inputs3d,
         onChangeInput = this._onChangeInput;
 
     deOptions.style.height = lineH * this._lineCount + 'px';
@@ -184,34 +219,36 @@ p._createTransformInputs = function () {
     var row = createRow();
     createInput('tx', 'tx', row);
     createInput('ty', 'y', row);
-    createInput('tz', 'z', row);
+    createInput('tz', 'z', row, true);
     row = createRow();
     createInput('rx', 'rx', row);
     createInput('ry', 'y', row);
-    createInput('rz', 'z', row);
+    createInput('rz', 'z', row, true);
     row = createRow();
     createInput('sx', 'sx', row);
     createInput('sy', 'y', row);
-    createInput('sz', 'z', row);
+    createInput('sz', 'z', row, true);
     row = createRow();
     createInput('skewX', 'skewX', row);
     createInput('skewY', 'skewY', row);
-    row = createRow();
+    row = createRow(true);
     createInput('perspective', 'perspective', row);
 
-    function createRow() {
+    function createRow(i3d) {
 
         var de = document.createElement('div');
         de.style.display = 'flex';
         de.style.width = '100%';
         de.style.height = lineH + 'px';
         // de.style.background = 'linear-gradient(to bottom, #184F12 18%,#1B4417 96%)';
-
+        if (i3d) {
+            inputs3d.push(de);
+        }
         deOptions.appendChild(de);
         return de;
     }
 
-    function createInput(key, caption, parent) {
+    function createInput(key, caption, parent, i3d) {
 
         var label = document.createElement('span');
         label.textContent = caption;
@@ -230,6 +267,9 @@ p._createTransformInputs = function () {
         inp.addEventListener('change', onChangeInput);
         parent.appendChild(inp);
 
+        if (i3d) {
+            inputs3d.push(label, inp);
+        }
         inputs[key] = inp;
     }
 };

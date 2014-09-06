@@ -367,7 +367,7 @@ p._setFinger = function (e) {
 p._setCursor = function (cursor) {
 
     this.domElem.style.cursor = cursor;
-    document.body.style.cursor = cursor;//hack! TODO
+    document.querySelector("html").style.cursor = cursor;//hack! TODO
 } 
 
 p._onMouseDown = function (e) {

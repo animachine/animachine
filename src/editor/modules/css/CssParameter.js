@@ -42,9 +42,9 @@ function CssParameter (opt) {
     this._btnToggleKey = amgui.createIconBtn({
         icon: 'key',
         height: 21,
-        parent: this.deOptions
+        parent: this.deOptions,
+        onClick: this._onToggleKey,
     });
-    this._btnToggleKey.addEventListener('click', this._onToggleKey);
     this._refreshBtnToggleKey();
 
     am.timeline.on('changeTime', this._onChangeTime);
@@ -297,7 +297,7 @@ p._refreshInput = function () {
 p._refreshBtnToggleKey = function () {
 
     var key = this.getKey(am.timeline.currTime);
-    this._btnToggleKey.style.color = key ? amgui.color.text : 'rgba(255,255,255,.23)';
+    this._btnToggleKey.style.color = key ? amgui.color.text : amgui.color.textInactive;
 };
 
 p._createParameterOptions = function () {

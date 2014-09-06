@@ -16,7 +16,7 @@ function Timebar(opt) {
     this._height = opt.height || 21;
     this._timescale = opt.timescale || 0;
     this._currTime = opt.currTime || 0;
-    this._maxTime = opt.maxTime || 60000;
+    this._length = opt.length || 60000;
 
     this._magnetPoints = [];
 
@@ -48,7 +48,6 @@ Object.defineProperties(p, {
         set: function (v) {
             if (this._timescale === v) return;
             this._timescale = Math.min(1, Math.max(0.0001, v));
-            console.log('>setts', v, this.timescale)
             this._renderTape();
             this.emit('changeTape');
         },
@@ -85,9 +84,9 @@ Object.defineProperties(p, {
         get: function () {
             return this._start + (this._width / this._timescale);
         }
-    }, 
+    },
     
-    length: {
+    visibleTime: {
         set: function (v) {
             this.timescale = this._width / v;
         },
@@ -104,7 +103,7 @@ Object.defineProperties(p, {
 
             this._currTime = time;
 
-            var pos = (time / this.length) * this.width;
+            var pos = (time / this.visibleTime) * this.width;
 
             this._dePointer.style.left = pos + 'px';
 
@@ -124,14 +123,19 @@ Object.defineProperties(p, {
         }
     },
 
-    maxTime: {
+    length: {
         set: function (v) {
-            if (this._maxTime === v) return;
-            return this._maxTime = v;
+
+            if (this._length === v) return;
+            this._length = v;
+
+            // var width = (this.length - (this._start + this._length)) * this.timescale
+            // this.deEnd.style.width = Math.max(0, width);
+
             this.emit('changeTape');
         },
         get: function () {
-            return this._maxTime
+            return this._length
         }
     },
 });
@@ -143,7 +147,7 @@ p._renderTape = function () {
 
     var start = this._start,
         end = this.end,
-        length = this.length,
+        visibleTime = this.visibleTime,
         height = this._height,
         scale = this.timescale, 
         width = this._width,
@@ -156,7 +160,7 @@ p._renderTape = function () {
 
     this._steps.forEach(function (s) {
 
-        if ((this.length / s.small) < maxMarkers && (!step || step.small > s.small)) {
+        if ((this.visibleTime / s.small) < maxMarkers && (!step || step.small > s.small)) {
 
             step = s;
         }
@@ -169,21 +173,21 @@ p._renderTape = function () {
         ctx.fillStyle = amgui.color.bg3;
         ctx.font = ~~(this._height * 0.5) + 'px "Open Sans"'
 
-        for (i = start % step.small; i < length; i += step.small) {
+        for (i = start % step.small; i < visibleTime; i += step.small) {
 
             ctx.moveTo(~~(i * scale) + 0.5, height);
             ctx.lineTo(~~(i * scale) + 0.5, height * 0.75);
         }
         ctx.stroke();
 
-        for (i = start % step.big; i < length; i += step.big) {
+        for (i = start % step.big; i < visibleTime; i += step.big) {
 
             ctx.moveTo(~~(i * scale) + 0.5, height);
             ctx.lineTo(~~(i * scale) + 0.5, height * 0.62);
         }
         ctx.stroke();
 
-        for (i = start % step.time; i < length; i += step.time) {
+        for (i = start % step.time; i < visibleTime; i += step.time) {
 
             text = step.format(i - start);
             textW = ctx.measureText(text).width / 2;
@@ -222,7 +226,7 @@ function onMMove(e) {
 
     if (this._dragMode === 'seek') {
 
-        time = (mouseX / this.width) * this.length;
+        time = (mouseX / this.width) * this.visibleTime;
 
         this._magnetPoints.forEach(function (mp) {
 

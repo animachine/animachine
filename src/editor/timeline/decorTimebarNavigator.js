@@ -6,7 +6,7 @@ var amgui = require('../amgui');
 function decorTimebarNavigator (timebar) {
 
     var deNav, deLeftHand, deRightHand, 
-        dragMode = 'move', mdX, mdStart, mdEnd;
+        dragMode, md = {};
     
     createBase();
     timebar.domElem.appendChild(deNav);
@@ -17,14 +17,15 @@ function decorTimebarNavigator (timebar) {
 
     timebar.on('changeTape', onChangeTape);
 
+
     function onChangeTape() {
 
         var width = timebar.width,
-            max = timebar.maxTime,
+            max = timebar.length,
             start = timebar.start,
             end = timebar.end;
 
-        deNav.style.left = (width * (start / max)) + 'px';
+        deNav.style.left = (width * (-start / max)) + 'px';
         deNav.style.width = (width * ((end - start) / max)) + 'px';
     }
 
@@ -37,9 +38,10 @@ function decorTimebarNavigator (timebar) {
         else if (e.target === deRightHand) dragMode = 'end';
         else dragMode = 'move';
 
-        mdX = e.pageX;
-        mdStart = timebar.start;
-        mdEnd = timebar.end;
+        md.x = e.clientX;
+        md.start = timebar.start;
+        md.visibleTime = timebar.visibleTime;
+        md.timescale = timebar.timescale;
 
         window.addEventListener('mousemove', onMMove);
         window.addEventListener('mouseup', onMUp);
@@ -48,9 +50,8 @@ function decorTimebarNavigator (timebar) {
 
     function onMMove(e) {
 
-        var move = (e.pageX - mdX) * timebar.maxTime,
-            start = mdStart + move,
-            length = mdEnd + timebar.start;
+        var move = (e.clientX - md.x) / md.timescale,
+            start = md.start - move;
 
         if (dragMode === 'move') {
 
@@ -59,11 +60,11 @@ function decorTimebarNavigator (timebar) {
         else if (dragMode === 'start') {
 
             timebar.start = start;
-            timebar.length = length;
+            timebar.visibleTime = md.visibleTime - move;
         }
         else if (dragMode === 'end') {
 
-            timebar.length = length;
+            timebar.visibleTime = md.visibleTime + move;
         }
     }
 
@@ -72,6 +73,8 @@ function decorTimebarNavigator (timebar) {
         window.removeEventListener('mousemove', onMMove);
         window.removeEventListener('mouseup', onMUp);
         window.removeEventListener('mouseleave', onMUp);
+        dragMode = undefined;
+        onMLeave();
     }
 
     function onMEnter() {
@@ -81,7 +84,9 @@ function decorTimebarNavigator (timebar) {
 
     function onMLeave() {
 
-        deNav.style.transform = 'scaleY(0.7)';
+        if (!dragMode) {
+            deNav.style.transform = 'scaleY(0.4)';
+        }
     }
 
     function createBase () {
@@ -89,13 +94,14 @@ function decorTimebarNavigator (timebar) {
         deNav = document.createElement('div');
         deNav.style.position = 'absolute';
         deNav.style.top = '0px';
-        deNav.style.height = '3px';
+        deNav.style.height = '7px';
         deNav.style.cursor = 'move';
         deNav.style.transformOrigin = 'center top';
         deNav.style.background = amgui.color.bg2;
 
         deRightHand = createHandler('right');
         deLeftHand = createHandler('left');
+        onMLeave();
     }
 
     function createHandler(side) {
@@ -105,13 +111,13 @@ function decorTimebarNavigator (timebar) {
         de.style[side] = '0px';
         de.style.top = '0px';
         de.style.height = '100%';
-        de.style.width = '5%';
+        de.style.width = '8%';
         de.style.minWidth = '1px';
         de.style.maxWidth = '7px';
         de.style.cursor = 'ew-resize';
-        de.style.transformOrigin = 'center top';
-        de.style.transform = 'scaleY(0.3)';
         deNav.appendChild(de);
+
+        return de;
     }
 }
 

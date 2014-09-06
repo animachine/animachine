@@ -308,6 +308,18 @@ p._createParameterOptions = function () {
     de.style.height = this._lineH + 'px';
     de.style.background = 'linear-gradient(to bottom, #184F12 18%,#1B4417 96%)';
 
+    amgui.bindDropdown({
+        asContextMenu: true,
+        deTarget: de,
+        deMenu: amgui.createDropdown({
+            options: [
+                {text: 'move up', onSelect: this.emit.bind(this, 'move', this, -1)},
+                {text: 'move down', onSelect: this.emit.bind(this, 'move', this, 1)},
+                {text: 'delete', onSelect: this.emit.bind(this, 'delete', this)},
+            ]
+        })
+    });
+
     return de;
 };
 

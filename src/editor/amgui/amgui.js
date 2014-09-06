@@ -446,10 +446,15 @@ var amgui = _.extend(
         de.style.margin = 0;
         de.style.padding = 0;
 
-        options.forEach(function (text) {
+        options.forEach(function (opt) {
+
+            if (typeof(opt) === 'string') {
+
+                opt = {text: opt};
+            }
 
             var li = document.createElement('li');
-            li.textContent = text;
+            li.textContent = opt.text;
             li.style.textAlign = 'left';
             li.style.fontFamily = amgui.FONT_FAMILY;
             li.style.fontSize = '14px';
@@ -462,7 +467,11 @@ var amgui = _.extend(
 
                 e.stopPropagation();
 
-                de.dispatchEvent(new CustomEvent('select', {detail: {selection: text}}));
+                if (opt.onSelect) {
+                    opt.onSelect();
+                }
+
+                de.dispatchEvent(new CustomEvent('select', {detail: {selection: opt.text}}));
             });
             de.appendChild(li);
         });

@@ -36,6 +36,8 @@ function CssSequence(opt) {
     this._onChangeHandler = this._onChangeHandler.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
     this._onChangeParameter = this._onChangeParameter.bind(this);
+    this._onDeleteParameter = this._onDeleteParameter.bind(this);
+    this._onMoveParameter = this._onMoveParameter.bind(this);
     this._onChangeBlankParameter = this._onChangeBlankParameter.bind(this);
     this._onToggleKey = this._onToggleKey.bind(this);
     this._onClickName = this._onClickName.bind(this);
@@ -265,6 +267,16 @@ p._onChangeParameter = function () {
     this.emit('change');
 };
 
+p._onDeleteParameter = function (param) {
+
+    this.deleteParameter(param);
+};
+
+p._onMoveParameter = function () {
+
+    
+};
+
 p._onChangeBlankParameter = function () {
 
     if (this._blankParameter) {
@@ -360,6 +372,8 @@ p.addParameter = function (opt) {
 
         this._parameters.push(param);
         param.on('change', this._onChangeParameter);
+        param.on('delete', this._onDeleteParameter);
+        param.on('move', this._onMoveParameter);
 
         this.deOptions.appendChild(param.deOptions);
         this.deKeys.appendChild(param.deKeyline);
@@ -368,6 +382,24 @@ p.addParameter = function (opt) {
         return param;
     }
 };
+
+p.deleteParameter = function (param) {
+
+    var idx = this._parameters.indexOf(param);
+
+    if (idx === -1) {
+        return;
+    }
+
+    this._parameters.splice(idx, 1);
+
+    param.removeListener('change', this._onChangeParameter);
+    param.removeListener('delete', this._onDeleteParameter);
+    param.removeListener('move', this._onMoveParameter);
+
+    $(param.deOptions).remove();
+    $(param.deKeyline).remove();
+}
 
 p._refreshBtnToggleKey = function () {
 

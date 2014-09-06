@@ -310,9 +310,8 @@ function getSteps() {
             big: 50, 
             time: 50, 
             format: function (ms) {
-                var sec = parseInt(ms/1000);
-
-                return (sec ? sec+':'+four(ms) : ms) + 'ms';
+                
+                return ms + 'ms';
             } 
         },
         {
@@ -320,9 +319,8 @@ function getSteps() {
             big: 100, 
             time: 100, 
             format: function (ms) {
-                var sec = parseInt(ms/1000);
-
-                return (sec ? sec+':'+four(ms) : ms) + 'ms';
+                
+                return ms + 'ms';
             } 
         },
         {

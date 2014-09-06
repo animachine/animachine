@@ -276,6 +276,21 @@ var amgui = _.extend(
         return de;
     },
 
+    createLabel: function (opt) {
+
+        var de = document.createElement('span');
+        de.textContent = opt.caption || 'label';
+
+        if ('fontSize' in opt) de.style.fontSize = opt.fontSize;
+        if ('display' in opt) de.style.display = opt.display;
+        
+        if (opt.parent) {
+            opt.parent.appendChild(de);
+        }
+
+        return de;
+    },
+
     createBtn: function (opt) {
 
         opt.backgroundColor = opt.backgroundColor || amgui.color.bg0;
@@ -526,17 +541,22 @@ var amgui = _.extend(
         de.style.color = amgui.color.text;
 
         opt.deTarget.addEventListener('mouseenter', onMEnter);
-        opt.deTarget.addEventListener('mouseleave', onMLeave);
 
         function onMEnter(e) {
 
             opt.deTarget.addEventListener('mousemove', onMMove);
+            opt.deTarget.addEventListener('mouseleave', onMLeave);
+            opt.deTarget.addEventListener('mousedown', onMLeave);
+
             onMMove(e);
         }
 
         function onMLeave(e) {
 
             opt.deTarget.removeEventListener('mousemove', onMMove);
+            opt.deTarget.removeEventListener('mouseleave', onMLeave);
+            opt.deTarget.removeEventListener('mousedown', onMLeave);
+
             hide();
             clearShowSetT();
         }

@@ -57,25 +57,30 @@ module.exports = Timeline;
 p.addSequence = function (sequ) {
 
     var deContOpt = createCont(sequ.deOptions, this._deLeft),
-        deContKf = createCont(sequ.deKeys, this._deKeylineCont),
-        sequH = sequ.height;
+        deContKf = createCont(sequ.deKeys, this._deKeylineCont);
+    
+    setHeight();
 
     this._sequences.push(sequ);
 
     sequ.on('select', this._onSelectSequence);
     sequ.on('change', this._onChangeSequence);
 
-    sequ.on('changeHeight', function () {
+    sequ.on('changeHeight', setHeight);
 
-        deContOpt.style.height = sequH + 'px';
-        deContKf.style.height = sequH + 'px';
-    });
+    function setHeight(h) {
+
+        var h = sequ.height;
+
+        deContOpt.style.height = h + 'px';
+        deContKf.style.height = h + 'px';
+    }
 
     function createCont(content, parent) {
 
         var de = document.createElement('div');
         de.style.width = '100%';
-        de.style.height = sequH + 'px';
+        de.style.height = sequ.height + 'px';
         de.style.overflow = 'hidden';
         de.style.transform = 'height 0.12 easeOut';
         de.appendChild(content);

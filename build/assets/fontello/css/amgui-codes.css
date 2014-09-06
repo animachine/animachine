@@ -36,3 +36,8 @@
 .icon-scissors:before { content: '\e820'; } /* '' */
 .icon-cw:before { content: '\e821'; } /* '' */
 .icon-ccw:before { content: '\e822'; } /* '' */
+.icon-cancel:before { content: '\e823'; } /* '' */
+.icon-cube:before { content: '\e824'; } /* '' */
+.icon-terminal:before { content: '\e825'; } /* '' */
+.icon-megaphone:before { content: '\e826'; } /* '' */
+.icon-plus:before { content: '\e827'; } /* '' */

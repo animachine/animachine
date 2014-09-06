@@ -185,12 +185,13 @@ p._onDrag = function (e) {
         change = {};
 
     if (finger === 'origin') {
+        
         setOrigin();
     }
         
     if (finger === 'move') {
-        change.tx = params.tx = md.params.tx + dx;
-        change.ty = params.ty = md.params.ty + dy;
+
+        setTransform();
     }
     
     if (finger.charAt(0) === '1') {
@@ -258,19 +259,24 @@ p._onDrag = function (e) {
         change.rz = params.rz = md.params.rz + r;
     }
 
+    function setTransform() {
+
+        change.tx = params.tx = md.params.tx + dx;
+        change.ty = params.ty = md.params.ty + dy;
+    }
+
     function setOrigin() {
 
         var diff = Math.sqrt(dx*dx + dy*dy),
-            mx = pMouse.x - pOrigin.x,
-            my = pMouse.y - pOrigin.y,
-            r = Math.atan2(my, mx) + params.rz,
+            mx = pMouse.x - md.pOrigin.x,
+            my = pMouse.y - md.pOrigin.y,
+            r = Math.atan2(my, mx) - params.rz,
             x = Math.cos(r) * diff * params.sx,
             y = Math.sin(r) * diff * params.sy;
-        console.log(x, y, dx, dy)
         change.ox = params.ox = md.params.ox + (x / base.w);
         change.oy = params.oy = md.params.oy + (y / base.h);
-        change.tx = params.tx = md.params.tx - x/2;
-        change.ty = params.ty = md.params.ty - y/2;
+        // change.tx = params.tx = md.params.tx - mx;
+        // change.ty = params.ty = md.params.ty - my;
 
     }
 };
@@ -286,11 +292,13 @@ p._setFinger = function (e) {
         mx = e.clientX,
         my = e.clientY,
         mp = {x: mx, y: my},
+        dox = po.x - mx,
+        doy = po.y - my,
+        dOrigin = Math.sqrt(dox*dox + doy*doy),
         dTop = distToSegment(mp, p[0], p[1]),
         dLeft = distToSegment(mp, p[1], p[2]),
         dBottom = distToSegment(mp, p[2], p[3]),
         dRight = distToSegment(mp, p[3], p[0]),
-        dOrigin = dist2(mp, po),
         top = dTop < diff,
         left = dLeft < diff,
         bottom = dBottom < diff,

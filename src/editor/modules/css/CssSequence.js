@@ -6,6 +6,9 @@ var CssTransformParameter = require('./CssTransformParameter');
 var Key = require('./Key');
 var Transhand = require('../../transhand/Transhand');
 var mstPlayer = require('./script.player.mst');
+var DialogSequOptions = require('./DialogSequOptions');
+
+var dialogSequOptions;
 
 function CssSequence(opt) {
 
@@ -15,6 +18,10 @@ function CssSequence(opt) {
 
     CssSequence._instances.push(this);
 
+    if (!dialogSequOptions) {
+        dialogSequOptions = new DialogSequOptions();
+    }
+
     this._selectors = opt.selectors || [];
     this._parameters = [];
 
@@ -23,6 +30,7 @@ function CssSequence(opt) {
     this._selectedElements = [];
     this._isOpened = false;
     this._headKeys = [];
+    this._name = opt._name || this._selectors[0] || 'unnamed';
 
     this._onSelectClick = this._onSelectClick.bind(this);
     this._onChangeHandler = this._onChangeHandler.bind(this);
@@ -30,6 +38,9 @@ function CssSequence(opt) {
     this._onChangeParameter = this._onChangeParameter.bind(this);
     this._onChangeBlankParameter = this._onChangeBlankParameter.bind(this);
     this._onToggleKey = this._onToggleKey.bind(this);
+    this._onClickName = this._onClickName.bind(this);
+    this._onChangeName = this._onChangeName.bind(this);
+    this._onChangeSelectors = this._onChangeSelectors.bind(this);
 
     this.deOptions = document.createElement('div');
     this.deKeys = document.createElement('div');
@@ -121,6 +132,8 @@ Object.defineProperty(p, 'height', {
                 ret += param.height;
             });
         }
+
+        return ret;
     }
 });
 
@@ -282,6 +295,30 @@ p._onToggleKey = function () {
     });
 
     this._refreshBtnToggleKey();
+};
+
+p._onClickName = function () {
+
+    dialogSequOptions.show({
+        name: this._name,
+        selectors: this._selectors,
+        onChangeName: this._onChangeName, 
+        onChangeSelectors: this._onChangeSelectors
+    });
+};
+
+p._onChangeName = function (name) {
+
+    this._name = name;
+    this._deName.textContent = name;
+};
+
+p._onChangeSelectors = function (selectors) {
+
+    this._selectors.length = 0;
+    this._selectors = this._selectors.concat(selectors);
+
+    this.selectElements();
 };
 
 p._isAllParamsHaveKey = function (time) {
@@ -476,6 +513,7 @@ p._createHeadOptions = function (){
     var de = document.createElement('div');
     de.style.position = 'relative';
     de.style.width = '100%';
+    de.style.display = 'flex';
     de.style.height = this._opt.baseH + 'px';
     de.style.background = 'linear-gradient(to bottom, #063501 18%,#064100 96%)';
     this.deOptions.appendChild(de);
@@ -500,11 +538,9 @@ p._createHeadOptions = function (){
     this._deToggleDropDown.style.display = 'inline-block';
     de.appendChild(this._deToggleDropDown);
 
-    this._deOptionsBtn = amgui.createIconBtn({icon: 'cog', height: this._opt.baseH});
-    this._deOptionsBtn.style.position = 'absolute';
-    this._deOptionsBtn.style.right = '21px';
-    this._deOptionsBtn.style.top = '0px';
-    de.appendChild(this._deOptionsBtn);
+    this._deName = amgui.createLabel({caption: this._name, parent: de});
+    this._deName.style.height = this._opt.baseH  + 'px';
+    this._deName.addEventListener('click', this._onClickName);
 
     this._btnToggleKey = amgui.createIconBtn({icon: 'key', height: this._opt.baseH});
     this._btnToggleKey.style.position = 'absolute';

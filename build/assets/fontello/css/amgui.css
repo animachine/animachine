@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'amgui';
-  src: url('../font/amgui.eot?90160407');
-  src: url('../font/amgui.eot?90160407#iefix') format('embedded-opentype'),
-       url('../font/amgui.woff?90160407') format('woff'),
-       url('../font/amgui.ttf?90160407') format('truetype'),
-       url('../font/amgui.svg?90160407#amgui') format('svg');
+  src: url('../font/amgui.eot?82614441');
+  src: url('../font/amgui.eot?82614441#iefix') format('embedded-opentype'),
+       url('../font/amgui.woff?82614441') format('woff'),
+       url('../font/amgui.ttf?82614441') format('truetype'),
+       url('../font/amgui.svg?82614441#amgui') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -14,7 +14,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'amgui';
-    src: url('../font/amgui.svg?90160407#amgui') format('svg');
+    src: url('../font/amgui.svg?82614441#amgui') format('svg');
   }
 }
 */
@@ -85,3 +85,5 @@
 .icon-empire:before { content: '\e81e'; } /* '' */
 .icon-rocket:before { content: '\e81f'; } /* '' */
 .icon-scissors:before { content: '\e820'; } /* '' */
+.icon-cw:before { content: '\e821'; } /* '' */
+.icon-ccw:before { content: '\e822'; } /* '' */

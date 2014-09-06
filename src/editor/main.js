@@ -8,6 +8,7 @@ var Timeline = require('./timeline');
 var Toolbar = require('./toolbar');
 var Windooman = require('./windooman');
 var Warehouseman = require('./warehouseman');
+var Chronicler = require('./Chronicler');
 var modules = {
     css: require('./modules/css')
 };
@@ -74,6 +75,18 @@ domready(function () {
     am.toolbar.domElem.style.top = '0px';
     am.workspace.fillTab('tools', am.toolbar.domElem);
     am.timeline = new Timeline(am);
+
+    am.history = new Chronicler();
+
+    am.toolbar.addIcon({
+        icon: 'ccw',
+        onClick: am.history.undo.bind(am.history)
+    });
+
+    am.toolbar.addIcon({
+        icon: 'cw',
+        onClick: am.history.redo.bind(am.history)
+    });
 
     am.toolbar.addIcon({
         icon: 'upload-cloud',

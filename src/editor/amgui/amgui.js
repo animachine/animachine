@@ -545,8 +545,8 @@ var amgui = _.extend(
 
             hide();
             refreshShowSetT();
-            mx = e.pageX;
-            my = e.pageY;
+            mx = e.clientX;
+            my = e.clientY;
         }
 
         function refreshShowSetT() {

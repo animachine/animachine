@@ -20,13 +20,11 @@ function decorTimebarNavigator (timebar) {
 
     function onChangeTape() {
 
-        var width = timebar.width,
-            max = timebar.length,
-            start = timebar.start,
-            end = timebar.end;
+        var scale = timebar.width / timebar.length;
 
-        deNav.style.left = (width * (-start / max)) + 'px';
-        deNav.style.width = (width * ((end - start) / max)) + 'px';
+        deNav.style.left = (-timebar.start * scale) + 'px';
+        deNav.style.width = (timebar.visibleTime * scale) + 'px';
+        // deNav.style.visibility = visibleTime > length ? 'none' : 'visible';
     }
 
     function onMDown(e) {
@@ -50,7 +48,8 @@ function decorTimebarNavigator (timebar) {
 
     function onMMove(e) {
 
-        var move = (e.clientX - md.x) / md.timescale,
+        var scale = timebar.width / timebar.length,
+            move = (e.clientX - md.x) / scale,
             start = md.start - move;
 
         if (dragMode === 'move') {

@@ -21,7 +21,8 @@ function Timeline(am) {
     this._timebar = new Timebar({
         height: this._headerH,
         width: this._deRight.offsetWidth || 1000,
-        timescale: 0.05
+        timescale: 0.12,
+        length: 12000
     });
     this._deRight.insertBefore(this._timebar.domElem, this._deKeylineCont);
 

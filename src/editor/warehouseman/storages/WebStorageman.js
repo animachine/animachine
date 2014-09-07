@@ -31,6 +31,13 @@ function WebStorageman(opt) {
 inherits(WebStorageman, EventEmitter);
 var p = WebStorageman.prototype;
 
+p.features = {
+    save: true,
+    open: true,
+    browse: true,
+}
+
+
 p.save = function (name, data, path) {
 
     name = this._validName(name);

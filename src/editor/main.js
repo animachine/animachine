@@ -111,9 +111,7 @@ domready(function () {
 
                 onOpen: function (save) {
 
-                    if (typeof(save) === 'string') {
-                        save = JSON.parse(save);
-                    }
+                    console.log(save);
 
                     am.timeline.clear();
                     am.timeline.useSave(save);

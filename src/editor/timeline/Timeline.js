@@ -4,6 +4,7 @@ var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var Timebar = require('./Timebar');
 var amgui = require('../amgui');
+var mineSave = require('./mineSave');
 var mstSaveScript = require('./script.save.mst');
 
 function Timeline(am) {
@@ -254,7 +255,7 @@ p.getScript = function (opt) {
 
     script = Mustache.render(mstSaveScript, {
         name: 'anim1',
-        saveData: opt.save && this.getSave(),
+        saveJson: opt.includeSave && this.getSave(),
         sequPlayerGens: playerScripts.join(',\n'),
         autoPlay: opt.autoPlay
     });
@@ -287,8 +288,14 @@ p.getSave = function () {
 
 p.useSave = function (save) {
 
-    this.currTime = save.currTime;
-    this.timescale = save.timescale;
+    var save = mineSave(save);
+
+    if (!save) {
+        alert('Can\'t use this save');
+    }
+
+    this._timebar.currTime = save.currTime;
+    this._timebar.timescale = save.timescale;
 
     save.sequences.forEach(function (sequData) {
 

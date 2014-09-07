@@ -310,10 +310,9 @@ function getBaseWorkspace() {
         direction: 'column',
         children: [{
                 type: 'panel',
-                mode: 'tab',
-                size: 23,
+                size: 32,
                 scaleMode: 'fix',
-                showHead: false,
+                noHead: false,
                 tabs: [{name: 'tools'}],
             },{
                 type: 'container',
@@ -322,7 +321,6 @@ function getBaseWorkspace() {
                 scaleMode: 'flex',
                 children: [{                    
                     type: 'panel',
-                    mode: 'tab',
                     size: 3,
                     scaleMode: 'flex',
                     tabs: [
@@ -331,16 +329,15 @@ function getBaseWorkspace() {
                     ]
                 }, {                    
                     type: 'panel',
-                    mode: 'empty',
+                    empty: true,
                     size: 12,
                     scaleMode: 'flex'
                 }]
             }, {
                 type: 'panel',
-                mode: 'tab',
                 size: 4,
                 scaleMode: 'flex',
-                showHead: false,
+                noHead: false,
                 tabs: [{name: 'timeline'}],
             }]
     };

@@ -1,18 +1,25 @@
 'use strict';
 
 var Tab = require('./Tab');
+var amgui = require('../amgui');
 
 function Panel(opt) {
 
-    this._mode = opt.mode || 'tab';
     this._tabs = [];
-    this._showHead = 'showHead' in opt ? opt.showHead : true;
     
     this.size = opt.size;
     this.scaleMode = opt.scaleMode;
 
     this._createDomElem();
     this._createTabBase();
+
+    this._empty = false;
+    this._collapsed = false;
+    this._noHead = true;
+
+    if ('empty' in opt) this.empty = opt.empty;
+    if ('collapsed' in opt) this.collapsed = opt.collapsed;
+    if ('noHead' in opt) this.noHead = opt.noHead;
 
     if (opt.tabs) {
         opt.tabs.forEach(this.addTab, this);
@@ -27,18 +34,49 @@ function Panel(opt) {
 
 var p = Panel.prototype;
 
-Object.defineProperty(p, 'mode', {
+Object.defineProperties(p, {
 
-    set: function (v) {
+    empty: {
+        set: function (v) {
 
-        this._mode = v;
-        this.domElem.style.pointerEvents = this._mode === 'empty' ? 'none' : 'auto';
-        this._deTabBase.display = this._mode === 'tab' ? 'block' : 'none';
+            v = !!v;
+            if (this._empty === v) return;
+
+            this._empty = v;
+            this.domElem.style.pointerEvents = this._empty ? 'none' : 'auto';
+            this.domElem.style.visibility = this._empty ? 'hidden' : 'visibile';
+        },
+        get: function () {
+            return this._empty;
+        }
     },
+    
+    collapsed: {
+        set: function (v) {
 
-    get: function () {
+            v = !!v;
+            if (this._collapsed === v) return;
 
-        return this._mode;
+            this._collapsed = v;
+            this._deTabBase.style.display = this._collapsed ? 'none' : 'flex';
+        },
+        get: function () {
+            return this._collapsed;
+        }
+    },
+    
+    noHead: {
+        set: function (v) {
+
+            v = !!v;
+            if (this._noHead === v) return;
+
+            this._noHead = v;
+            this._deTabHead.style.display = this._noHead ? 'none' : 'flex';
+        },
+        get: function () {
+            return this._noHead;
+        }
     }
 });
 
@@ -100,6 +138,7 @@ p._createTabBase = function () {
     this._deTabHead.style.height = '23px';
     this._deTabHead.style.display = 'flex';
     this._deTabHead.style.alignItems = 'stretch';
+    this._deTabHead.style.background = amgui.color.bg1;
     if (this._showHead) {
         this._deTabBase.appendChild(this._deTabHead);
     }

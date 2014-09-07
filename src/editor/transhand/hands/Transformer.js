@@ -275,8 +275,8 @@ p._onDrag = function (e) {
             y = Math.sin(r) * diff * params.sy;
         change.ox = params.ox = md.params.ox + (x / base.w);
         change.oy = params.oy = md.params.oy + (y / base.h);
-        // change.tx = params.tx = md.params.tx - mx;
-        // change.ty = params.ty = md.params.ty - my;
+        // change.tx = params.tx = md.params.tx - (x * (params.scale-1));
+        // change.ty = params.ty = md.params.ty - (y * (params.scale-1));
 
     }
 };

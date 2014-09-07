@@ -22,7 +22,7 @@ function Timeline(am) {
         height: this._headerH,
         width: this._deRight.offsetWidth || 1000,
         timescale: 0.12,
-        length: 12000
+        length: 6000
     });
     this._deRight.insertBefore(this._timebar.domElem, this._deKeylineCont);
 

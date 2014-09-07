@@ -12,6 +12,7 @@ WebFont.load({
 var amgui = _.extend(
     new EventEmitter, 
     require('./amgui.bezierEditor'),
+    require('./amgui.makeDraggable'),
     {
 
     FONT_FAMILY: '"Open Sans", sans-serif',

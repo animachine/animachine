@@ -28,6 +28,8 @@ function Timebar(opt) {
 
     this._createBase();
     this._createPointer();
+    this._createEndShadow();
+
     this._renderTape();
 
     this._canvasTape.addEventListener('mousedown', this._onMDown);
@@ -146,7 +148,7 @@ Object.defineProperties(p, {
 p._renderTape = function () {
 
     var start = this._start,
-        end = this.end,
+        length = this._length,
         visibleTime = this.visibleTime,
         height = this._height,
         scale = this.timescale, 
@@ -195,6 +197,8 @@ p._renderTape = function () {
         }
         ctx.stroke();
     }
+
+    this._deEndShadow.style.width = ((visibleTime - (start + length)) * scale) + 'px';
 };
 
 function onMDown(e) {
@@ -292,6 +296,18 @@ p._createPointer = function () {
     pointer.style.borderRadius = radius + 'px';
     this._dePointer.appendChild(pointer); 
     this.domElem.appendChild(this._dePointer); 
+};
+
+p._createEndShadow = function () {
+
+    this._deEndShadow = document.createElement('div');
+    this._deEndShadow.style.position = 'absolute';
+    this._deEndShadow.style.top = '0px';
+    this._deEndShadow.style.right = '0px';
+    this._deEndShadow.style.height = '100%';
+    this._deEndShadow.style.width = '0px';
+    this._deEndShadow.style.backgroundColor = 'rgba(83,83,83,0.73)';
+    this.domElem.appendChild(this._deEndShadow); 
 };
 
 

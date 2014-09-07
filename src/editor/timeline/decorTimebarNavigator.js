@@ -11,9 +11,51 @@ function decorTimebarNavigator (timebar) {
     createBase();
     timebar.domElem.appendChild(deNav);
 
-    deNav.addEventListener('mousedown', onMDown);
-    deNav.addEventListener('mouseenter', onMEnter);
-    deNav.addEventListener('mouseleave', onMLeave);
+    amgui.makeDraggable({
+        deTarget: deNav,
+        onDown: function (e) {
+
+            if (e.target === deLeftHand) dragMode = 'start';
+            else if (e.target === deRightHand) dragMode = 'end';
+            else dragMode = 'move';
+
+            return {
+                start: timebar.start,
+                visibleTime: timebar.visibleTime,
+                timescale: timebar.timescale,
+            }
+        },
+        onMove: function (md, mx) {
+
+            var scale = timebar.width / timebar.length,
+                move = (mx - md.mx) / scale,
+                start = md.start - move;
+
+            if (dragMode === 'move') {
+
+                timebar.start = start;
+            }
+            else if (dragMode === 'start') {
+
+                timebar.start = start;
+                timebar.visibleTime = md.visibleTime - move;
+            }
+            else if (dragMode === 'end') {
+
+                timebar.visibleTime = md.visibleTime + move;
+            }   
+        },
+        onUp: function () {
+
+            dragMode = undefined;
+            onMLeave();
+        },
+        onEnter: function () {
+
+            deNav.style.transform = 'scaleY(1)';
+        },
+        onLeave: onMLeave
+    });
 
     timebar.on('changeTape', onChangeTape);
 
@@ -24,61 +66,6 @@ function decorTimebarNavigator (timebar) {
 
         deNav.style.left = (-timebar.start * scale) + 'px';
         deNav.style.width = (timebar.visibleTime * scale) + 'px';
-        // deNav.style.visibility = visibleTime > length ? 'none' : 'visible';
-    }
-
-    function onMDown(e) {
-
-        e.stopPropagation();
-        e.preventDefault();
-
-        if (e.target === deLeftHand) dragMode = 'start';
-        else if (e.target === deRightHand) dragMode = 'end';
-        else dragMode = 'move';
-
-        md.x = e.clientX;
-        md.start = timebar.start;
-        md.visibleTime = timebar.visibleTime;
-        md.timescale = timebar.timescale;
-
-        window.addEventListener('mousemove', onMMove);
-        window.addEventListener('mouseup', onMUp);
-        window.addEventListener('mouseleave', onMUp);
-    }
-
-    function onMMove(e) {
-
-        var scale = timebar.width / timebar.length,
-            move = (e.clientX - md.x) / scale,
-            start = md.start - move;
-
-        if (dragMode === 'move') {
-
-            timebar.start = start;
-        }
-        else if (dragMode === 'start') {
-
-            timebar.start = start;
-            timebar.visibleTime = md.visibleTime - move;
-        }
-        else if (dragMode === 'end') {
-
-            timebar.visibleTime = md.visibleTime + move;
-        }
-    }
-
-    function onMUp() {
-
-        window.removeEventListener('mousemove', onMMove);
-        window.removeEventListener('mouseup', onMUp);
-        window.removeEventListener('mouseleave', onMUp);
-        dragMode = undefined;
-        onMLeave();
-    }
-
-    function onMEnter() {
-
-        deNav.style.transform = 'scaleY(1)';
     }
 
     function onMLeave() {

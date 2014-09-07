@@ -379,11 +379,12 @@ var amgui = _.extend(
             if (on === isOn) {
                 return;
             }
+            
             isOn = on;
             setIcon();
 
             de.dispatchEvent(new CustomEvent('toggle', {detail: {state: isOn}}));
-            de.dispatchEvent(new CustomEvent(isOn ? 'toggleOn' : 'toggleOff'));
+            de.dispatchEvent(new Event(isOn ? 'toggleOn' : 'toggleOff'));
         };
 
         de.state = function () {

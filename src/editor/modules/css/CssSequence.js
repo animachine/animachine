@@ -149,6 +149,23 @@ p._onPick = function (de) {
     }
 };
 
+p.play = function () {
+
+    this._animPlay();
+};
+
+p.pause = function () {
+
+    window.cancelAnimationFrame(this._animPlayRafid);
+};
+
+p._animPlay = function () {
+
+    this._animPlayRafid = window.requestAnimationFrame(this._animPlay);
+
+    this.renderTime(am.timeline.currTime);
+};
+
 p._focusHandler = function (de) {
 
     de = de || this._currHandledDe;

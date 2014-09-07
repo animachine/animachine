@@ -1,3 +1,5 @@
+'use strict';
+
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var Timebar = require('./Timebar');
@@ -10,6 +12,15 @@ function Timeline(am) {
     this.setMaxListeners(1100);
 
     this._headerH = 23;
+
+    this._onSelectSequence = this._onSelectSequence.bind(this);
+    this._onChangeSequence = this._onChangeSequence.bind(this);
+    this._onChangeTime = this._onChangeTime.bind(this);
+    this._onChangeTape = this._onChangeTape.bind(this);
+    this._onWindowResize = this._onWindowResize.bind(this);
+    this._onTogglePlayPause = this._onTogglePlayPause.bind(this);
+    this._onTimebarSeek = this._onTimebarSeek.bind(this);
+    this._animPlay = this._animPlay.bind(this);
     
     this._createBase();
     this._createSettingsHead();
@@ -31,21 +42,11 @@ function Timeline(am) {
 
     this._sequences = [];
 
-    this._dropdownNewSequ.addEventListener('select', function (e) {
-        
-        // this.addSequence(am.sequenceTypes[0].create());
-    }.bind(this));
-
-    this._onSelectSequence = this._onSelectSequence.bind(this);
-    this._onChangeSequence = this._onChangeSequence.bind(this);
-    this._onChangeTime = this._onChangeTime.bind(this);
-    this._onChangeTape = this._onChangeTape.bind(this);
-    this._onWindowResize = this._onWindowResize.bind(this);
-
     this._timebar.on('changeTime', this.emit.bind(this, 'changeTime'));
     this._timebar.on('changeTape', this.emit.bind(this, 'changeTape'));
     this._timebar.on('changeTime', this._onChangeTime);
     this._timebar.on('changeTape', this._onChangeTape);
+    this._timebar.on('seek', this._onTimebarSeek);
 
     amgui.callOnAdded(this.domElem, this._refreshTimebarWidth, this);
     
@@ -92,17 +93,59 @@ p.addSequence = function (sequ) {
     }
 }
 
-Object.defineProperty(p, 'currTime', {
-    get: function () {
-        return this._timebar._currTime
+Object.defineProperties(p, {
+
+    'currTime': {
+        get: function () {
+            return this._timebar._currTime
+        }
+    },
+
+    'timescale': {
+        get: function () {
+            return this._timebar.timescale
+        }
     }
 });
 
-Object.defineProperty(p, 'timescale', {
-    get: function () {
-        return this._timebar.timescale
-    }
-});
+p.play = function () {
+
+    if (this._isPlaying) return;
+    this._isPlaying = true;
+
+    this._btnTogglePlay.setToggle(true);
+
+    _.invoke(this._sequences, 'play', this.currTime);
+
+    this._playStartTimeStamp = performance.now();
+    this._playStartCurrTime = this.currTime;
+    this._animPlay();
+};
+
+p.pause = function () {
+
+    if (!this._isPlaying) return;
+    this._isPlaying = false;
+
+    this._btnTogglePlay.setToggle(false);
+
+    _.invoke(this._sequences, 'pause');
+
+    window.cancelAnimationFrame(this._animPlayRafid)
+};
+
+p._animPlay = function () {
+
+    this._animPlayRafid = window.requestAnimationFrame(this._animPlay);
+
+    var t = Math.round(performance.now() - this._playStartTimeStamp);
+    this._timebar.currTime = (this._playStartCurrTime + t) % this._timebar.length;
+};
+
+p._onTimebarSeek = function () {
+
+    this.pause();
+}
 
 p._onSelectSequence = function(sequ) {
 
@@ -138,6 +181,17 @@ p._onChangeTape = function () {
 p._onWindowResize = function () {
 
     this._refreshTimebarWidth();
+};
+
+p._onTogglePlayPause = function () {
+
+    if (this._isPlaying) {
+
+        this.pause();
+    }
+    else {
+        this.play();
+    }
 };
 
 p._refreshMagnetPoints = function () {
@@ -271,6 +325,22 @@ p._createBase = function () {
     this._deDivider.style.backgroundColor = amgui.color.bg3;
     this._deDivider.style.width = '1px';
     this._deDivider.style.height = '100%';
+    this._deDivider.style.cursor = 'ew-resize';
+    amgui.makeDraggable({
+
+        deTarget: this._deDivider,
+        thisArg: this,
+        
+        onDrag: function (md, mx) {
+
+            var left = mx - this.domElem.getBoundingClientRect().left;
+
+            this._deDivider.style.left = left + 'px';
+            this._deLeft.style.width = left + 'px';
+
+            this._refreshTimebarWidth();
+        }
+    });
     this.domElem.appendChild(this._deDivider);
 
     this._deRight = document.createElement('div');
@@ -284,8 +354,6 @@ p._createBase = function () {
     this._deKeylineCont.style.position = 'relative';
     this._deKeylineCont.style.height = '100%';
     this._deRight.appendChild(this._deKeylineCont);
-
-    this._initDividerMoving();
 };
 
 p._createTimeline = function () {
@@ -320,15 +388,16 @@ p._createSettingsHead = function () {
     });
 
     
-    this._btnPlay = amgui.createToggleIconBtn({
+    this._btnTogglePlay = amgui.createToggleIconBtn({
         iconOn: 'pause', 
         iconOff: 'play',
         parent: this._deSettingsHead,
-        display: 'inline-block'
+        display: 'inline-block',
+        onClick: this._onTogglePlayPause
     });
 
     this._deCurrTime = amgui.createLabel({
-        caption:'',
+        caption: '',
         parent: this._deSettingsHead
     });
     this._deCurrTime.style.flex = '1';
@@ -348,42 +417,4 @@ p._createPointerLine = function () {
     this._dePointerLine.style.height = '100%';
     this._dePointerLine.style.borderLeft = '1px solid red';
     this._deRight.appendChild(this._dePointerLine);
-};
-
-
-
-p._initDividerMoving = function () {
-
-    that = this;
-
-    this._deDivider.style.cursor = 'ew-resize';
-
-    this._deDivider.addEventListener('mousedown', down);
-
-    function down(e) {
-
-        e.stopPropagation();
-        e.preventDefault();
-        
-        window.addEventListener('mousemove', drag);
-        window.addEventListener('mouseup', end);
-        window.addEventListener('mouseleave', end);
-    }
-
-    function drag(e) {
-
-        var left = e.pageX - that.domElem.getBoundingClientRect().left;
-
-        that._deDivider.style.left = left + 'px';
-        that._deLeft.style.width = left + 'px';
-
-        that._refreshTimebarWidth();
-    }
-
-    function end(e) {
-        
-        window.removeEventListener('mousemove', drag);
-        window.removeEventListener('mouseup', end);
-        window.removeEventListener('mouseleave', end);
-    }
 };

@@ -248,6 +248,8 @@ function onMMove(e) {
         }
 
         this.currTime = this._start + time;
+
+        this.emit('seek');
     }
     else if (this._dragMode === 'translate') {
 

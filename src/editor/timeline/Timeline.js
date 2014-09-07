@@ -324,7 +324,7 @@ p._createBase = function () {
 
     this._deLeft = document.createElement('div');
     this._deLeft.style.backgroundColor = amgui.color.bg0;
-    this._deLeft.style.width = '230px';
+    this._deLeft.style.width = '300px';
     this._deLeft.style.height = '100%';
     this.domElem.appendChild(this._deLeft);
 
@@ -338,7 +338,7 @@ p._createBase = function () {
         deTarget: this._deDivider,
         thisArg: this,
         
-        onDrag: function (md, mx) {
+        onMove: function (md, mx) {
 
             var left = mx - this.domElem.getBoundingClientRect().left;
 

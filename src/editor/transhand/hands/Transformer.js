@@ -219,6 +219,7 @@ p._onDrag = function (e) {
         setRotation();
     }
 
+
     this.emit('change', change, 'transform');
 
     function setScale(r, sN, way) {

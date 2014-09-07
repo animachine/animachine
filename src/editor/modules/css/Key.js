@@ -7,7 +7,7 @@ function Key (opt) {
 
     EventEmitter.call(this);
     
-    this._time = opt.time || 0;
+    this._time = ~~opt.time || 0;
     this._value = opt.value || '';
     this._ease = opt.ease || 'linear';
     this._deKeyline = opt.deKeyline;

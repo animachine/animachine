@@ -14,6 +14,14 @@ var BASE_VALUES = {
     perspective: 0
 };
 
+var PRECISIONS = { 
+    tx: 0, ty: 0, tz: 0,
+    rx: 2, ry: 2, rz: 2,
+    sx: 2, sy: 2, sz: 2,
+    skewX: 2, skewY: 2,
+    perspective: 0
+};
+
 function CssTransformParameter (opt) {
 
     CssParameter.call(this, _.extend({
@@ -152,7 +160,7 @@ p._refreshInput = function () {
 
         if (inputs[key].value !== values[key]) {
 
-            inputs[key].value = values[key];
+            inputs[key].value = values[key].toFixed(PRECISIONS[key]);
         }
     });
 };

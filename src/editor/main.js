@@ -189,8 +189,6 @@ domready(function () {
 
 function onClickRoot(e) {
 
-    e.stopPropagation();
-
     var de = e.target;
 
     if (am.selectedElement !== de && isPickable(de)) {

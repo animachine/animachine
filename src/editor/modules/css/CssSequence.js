@@ -30,7 +30,6 @@ function CssSequence(opt) {
     this._selectedElements = [];
     this._isOpened = false;
     this._headKeys = [];
-    this._name = opt._name || this._selectors[0] || 'unnamed';
 
     this._onSelectClick = this._onSelectClick.bind(this);
     this._onChangeHandler = this._onChangeHandler.bind(this);
@@ -51,6 +50,8 @@ function CssSequence(opt) {
     this._deHeadKeyline = amgui.createKeyline({});
     this.deKeys.appendChild(this._deHeadKeyline);
 
+    this.name = opt.name || this._selectors[0] || 'unnamed';
+
     am.timeline.on('changeTime', this._onChangeTime);
     this.deOptions.addEventListener('click', this._onSelectClick);
     this.deKeys.addEventListener('click', this._onSelectClick);
@@ -64,6 +65,41 @@ inherits(CssSequence, EventEmitter);
 var p = CssSequence.prototype;
 
 p.type = 'css_sequ_type';
+
+Object.defineProperties(p, {
+
+    height: {
+
+        get: function () {
+
+            var ret = this._opt.baseH;
+
+            if (this._isOpened) {
+
+                this._parameters.forEach(function (param) {
+
+                    ret += param.height;
+                });
+            }
+
+            return ret;
+        }
+    },
+
+    name: {
+        set: function (v) {
+
+            if (v === this._name) return;
+
+            this._name = v || 'unnamed';
+            this._deName.textContent = this._name;
+        },
+        get: function () {
+
+            return this._name;
+        }
+    }
+});
 
 p.select = function () {
 
@@ -121,24 +157,6 @@ p.renderTime = function (time) {
     });
 };
 
-Object.defineProperty(p, 'height', {
-
-    get: function () {
-
-        var ret = this._opt.baseH;
-
-        if (this._isOpened) {
-
-            this._parameters.forEach(function (param) {
-
-                ret += param.height;
-            });
-        }
-
-        return ret;
-    }
-});
-
 p._onPick = function (de) {
 
     var items = am.deRoot.querySelectorAll(this.selectors.join(','));
@@ -190,13 +208,26 @@ p._focusHandler = function (de) {
             y: br.top,
             w: br.width,
             h: br.height,
-        }
+        },
+        params: {}
     };
     var transformParam = this.getParameter('transform');
+    var transformOriginParam = this.getParameter('transform-origin');
 
     if (transformParam) {
 
-        handOpt.params = transformParam.getRawValue();
+        _.extend(handOpt.params, transformParam.getRawValue());
+    }
+
+    if (transformOriginParam) {
+
+        var val = transformOriginParam.getValue(),
+            match = /\s*([\d\.]+)%\s*([\d\.]+)%/.exec(val);
+
+        if (match) {
+            handOpt.params.ox = match[1] / 100;
+            handOpt.params.oy = (match[2] || match[1]) / 100;
+        }
     }
 
     this._handler.setup({
@@ -255,7 +286,7 @@ p._onChangeHandler = function(params, type) {
             prop.addKey({
                 time: time,
                 name: name,
-                value: (params.ox*100) + '% ' + (params.oy*100) + '%'
+                value: (params.ox*100).toFixed(2) + '% ' + (params.oy*100).toFixed(2) + '%'
             });
         }
     }
@@ -289,9 +320,15 @@ p._onDeleteParameter = function (param) {
     this.deleteParameter(param);
 };
 
-p._onMoveParameter = function () {
+p._onMoveParameter = function (param, way) {
 
-    
+    var idx = this._parameters.indexOf(param);
+
+    this._parameters.splice(idx, 1);
+    idx = Math.min(this._parameters.length, Math.max(0, idx + way));
+    this._parameters.splice(idx, 0, param);
+
+    this._refreshParameterOrdering();
 };
 
 p._onChangeBlankParameter = function () {
@@ -338,8 +375,7 @@ p._onClickName = function () {
 
 p._onChangeName = function (name) {
 
-    this._name = name;
-    this._deName.textContent = name;
+    this.name = name;
 };
 
 p._onChangeSelectors = function (selectors) {
@@ -392,8 +428,7 @@ p.addParameter = function (opt) {
         param.on('delete', this._onDeleteParameter);
         param.on('move', this._onMoveParameter);
 
-        this.deOptions.appendChild(param.deOptions);
-        this.deKeys.appendChild(param.deKeyline);
+        this._refreshParameterOrdering()
         this.emit('changeHeight');
 
         return param;
@@ -448,6 +483,15 @@ p._refreshHeadKeyline = function () {
     }, this);
 
     _.invoke(_.difference(oldKeys, this._headKeys), 'dispose');
+};
+
+p._refreshParameterOrdering = function () {
+
+    this._parameters.forEach(function (param) {
+
+        this.deOptions.appendChild(param.deOptions);
+        this.deKeys.appendChild(param.deKeyline);
+    }, this);
 };
 
 p.getScript = function () {
@@ -517,6 +561,7 @@ p.getScript = function () {
 p.getSave = function () {
 
     var save = {
+        name: this.name,
         selectors: _.clone(this._selectors),
         parameters: [],
     };
@@ -530,6 +575,8 @@ p.getSave = function () {
 };
 
 p.useSave = function (save) {
+
+    this.name = save.name;
 
     this._selectors = save.selectors;
 

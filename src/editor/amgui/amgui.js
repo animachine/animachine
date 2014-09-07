@@ -499,7 +499,7 @@ var amgui = _.extend(
 
                 e.stopPropagation();
                 e.preventDefault();
-                isOpened ? close() : open();
+                isOpened ? close(e) : open(e);
             });
         }
         else {
@@ -507,24 +507,26 @@ var amgui = _.extend(
             deBtn.addEventListener('click', function (e) {
 
                 e.stopPropagation();
-                isOpened ? close() : open();
+                isOpened ? close(e) : open(e);
             });
         }
 
         deDropdown.style.position = 'fixed';
+        deDropdown.style.pointerEvents = 'auto';
         
         deDropdown.addEventListener('select', close);
 
-        function open() {
+        function open(e) {
 
             if (isOpened) return;
             isOpened = true;
 
-            var bcr = deBtn.getBoundingClientRect();
-            deDropdown.style.left = bcr.left + 'px';
-            deDropdown.style.top = bcr.bottom + 'px';
+            
+            amgui.placeToPoint(deDropdown, e.clientX, e.clientY, opt.side);
 
-            deBtn.appendChild(deDropdown);
+            var deCont = amgui.deOverlayCont || deBtn;
+
+            deCont.appendChild(deDropdown);
             window.addEventListener('click', close);
         }
 

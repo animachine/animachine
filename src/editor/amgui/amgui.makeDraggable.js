@@ -23,7 +23,7 @@ function makeDraggable(opt) {
         e.stopPropagation();
         e.preventDefault();
 
-        md = call('onDown', [e]);
+        md = call('onDown', [e]) || {};
 
         md.mx = e.clientX;
         md.my = e.clientY;

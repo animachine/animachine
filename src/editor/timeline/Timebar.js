@@ -102,6 +102,8 @@ Object.defineProperties(p, {
     currTime: {
         set: function (time) {
 
+            time = parseInt(time);
+
             if (this._currTime === time) return;
 
             this._currTime = time;

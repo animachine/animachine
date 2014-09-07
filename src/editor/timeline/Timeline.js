@@ -27,6 +27,7 @@ function Timeline(am) {
     this._deRight.insertBefore(this._timebar.domElem, this._deKeylineCont);
 
     this._refreshTimebarWidth();
+    this._refreshDeCurrTime();
 
     this._sequences = [];
 
@@ -125,6 +126,8 @@ p._onChangeTime = function () {
 
     var left = this.currTime * this.timescale;
     this._dePointerLine.style.left = left + 'px';
+
+    this._refreshDeCurrTime();
 };
 
 p._onChangeTape = function () {
@@ -158,6 +161,29 @@ p._refreshTimebarWidth = function () {
 
     this._timebar.width = this._deRight.offsetWidth;
 };
+
+p._refreshDeCurrTime = function () {
+
+    var time = this.currTime, 
+        min, sec, ms, str  = '';
+
+    min = ~~(time / 60000);
+    time %= 60000;
+    sec = ~~(time / 1000);
+    time %= 1000;
+    ms = ~~time;
+
+    if (min) {
+        str += min + ':';
+        sec = ('00' + sec).substr(-2);
+    }
+    if (sec) {
+        str += sec + ':';
+        ms = ('0000' + ms).substr(-4);
+    }
+    str += ms;
+    this._deCurrTime.textContent = str;
+}
 
 
 
@@ -277,6 +303,7 @@ p._createSettingsHead = function () {
 
     this._deSettingsHead = document.createElement('div');
     this._deSettingsHead.style.backgroundColor = 'darkgreey';
+    this._deSettingsHead.style.display = 'flex';
     this._deSettingsHead.style.width = '100%';
     this._deSettingsHead.style.height = this._headerH + 'px';
     this._deLeft.appendChild(this._deSettingsHead);
@@ -299,6 +326,16 @@ p._createSettingsHead = function () {
         parent: this._deSettingsHead,
         display: 'inline-block'
     });
+
+    this._deCurrTime = amgui.createLabel({
+        caption:'',
+        parent: this._deSettingsHead
+    });
+    this._deCurrTime.style.flex = '1';
+    this._deCurrTime.style.textAlign = 'right';
+    this._deCurrTime.style.fontSize = '12px';
+    this._deCurrTime.style.marginRight = '2px';
+    this._deCurrTime.style.color = amgui.color.bg3;
 };
 
 p._createPointerLine = function () {

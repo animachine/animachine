@@ -23,12 +23,7 @@ function makeDraggable(opt) {
         e.stopPropagation();
         e.preventDefault();
 
-        if (opt.onDown) {
-            md = opt.onDown(e) || {};
-        }
-        else {
-            md = {};
-        }
+        md = call('onDown', [e]);
 
         md.mx = e.clientX;
         md.my = e.clientY;
@@ -40,9 +35,7 @@ function makeDraggable(opt) {
 
     function onMove(e) {
 
-        if (opt.onMove) {
-            opt.onMove(md, e.clientX, e.clientY, e);
-        }
+        call('onMove', [md, e.clientX, e.clientY, e]);
     }
 
     function onUp() {
@@ -50,19 +43,25 @@ function makeDraggable(opt) {
         window.removeEventListener('mousemove', onMove);
         window.removeEventListener('mouseup', onUp);
         window.removeEventListener('mouseleave', onUp);
+
+        call('onUp');
     }
 
     function onEnter() {
 
-        if (opt.onEnter) {
-            opt.onEnter();
-        }
+        call('onEnter');
     }
 
     function onLeave() {
+        
+        call('onLeave');
+    }
 
-        if (opt.onLeave) {
-            opt.onLeave();
+    function call(name, args) {
+
+        if (name in opt) {
+
+            return opt[name].apply(opt.thisArg, args)
         }
     }
 }

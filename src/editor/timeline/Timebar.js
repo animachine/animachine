@@ -45,7 +45,8 @@ module.exports = Timebar;
 
 
 Object.defineProperties(p, {
-    
+
+    /** px/ms */
     timescale: {
         set: function (v) {
             if (this._timescale === v) return;
@@ -131,9 +132,7 @@ Object.defineProperties(p, {
             if (this._length === v) return;
             this._length = v;
 
-            // var width = (this.length - (this._start + this._length)) * this.timescale
-            // this.deEnd.style.width = Math.max(0, width);
-
+            this._renderTape();
             this.emit('changeTape');
         },
         get: function () {
@@ -198,7 +197,8 @@ p._renderTape = function () {
         ctx.stroke();
     }
 
-    this._deEndShadow.style.width = ((visibleTime - (start + length)) * scale) + 'px';
+    var endWidth = ((visibleTime - (start + length)) * scale);
+    this._deEndShadow.style.width = Math.max(0, Math.min(width, endWidth)) + 'px';
 };
 
 function onMDown(e) {
@@ -308,6 +308,30 @@ p._createEndShadow = function () {
     this._deEndShadow.style.width = '0px';
     this._deEndShadow.style.backgroundColor = 'rgba(83,83,83,0.73)';
     this.domElem.appendChild(this._deEndShadow); 
+
+    var handler = document.createElement('div');
+    handler.style.position = 'absolute';
+    handler.style.top = '0px';
+    handler.style.left = '0px';
+    handler.style.height = '100%';
+    handler.style.width = '3px';
+    handler.style.cursor = 'ew-resize';
+    this._deEndShadow.appendChild(handler);
+
+    amgui.makeDraggable({
+        deTarget: handler,
+        thisArg: this,
+        onDown: function () {
+            return {
+                length: this.length,
+            }
+        },
+        onMove: function (md, mx) {
+
+            var dx = mx - md.mx;
+            this.length = md.length + (dx / this.timescale);
+        }
+    })
 };
 
 

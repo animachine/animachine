@@ -103,13 +103,17 @@ p.getValue = function (time) {
     }
 };
 
-p.addKey = function (opt) {
+p.addKey = function (opt, skipHistory) {
 
     var key = this.getKey(opt.time);
 
     if (key) {
 
         if ('value' in opt) {
+
+            if (!skipHistory) {
+                am.history.saveChain(key, [this.addKey, this, key, true], [this.addKey, this, opt, true]);
+            }
 
             key.value = opt.value;
         }
@@ -122,6 +126,10 @@ p.addKey = function (opt) {
         key.on('delete', this._onDeleteKey);
 
         this._keys.push(key);
+
+        if (!skipHistory) {
+            am.history.save([this.removeKey, this, opt.time, true], [this.addKey, this, opt, true]);
+        }
     }
 
     this._refreshInput();
@@ -130,6 +138,30 @@ p.addKey = function (opt) {
     this.emit('change');
 
     return key;
+};
+
+p.removeKey = function (key, skipHistory) {
+
+    if (!skipHistory) {
+        am.history.save([this.addKey, this, key, true],
+            [this.removeKey, this, key, true]);
+    }
+
+    var idx = this._keys.indexOf(key);
+
+    if (idx !== -1) {
+
+        this._keys.splice(idx, 1);
+
+        key.dispose();
+
+        key.removeListener('changeTime', this._onChangeKeyTime);
+        key.removeListener('delete', this._onDeleteKey);
+
+        this._refreshBtnToggleKey();
+
+        this.emit('change');
+    }
 };
 
 p.getKey = function (time) {
@@ -243,7 +275,7 @@ p._onChangeKeyTime = function () {
 
 p._onDeleteKey = function (key) {
 
-    this.deleteKey(key);
+    this.removeKey(key);
 };
 
 p._onChangeTime = function () {
@@ -257,29 +289,10 @@ p._onToggleKey = function () {
     var key = this.getKey(am.timeline.currTime);
 
     if (key) {
-        this.deleteKey(key);
+        this.removeKey(key);
     }
     else {
         this.addKey({time: am.timeline.currTime});
-    }
-};
-
-p.deleteKey = function (key) {
-
-    var idx = this._keys.indexOf(key);
-
-    if (idx !== -1) {
-
-        this._keys.splice(idx, 1);
-
-        key.dispose();
-
-        key.removeListener('changeTime', this._onChangeKeyTime);
-        key.removeListener('delete', this._onDeleteKey);
-
-        this._refreshBtnToggleKey();
-
-        this.emit('change');
     }
 };
 

@@ -16,11 +16,14 @@ function Timeline(am) {
 
     this._onSelectSequence = this._onSelectSequence.bind(this);
     this._onChangeSequence = this._onChangeSequence.bind(this);
+    this._onDeleteSequence = this._onDeleteSequence.bind(this);
+    this._onMoveSequence = this._onMoveSequence.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
     this._onChangeTape = this._onChangeTape.bind(this);
     this._onWindowResize = this._onWindowResize.bind(this);
     this._onTogglePlayPause = this._onTogglePlayPause.bind(this);
     this._onTimebarSeek = this._onTimebarSeek.bind(this);
+    this._onChangeSequenceHeight = this._onChangeSequenceHeight.bind(this);
     this._animPlay = this._animPlay.bind(this);
     
     this._createBase();
@@ -42,6 +45,7 @@ function Timeline(am) {
     this._refreshDeCurrTime();
 
     this._sequences = [];
+    this._mapSequenceDatas = new WeakMap();
 
     this._timebar.on('changeTime', this.emit.bind(this, 'changeTime'));
     this._timebar.on('changeTape', this.emit.bind(this, 'changeTape'));
@@ -58,41 +62,10 @@ inherits(Timeline, EventEmitter);
 var p = Timeline.prototype;
 module.exports = Timeline;
 
-p.addSequence = function (sequ) {
 
-    var deContOpt = createCont(sequ.deOptions, this._deLeft),
-        deContKf = createCont(sequ.deKeys, this._deKeylineCont);
-    
-    setHeight();
 
-    this._sequences.push(sequ);
 
-    sequ.on('select', this._onSelectSequence);
-    sequ.on('change', this._onChangeSequence);
 
-    sequ.on('changeHeight', setHeight);
-
-    function setHeight(h) {
-
-        var h = sequ.height;
-
-        deContOpt.style.height = h + 'px';
-        deContKf.style.height = h + 'px';
-    }
-
-    function createCont(content, parent) {
-
-        var de = document.createElement('div');
-        de.style.width = '100%';
-        de.style.height = sequ.height + 'px';
-        de.style.overflow = 'hidden';
-        de.style.transform = 'height 0.12 easeOut';
-        de.appendChild(content);
-        parent.appendChild(de);
-
-        return de;
-    }
-}
 
 Object.defineProperties(p, {
 
@@ -108,6 +81,85 @@ Object.defineProperties(p, {
         }
     }
 });
+
+
+
+
+
+
+p.addSequence = function (sequ, skipHistory) {
+
+    if (!skipHistory) {
+        am.history.save([this.removeSequence, this, sequ, true],
+            [this.addSequence, this, sequ, true]);
+    }
+    
+    this._sequences.push(sequ);
+
+    this._mapSequenceDatas.set(sequ, {
+        deContOpt: createCont(sequ.deOptions, this._deLeft),
+        deContKf: createCont(sequ.deKeys, this._deKeylineCont),
+    });
+
+    this._onChangeSequenceHeight();
+
+    sequ.on('select', this._onSelectSequence);
+    sequ.on('change', this._onChangeSequence);
+    sequ.on('delete', this._onDeleteSequence);
+    sequ.on('move', this._onMoveSequence);
+    sequ.on('changeHeight', this._onChangeSequenceHeight);
+
+    function createCont(content, parent) {
+
+        var de = document.createElement('div');
+        de.style.width = '100%';
+        de.style.height = sequ.height + 'px';
+        de.style.overflow = 'hidden';
+        de.style.transform = 'height 0.12 easeOut';
+        de.appendChild(content);
+        parent.appendChild(de);
+
+        return de;
+    }
+};
+
+p.removeSequence = function (sequ, skipHistory) {
+
+    if (!skipHistory) {
+        am.history.save([this.addSequence, this, sequ, true],
+            [this.removeSequence, this, sequ, true]);
+    }
+
+    var idx = this._sequences.indexOf(sequ);
+
+    if (idx === -1) {
+        return;
+    }
+
+    this._sequences.splice(idx, 1);
+
+    var sequData = this._mapSequenceDatas.get(sequ);
+    $(sequData.deOptions).remove();
+    $(sequData.deKeyline).remove();
+    this._mapSequenceDatas.delete(sequ);
+
+    sequ.removeListener('select', this._onSelectSequence);
+    sequ.removeListener('change', this._onChangeSequence);
+    sequ.removeListener('delete', this._onDeleteSequence);
+    sequ.removeListener('move', this._onMoveSequence);
+    sequ.removeListener('changeHeight', this._onChangeSequenceHeight);
+};
+
+p.moveSequence = function (sequ, way) {
+
+    var idx = this._sequences.indexOf(sequ);
+
+    this._sequences.splice(idx, 1);
+    idx = Math.min(this._sequences.length, Math.max(0, idx + way));
+    this._sequences.splice(idx, 0, sequ);
+
+    this._refreshSequenceOrdering();
+};
 
 p.play = function () {
 
@@ -134,6 +186,13 @@ p.pause = function () {
 
     window.cancelAnimationFrame(this._animPlayRafid)
 };
+
+
+
+
+
+
+
 
 p._animPlay = function () {
 
@@ -166,6 +225,16 @@ p._onChangeSequence = function(sequ) {
     this._refreshMagnetPoints();
 };
 
+p._onDeleteSequence = function (sequ) {
+
+    this.removeSequence(sequ);
+};
+
+p._onMoveSequence = function (sequ, way) {
+
+    this.moveSequence(sequ, way);
+};
+
 p._onChangeTime = function () {
 
     var left = this.currTime * this.timescale;
@@ -177,6 +246,15 @@ p._onChangeTime = function () {
 p._onChangeTape = function () {
 
     this._deKeylineCont.style.left = (this._timebar.start * this.timescale) + 'px';
+};
+
+p._onChangeSequenceHeight = function (sequ) {
+
+    var h = sequ.height,
+        sequData = this._mapSequenceDatas.get(sequ);
+
+    sequData.deContOpt.style.height = h + 'px';
+    sequData.deContKf.style.height = h + 'px';
 };
 
 p._onWindowResize = function () {
@@ -193,6 +271,26 @@ p._onTogglePlayPause = function () {
     else {
         this.play();
     }
+};
+
+
+
+
+
+
+
+
+
+
+p._refreshSequenceOrdering = function () {
+
+    this._sequences.forEach(function (sequ) {
+
+        var sequData = this._mapSequenceDatas.get(sequ);
+
+        this._deLeft.appendChild(sequData.deOptions);
+        this._deKeylineCont.appendChild(sequData.deKeyline);
+    }, this);
 };
 
 p._refreshMagnetPoints = function () {
@@ -303,10 +401,16 @@ p.useSave = function (save) {
         sequ.useSave(sequData.data)
         this.addSequence(sequ);
     }, this);
+
+    am.history.clear();
 };
 
 p.clear = function () {
-    //TODO
+    
+    while(this._sequences.length) {
+
+        this.removeSequence(this._sequences[0]);
+    }
 }
 
 

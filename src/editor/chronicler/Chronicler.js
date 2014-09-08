@@ -43,7 +43,7 @@ p.save = function (undo, redo) {
 
 p.saveChain = function (id, undo, redo, delay) {
 
-    var chain = this._findChain(id);
+    var chain = this.getChain(id);
 
     if (chain) {
 
@@ -66,7 +66,7 @@ p.saveChain = function (id, undo, redo, delay) {
 
 p.closeChain = function (id) {
 
-    var chain = this._findChain(id);
+    var chain = this.getChain(id);
 
     if (!chain) {
         return;
@@ -76,7 +76,17 @@ p.closeChain = function (id) {
     this._chains.splice(this._chains.indexOf(chain), 1);
 };
 
-p._findChain = function (id) {
+p.clear = function () {
+
+    while (this._chains.length) {
+        this.closeChain(this._chains[0].id);
+    };
+    
+    this._stack.length = 0, 
+    this._pointer = -1;
+}
+
+p.getChain = function (id) {
 
     return this._chains.find(function (chain) {
 

@@ -66,6 +66,11 @@ var p = CssSequence.prototype;
 
 p.type = 'css_sequ_type';
 
+
+
+
+
+
 Object.defineProperties(p, {
 
     height: {
@@ -100,6 +105,85 @@ Object.defineProperties(p, {
         }
     }
 });
+
+
+
+
+
+
+
+p.addParameter = function (opt, skipHistory) {
+
+    opt = opt || {};
+
+    var param = this.getParameter(opt.name);
+    
+    if (!skipHistory) {
+        am.history.save([this.addParameter, this, param, true],
+            [this.removeParameter, this, param, true]);
+    }
+
+    if (param) {
+
+        return param;
+    }
+    else {
+
+        if (opt.name === 'transform') {
+
+            param = new CssTransformParameter(opt);
+        }
+        else {
+
+            param = new CssParameter(opt);
+        }
+
+        this._parameters.push(param);
+        param.on('change', this._onChangeParameter);
+        param.on('delete', this._onDeleteParameter);
+        param.on('move', this._onMoveParameter);
+
+        this._refreshParameterOrdering();
+        this._moveBlankParameterDown();
+        this.emit('changeHeight');
+
+        return param;
+    }
+};
+
+p.removeParameter = function (param) {
+
+    if (!skipHistory) {
+        am.history.save([this.addParameter, this, param, true],
+            [this.removeParameter, this, param, true]);
+    }
+
+    var idx = this._parameters.indexOf(param);
+
+    if (idx === -1) {
+        return;
+    }
+
+    this._parameters.splice(idx, 1);
+
+    param.removeListener('change', this._onChangeParameter);
+    param.removeListener('delete', this._onDeleteParameter);
+    param.removeListener('move', this._onMoveParameter);
+
+    $(param.deOptions).remove();
+    $(param.deKeyline).remove();
+};
+
+p.moveParameter = function (param, way) {
+
+    var idx = this._parameters.indexOf(param);
+
+    this._parameters.splice(idx, 1);
+    idx = Math.min(this._parameters.length, Math.max(0, idx + way));
+    this._parameters.splice(idx, 0, param);
+
+    this._refreshParameterOrdering();
+};
 
 p.select = function () {
 
@@ -177,6 +261,27 @@ p.pause = function () {
     window.cancelAnimationFrame(this._animPlayRafid);
 };
 
+p.getMagnetPoints = function () {
+
+    var times = [];
+
+    this._headKeys.forEach(function (key) {
+
+        times.push(key.time);
+    });
+
+    return times;
+};
+
+
+
+
+
+
+
+
+
+
 p._animPlay = function () {
 
     this._animPlayRafid = window.requestAnimationFrame(this._animPlay);
@@ -249,6 +354,27 @@ p._blurHandler = function () {
     }
 };
 
+p._moveBlankParameterDown = function () {
+
+    if (!this._blankParameter) {
+        return;
+    }
+
+    var idx = this._parameters.indexOf(this._blankParameter);
+
+    if (idx < this._parameters.length - 1) {
+
+        this.moveParameter(this._blankParameter, (this._parameters.length - 1) - idx)
+    }
+};
+
+
+
+
+
+
+
+
 p._onSelectClick = function () {
 
     this.select();
@@ -258,7 +384,6 @@ p._onChangeHandler = function(params, type) {
 
     var time = am.timeline.currTime,
         name, prop, value;
-
 
     if (type === 'transform') {
 
@@ -317,18 +442,12 @@ p._onChangeParameter = function () {
 
 p._onDeleteParameter = function (param) {
 
-    this.deleteParameter(param);
+    this.removeParameter(param);
 };
 
 p._onMoveParameter = function (param, way) {
 
-    var idx = this._parameters.indexOf(param);
-
-    this._parameters.splice(idx, 1);
-    idx = Math.min(this._parameters.length, Math.max(0, idx + way));
-    this._parameters.splice(idx, 0, param);
-
-    this._refreshParameterOrdering();
+    this.moveParameter(param, way);
 };
 
 p._onChangeBlankParameter = function () {
@@ -352,7 +471,7 @@ p._onToggleKey = function () {
         if (param.isValid()) {
 
             if (allHaveKey) {
-                param.deleteKey(param.getKey(time));
+                param.removeKey(param.getKey(time));
             }
             else {
                 param.addKey({time: time});
@@ -402,57 +521,6 @@ p.getParameter = function (name) {
     });
 };
 
-p.addParameter = function (opt) {
-
-    opt = opt || {};
-
-    var param = this.getParameter(opt.name);
-
-    if (param) {
-
-        return param
-    }
-    else {
-
-        if (opt.name === 'transform') {
-
-            param = new CssTransformParameter(opt);
-        }
-        else {
-
-            param = new CssParameter(opt);
-        }
-
-        this._parameters.push(param);
-        param.on('change', this._onChangeParameter);
-        param.on('delete', this._onDeleteParameter);
-        param.on('move', this._onMoveParameter);
-
-        this._refreshParameterOrdering()
-        this.emit('changeHeight');
-
-        return param;
-    }
-};
-
-p.deleteParameter = function (param) {
-
-    var idx = this._parameters.indexOf(param);
-
-    if (idx === -1) {
-        return;
-    }
-
-    this._parameters.splice(idx, 1);
-
-    param.removeListener('change', this._onChangeParameter);
-    param.removeListener('delete', this._onDeleteParameter);
-    param.removeListener('move', this._onMoveParameter);
-
-    $(param.deOptions).remove();
-    $(param.deKeyline).remove();
-}
-
 p._refreshBtnToggleKey = function () {
 
     var allHaveKey = this._isAllParamsHaveKey(am.timeline.currTime);
@@ -493,6 +561,12 @@ p._refreshParameterOrdering = function () {
         this.deKeys.appendChild(param.deKeyline);
     }, this);
 };
+
+
+
+
+
+
 
 p.getScript = function () {
 
@@ -590,17 +664,13 @@ p.useSave = function (save) {
     return save;
 };
 
-p.getMagnetPoints = function () {
 
-    var times = [];
 
-    this._headKeys.forEach(function (key) {
 
-        times.push(key.time);
-    });
 
-    return times;
-};
+
+
+
 
 
 
@@ -645,6 +715,18 @@ p._createHeadOptions = function (){
     this._btnToggleKey.addEventListener('click', this._onToggleKey);
     de.appendChild(this._btnToggleKey);
     this._refreshBtnToggleKey();
+
+    amgui.bindDropdown({
+        asContextMenu: true,
+        deTarget: de,
+        deMenu: amgui.createDropdown({
+            options: [
+                {text: 'move up', onSelect: this.emit.bind(this, 'move', this, -1)},
+                {text: 'move down', onSelect: this.emit.bind(this, 'move', this, 1)},
+                {text: 'delete', onSelect: this.emit.bind(this, 'delete', this)},
+            ]
+        })
+    });
 
     return de;
 };

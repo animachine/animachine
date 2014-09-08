@@ -8,7 +8,7 @@ var Timeline = require('./timeline');
 var Toolbar = require('./toolbar');
 var Windooman = require('./windooman');
 var Warehouseman = require('./warehouseman');
-var Chronicler = require('./Chronicler');
+var Chronicler = require('./chronicler');
 var modules = {
     css: require('./modules/css')
 };

@@ -268,16 +268,16 @@ p._onDrag = function (e) {
 
     function setOrigin() {
 
-        var diff = Math.sqrt(dx*dx + dy*dy),
-            mx = pMouse.x - md.pOrigin.x,
+        var mx = pMouse.x - md.pOrigin.x,
             my = pMouse.y - md.pOrigin.y,
+            dist = Math.sqrt(mx*mx + my*my),
             r = Math.atan2(my, mx) - params.rz,
-            x = Math.cos(r) * diff * params.sx,
-            y = Math.sin(r) * diff * params.sy;
-        change.ox = params.ox = md.params.ox + (x / base.w);
-        change.oy = params.oy = md.params.oy + (y / base.h);
-        // change.tx = params.tx = md.params.tx - (x * (params.scale-1));
-        // change.ty = params.ty = md.params.ty - (y * (params.scale-1));
+            x = Math.cos(r) * dist * params.sx,
+            y = Math.sin(r) * dist * params.sy;
+        change.ox = params.ox = md.params.ox + (x / params.sx / base.w);
+        change.oy = params.oy = md.params.oy + (y / params.sy / base.h);
+        // change.tx = params.tx = md.params.tx - (x / (params.sx));
+        // change.ty = params.ty = md.params.ty - (y / (params.sy));
 
     }
 };

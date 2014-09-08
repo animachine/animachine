@@ -49,7 +49,9 @@ Object.defineProperties(p, {
     /** px/ms */
     timescale: {
         set: function (v) {
-            if (this._timescale === v) return;
+
+            if (!Number.isFinite(v) || this._timescale === v) return;
+
             this._timescale = Math.min(1, Math.max(0.0001, v));
             this._renderTape();
             this.emit('changeTape');
@@ -61,7 +63,9 @@ Object.defineProperties(p, {
 
     start: {
         set: function (v) {
-            if (this._start === v) return;
+
+            if (!Number.isFinite(v) || this._start === v) return;
+
             this._start = Math.min(0, v);
             this._renderTape();
             this.emit('changeTape');
@@ -73,7 +77,9 @@ Object.defineProperties(p, {
 
     width: {
         set: function (v) {
-            if (this._width === v) return;
+
+            if (!Number.isFinite(v) || this._width === v) return;
+            
             this._width = v;
             this._renderTape();
             this.emit('changeTape');
@@ -100,15 +106,15 @@ Object.defineProperties(p, {
     },
     
     currTime: {
-        set: function (time) {
+        set: function (v) {
 
-            time = parseInt(time);
+            v = parseInt(v);
 
-            if (this._currTime === time) return;
+            if (!Number.isFinite(v) || this._currTime === v) return;
 
-            this._currTime = time;
+            this._currTime = v;
 
-            var pos = (time / this.visibleTime) * this.width;
+            var pos = (v / this.visibleTime) * this.width;
 
             this._dePointer.style.left = pos + 'px';
 
@@ -131,7 +137,7 @@ Object.defineProperties(p, {
     length: {
         set: function (v) {
 
-            if (this._length === v) return;
+            if (!Number.isFinite(v) || this._length === v) return;
             this._length = v;
 
             this._renderTape();

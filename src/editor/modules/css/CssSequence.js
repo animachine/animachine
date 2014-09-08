@@ -145,7 +145,7 @@ p.addParameter = function (opt, skipHistory) {
 
         this._refreshParameterOrdering();
         this._moveBlankParameterDown();
-        this.emit('changeHeight');
+        this.emit('changeHeight', this);
 
         return param;
     }
@@ -455,6 +455,7 @@ p._onChangeBlankParameter = function () {
     if (this._blankParameter) {
 
         this._blankParameter.removeListener('change', this._onChangeBlankParameter);
+        this._blankParameter = undefined;
     };
 
     this._blankParameter = this.addParameter();
@@ -699,7 +700,7 @@ p._createHeadOptions = function (){
     });
     this._deToggleDropDown.addEventListener('toggle', function (e) {
         this._isOpened = e.detail.state;
-        this.emit('changeHeight', this.height);
+        this.emit('changeHeight', this);
     }.bind(this));
     this._deToggleDropDown.style.display = 'inline-block';
     de.appendChild(this._deToggleDropDown);

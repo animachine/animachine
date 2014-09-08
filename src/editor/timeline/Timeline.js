@@ -101,7 +101,7 @@ p.addSequence = function (sequ, skipHistory) {
         deContKf: createCont(sequ.deKeys, this._deKeylineCont),
     });
 
-    this._onChangeSequenceHeight();
+    this._onChangeSequenceHeight(sequ);
 
     sequ.on('select', this._onSelectSequence);
     sequ.on('change', this._onChangeSequence);
@@ -139,8 +139,8 @@ p.removeSequence = function (sequ, skipHistory) {
     this._sequences.splice(idx, 1);
 
     var sequData = this._mapSequenceDatas.get(sequ);
-    $(sequData.deOptions).remove();
-    $(sequData.deKeyline).remove();
+    $(sequData.deContOpt).remove();
+    $(sequData.deContKf).remove();
     this._mapSequenceDatas.delete(sequ);
 
     sequ.removeListener('select', this._onSelectSequence);
@@ -166,7 +166,7 @@ p.play = function () {
     if (this._isPlaying) return;
     this._isPlaying = true;
 
-    this._btnTogglePlay.setToggle(true);
+    this._btnTogglePlay.setToggle(false);
 
     _.invoke(this._sequences, 'play', this.currTime);
 
@@ -180,7 +180,7 @@ p.pause = function () {
     if (!this._isPlaying) return;
     this._isPlaying = false;
 
-    this._btnTogglePlay.setToggle(false);
+    this._btnTogglePlay.setToggle(true);
 
     _.invoke(this._sequences, 'pause');
 
@@ -366,8 +366,11 @@ p.getScript = function (opt) {
 p.getSave = function () {
 
     var save = {
-        currTime: this.currTime,
-        timescale: this.timescale,
+        timebar: {
+            currTime: this._timebar.currTime,
+            timescale: this._timebar.timescale,
+            length: this._timebar.length,
+        },
         sequences: []
     };
 
@@ -392,8 +395,16 @@ p.useSave = function (save) {
         alert('Can\'t use this save');
     }
 
-    this._timebar.currTime = save.currTime;
-    this._timebar.timescale = save.timescale;
+    this.clear();
+
+    save = _.extend({
+        timebar: {},
+        sequences: []
+    }, save)
+
+    this._timebar.currTime = save.timebar.currTime;
+    this._timebar.timescale = save.timebar.timescale;
+    this._timebar.length = save.timebar.length;
 
     save.sequences.forEach(function (sequData) {
 

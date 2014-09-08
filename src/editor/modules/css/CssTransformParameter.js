@@ -178,7 +178,7 @@ p._onChangeInput = function (e) {
     var inp = e.currentTarget,
         value = {};
 
-    value[inp._key] = inp.value;
+    value[inp._key] = parseFloat(inp.value);
 
     this.addKey({
         time: am.timeline.currTime,

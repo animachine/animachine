@@ -1,3 +1,5 @@
+'use strict';
+
 function Chronicler() {
 
     this._stack = [], 
@@ -17,7 +19,7 @@ p.undo = function () {
 
 p.redo = function () {
 
-    if (this._pointer < this.stack.length - 1) {
+    if (this._pointer < this._stack.length - 1) {
 
         call(this._stack[++this._pointer].redo);
     }
@@ -38,7 +40,7 @@ p.save = function (undo, redo) {
 
     var reg = {undo: undo, redo: redo};
 
-    this._stack.splice(this._pointer, this._stack.length, reg);
+    this._stack.splice(++this._pointer, this._stack.length, reg);
 };
 
 p.saveChain = function (id, undo, redo, delay) {
@@ -50,7 +52,7 @@ p.saveChain = function (id, undo, redo, delay) {
         chain.reg.redo = redo;
     }
     else {
-        chian = {
+        chain = {
             id: id,
             reg: this.save(undo, redo)
         };

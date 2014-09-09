@@ -1,7 +1,7 @@
 var CssSequence = require('./CssSequence');
 var qsgen = require('../../qsgen');
 
-var am, iconNew, qsModal, selectBox;
+var am, iconNew, qsModal;
 
 exports.init = function (_am) {
 
@@ -10,40 +10,44 @@ exports.init = function (_am) {
     am.registerSequenceType(CssSequence, CssSequence.prototype.type);
 
     am.on('selectDomElement', onSelectDomElement);
-
-    selectBox = createSelectionBox();
 }
 
 function onSelectDomElement(de) {
 
     if (!CssSequence._instances.some(testSequ)) {
 
-        iconNew = am.toolbar.addIcon(iconNew ? 
-        {
-            deIcon: iconNew
-        } : {
+        var iconOpt;
+
+        if (iconNew) {
+
+            iconOpt = { deIcon: iconNew };
+        }
+        else {
+            iconOpt = {
             
-            icon: 'plus-squared',
+                icon: 'plus-squared',
+                backgound: '#063501',
 
-            onClick: function () {
+                onClick: function () {
 
-                am.toolbar.removeIcon(iconNew);
-                selectBox.hide();
+                    am.toolbar.removeIcon(iconNew);
+                    am.domPicker.hide();
 
-                var selector = qsgen(am.selectedElement);
-                console.log('selector:', selector);
+                    var selector = qsgen(am.selectedElement);
+                    console.log('selector:', selector);
 
-                var sequ = new CssSequence({
-                    selectors: [selector]
-                });
+                    var sequ = new CssSequence({
+                        selectors: [selector]
+                    });
 
-                am.timeline.addSequence(sequ);
+                    am.timeline.addSequence(sequ);
 
-                sequ.select();
-            }
-        });
+                    sequ.select();
+                }
+            };
+        }
 
-        selectBox.show(de);
+        iconNew = am.toolbar.addIcon(iconOpt);
     }
 
     function testSequ(sequ) {
@@ -55,48 +59,4 @@ function onSelectDomElement(de) {
             return true;
         }
     }
-}
-
-function createQsModal() {
-
-    var de = document.createElement('div');
-    de.style.width = '340px';
-
-    var inp = document.createElement('input');
-    inp.type = 'text';
-    de.appendChild(inp);
-
-    return amgui.createDialog({
-        content: de,
-        title: 'Selector',
-        buttons: ['ok']
-    });
-}
-
-function createSelectionBox() {
-
-    var de = document.createElement('div');
-    de.style.position = 'fixed';
-    de.style.boxSizing = 'border-box';
-    de.style.boxShadow = '0px 0px 1px 0px rgba(50, 50, 50, 0.75)';
-    de.style.display = 'none';
-    de.style.border = '2px dashed #eee';
-    am.deHandlerCont.appendChild(de);
-    
-    de.show = function (deTarget) {
-
-        var br = deTarget.getBoundingClientRect();
-        de.style.left = br.left + 'px';
-        de.style.top = br.top + 'px';
-        de.style.width = br.width + 'px';
-        de.style.height = br.height + 'px';
-        de.style.display = 'block';
-    }
-
-    de.hide = function () {
-        
-        de.style.display = 'none';
-    }
-
-    return de;
 }

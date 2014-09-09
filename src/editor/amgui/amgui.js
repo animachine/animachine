@@ -13,6 +13,7 @@ var amgui = _.extend(
     new EventEmitter, 
     require('./amgui.bezierEditor'),
     require('./amgui.makeDraggable'),
+    require('./amgui.scroll'),
     {
 
     FONT_FAMILY: '"Open Sans", sans-serif',
@@ -347,8 +348,7 @@ var amgui = _.extend(
         de.addEventListener('mouseenter', onMOver);
         de.addEventListener('mouseleave', onMOut);
 
-        if (opt.onClick) {
-
+        if ('onClick' in opt) {
             de.addEventListener('click', opt.onClick);
         }
 

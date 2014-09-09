@@ -7,9 +7,9 @@ function Key (opt) {
 
     EventEmitter.call(this);
     
-    this._time = ~~opt.time || 0;
-    this._value = opt.value || '';
-    this._ease = opt.ease || 'linear';
+    this._time =  0;
+    this._value =  '';
+    this._ease = 'linear';
     this._deKeyline = opt.deKeyline;
 
     this._onChangeDeTime = this._onChangeDeTime.bind(this);
@@ -35,6 +35,10 @@ function Key (opt) {
         deMenu: this._deMenu,
         asContextMenu: true
     });
+
+    if (opt) {
+        this.useSave(opt);
+    }
 }
 
 inherits(Key, EventEmitter);
@@ -45,7 +49,7 @@ Object.defineProperties(p, {
     time: {
         set: function (v) {
 
-            if (this._time === v) return;
+            if (!Number.isFinite(v) || this._time === v) return;
 
             this._time = v;
 
@@ -80,7 +84,24 @@ Object.defineProperties(p, {
             return this._ease;
         }
     }
-})
+});
+
+
+p.getSave = function () {
+
+    return {
+        value: this.value,
+        time: this.time,
+        ease: this.ease
+    }
+};
+
+p.useSave = function (save) {
+
+    this.value = save.value;
+    this.time = save.time;
+    this.ease = save.ease;
+};
 
 p._onChangeDeTime = function (e) {
 

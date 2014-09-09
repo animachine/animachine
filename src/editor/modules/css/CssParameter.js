@@ -9,12 +9,9 @@ var amgui = require('../../amgui');
 function CssParameter (opt) {
 
     EventEmitter.call(this);
-    
-    this.name = opt.name || '';
-
-    this._lineH = opt.lineH || 21;
 
     this._keys = [];
+    this._lineH =  21;
 
     this.deOptions = this._createParameterOptions();
     this.deKeyline = amgui.createKeyline({
@@ -27,12 +24,10 @@ function CssParameter (opt) {
     this._onToggleKey = this._onToggleKey.bind(this);
     this._onDeleteKey = this._onDeleteKey.bind(this);
 
-    if (!opt.skipKeyValueInput) {
+    if (!this._noBaseKeyValueInput) {
 
         this._input = amgui.createKeyValueInput({
             parent: this.deOptions,
-            key: this.name,
-            value: opt.value,
             onChange: this._onChangeInput,
             height: this._lineH
         });
@@ -48,10 +43,93 @@ function CssParameter (opt) {
     this._refreshBtnToggleKey();
 
     am.timeline.on('changeTime', this._onChangeTime);
+
+    if (opt) {
+        this.useSave(opt);
+    }
 }
 
 inherits(CssParameter, EventEmitter);
 var p = CssParameter.prototype;
+
+
+
+
+
+
+
+
+
+Object.defineProperty(p, 'height', {
+
+    get: function () {
+        
+        return this._lineH;
+    }
+});
+
+
+
+
+
+p.getSave = function () {
+
+    var save = {
+        name: this.name,
+        keys: [],
+    }
+
+    this._keys.forEach(function (keySave) {
+
+        save.keys.push(key.getSave());
+    });
+
+    return save;
+};
+
+p.useSave = function(save) {
+
+    this.name = save.name;
+
+    save.keys.forEach(this.addKey, this);
+};
+
+p.addKey = function (opt, skipHistory) {
+
+    var key = this.getKey(opt.time);
+
+    if (key) {
+
+        if ('value' in opt) {
+
+            if (!skipHistory) {
+                am.history.saveChain(key, [this.addKey, this, key, true], [this.addKey, this, opt, true]);
+            }
+
+            key.value = opt.value;
+        }
+    }
+    else {
+
+        key = new Key(_.extend({deKeyline: this.deKeyline}, opt));
+
+        key.on('changeTime', this._onChangeKeyTime);
+        key.on('delete', this._onDeleteKey);
+
+        this._keys.push(key);
+
+        if (!skipHistory) {
+            am.history.save([this.removeKey, this, opt.time, true], [this.addKey, this, opt, true]);
+        }
+    }
+
+    this._refreshInput();
+    this._refreshBtnToggleKey();
+
+    this.emit('change');
+
+    return key;
+};
 
 p.getValue = function (time) {
 
@@ -101,43 +179,6 @@ p.getValue = function (time) {
             return after.value;
         }
     }
-};
-
-p.addKey = function (opt, skipHistory) {
-
-    var key = this.getKey(opt.time);
-
-    if (key) {
-
-        if ('value' in opt) {
-
-            if (!skipHistory) {
-                am.history.saveChain(key, [this.addKey, this, key, true], [this.addKey, this, opt, true]);
-            }
-
-            key.value = opt.value;
-        }
-    }
-    else {
-
-        key = new Key(_.extend({deKeyline: this.deKeyline}, opt));
-
-        key.on('changeTime', this._onChangeKeyTime);
-        key.on('delete', this._onDeleteKey);
-
-        this._keys.push(key);
-
-        if (!skipHistory) {
-            am.history.save([this.removeKey, this, opt.time, true], [this.addKey, this, opt, true]);
-        }
-    }
-
-    this._refreshInput();
-    this._refreshBtnToggleKey();
-
-    this.emit('change');
-
-    return key;
 };
 
 p.removeKey = function (key, skipHistory) {
@@ -214,43 +255,21 @@ p.getKeyTimes = function () {
     return times;
 };
 
+p.isValid = function () {
 
-Object.defineProperty(p, 'height', {
-
-    get: function () {
-        
-        return this._lineH;
-    }
-});
-
-p.getSave = function () {
-
-    var save = {
-        name: this.name,
-        keys: [],
-    }
-
-    this._keys.forEach(function (key) {
-
-        save.keys.push({
-            value: key.value,
-            time: key.time,
-            ease: key.ease
-        });
-    });
-
-    return save;
+    return !!(this.name && this._keys.length);
 };
 
-p.useSave = function(save) {
 
-    this.name = save.name;
 
-    save.keys.forEach(function (keyData) {
 
-        this.addKey(keyData);
-    }, this);
-};
+
+
+
+
+
+
+
 
 p._onChangeInput = function (e) {
 
@@ -296,10 +315,13 @@ p._onToggleKey = function () {
     }
 };
 
-p.isValid = function () {
 
-    return !!(this.name && this._keys.length);
-};
+
+
+
+
+
+
 
 p._refreshInput = function () {
 
@@ -312,6 +334,17 @@ p._refreshBtnToggleKey = function () {
     var key = this.getKey(am.timeline.currTime);
     this._btnToggleKey.style.color = key ? amgui.color.text : amgui.color.textInactive;
 };
+
+
+
+
+
+
+
+
+
+
+
 
 p._createParameterOptions = function () {
 

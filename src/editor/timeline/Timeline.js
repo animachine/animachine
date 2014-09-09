@@ -7,7 +7,7 @@ var amgui = require('../amgui');
 var mineSave = require('./mineSave');
 var mstSaveScript = require('./script.save.mst');
 
-function Timeline(am) {
+function Timeline(opt) {
 
     EventEmitter.call(this);
     this.setMaxListeners(1100);
@@ -28,7 +28,7 @@ function Timeline(am) {
     
     this._createBase();
     this._createSettingsHead();
-    this._createTimeline();
+    // this._createTimeline();
     this._createPointerLine();
 
     this._currSequence;
@@ -56,6 +56,10 @@ function Timeline(am) {
     amgui.callOnAdded(this.domElem, this._refreshTimebarWidth, this);
     
     window.addEventListener('resize', this._onWindowResize);
+
+    if (opt) {
+        this.useSave(opt);
+    }
 }
 
 inherits(Timeline, EventEmitter);
@@ -82,10 +86,89 @@ Object.defineProperties(p, {
     }
 });
 
+p.getSave = function () {
 
+    var save = {
+        timebar: {
+            currTime: this._timebar.currTime,
+            timescale: this._timebar.timescale,
+            length: this._timebar.length,
+        },
+        sequences: []
+    };
 
+    this._sequences.forEach(function (sequ) {
 
+        save.sequences.push({
+            type: sequ.type,
+            data: sequ.getSave()
+        });
+    });
 
+    console.log(JSON.stringify(save));
+
+    return JSON.stringify(save);
+};
+
+p.useSave = function (save) {
+
+    var save = mineSave(save);
+
+    if (!save) {
+        alert('Can\'t use this save');
+    }
+
+    this.clear();
+
+    save = _.extend({
+        timebar: {},
+        sequences: []
+    }, save)
+
+    this._timebar.currTime = save.timebar.currTime;
+    this._timebar.timescale = save.timebar.timescale;
+    this._timebar.length = save.timebar.length;
+
+    save.sequences.forEach(function (sequData) {
+
+        var sequ = new am.sequenceTypes[sequData.type]();
+        sequ.useSave(sequData.data)
+        this.addSequence(sequ);
+    }, this);
+
+    am.history.clear();
+};
+
+p.getScript = function (opt) {
+
+    opt = opt || {};
+
+    var script, playerScripts = [];
+
+    this._sequences.forEach(function (sequ) {
+
+        playerScripts.push(sequ.getScript());
+    });
+
+    script = Mustache.render(mstSaveScript, {
+        name: 'anim1',
+        saveJson: opt.includeSave && this.getSave(),
+        sequPlayerGens: playerScripts.join(',\n'),
+        autoPlay: opt.autoPlay
+    });
+
+    console.log(script);
+
+    return script;
+};
+
+p.clear = function () {
+    
+    while(this._sequences.length) {
+
+        this.removeSequence(this._sequences[0]);
+    }
+}
 
 p.addSequence = function (sequ, skipHistory) {
 
@@ -340,92 +423,6 @@ p._refreshDeCurrTime = function () {
 
 
 
-p.getScript = function (opt) {
-
-    opt = opt || {};
-
-    var script, playerScripts = [];
-
-    this._sequences.forEach(function (sequ) {
-
-        playerScripts.push(sequ.getScript());
-    });
-
-    script = Mustache.render(mstSaveScript, {
-        name: 'anim1',
-        saveJson: opt.includeSave && this.getSave(),
-        sequPlayerGens: playerScripts.join(',\n'),
-        autoPlay: opt.autoPlay
-    });
-
-    console.log(script);
-
-    return script;
-}
-
-p.getSave = function () {
-
-    var save = {
-        timebar: {
-            currTime: this._timebar.currTime,
-            timescale: this._timebar.timescale,
-            length: this._timebar.length,
-        },
-        sequences: []
-    };
-
-    this._sequences.forEach(function (sequ) {
-
-        save.sequences.push({
-            type: sequ.type,
-            data: sequ.getSave()
-        });
-    });
-
-    console.log(JSON.stringify(save));
-
-    return JSON.stringify(save);
-};
-
-p.useSave = function (save) {
-
-    var save = mineSave(save);
-
-    if (!save) {
-        alert('Can\'t use this save');
-    }
-
-    this.clear();
-
-    save = _.extend({
-        timebar: {},
-        sequences: []
-    }, save)
-
-    this._timebar.currTime = save.timebar.currTime;
-    this._timebar.timescale = save.timebar.timescale;
-    this._timebar.length = save.timebar.length;
-
-    save.sequences.forEach(function (sequData) {
-
-        var sequ = new am.sequenceTypes[sequData.type]();
-        sequ.useSave(sequData.data)
-        this.addSequence(sequ);
-    }, this);
-
-    am.history.clear();
-};
-
-p.clear = function () {
-    
-    while(this._sequences.length) {
-
-        this.removeSequence(this._sequences[0]);
-    }
-}
-
-
-
 
 
 
@@ -440,6 +437,7 @@ p._createBase = function () {
     this._deLeft = document.createElement('div');
     this._deLeft.style.backgroundColor = amgui.color.bg0;
     this._deLeft.style.width = '300px';
+    this._deLeft.style.height = '100%';
     this._deLeft.style.height = '100%';
     this.domElem.appendChild(this._deLeft);
 
@@ -472,21 +470,47 @@ p._createBase = function () {
     this._deRight.style.height = '100%';
     this.domElem.appendChild(this._deRight);
 
+    this._deKeylineContCont = document.createElement('div');
+    this._deKeylineContCont.style.position = 'relative';
+    this._deKeylineContCont.style.height = '100%';
+    this._deRight.appendChild(this._deKeylineContCont);
+
+    this._deOptionsContCont = document.createElement('div');
+    this._deOptionsContCont.style.position = 'relative';
+    this._deOptionsContCont.style.height = '100%';
+    this._deLeft.appendChild(this._deOptionsContCont);
+
     this._deKeylineCont = document.createElement('div');
     this._deKeylineCont.style.position = 'relative';
-    this._deKeylineCont.style.height = '100%';
-    this._deRight.appendChild(this._deKeylineCont);
+    this._deKeylineContCont.appendChild(this._deKeylineCont);
+
+    this._deOptionsCont = document.createElement('div');
+    this._deOptionsCont.style.position = 'relative';
+    this._deOptionsContCont.appendChild(this._deOptionsCont);
+
+    this._deRange = amgui.createRange({
+        width: '6px',
+        height: '100%',
+        parent: this.domElem,
+        vertical: true
+    });
+
+    amgui.makeScrollable({
+        deCont: this._deOptionsContCont,
+        deTragets: [this._deOptionsCont, this._deKeylineCont],
+        deRange: this._deRange
+    });
 };
 
-p._createTimeline = function () {
+// p._createTimeline = function () {
 
-    this._deRight.style.backgroundColor = amgui.color.bg1;
-    this._deRight.position = 'absolute';
-    this._deRight.style.top = '0px';
-    this._deRight.style.right = '0px';
-    this._deRight.style.width = '30%';
-    this._deRight.style.height = '100%';
-};
+//     this._deRight.style.backgroundColor = amgui.color.bg1;
+//     this._deRight.position = 'absolute';
+//     this._deRight.style.top = '0px';
+//     this._deRight.style.right = '0px';
+//     this._deRight.style.width = '30%';
+//     this._deRight.style.height = '100%';
+// };
 
 
 p._createSettingsHead = function () {

@@ -9,6 +9,7 @@ var Toolbar = require('./toolbar');
 var Windooman = require('./windooman');
 var Warehouseman = require('./warehouseman');
 var Chronicler = require('./chronicler');
+var DomPicker = require('./dom-picekr');
 var modules = {
     css: require('./modules/css')
 };
@@ -77,6 +78,9 @@ domready(function () {
     am.timeline = new Timeline(am);
 
     am.history = new Chronicler();
+
+    am.domPicker = new DomPicker();
+    am.deHandlerCont.appendChild(am.domPicker.domelem)
 
     am.toolbar.addIcon({
         icon: 'ccw',
@@ -189,16 +193,20 @@ domready(function () {
 
 function onClickRoot(e) {
 
-    var de = e.target;
-
-    if (am.selectedElement !== de && isPickable(de)) {
-        am.selectedElement = de;
-        
-        am.emit('selectDomElement', am.selectedElement);
-    }
+    am.domPicker.focusElem(e.target);
 }
 
-function isPickable(deTest) {
+function onSelectWithDomPicker(de) {
+
+    if (am.selectedElement !== de) {
+
+        am.selectedElement = de;
+        am.emit('selectDomElement', am.selectedElement);
+    }
+
+}
+
+am.isPickableDomElem = function (deTest) {
 
     return step(deTest);
 

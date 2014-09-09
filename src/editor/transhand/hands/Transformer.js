@@ -219,8 +219,17 @@ p._onDrag = function (e) {
         setRotation();
     }
 
+    if (shift && 'sx' in change && 'sy' in change) {
+
+        fixProportion();
+    }
+
 
     this.emit('change', change, 'transform');
+
+
+
+
 
     function setScale(r, sN, way) {
 
@@ -228,8 +237,7 @@ p._onDrag = function (e) {
             mdDist = distToPointInAngle(md.pOrigin, md.pMouse, rad),
             dragDist = distToPointInAngle(md.pOrigin, pMouse, rad),
             scale = (dragDist / mdDist) * md.params[sN];
-// console.log('pOrigin', pOrigin, 'pMouse', pMouse, 'md.pMouse', md.pMouse, 'rad', rad)
-// console.log('scale', scale, 'dragDist', dragDist, 'mdDist', mdDist, 'md.params.'+sN, md.params[sN])
+
         if (alt) {
             var es = (scale - md.params[sN]) / 2,
                 tN = 't' + sN.charAt(1),
@@ -240,6 +248,20 @@ p._onDrag = function (e) {
         }
 
         change[sN] = params[sN] = scale;
+    }
+
+    function fixProportion() {
+
+        var sdx = md.params.sx - params.sx,
+            sdy = md.params.sy - params.sy,
+            asdx = Math.abs(sdx),
+            asdy = Math.abs(sdy),
+            px = asdx / Math.abs(md.params.sx),
+            py = asdy / Math.abs(md.params.sy),
+            sd = px < py ? sdx : sdy;
+
+        change.sx + params.sx = md.params.sx + sd;
+        change.sy + params.sy = md.params.sy + sd;
     }
 
     function setRotation() {
@@ -262,8 +284,19 @@ p._onDrag = function (e) {
 
     function setTransform() {
 
-        change.tx = params.tx = md.params.tx + dx;
-        change.ty = params.ty = md.params.ty + dy;
+        if (shift) {
+            
+            if (Math.abs(dx) < Math.abs(dy)) {
+
+                change.tx = params.tx = md.params.tx + dx;
+            else {
+                change.ty = params.ty = md.params.ty + dy;
+            }
+        }
+        else {
+            change.tx = params.tx = md.params.tx + dx;
+            change.ty = params.ty = md.params.ty + dy;
+        }
     }
 
     function setOrigin() {
@@ -274,11 +307,11 @@ p._onDrag = function (e) {
             r = Math.atan2(my, mx) - params.rz,
             x = (Math.cos(r) * dist) / params.sx,
             y = (Math.sin(r) * dist) / params.sy;
+
         change.ox = params.ox = md.params.ox + (x / base.w);
         change.oy = params.oy = md.params.oy + (y / base.h);
         change.tx = params.tx = md.params.tx + (mx - x);
         change.ty = params.ty = md.params.ty + (my - y);
-
     }
 };
 
@@ -350,7 +383,6 @@ p._setFinger = function (e) {
         this._cursorFunc = this._getScaleCursor;
     }
     else {
-        
         this._cursorFunc = undefined
         
         if (this._finger) {

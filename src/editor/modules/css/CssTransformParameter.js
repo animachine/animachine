@@ -24,10 +24,9 @@ var PRECISIONS = {
 
 function CssTransformParameter (opt) {
 
-    CssParameter.call(this, _.extend({
-        name: 'transform',
-        skipKeyValueInput: true,
-    }, opt));
+    this._noBaseKeyValueInput = true;
+
+    CssParameter.call(this, _.extend({name: 'transform'}, opt));
 
     this._inputs = {};
     this._inputs3d = [];

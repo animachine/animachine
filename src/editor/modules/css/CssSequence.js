@@ -399,7 +399,6 @@ p._onChangeHandler = function(params, type) {
                 prop = this.addParameter({name: 'transform'});
                 prop.addKey({
                     time: time,
-                    name: name,
                     value: value
                 });
             }
@@ -410,7 +409,6 @@ p._onChangeHandler = function(params, type) {
             prop = this.addParameter({name: 'transform-origin'});
             prop.addKey({
                 time: time,
-                name: name,
                 value: (params.ox*100).toFixed(2) + '% ' + (params.oy*100).toFixed(2) + '%'
             });
         }

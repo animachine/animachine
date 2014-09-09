@@ -229,9 +229,9 @@ p._createTransformInputs = function () {
     createInput('ty', 'y', row);
     createInput('tz', 'z', row, true);
     row = createRow();
-    createInput('rx', 'rx', row);
-    createInput('ry', 'y', row);
-    createInput('rz', 'z', row, true);
+    createInput('rx', 'rx', row, true);
+    createInput('ry', 'y', row, true);
+    createInput('rz', 'rz', row);
     row = createRow();
     createInput('sx', 'sx', row);
     createInput('sy', 'y', row);

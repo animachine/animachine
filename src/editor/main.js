@@ -9,7 +9,7 @@ var Toolbar = require('./toolbar');
 var Windooman = require('./windooman');
 var Warehouseman = require('./warehouseman');
 var Chronicler = require('./chronicler');
-var DomPicker = require('./dom-picekr');
+var DomPicker = require('./dom-picker');
 var modules = {
     css: require('./modules/css')
 };
@@ -72,15 +72,15 @@ domready(function () {
     am.deGuiCont.appendChild(am.workspace.domElem);
 
     am.deRoot = document.body;
-    am.toolbar = new Toolbar();
-    am.toolbar.domElem.style.top = '0px';
-    am.workspace.fillTab('tools', am.toolbar.domElem);
-    am.timeline = new Timeline(am);
-
     am.history = new Chronicler();
-
+    am.toolbar = new Toolbar();
+    am.timeline = new Timeline();
     am.domPicker = new DomPicker();
-    am.deHandlerCont.appendChild(am.domPicker.domelem)
+
+    am.workspace.fillTab('tools', am.toolbar.domElem);
+
+    am.deHandlerCont.appendChild(am.domPicker.domElem);
+    am.domPicker.on('pick', onSelectWithDomPicker)
 
     am.toolbar.addIcon({
         icon: 'ccw',
@@ -125,6 +125,7 @@ domready(function () {
     });
 
 
+
     am.timeline.domElem.style.position = 'fixed';
     am.timeline.domElem.style.width = '100%';
     am.timeline.domElem.style.height = '230px';
@@ -154,6 +155,10 @@ function onSelectWithDomPicker(de) {
 }
 
 am.isPickableDomElem = function (deTest) {
+
+    if (!deTest) {
+        return false;
+    }
 
     return step(deTest);
 

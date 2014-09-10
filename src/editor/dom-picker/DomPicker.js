@@ -15,7 +15,7 @@ function DomPicker(opt) {
     this._createDomElem();
 }
 
-inherits(Timeline, EventEmitter);
+inherits(DomPicker, EventEmitter);
 var p = DomPicker.prototype;
 
 module.exports = DomPicker;
@@ -49,22 +49,21 @@ p.focusElem = function (target) {
     this.domElem.style.display = 'block';
 
     var p = am.isPickableDomElem;
-    this._btnTop.style.display = p(deTarget.parentNode) ? 'absolute' : 'none';
-    this._btnRight.style.display = p(deTarget.nextSibling) ? 'absolute' : 'none';
-    this._btnBottom.style.display = p(deTarget.firstChild) ? 'absolute' : 'none';
-    this._btnLeft.style.display = p(deTarget.previousSibling) ? 'absolute' : 'none';
+    var top = p(deTarget.parentElement)
+    var right = p(deTarget.nextElementSibling)
+    var bottom = p(deTarget.firstElementChild)
+    var left = p(deTarget.previousElementSibling)
+    this._btnTop.style.display = top ? 'absolute' : 'none';
+    this._btnRight.style.display = right ? 'absolute' : 'none';
+    this._btnBottom.style.display = bottom ? 'absolute' : 'none';
+    this._btnLeft.style.display = left ? 'absolute' : 'none';
 
-    this.emit('select', deTarget);
+    this.emit('pick', deTarget);
 };
 
 p.hide = function () {
 
-    var br = deTarget.getBoundingClientRect();
-    this.domElem.style.left = br.left + 'px';
-    this.domElem.style.top = br.top + 'px';
-    this.domElem.style.width = br.width + 'px';
-    this.domElem.style.height = br.height + 'px';
-    this.domElem.style.display = 'block';
+    this.domElem.style.display = 'none';
 };
 
 p._onMMove =  function (e) {
@@ -98,6 +97,7 @@ p._createBase = function () {
     de.style.display = 'none';
     de.style.pointerEvents = 'none';
     de.style.border = '2px dashed #eee';
+    de.style.pointerEvents = 'auto';
     am.deHandlerCont.appendChild(de);
 
     de.addEventListener('mouseenter', this._onMEnter);
@@ -105,48 +105,50 @@ p._createBase = function () {
     
     this.domElem = de;
 
-    this._btnTop = createIcon('angle-top', 'up one level', function () {
+    this._btnTop = createBtn('angle-up', 'up one level', function () {
 
-        this.focus(this._deTarget.parentNode);
-    });
-    this._btnTop.top = -btnSize + 'px';
-    this._btnTop.left = '0';
-    this._btnTop.right = '0';
-    this._btnTop.margin = 'auto 0';
-
-    this._btnRight = createIcon('angle-right', 'next sibling', function () {
-
-        this.focus(this._deTarget.nextSibling);
+        this.focusElem(this._deTarget.parentElement);
     }.bind(this));
-    this._btnRight.right = btnSize + 'px';
-    this._btnRight.top = '0';
-    this._btnRight.bottom = '0';
-    this._btnRight.margin = '0 auto';
+    this._btnTop.style.top = -btnSize + 'px';
+    this._btnTop.style.left = '0';
+    this._btnTop.style.right = '0';
+    this._btnTop.style.margin = '0 auto';
+
+
+    this._btnRight = createBtn('angle-right', 'next sibling', function () {
+
+        this.focusElem(this._deTarget.nextElementSibling);
+    }.bind(this));
+    this._btnRight.style.right = -btnSize + 'px';
+    this._btnRight.style.top = '0';
+    this._btnRight.style.bottom = '0';
+    this._btnRight.style.margin = 'auto 0';
 
     this._btnBottom = createIcon('angle-bottom', 'down one level', function () {
 
-        this.focus(this._crumbs[this._crumbs.length-1] || this._deTarget.firstChild);
-    }.bind(this));
-    this._btnBottom.bottom = btnSize + 'px';
-    this._btnBottom.left = '0';
-    this._btnBottom.right = '0';
-    this._btnBottom.margin = 'auto 0';
+        this.focus(this._crumbs[this._crumbs.length-1] || this._deTarget.firstElementChild);
 
-    this._btnLeft = createIcon('angle-left', 'prevoius sibling', function () { 
-
-        this.focus(this._deTarget.previousSibling);
     }.bind(this));
-    this._btnLeft.left = -btnSize + 'px';
-    this._btnLeft.top = '0';
-    this._btnLeft.bottom = '0';
-    this._btnLeft.margin = '0 auto';
+    this._btnBottom.style.bottom = -btnSize + 'px';
+    this._btnBottom.style.left = '0';
+    this._btnBottom.style.right = '0';
+    this._btnBottom.style.margin = '0 auto';
+
+    this._btnLeft = createBtn('angle-left', 'previous sibling', function () { 
+
+        this.focusElem(this._deTarget.previousElementSibling);
+    }.bind(this));
+    this._btnLeft.style.left = -btnSize + 'px';
+    this._btnLeft.style.top = '0';
+    this._btnLeft.style.bottom = '0';
+    this._btnLeft.style.margin = 'auto 0';
 
     this._btnClose = createIcon('close', 'close', function () {
 
         this.hide();
     }.bind(this));
-    this._btnClose.right = -btnSize + 'px';
-    this._btnClose.top = -btnSize + 'px';
+    this._btnClose.style.right = -btnSize + 'px';
+    this._btnClose.style.top = -btnSize + 'px';
 
     function createBtn(icon, tooltip, onClick) {
 
@@ -154,8 +156,11 @@ p._createBase = function () {
             icon: icon,
             widht: btnSize,
             height: btnSize,
-            onClick: onClick,
-            parent: this.domElem
+            onClick: function (e) {
+                e.stopPropagation();
+                onClick();
+            },
+            parent: de
         });
 
         amgui.addTooltip({

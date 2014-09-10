@@ -139,7 +139,10 @@ p.useSave = function (save) {
 
     this._selectors = save.selectors || [];
 
-    save.parameters.forEach(this.addParameter, this);
+    if (save.parameters) {
+
+        save.parameters.forEach(this.addParameter, this);
+    }
 
     return save;
 };

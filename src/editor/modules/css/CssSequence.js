@@ -24,9 +24,10 @@ function CssSequence(opt) {
     this._parameters = [];
 
     this._baseH = 21;
-    this._selectedElements = [];
-    this._isOpened = false;
+    this._selectedElems = [];
     this._headKeys = [];
+    this._isOpened = false;
+    this._isHidingSelectedElems = [];
 
     this._onSelectClick = this._onSelectClick.bind(this);
     this._onChangeHandler = this._onChangeHandler.bind(this);
@@ -36,6 +37,8 @@ function CssSequence(opt) {
     this._onMoveParameter = this._onMoveParameter.bind(this);
     this._onChangeBlankParameter = this._onChangeBlankParameter.bind(this);
     this._onToggleKey = this._onToggleKey.bind(this);
+    this._onToggleParams = this._onToggleParams.bind(this);
+    this._onToggleHide = this._onToggleHide.bind(this);
     this._onClickName = this._onClickName.bind(this);
     this._onChangeName = this._onChangeName.bind(this);
     this._onChangeSelectors = this._onChangeSelectors.bind(this);
@@ -292,9 +295,9 @@ p.select = function () {
 
     this.selectElements();
 
-    if (this._selectedElements.length) {
+    if (this._selectedElems.length) {
 
-        this._focusHandler(this._selectedElements[0]);
+        this._focusHandler(this._selectedElems[0]);
     }
 
     this.deHighlight.style.opacity = 1;
@@ -461,6 +464,29 @@ p._moveBlankParameterDown = function () {
     }
 };
 
+p._hideSelectedElems = function () {
+
+    if (this._isHidingSelectedElems) return;
+    this._isHidingSelectedElems = true;
+
+    this._selectedElems.forEach(function (de) {
+
+        de._amVisibilitySave = de.style.visibility;
+        de.style.visibility = 'hidden';
+    });
+};
+
+p._showSelectedElems = function () {
+
+    if (!this._isHidingSelectedElems) return;
+    this._isHidingSelectedElems = false;
+
+    this._selectedElems.forEach(function (de) {
+
+        de.style.visibility = de._amVisibilitySave;
+    });
+};
+
 
 
 
@@ -517,7 +543,7 @@ p._onChangeTime = function (time) {
 
         this.renderTime(time);
         this._focusHandler();
-        this._refreshBtnToggleKey();
+        this._refreshTgglKey();
     }, this);
 };
 
@@ -526,7 +552,7 @@ p._onChangeParameter = function () {
     this.renderTime();
     this._focusHandler();
     this._refreshHeadKeyline();
-    this._refreshBtnToggleKey();
+    this._refreshTgglKey();
 
     this.emit('change');
 };
@@ -571,7 +597,23 @@ p._onToggleKey = function () {
         }
     });
 
-    this._refreshBtnToggleKey();
+    this._refreshTgglKey();
+};
+
+p._onToggleParams = function (e) {
+
+    this._isOpened = e.detail.state;
+    this.emit('changeHeight', this);
+};
+
+p._onToggleHide = function () {
+
+    if (this._isHidingSelectedElems) {
+        this._showSelectedElems();
+    }
+    else {
+        this._hideSelectedElems();
+    }
 };
 
 p._onClickName = function () {
@@ -597,6 +639,16 @@ p._onChangeSelectors = function (selectors) {
     this.selectElements();
 };
 
+
+
+
+
+
+
+
+
+
+
 p._isAllParamsHaveKey = function (time) {
 
     return this._parameters.every(function (param) {
@@ -613,10 +665,9 @@ p.getParameter = function (name) {
     });
 };
 
-p._refreshBtnToggleKey = function () {
+p._refreshTgglKey = function () {
 
-    var allHaveKey = this._isAllParamsHaveKey(am.timeline.currTime);
-    this._btnToggleKey.style.color = allHaveKey ? amgui.color.text : 'rgba(255,255,255,.23)';
+    this._tgglKey.setToggle( this._isAllParamsHaveKey(am.timeline.currTime));
 };
 
 
@@ -663,6 +714,7 @@ p._refreshParameterOrdering = function () {
 
 
 
+
 p._createHeadOptions = function (){
 
     var de = document.createElement('div');
@@ -681,29 +733,36 @@ p._createHeadOptions = function (){
     this.deHighlight.style.opacity = 0;
     de.appendChild(this.deHighlight);
 
-    this._deToggleDropDown = amgui.createToggleIconBtn({
+    this._tgglParams = amgui.createToggleIconBtn({
         iconOn: 'angle-down',
         iconOff: 'angle-right',
         height: this._baseH,
+        onToggle: this._onToggleParams,
+        parent: de
     });
-    this._deToggleDropDown.addEventListener('toggle', function (e) {
-        this._isOpened = e.detail.state;
-        this.emit('changeHeight', this);
-    }.bind(this));
-    this._deToggleDropDown.style.display = 'inline-block';
-    de.appendChild(this._deToggleDropDown);
 
     this._deName = amgui.createLabel({caption: this._name, parent: de});
     this._deName.style.height = this._baseH  + 'px';
+    this._deName.style.cursor = 'pointer';
     this._deName.addEventListener('click', this._onClickName);
 
-    this._btnToggleKey = amgui.createIconBtn({icon: 'key', height: this._baseH});
-    this._btnToggleKey.style.position = 'absolute';
-    this._btnToggleKey.style.right = '0px';
-    this._btnToggleKey.style.top = '0px';
-    this._btnToggleKey.addEventListener('click', this._onToggleKey);
-    de.appendChild(this._btnToggleKey);
-    this._refreshBtnToggleKey();
+    this._tgglHide = amgui.createToggleIconBtn({
+        iconOn: 'eye', 
+        iconOff: 'eye-off', 
+        height: this._baseH,
+        onToggle: this._onToggleHide,
+        changeColor: true,
+        parent: de
+    });
+
+    this._tgglKey = amgui.createToggleIconBtn({
+        icon: 'key',
+        height: this._baseH,
+        onToggle: this._onToggleKey,
+        changeColor: true,
+        parent: de
+    });
+    this._refreshTgglKey();
 
     amgui.bindDropdown({
         asContextMenu: true,
@@ -720,9 +779,9 @@ p._createHeadOptions = function (){
     return de;
 };
 
-p.isOwnedDomElement = function (de) {
+p.isOwnedDomElem = function (de) {
 
-    return this._selectedElements.indexOf(de) !== -1;
+    return this._selectedElems.indexOf(de) !== -1;
 };
 
 p.selectElements = function () {
@@ -736,7 +795,7 @@ p.selectElements = function () {
         list = list.concat(items);
     });
 
-    this._selectedElements = list;
+    this._selectedElems = list;
 };
 
 module.exports = CssSequence;

@@ -6,10 +6,12 @@ function DomPicker(opt) {
 
     EventEmitter.call(this);
 
-    this._onMEnter = this._onMEnter.bind(this);
-    this._onMLeave = this._onMLeave.bind(this);
+    this._isMouseOver = false;
+    this._crumbs = [];
 
-    this.prevChildChain = [];
+    this._onMMove = this._onMMove.bind(this);
+    window.addEventListener('mousemove', thid._onMMove);
+
     this._createDomElem();
 }
 
@@ -18,18 +20,26 @@ var p = DomPicker.prototype;
 
 module.exports = DomPicker;
 
-p.focusElem = function (deTraget) {
-//TODO: track the prevChildChain
-    if (this._deTarget && this._deTarget.parentNode === deTarget) {
+p.focusElem = function (target) {
 
-        this._dePrevChild = this._deTarget;
+    var oldTarget = this._deTarget
+        crumbs = this._crumbs,
+        lastCrumb = crumbs[crumbs.length-1];
+
+    if (oldTarget && oldTarget.parentElement === target) {
+
+        crumbs.push(oldTarget);
     }
-    else if (this._dePrevChild && this._dePrevChild.parentNode !== deTarget) {
+    else if (target === lastCrumb) {
         
-        this._dePrevChild = undefined;
+        crumbs.pop();
+    }
+    else if (target.parentElement === lastCrumb) {
+
+        crumbs.length = 0;
     }
 
-    this._deTarget = deTarget;
+    this._deTarget = target;
 
     var br = deTarget.getBoundingClientRect();
     this.domElem.style.left = br.left + 'px';
@@ -57,22 +67,24 @@ p.hide = function () {
     this.domElem.style.display = 'block';
 };
 
-p._onMEnter =  function () {
+p._onMMove =  function (e) {
 
-    this._btnTop.style.visibility = 'visible';
-    this._btnRight.style.visibility = 'visible';
-    this._btnBottom.style.visibility = 'visible';
-    this._btnLeft.style.visibility = 'visible';
-    this._btnClose.style.visibility = 'visible';
-};
+    var br = this.domElem.getBoundingClientRect();
+    var over = e.clientX >= br.left && e.clientX <= br.right &&
+            e.clientY >= br.top && e.clientY <= br.bottom;
 
-p._onMLeave =  function () {
+    if (over !== this._isMouseOver) {
 
-    this._btnTop.style.visibility = 'hidden';
-    this._btnRight.style.visibility = 'hidden';
-    this._btnBottom.style.visibility = 'hidden';
-    this._btnLeft.style.visibility = 'hidden';
-    this._btnClose.style.visibility = 'hidden';
+        this._isMouseOver = over;
+
+        var v = over ? 'visible' : 'hidden';
+
+        this._btnTop.style.visibility = v;
+        this._btnRight.style.visibility = v;
+        this._btnBottom.style.visibility = v;
+        this._btnLeft.style.visibility = v;
+        this._btnClose.style.visibility = v;
+    }
 };
 
 p._createBase = function () {
@@ -84,6 +96,7 @@ p._createBase = function () {
     de.style.boxSizing = 'border-box';
     de.style.boxShadow = '0px 0px 1px 0px rgba(50, 50, 50, 0.75)';
     de.style.display = 'none';
+    de.style.pointerEvents = 'none';
     de.style.border = '2px dashed #eee';
     am.deHandlerCont.appendChild(de);
 
@@ -102,6 +115,7 @@ p._createBase = function () {
     this._btnTop.margin = 'auto 0';
 
     this._btnRight = createIcon('angle-right', 'next sibling', function () {
+
         this.focus(this._deTarget.nextSibling);
     }.bind(this));
     this._btnRight.right = btnSize + 'px';
@@ -110,7 +124,8 @@ p._createBase = function () {
     this._btnRight.margin = '0 auto';
 
     this._btnBottom = createIcon('angle-bottom', 'down one level', function () {
-        this.focus(this._deTarget.firstChild);
+
+        this.focus(this._crumbs[this._crumbs.length-1] || this._deTarget.firstChild);
     }.bind(this));
     this._btnBottom.bottom = btnSize + 'px';
     this._btnBottom.left = '0';
@@ -118,6 +133,7 @@ p._createBase = function () {
     this._btnBottom.margin = 'auto 0';
 
     this._btnLeft = createIcon('angle-left', 'prevoius sibling', function () { 
+
         this.focus(this._deTarget.previousSibling);
     }.bind(this));
     this._btnLeft.left = -btnSize + 'px';
@@ -126,6 +142,7 @@ p._createBase = function () {
     this._btnLeft.margin = '0 auto';
 
     this._btnClose = createIcon('close', 'close', function () {
+
         this.hide();
     }.bind(this));
     this._btnClose.right = -btnSize + 'px';
@@ -147,6 +164,8 @@ p._createBase = function () {
         });
 
         deIcon.style.position = 'absolute';
+        deIcon.style.pointerEvents = 'auto';
+
         return deIcon;
     }
 };

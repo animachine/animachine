@@ -18,6 +18,7 @@ function Toolbar() {
     this.domElem.style.pointerEvents = 'auto';
     this.domElem.style.height = this._height + 'px';
 
+    this.addSeparator('first');
     this.addSeparator('tools');
     this.addSeparator('handler');
     this.addSeparator('global');

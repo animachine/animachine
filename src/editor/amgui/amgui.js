@@ -82,7 +82,7 @@ var amgui = _.extend(
         de.appendChild(key);
 
         setLeft();
-
+        //TODO use amgui.makeDraggable
         de.addEventListener('mousedown', function (e) {
 
             if (e.button !== 0) {
@@ -367,6 +367,11 @@ var amgui = _.extend(
 
     createToggleIconBtn: function (opt) {
 
+        opt.iconOn = opt.iconOn || opt.icon;
+        opt.iconOff = opt.iconOff || opt.icon;
+        opt.color = opt.color || amgui.color.text;
+        opt.colorInactive = opt.colorInactive || amgui.color.textInactive;
+
         var isOn = false;
         var de = amgui.createIconBtn(opt);
         setIcon();
@@ -400,6 +405,10 @@ var amgui = _.extend(
         function setIcon() {
 
             de.setIcon(isOn ? opt.iconOn : opt.iconOff);
+
+            if (opt.changeColor) {
+                de.style.color = isOn ? opt.color : opt.colorInactive;
+            }
         }
 
         return de;

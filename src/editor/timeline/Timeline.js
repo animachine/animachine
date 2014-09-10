@@ -445,22 +445,6 @@ p._createBase = function () {
     this._deDivider.style.backgroundColor = amgui.color.bg3;
     this._deDivider.style.width = '1px';
     this._deDivider.style.height = '100%';
-    this._deDivider.style.cursor = 'ew-resize';
-    amgui.makeDraggable({
-
-        deTarget: this._deDivider,
-        thisArg: this,
-        
-        onMove: function (md, mx) {
-
-            var left = mx - this.domElem.getBoundingClientRect().left;
-
-            this._deDivider.style.left = left + 'px';
-            this._deLeft.style.width = left + 'px';
-
-            this._refreshTimebarWidth();
-        }
-    });
     this.domElem.appendChild(this._deDivider);
 
     this._deRight = document.createElement('div');
@@ -500,6 +484,8 @@ p._createBase = function () {
         deTragets: [this._deOptionsCont, this._deKeylineCont],
         deRange: this._deRange
     });
+
+    this._createDividerHandler();
 };
 
 // p._createTimeline = function () {
@@ -552,6 +538,36 @@ p._createSettingsHead = function () {
     this._deCurrTime.style.marginRight = '2px';
     this._deCurrTime.style.color = amgui.color.bg3;
 };
+
+p._createDividerHandler = function () {
+
+    this._deDividerHandler = document.createElement('div');
+    this._deDividerHandler.style.top = this._headerH + 'px';
+    this._deDividerHandler.style.left = this._deDivider.style.left;
+    this._deDividerHandler.style.width = '1px';
+    this._deDividerHandler.style.position = 'absolute';
+    this._deDividerHandler.style.height = 'calc(100% - ' + this._headerH + 'px)';
+    this._deDividerHandler.style.transform = 'scaleX(3)';
+    this._deDividerHandler.style.cursor = 'ew-resize';
+    this.domElem.appendChild(this._deDividerHandler);
+
+    amgui.makeDraggable({
+
+        deTarget: this._deDividerHandler,
+        thisArg: this,
+        
+        onMove: function (md, mx) {
+
+            var left = mx - this.domElem.getBoundingClientRect().left + 'px';
+
+            this._deDivider.style.left = left;
+            this._deLeft.style.width = left;
+            this._deDividerHandler.style.left = left;
+
+            this._refreshTimebarWidth();
+        }
+    });
+}
 
 p._createPointerLine = function () {
 

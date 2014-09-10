@@ -168,7 +168,7 @@ p.getValue = function (time) {
             var p = (time - before.time) / (after.time - before.time), 
                 av = uncalc(after.value), bv = uncalc(before.value);
 
-            return 'calc(' + bv + ' + (' + av + ' - ' + bv + ')*' + p + ')';
+            return createCalc(av, bv, p)
         }
         else if (before) {
             
@@ -179,6 +179,39 @@ p.getValue = function (time) {
             return after.value;
         }
     }
+
+    function createCalc(av, bv, p) {
+
+        var avs = _.compact(av.split(' ')),
+            bvs = _.compact(bv.split(' ')),
+            avl = avs.length,
+            bvl = bvs.length,
+            ret = [];
+
+        if (avl !== bvl) {
+
+            if (avl < bvl) {
+
+                avs = avs.concat(bvs.slice(avl));
+            }
+            else {
+                bvs = bvs.concat(avs.slice(bvl));
+            }         
+        }
+
+        avs.forEach(function (a, idx) {
+
+            ret.push(calc(a, bvs[idx]));
+        });
+
+        return ret.join(' ');
+
+        function calc(a, b) {
+
+            return 'calc(' + b + ' + (' + a + ' - ' + b + ')*' + p + ')';
+        }
+    }
+    
 };
 
 p.removeKey = function (key, skipHistory) {

@@ -125,66 +125,13 @@ domready(function () {
     });
 
 
-    am.toolbar.addIcon({
-        icon: 'blank',
-        onClick: function () {
-            am.timeline.useSave({
-                "currTime": 1100,
-                "timescale": 0.05,
-                "sequences": [{
-                    "type": "css_sequ_type",
-                    "data": {
-                        "selectors": ["#boxX5"],
-                        "parameters": [{
-                            "name": "",
-                            "keys": []
-                        }, {
-                            "name": "transform",
-                            "keys": [{
-                                "value": {
-                                    "tx": 0,
-                                    "ty": 0,
-                                    "tz": 0,
-                                    "rx": 0,
-                                    "ry": 0,
-                                    "rz": 0,
-                                    "sx": 1,
-                                    "sy": 2.20250521920668,
-                                    "sz": 1,
-                                    "skewX": 0,
-                                    "skewY": 0,
-                                    "perspective": 0
-                                },
-                                "time": 0
-                            }, {
-                                "value": {
-                                    "tx": 0,
-                                    "ty": 0,
-                                    "tz": 0,
-                                    "rx": 0,
-                                    "ry": 0,
-                                    "rz": 0,
-                                    "sx": 3.4274496158006964,
-                                    "sy": 1.0196644138403999,
-                                    "sz": 1,
-                                    "skewX": 0,
-                                    "skewY": 0,
-                                    "perspective": 0
-                                },
-                                "time": 1380
-                            }]
-                        }]
-                    }
-                }]
-            })
-        }
-    });
-
     am.timeline.domElem.style.position = 'fixed';
     am.timeline.domElem.style.width = '100%';
     am.timeline.domElem.style.height = '230px';
     am.timeline.domElem.style.bottom = '0px';
     am.workspace.fillTab('timeline', am.timeline.domElem);
+
+    addToggleGui();
 
     document.body.addEventListener('click', onClickRoot);
 
@@ -270,6 +217,38 @@ function createAmRoot() {
 
     return sr;
     // return de;
+}
+
+function addToggleGui() {
+
+    am.toolbar.addIcon({
+        icon: 'resize-small',
+        separator: 'first',
+        tooltip: 'hide editor',
+        onClick: function () {
+            am.domElem.display = 'none';
+            document.body.appendChild(btnFull);
+
+            var zIndex = getMaxZIndex();
+            if (zIndex) {
+                btnFull.style.zIndex = zIndex + 1000;
+            }
+        }
+    });
+
+    var btnFull = amgui.createIconBtn({
+        width: 32,
+        height: 32,
+        fontSize: '32px',
+        icon: opt.icon,
+        tooltip: 'show editor',
+        onClick: function () {
+            am.domElem.display = 'block';
+            btnFull.parentElement.removeChild(btnFull);
+        }
+    });
+
+    btnFull.style.position = 'fixed';
 }
 
 function createAmLayer() {

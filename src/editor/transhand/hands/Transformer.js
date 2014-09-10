@@ -252,13 +252,13 @@ p._onDrag = function (e) {
 
     function fixProportion() {
 
-        var sdx = md.params.sx - params.sx,
-            sdy = md.params.sy - params.sy,
+        var sdx = params.sx - md.params.sx,
+            sdy = params.sy - md.params.sy,
             asdx = Math.abs(sdx),
             asdy = Math.abs(sdy),
             px = asdx / Math.abs(md.params.sx),
             py = asdy / Math.abs(md.params.sy),
-            sd = px < py ? sdx : sdy;
+            sd = px > py ? sdx : sdy;
 
         change.sx = params.sx = md.params.sx + sd;
         change.sy = params.sy = md.params.sy + sd;
@@ -286,11 +286,13 @@ p._onDrag = function (e) {
 
         if (shift) {
             
-            if (Math.abs(dx) < Math.abs(dy)) {
+            if (Math.abs(dx) > Math.abs(dy)) {
 
                 change.tx = params.tx = md.params.tx + dx;
+                change.ty = params.ty = md.params.ty;
             }
             else {
+                change.tx = params.tx = md.params.tx;
                 change.ty = params.ty = md.params.ty + dy;
             }
         }

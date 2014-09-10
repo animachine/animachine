@@ -551,7 +551,7 @@ p._createDividerHandler = function () {
 
     this._deDividerHandler = document.createElement('div');
     this._deDividerHandler.style.top = this._headerH + 'px';
-    this._deDividerHandler.style.left = this._deDivider.style.left;
+    this._deDividerHandler.style.left = this._deLeft.style.width;
     this._deDividerHandler.style.width = '1px';
     this._deDividerHandler.style.position = 'absolute';
     this._deDividerHandler.style.height = 'calc(100% - ' + this._headerH + 'px)';
@@ -568,7 +568,6 @@ p._createDividerHandler = function () {
 
             var left = mx - this.domElem.getBoundingClientRect().left + 'px';
 
-            this._deDivider.style.left = left;
             this._deLeft.style.width = left;
             this._deDividerHandler.style.left = left;
 

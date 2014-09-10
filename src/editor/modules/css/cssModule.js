@@ -53,7 +53,7 @@ function onSelectDomElement(de) {
 
     function testSequ(sequ) {
             
-        if (sequ.isOwnedDomElement(de)) {
+        if (sequ.isOwnedDomElem(de)) {
             console.log('is owned', de)
             sequ.select();
             selectBox.hide();

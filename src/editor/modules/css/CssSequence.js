@@ -749,6 +749,12 @@ p._createHeadOptions = function (){
     this._deName.style.cursor = 'pointer';
     this._deName.addEventListener('click', this._onClickName);
 
+    var space = document.createElement('div');
+    space.style.display = 'inline-block';
+    space.style.flex = '1';
+    space.style.pointerEvents = 'none';
+    de.appendChild(space);
+
     this._tgglHide = amgui.createToggleIconBtn({
         iconOn: 'eye', 
         iconOff: 'eye-off', 

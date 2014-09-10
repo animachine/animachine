@@ -177,7 +177,7 @@ am.isPickableDomElem = function (deTest) {
             return step(de.parentNode);
         }
     }
-}
+};
 
 function createAmRoot() {
     
@@ -231,7 +231,9 @@ function addToggleGui() {
         separator: 'first',
         tooltip: 'hide editor',
         onClick: function () {
-            am.domElem.display = 'none';
+
+            am.deGuiCont.style.display = 'none';
+            
             document.body.appendChild(btnFull);
 
             var zIndex = getMaxZIndex();
@@ -245,10 +247,11 @@ function addToggleGui() {
         width: 32,
         height: 32,
         fontSize: '32px',
-        icon: opt.icon,
+        icon: 'resize-full',
         tooltip: 'show editor',
         onClick: function () {
-            am.domElem.display = 'block';
+            
+            am.deGuiCont.style.display = 'block';
             btnFull.parentElement.removeChild(btnFull);
         }
     });

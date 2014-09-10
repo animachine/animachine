@@ -378,6 +378,11 @@ var amgui = _.extend(
 
         de.addEventListener('click', onClick);
 
+        if ('onToggle' in opt) {
+
+            de.addEventListener('toggle', opt.onToggle);
+        }
+
         de.setToggle = function (on) {
 
             on = !!on;
@@ -396,6 +401,7 @@ var amgui = _.extend(
 
             return isOn;
         }
+
 
         function onClick() {
             

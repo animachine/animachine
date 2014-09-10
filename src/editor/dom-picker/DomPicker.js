@@ -10,9 +10,9 @@ function DomPicker(opt) {
     this._crumbs = [];
 
     this._onMMove = this._onMMove.bind(this);
-    window.addEventListener('mousemove', thid._onMMove);
+    window.addEventListener('mousemove', this._onMMove);
 
-    this._createDomElem();
+    this._createBase();
 }
 
 inherits(DomPicker, EventEmitter);
@@ -41,7 +41,7 @@ p.focusElem = function (target) {
 
     this._deTarget = target;
 
-    var br = deTarget.getBoundingClientRect();
+    var br = target.getBoundingClientRect();
     this.domElem.style.left = br.left + 'px';
     this.domElem.style.top = br.top + 'px';
     this.domElem.style.width = br.width + 'px';
@@ -49,16 +49,16 @@ p.focusElem = function (target) {
     this.domElem.style.display = 'block';
 
     var p = am.isPickableDomElem;
-    var top = p(deTarget.parentElement)
-    var right = p(deTarget.nextElementSibling)
-    var bottom = p(deTarget.firstElementChild)
-    var left = p(deTarget.previousElementSibling)
-    this._btnTop.style.display = top ? 'absolute' : 'none';
-    this._btnRight.style.display = right ? 'absolute' : 'none';
-    this._btnBottom.style.display = bottom ? 'absolute' : 'none';
-    this._btnLeft.style.display = left ? 'absolute' : 'none';
+    var top = p(target.parentElement)
+    var right = p(target.nextElementSibling)
+    var bottom = p(target.firstElementChild)
+    var left = p(target.previousElementSibling)
+    this._btnTop.style.display = top ? 'block' : 'none';
+    this._btnRight.style.display = right ? 'block' : 'none';
+    this._btnBottom.style.display = bottom ? 'block' : 'none';
+    this._btnLeft.style.display = left ? 'block' : 'none';
 
-    this.emit('pick', deTarget);
+    this.emit('pick', target);
 };
 
 p.hide = function () {
@@ -68,9 +68,12 @@ p.hide = function () {
 
 p._onMMove =  function (e) {
 
-    var br = this.domElem.getBoundingClientRect();
-    var over = e.clientX >= br.left && e.clientX <= br.right &&
-            e.clientY >= br.top && e.clientY <= br.bottom;
+    var br = this.domElem.getBoundingClientRect(),
+        mx = e.clientX,
+        my = e.clientY,
+        s = this._isMouseOver ? 21 : 0,
+        over = mx >= br.left-s && mx <= br.right+s &&
+            my >= br.top-s && my <= br.bottom+s;
 
     if (over !== this._isMouseOver) {
 
@@ -97,7 +100,7 @@ p._createBase = function () {
     de.style.display = 'none';
     de.style.pointerEvents = 'none';
     de.style.border = '2px dashed #eee';
-    de.style.pointerEvents = 'auto';
+    de.style.pointerEvents = 'none';
     am.deHandlerCont.appendChild(de);
 
     de.addEventListener('mouseenter', this._onMEnter);
@@ -124,9 +127,9 @@ p._createBase = function () {
     this._btnRight.style.bottom = '0';
     this._btnRight.style.margin = 'auto 0';
 
-    this._btnBottom = createIcon('angle-bottom', 'down one level', function () {
+    this._btnBottom = createBtn('angle-down', 'down one level', function () {
 
-        this.focus(this._crumbs[this._crumbs.length-1] || this._deTarget.firstElementChild);
+        this.focusElem(this._crumbs[this._crumbs.length-1] || this._deTarget.firstElementChild);
 
     }.bind(this));
     this._btnBottom.style.bottom = -btnSize + 'px';
@@ -143,7 +146,7 @@ p._createBase = function () {
     this._btnLeft.style.bottom = '0';
     this._btnLeft.style.margin = 'auto 0';
 
-    this._btnClose = createIcon('close', 'close', function () {
+    this._btnClose = createBtn('cancel', 'close', function () {
 
         this.hide();
     }.bind(this));

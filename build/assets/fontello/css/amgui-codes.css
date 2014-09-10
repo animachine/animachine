@@ -45,3 +45,7 @@
 .icon-down-circled2:before { content: '\e829'; } /* '' */
 .icon-angle-left:before { content: '\e82a'; } /* '' */
 .icon-angle-up:before { content: '\e82b'; } /* '' */
+.icon-resize-small:before { content: '\e82c'; } /* '' */
+.icon-resize-full:before { content: '\e82d'; } /* '' */
+.icon-eye:before { content: '\e82e'; } /* '' */
+.icon-eye-off:before { content: '\e82f'; } /* '' */

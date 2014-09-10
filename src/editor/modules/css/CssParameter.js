@@ -91,7 +91,10 @@ p.useSave = function(save) {
 
     this.name = save.name;
 
-    save.keys.forEach(this.addKey, this);
+    if (save.keys) {
+
+        save.keys.forEach(this.addKey, this);
+    }
 };
 
 p.addKey = function (opt, skipHistory) {

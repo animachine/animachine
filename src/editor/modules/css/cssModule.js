@@ -27,6 +27,7 @@ function onSelectDomElement(de) {
             
                 icon: 'plus-squared',
                 backgound: '#063501',
+                tooltip: 'new sequence with selected elem',
 
                 onClick: function () {
 

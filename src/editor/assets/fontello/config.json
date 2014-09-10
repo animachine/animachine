@@ -13,6 +13,12 @@
       "src": "fontelico"
     },
     {
+      "uid": "68e298ff2d8b25dd7f647ed64f5ae690",
+      "css": "emo-surprised",
+      "code": 59432,
+      "src": "fontelico"
+    },
+    {
       "uid": "8ce732688587909ad0a9d8323eaca8ad",
       "css": "marquee",
       "code": 59413,
@@ -109,9 +115,27 @@
       "src": "fontawesome"
     },
     {
+      "uid": "c53068fe21c8410b0a098b4c52c3d37e",
+      "css": "down-circled2",
+      "code": 59433,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "f3f90c8c89795da30f7444634476ea4f",
+      "css": "angle-left",
+      "code": 59434,
+      "src": "fontawesome"
+    },
+    {
       "uid": "7bf14281af5633a597f85b061ef1cfb9",
       "css": "angle-right",
       "code": 59394,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "5de9370846a26947e03f63142a3f1c07",
+      "css": "angle-up",
+      "code": 59435,
       "src": "fontawesome"
     },
     {

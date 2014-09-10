@@ -26,20 +26,16 @@ function Timeline(opt) {
     this._onChangeSequenceHeight = this._onChangeSequenceHeight.bind(this);
     this._animPlay = this._animPlay.bind(this);
     
-    this._createBase();
-    this._createSettingsHead();
-    // this._createTimeline();
-    this._createPointerLine();
-
-    this._currSequence;
-    
     this._timebar = new Timebar({
         height: this._headerH,
-        width: this._deRight.offsetWidth || 1000,
         timescale: 0.12,
         length: 6000
     });
-    this._deRight.insertBefore(this._timebar.domElem, this._deKeylineCont);
+    
+    this._createBase();
+    // this._createTimeline();
+    this._createPointerLine();
+
 
     this._refreshTimebarWidth();
     this._refreshDeCurrTime();
@@ -180,7 +176,7 @@ p.addSequence = function (sequ, skipHistory) {
     this._sequences.push(sequ);
 
     this._mapSequenceDatas.set(sequ, {
-        deContOpt: createCont(sequ.deOptions, this._deLeft),
+        deContOpt: createCont(sequ.deOptions, this._deOptionsCont),
         deContKf: createCont(sequ.deKeys, this._deKeylineCont),
     });
 
@@ -371,7 +367,7 @@ p._refreshSequenceOrdering = function () {
 
         var sequData = this._mapSequenceDatas.get(sequ);
 
-        this._deLeft.appendChild(sequData.deOptions);
+        this._deOptionsCont.appendChild(sequData.deOptions);
         this._deKeylineCont.appendChild(sequData.deKeyline);
     }, this);
 };
@@ -436,10 +432,13 @@ p._createBase = function () {
 
     this._deLeft = document.createElement('div');
     this._deLeft.style.backgroundColor = amgui.color.bg0;
+    this._deLeft.style.display = 'flex';
+    this._deLeft.style.flexDirection = 'column';
     this._deLeft.style.width = '300px';
     this._deLeft.style.height = '100%';
-    this._deLeft.style.height = '100%';
     this.domElem.appendChild(this._deLeft);
+
+    this._createSettingsHead();
 
     this._deDivider = document.createElement('div');
     this._deDivider.style.backgroundColor = amgui.color.bg3;
@@ -464,19 +463,28 @@ p._createBase = function () {
     this.domElem.appendChild(this._deDivider);
 
     this._deRight = document.createElement('div');
+    this._deRight.style.display = 'flex';
+    this._deRight.style.flexDirection = 'column';
     this._deRight.style.position = 'relative';
     this._deRight.style.backgroundColor = amgui.color.bg0;
     this._deRight.style.flex = '1';
     this._deRight.style.height = '100%';
     this.domElem.appendChild(this._deRight);
 
+    this._timebar.domElem.style.height = '23px';
+    this._deRight.appendChild(this._timebar.domElem);
+
     this._deKeylineContCont = document.createElement('div');
     this._deKeylineContCont.style.position = 'relative';
+    this._deKeylineContCont.style.flex = '1';
     this._deKeylineContCont.style.height = '100%';
+    this._deKeylineContCont.style.width = '100%';
     this._deRight.appendChild(this._deKeylineContCont);
 
     this._deOptionsContCont = document.createElement('div');
     this._deOptionsContCont.style.position = 'relative';
+    this._deOptionsContCont.style.flex = '1';
+    this._deOptionsContCont.style.width = '100%';
     this._deOptionsContCont.style.height = '100%';
     this._deLeft.appendChild(this._deOptionsContCont);
 

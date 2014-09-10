@@ -3,6 +3,7 @@
 var amgui = {
 
     createRange: createRange,
+    makeScrollable: makeScrollable,
 };
 
 module.exports = amgui;

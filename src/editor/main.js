@@ -9,7 +9,7 @@ var Toolbar = require('./toolbar');
 var Windooman = require('./windooman');
 var Warehouseman = require('./warehouseman');
 var Chronicler = require('./chronicler');
-var DomPicker = require('./dom-picekr');
+var DomPicker = require('./dom-picker');
 var modules = {
     css: require('./modules/css')
 };
@@ -72,15 +72,15 @@ domready(function () {
     am.deGuiCont.appendChild(am.workspace.domElem);
 
     am.deRoot = document.body;
-    am.toolbar = new Toolbar();
-    am.toolbar.domElem.style.top = '0px';
-    am.workspace.fillTab('tools', am.toolbar.domElem);
-    am.timeline = new Timeline(am);
-
     am.history = new Chronicler();
-
+    am.toolbar = new Toolbar();
+    am.timeline = new Timeline();
     am.domPicker = new DomPicker();
-    am.deHandlerCont.appendChild(am.domPicker.domelem)
+
+    am.workspace.fillTab('tools', am.toolbar.domElem);
+
+    am.deHandlerCont.appendChild(am.domPicker.domElem);
+    am.domPicker.on('pick', onSelectWithDomPicker)
 
     am.toolbar.addIcon({
         icon: 'ccw',
@@ -124,62 +124,6 @@ domready(function () {
         }
     });
 
-
-    am.toolbar.addIcon({
-        icon: 'blank',
-        onClick: function () {
-            am.timeline.useSave({
-                "currTime": 1100,
-                "timescale": 0.05,
-                "sequences": [{
-                    "type": "css_sequ_type",
-                    "data": {
-                        "selectors": ["#boxX5"],
-                        "parameters": [{
-                            "name": "",
-                            "keys": []
-                        }, {
-                            "name": "transform",
-                            "keys": [{
-                                "value": {
-                                    "tx": 0,
-                                    "ty": 0,
-                                    "tz": 0,
-                                    "rx": 0,
-                                    "ry": 0,
-                                    "rz": 0,
-                                    "sx": 1,
-                                    "sy": 2.20250521920668,
-                                    "sz": 1,
-                                    "skewX": 0,
-                                    "skewY": 0,
-                                    "perspective": 0
-                                },
-                                "time": 0
-                            }, {
-                                "value": {
-                                    "tx": 0,
-                                    "ty": 0,
-                                    "tz": 0,
-                                    "rx": 0,
-                                    "ry": 0,
-                                    "rz": 0,
-                                    "sx": 3.4274496158006964,
-                                    "sy": 1.0196644138403999,
-                                    "sz": 1,
-                                    "skewX": 0,
-                                    "skewY": 0,
-                                    "perspective": 0
-                                },
-                                "time": 1380
-                            }]
-                        }]
-                    }
-                }]
-            })
-        }
-    });
-
     am.timeline.domElem.style.position = 'fixed';
     am.timeline.domElem.style.width = '100%';
     am.timeline.domElem.style.height = '230px';
@@ -207,6 +151,10 @@ function onSelectWithDomPicker(de) {
 }
 
 am.isPickableDomElem = function (deTest) {
+
+    if (!deTest) {
+        return false;
+    }
 
     return step(deTest);
 

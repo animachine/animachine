@@ -260,8 +260,8 @@ p._onDrag = function (e) {
             py = asdy / Math.abs(md.params.sy),
             sd = px < py ? sdx : sdy;
 
-        change.sx + params.sx = md.params.sx + sd;
-        change.sy + params.sy = md.params.sy + sd;
+        change.sx = params.sx = md.params.sx + sd;
+        change.sy = params.sy = md.params.sy + sd;
     }
 
     function setRotation() {
@@ -289,6 +289,7 @@ p._onDrag = function (e) {
             if (Math.abs(dx) < Math.abs(dy)) {
 
                 change.tx = params.tx = md.params.tx + dx;
+            }
             else {
                 change.ty = params.ty = md.params.ty + dy;
             }

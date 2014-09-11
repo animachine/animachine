@@ -256,6 +256,8 @@ function addToggleGui() {
         }
     });
 
+    btnFull.style.top = '0px';
+    btnFull.style.left = '0px';
     btnFull.style.position = 'fixed';
 }
 

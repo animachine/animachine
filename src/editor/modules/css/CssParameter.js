@@ -98,7 +98,7 @@ p.useSave = function(save) {
 };
 
 p.addKey = function (opt, skipHistory) {
-
+    
     var key = this.getKey(opt.time);
 
     if (key) {
@@ -122,6 +122,7 @@ p.addKey = function (opt, skipHistory) {
         this._keys.push(key);
 
         if (!skipHistory) {
+            am.history.closeChain(key);
             am.history.save([this.removeKey, this, opt.time, true], [this.addKey, this, opt, true]);
         }
     }

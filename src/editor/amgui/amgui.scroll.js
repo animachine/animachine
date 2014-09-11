@@ -1,57 +1,69 @@
 'use strict';
 
-var amgui = {
+var amgui;
 
-    createRange: createRange,
-    makeScrollable: makeScrollable,
+module.exports = function (_amgui) {
+
+    amgui = _amgui;
+
+    return {
+        createRange: createRange,
+        makeScrollable: makeScrollable,
+    }
 };
-
-module.exports = amgui;
 
 
 
 function makeScrollable(opt) {
 
     var pos = 0,
-        deCont = opt.deCont,
-        deTargets = deTargets,
+        deConts = opt.deCont,
+        deTargets = opt.deTarget,
         range = opt.range;
 
-    opt.deCont.addEventListener('wheel', function (e) {
+    if (!Array.isArray(deConts)) deConts = [deConts];
+    if (!Array.isArray(deTargets)) deTargets = [deTargets];
 
-        var way = e.delta/18,
-            maxH = getTargetsMaxH();
-        
-        pos = Math.max(0, Math.min(maxH, pos + way));
+    deConts.forEach(function (deC) {
 
-        scroll();
+        deC.addEventListener('wheel', onWheel);
     });
 
     if (opt.range) {
 
-        range.addEventListener('change', function (e) {
-
-            pos = getTargetsMaxH() * e.detail.value;
-            scroll();
-        })
+        range.addEventListener('change', onChangeRange);
     }
 
-    
+    function onWheel(e) {
 
-    function scroll(p) {
+        var way = e.deltaY/18,
+            maxH = getTargetMaxH();
+        
+        pos = Math.max(0, Math.min(maxH, pos + way));
 
-        opt.deTargets.forEach(function (deTarget) {
+        scroll();
+    }
 
-            deTarget.top = -pos + 'px'
+    function onChangeRange(e) {
+
+        pos = getTargetMaxH() * e.detail.value;
+        scroll();
+    }
+
+    function scroll() {
+
+        deTargets.forEach(function (deT) {
+
+            deT.style.top = -pos + 'px'
         });
     }
 
-    function getTargetsMaxH() {
+    function getTargetMaxH() {
 
-        var contH = getH(deCont),
-            targetsH = deTargets.slice().map(getH);
+        var contH = Math.max.apply(null, deConts.slice().map(getH)),
+            targetH = Math.max.apply(null, deTargets.slice().map(getH));
 
-        return Math.max.apply(null, targetsH) - contH;
+        return targetH - contH;
     }
 
     function getH(de) {
@@ -85,40 +97,29 @@ function createRange(opt) {
     deCursor.style[d('width','height')] = opt.cursorHeight || '100%';
     de.appendChild(deCursor);
 
+    if (opt.parent) {
+        opt.parent.appendChild(de);
+    };
+
     de.setCursorWidth = function (w) {
 
         deCursor.style[d('height','width')] = w + 'px';
         cursorWidth = w;
     };
-    de.setCursorWidth(opt.cursorWidth || 12);
+    de.setCursorWidth(opt.cursorWidth || 12);   
 
-    de.addEventListener('mousedown', onDown);
-//TODO use amgui.makeDraggable()
-    function onDown(e) {
+    amgui.makeDraggable({
+        deTarget: de,
+        onMove: function (md, mx, my) {
 
-        window.addEventListener('mousemove', onDrag);
-        window.addEventListener('mouseup', onUp);
-        window.addEventListener('mouseleave', onUp);
+            var br = de.getBoundingClientRect(),
+                p = d(mx, my) - (d(br.top, br.left) + cursorWidth/2),
+                fw = d(br.height, br.width) - cursorWidth,
+                pos = Math.max(0, Math.min(1, p / fw));
 
-        onDrag(e);
-    }
-
-    function onDrag(e) {
-
-        var br = de.getBoundingClientRect(),
-            mx = d(e.pageY,e.pageX) - (d(br.top,br.left) + cursorWidth/2),
-            fw = d(br.height,br.width) - cursorWidth,
-            pos = Math.max(0, Math.min(1, mx / fw));
-
-        de.setValue(pos);
-    }
-
-    function onUp() {
-
-        window.removeEventListener('mousemove', onDrag);
-        window.removeEventListener('mouseup', onUp);
-        window.removeEventListener('mouseleave', onUp);
-    }
+            de.setValue(pos);
+        }
+    });
 
     de.setValue = function (v) {
 

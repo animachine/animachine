@@ -1,12 +1,15 @@
 'use strict';
 
-var amgui = {
+var amgui;
 
-    makeDraggable: makeDraggable,
+module.exports = function (_amgui) {
+
+    amgui = _amgui;
+
+    return {
+        makeDraggable: makeDraggable,
+    }
 };
-
-module.exports = amgui;
-
 
 function makeDraggable(opt) {
 

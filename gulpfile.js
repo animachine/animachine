@@ -6,6 +6,7 @@ var concat = require('gulp-concat');
 var rimraf = require('gulp-rimraf');
 var size = require('gulp-size');
 var watch = require('gulp-watch');
+var uglify= require('gulp-uglify');
 var vulcanize = require('gulp-vulcanize');
 var source = require('vinyl-source-stream');
 var browserify = require('browserify');
@@ -31,7 +32,7 @@ gulp.task('vendor', function () {
       paths.assets + 'js/webfont.js',
       paths.bower + 'web-animations-js/web-animations.js',
       paths.bower + 'lodash/dist/lodash.min.js',
-      paths.bower + 'jquery/dist/jquery.min.js',
+      paths.bower + 'jquery/dist/jquery.js',
       paths.bower + 'jQuery.Autosize.Input/jquery.autosize.input.js',
       paths.bower + 'mustache/mustache.js',
       paths.node + 'css.escape/css.escape.js',
@@ -40,7 +41,7 @@ gulp.task('vendor', function () {
       // paths.bower + 'pojoviz-renderers.js',
     ])
     .pipe(concat('vendor.js'))
-    // .pipe($.uglify())
+    .pipe(uglify())
     .pipe(gulp.dest('./build'))
     .pipe(size());
 });

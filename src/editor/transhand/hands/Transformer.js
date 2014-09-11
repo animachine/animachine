@@ -252,16 +252,16 @@ p._onDrag = function (e) {
 
     function fixProportion() {
 
-        var sdx = params.sx - md.params.sx,
-            sdy = params.sy - md.params.sy,
-            asdx = Math.abs(sdx),
-            asdy = Math.abs(sdy),
-            px = asdx / Math.abs(md.params.sx),
-            py = asdy / Math.abs(md.params.sy),
-            sd = px > py ? sdx : sdy;
+        var mx = pMouse.x - pOrigin.x,
+            my = pMouse.y - pOrigin.y,
+            mr = Math.abs(radDiff(params.rz, Math.atan2(my, mx))),
+            isVertical = mr > Math.PI/4 && mr < Math.PI/4 * 3,
+            spx = params.sx / md.params.sx,
+            spy = params.sy / md.params.sy,
+            sp = isVertical ? sdy : sdx;
 
-        change.sx = params.sx = md.params.sx + sd;
-        change.sy = params.sy = md.params.sy + sd;
+        change.sx = params.sx = md.params.sx * sp;
+        change.sy = params.sy = md.params.sy * sp;
     }
 
     function setRotation() {

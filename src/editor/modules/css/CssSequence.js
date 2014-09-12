@@ -145,61 +145,24 @@ p.useSave = function (save) {
 
 p.getScript = function () {
 
-    var keys = [], code = '', options, selectors,
-        longestOffset = 0;
+    var paramKeys = [], code = '', options, selectors;
 
     this._parameters.forEach(function (param) {
 
-        param._keys.forEach(function (key) {
-
-            var offset = key.time,
-                kf = getKey(offset);
-            
-            kf[param.name] = param.getValue(key.time);
-
-            if (key.ease && key.ease !== 'linear') {
-               kf.easing = key.ease; 
-            }
-
-            if (longestOffset < offset) longestOffset = offset;
-        });
+        paramKeys.push(param.getKeys());
     });
-
-    keys.forEach(function (key) {
-
-        key.offset /= longestOffset;
-    });
-
-    keys.sort(function (a, b) {
-
-        return a.offset - b.offset;
-    });
-
-    function getKey(time) {
-
-        var key = keys.find(function (_key) {
-            return time === _key.offset;
-        });
-
-        if (!key) {
-
-            key = {offset: time};
-            keys.push(key);
-        }
-
-        return key;
-    }
 
     options = {
       direction: "normal",
-      duration: longestOffset,
-      iterations: 1
+      duration: am.timeline.length,
+      iterations: 1,
+      fill: 'both',
     };
 
     selectors = this._selectors.join(',').replace('\\','\\\\');
 
     code = Mustache.render(mstPlayer, {
-        keys: JSON.stringify(keys),
+        paramKeys: JSON.stringify(paramKeys),
         options: JSON.stringify(options),
         selectors: selectors
     });

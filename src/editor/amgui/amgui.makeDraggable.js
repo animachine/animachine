@@ -23,6 +23,11 @@ function makeDraggable(opt) {
 
     function onDown(e) {
 
+        if (e.button !== 0) {
+            
+            return;
+        }
+
         e.stopPropagation();
         e.preventDefault();
 

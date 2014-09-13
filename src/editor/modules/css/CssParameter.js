@@ -97,8 +97,36 @@ p.useSave = function(save) {
     }
 };
 
-p.addKey = function (opt, skipHistory) {
+p.getScriptKeys = function () {
 
+    var keys = [];
+
+    this._keys.forEach(function (key) {
+
+        var k = {
+            offset: am.timeline.length / key.time,
+        }
+
+        k[param.name] = param.getValue(key.time);
+        
+        if (key.ease && key.ease !== 'linear') {
+
+           k.easing = key.ease; 
+        }
+
+        keys.push(k);
+    });
+
+    keys.sort(function (a, b) {
+
+        return a.offset - b.offset;
+    });
+
+    return keys;
+};
+
+p.addKey = function (opt, skipHistory) {
+    
     var key = this.getKey(opt.time);
 
     if (key) {
@@ -122,6 +150,7 @@ p.addKey = function (opt, skipHistory) {
         this._keys.push(key);
 
         if (!skipHistory) {
+            am.history.closeChain(key);
             am.history.save([this.removeKey, this, opt.time, true], [this.addKey, this, opt, true]);
         }
     }

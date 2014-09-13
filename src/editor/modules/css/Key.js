@@ -19,7 +19,8 @@ function Key (opt) {
 
     this.domElem = this._deKeyline.addKey({
         timescale: am.timeline.timescale,
-        time: this.time
+        time: this.time,
+        ease: this.ease
     });
 
     this._deMenu = amgui.createDropdown({
@@ -78,6 +79,10 @@ Object.defineProperties(p, {
             if (!v || this._ease === v) return;
 
             this._ease = v;
+
+            this.domElem.setEase(v);
+
+            this.emit('changeEase', v);
         },
         get: function () {
 
@@ -144,7 +149,7 @@ p.dispose = function () {
     this._deMenu.removeEventListener('select', this._onSelectDropdown);
     am.timeline.removeListener('changeTape', this._onChangeTape);
 
-    if (this.domElem.parentNode) this.domElem.parentNode.removeChild(this.domElem); 
+    this.domElem.remove();
     if (this._deMenu.parentNode) this._deMenu.parentNode.removeChild(this._deMenu); 
 };
 

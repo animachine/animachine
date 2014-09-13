@@ -14,7 +14,7 @@ exports.init = function (_am) {
 
 function onSelectDomElement(de) {
 
-    if (!CssSequence._instances.some(testSequ)) {
+    if (!am.timeline.sequences.some(testSequ)) {
 
         var iconOpt;
 
@@ -52,8 +52,9 @@ function onSelectDomElement(de) {
     }
 
     function testSequ(sequ) {
-            
-        if (sequ.isOwnedDomElem(de)) {
+
+        if (sequ instanceof CssSequence && sequ.isOwnedDomElem(de)) {
+
             console.log('is owned', de)
             sequ.select();
             selectBox.hide();

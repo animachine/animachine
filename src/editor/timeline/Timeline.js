@@ -5,6 +5,7 @@ var inherits = require('inherits');
 var Timebar = require('./Timebar');
 var amgui = require('../amgui');
 var mineSave = require('./mineSave');
+var UglifyJS = require('uglify-js');
 var mstSaveScript = require('./script.save.mst');
 
 function Timeline(opt) {
@@ -79,6 +80,12 @@ Object.defineProperties(p, {
         get: function () {
             return this._timebar.timescale
         }
+    },
+
+    'sequences': {
+        get: function () {
+            return this._sequences;
+        }
     }
 });
 
@@ -127,8 +134,9 @@ p.useSave = function (save) {
 
     save.sequences.forEach(function (sequData) {
 
-        var sequ = new am.sequenceTypes[sequData.type]();
-        sequ.useSave(sequData.data)
+        var SequClass = new am.sequenceTypes[sequData.type],
+            sequ = new SequClass(sequData);
+
         this.addSequence(sequ);
     }, this);
 
@@ -152,6 +160,14 @@ p.getScript = function (opt) {
         sequPlayerGens: playerScripts.join(',\n'),
         autoPlay: opt.autoPlay
     });
+
+    if (script.minify) {
+
+        script = UglifyJS.minify(script, {
+            fromString: true,
+            comments: /@amsave/
+        });
+    }
 
     console.log(script);
 
@@ -460,9 +476,11 @@ p._createBase = function () {
 
     this._deKeylineContCont = document.createElement('div');
     this._deKeylineContCont.style.position = 'relative';
+    this._deKeylineContCont.style.display = 'flex';
     this._deKeylineContCont.style.flex = '1';
     this._deKeylineContCont.style.height = '100%';
     this._deKeylineContCont.style.width = '100%';
+    this._deKeylineContCont.style.overflow = 'hidden';
     this._deRight.appendChild(this._deKeylineContCont);
 
     this._deOptionsContCont = document.createElement('div');
@@ -470,10 +488,12 @@ p._createBase = function () {
     this._deOptionsContCont.style.flex = '1';
     this._deOptionsContCont.style.width = '100%';
     this._deOptionsContCont.style.height = '100%';
+    this._deOptionsContCont.style.overflow = 'hidden';
     this._deLeft.appendChild(this._deOptionsContCont);
 
     this._deKeylineCont = document.createElement('div');
     this._deKeylineCont.style.position = 'relative';
+    this._deKeylineCont.style.flex = '1';
     this._deKeylineContCont.appendChild(this._deKeylineCont);
 
     this._deOptionsCont = document.createElement('div');
@@ -483,13 +503,13 @@ p._createBase = function () {
     this._deRange = amgui.createRange({
         width: '6px',
         height: '100%',
-        parent: this.domElem,
+        parent: this._deKeylineContCont,
         vertical: true
     });
 
     amgui.makeScrollable({
-        deCont: this._deOptionsContCont,
-        deTragets: [this._deOptionsCont, this._deKeylineCont],
+        deCont: [this._deOptionsContCont, this._deKeylineContCont],
+        deTarget: [this._deOptionsCont, this._deKeylineCont],
         deRange: this._deRange
     });
 

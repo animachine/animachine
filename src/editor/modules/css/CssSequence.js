@@ -14,8 +14,6 @@ function CssSequence(opt) {
 
     EventEmitter.call(this);
 
-    CssSequence._instances.push(this);
-
     if (!dialogSequOptions) {
         dialogSequOptions = new DialogSequOptions();
     }
@@ -60,8 +58,6 @@ function CssSequence(opt) {
         this.useSave(opt);
     }
 }
-
-CssSequence._instances = [];
 
 inherits(CssSequence, EventEmitter);
 var p = CssSequence.prototype;
@@ -149,61 +145,24 @@ p.useSave = function (save) {
 
 p.getScript = function () {
 
-    var keys = [], code = '', options, selectors,
-        longestOffset = 0;
+    var paramKeys = [], code = '', options, selectors;
 
     this._parameters.forEach(function (param) {
 
-        param._keys.forEach(function (key) {
-
-            var offset = key.time,
-                kf = getKey(offset);
-            
-            kf[param.name] = param.getValue(key.time);
-
-            if (key.ease && key.ease !== 'linear') {
-               kf.easing = key.ease; 
-            }
-
-            if (longestOffset < offset) longestOffset = offset;
-        });
+        paramKeys.push(param.getKeys());
     });
-
-    keys.forEach(function (key) {
-
-        key.offset /= longestOffset;
-    });
-
-    keys.sort(function (a, b) {
-
-        return a.offset - b.offset;
-    });
-
-    function getKey(time) {
-
-        var key = keys.find(function (_key) {
-            return time === _key.offset;
-        });
-
-        if (!key) {
-
-            key = {offset: time};
-            keys.push(key);
-        }
-
-        return key;
-    }
 
     options = {
       direction: "normal",
-      duration: longestOffset,
-      iterations: 1
+      duration: am.timeline.length,
+      iterations: 1,
+      fill: 'both',
     };
 
     selectors = this._selectors.join(',').replace('\\','\\\\');
 
     code = Mustache.render(mstPlayer, {
-        keys: JSON.stringify(keys),
+        paramKeys: JSON.stringify(paramKeys),
         options: JSON.stringify(options),
         selectors: selectors
     });
@@ -217,10 +176,6 @@ p.addParameter = function (opt, skipHistory) {
 
     var param = this.getParameter(opt.name);
     
-    if (!skipHistory) {
-        am.history.save([this.addParameter, this, param, true],
-            [this.removeParameter, this, param, true]);
-    }
 
     if (param) {
 
@@ -237,6 +192,11 @@ p.addParameter = function (opt, skipHistory) {
             param = new CssParameter(opt);
         }
 
+        if (!skipHistory) {
+            am.history.save([this.removeParameter, this, param, true],
+                [this.addParameter, this, param, true]);
+        }
+
         this._parameters.push(param);
         param.on('change', this._onChangeParameter);
         param.on('delete', this._onDeleteParameter);
@@ -250,7 +210,7 @@ p.addParameter = function (opt, skipHistory) {
     }
 };
 
-p.removeParameter = function (param) {
+p.removeParameter = function (param, skipHistory) {
 
     if (!skipHistory) {
         am.history.save([this.addParameter, this, param, true],
@@ -756,9 +716,10 @@ p._createHeadOptions = function (){
     de.appendChild(space);
 
     this._tgglHide = amgui.createToggleIconBtn({
-        iconOn: 'eye', 
-        iconOff: 'eye-off', 
+        iconOn: 'eye-off', 
+        iconOff: 'eye', 
         height: this._baseH,
+        defaultToggle: false,
         onToggle: this._onToggleHide,
         changeColor: true,
         parent: de

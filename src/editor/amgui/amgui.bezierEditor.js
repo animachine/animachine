@@ -1,11 +1,15 @@
 'use strict';
 
-var amgui = {
+var amgui;
 
-    createBezierEditor: createBezierEditor,
+module.exports = function (_amgui) {
+
+    amgui = _amgui;
+
+    return {
+        createBezierEditor: createBezierEditor,
+    }
 };
-
-module.exports = amgui;
 
 
 

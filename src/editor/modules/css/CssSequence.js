@@ -25,7 +25,7 @@ function CssSequence(opt) {
     this._selectedElems = [];
     this._headKeys = [];
     this._isOpened = false;
-    this._isHidingSelectedElems = [];
+    this._isHidingSelectedElems = false;
 
     this._onSelectClick = this._onSelectClick.bind(this);
     this._onChangeHandler = this._onChangeHandler.bind(this);
@@ -34,9 +34,9 @@ function CssSequence(opt) {
     this._onDeleteParameter = this._onDeleteParameter.bind(this);
     this._onMoveParameter = this._onMoveParameter.bind(this);
     this._onChangeBlankParameter = this._onChangeBlankParameter.bind(this);
-    this._onToggleKey = this._onToggleKey.bind(this);
+    this._onClickTgglKey = this._onClickTgglKey.bind(this);
     this._onToggleParams = this._onToggleParams.bind(this);
-    this._onToggleHide = this._onToggleHide.bind(this);
+    this._onClickTggHide = this._onClickTggHide.bind(this);
     this._onClickName = this._onClickName.bind(this);
     this._onChangeName = this._onChangeName.bind(this);
     this._onChangeSelectors = this._onChangeSelectors.bind(this);
@@ -92,7 +92,7 @@ Object.defineProperties(p, {
     name: {
         set: function (v) {
 
-            if (v === this._name) return;
+            if (this._name && v === this._name) return;
 
             this._name = v || this._selectors[0] ||'unnamed';
             this._deName.textContent = this._name;
@@ -131,9 +131,9 @@ p.useSave = function (save) {
         return;
     }
 
-    this.name = save.name;
-
     this._selectors = save.selectors || [];
+
+    this.name = save.name;
 
     if (save.parameters) {
 
@@ -149,7 +149,7 @@ p.getScript = function () {
 
     this._parameters.forEach(function (param) {
 
-        paramKeys.push(param.getKeys());
+        paramKeys.push(param.getScriptKeys());
     });
 
     options = {
@@ -432,6 +432,8 @@ p._hideSelectedElems = function () {
     if (this._isHidingSelectedElems) return;
     this._isHidingSelectedElems = true;
 
+    this._tgglHide.setToggle(true);
+
     this._selectedElems.forEach(function (de) {
 
         de._amVisibilitySave = de.style.visibility;
@@ -443,6 +445,8 @@ p._showSelectedElems = function () {
 
     if (!this._isHidingSelectedElems) return;
     this._isHidingSelectedElems = false;
+
+    this._tgglHide.setToggle(false);
 
     this._selectedElems.forEach(function (de) {
 
@@ -542,7 +546,7 @@ p._onChangeBlankParameter = function () {
     this._blankParameter.on('change', this._onChangeBlankParameter);
 };
 
-p._onToggleKey = function () {
+p._onClickTgglKey = function () {
 
     var time = am.timeline.currTime;
         allHaveKey = this._isAllParamsHaveKey(time);
@@ -569,7 +573,7 @@ p._onToggleParams = function (e) {
     this.emit('changeHeight', this);
 };
 
-p._onToggleHide = function () {
+p._onClickTggHide = function () {
 
     if (this._isHidingSelectedElems) {
         this._showSelectedElems();
@@ -720,7 +724,7 @@ p._createHeadOptions = function (){
         iconOff: 'eye', 
         height: this._baseH,
         defaultToggle: false,
-        onToggle: this._onToggleHide,
+        onClick: this._onClickTggHide,
         changeColor: true,
         parent: de
     });
@@ -728,7 +732,7 @@ p._createHeadOptions = function (){
     this._tgglKey = amgui.createToggleIconBtn({
         icon: 'key',
         height: this._baseH,
-        onToggle: this._onToggleKey,
+        onClick: this._onClickTgglKey,
         changeColor: true,
         parent: de
     });

@@ -116,7 +116,10 @@ function createToggleIconBtn(opt) {
     var de = amgui.createIconBtn(opt);
     setIcon();
 
-    de.addEventListener('click', onClick);
+    if ('autoToggle' in opt ? opt.autoToggle : !opt.onClick) {
+        
+        de.addEventListener('click', onClick);
+    }
 
     if ('onToggle' in opt) {
 

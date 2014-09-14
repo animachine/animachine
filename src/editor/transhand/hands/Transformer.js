@@ -59,9 +59,10 @@ p.setup = function (opt) {
 };
 
 p.activate = function () {
-
+console.log('activate')
     if (this._isActivated) return;
     this._isActivated = true;
+console.log('>activate')
 
     window.addEventListener('mousemove', this._onMouseMove);
     window.addEventListener('mousedown', this._onMouseDown);
@@ -69,8 +70,10 @@ p.activate = function () {
 
 p.deactivate = function () {
 
+console.log('deactivate')
     if (!this._isActivated) return;
     this._isActivated = false;
+console.log('>deactivate')
     
     window.removeEventListener('mousemove', this._onMouseMove);
     window.removeEventListener('mousedown', this._onMouseDown);
@@ -257,8 +260,12 @@ p._onDrag = function (e) {
             mr = Math.abs(radDiff(params.rz, Math.atan2(my, mx))),
             isVertical = mr > Math.PI/4 && mr < Math.PI/4 * 3,
             spx = params.sx / md.params.sx,
-            spy = params.sy / md.params.sy,
-            sp = isVertical ? sdy : sdx;
+            spy = params.sy / md.params.sy;
+
+        spx *= spx < 0 ? -1 : 1;
+        spy *= spy < 0 ? -1 : 1;
+        
+        var sp = isVertical ? spy : spx;
 
         change.sx = params.sx = md.params.sx * sp;
         change.sy = params.sy = md.params.sy * sp;

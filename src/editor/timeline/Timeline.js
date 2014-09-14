@@ -161,12 +161,12 @@ p.getScript = function (opt) {
         autoPlay: opt.autoPlay
     });
 
-    if (script.minify) {
+    if (opt.minify) {
 
         script = UglifyJS.minify(script, {
             fromString: true,
             comments: /@amsave/
-        });
+        }).code;
     }
 
     console.log(script);

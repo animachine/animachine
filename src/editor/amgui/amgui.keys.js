@@ -35,18 +35,29 @@ function createKeyline(opt) {
         var deKey = amgui.createKey(opt);
         deKeys.push(deKey);
 
-        de.appendChild(key);
+        sortKeys();
+
+        de.appendChild(deKey);
 
         deKey.addEventListener('changeEase', renderEase);
         deKey.addEventListener('remove', onKeyRemove);
         renderEase();
 
-        return key;
+        return deKey;
     }
 
-     function onKeyRemove () {
+    function sortKeys() {
 
-        var idx = deKeys.indexOf(this);
+        deKeys.sort(function (a, b) {
+        
+            return b.offsetLeft - a.offsetLeft;
+        });
+    }
+
+    function onKeyRemove () {
+
+        var deKey = this;
+            idx = deKeys.indexOf(deKey);
 
         if (idx === -1) {
             return;
@@ -57,8 +68,8 @@ function createKeyline(opt) {
         deKey.removeEventListener('changeEase', renderEase);
         deKey.removeEventListener('remove', onKeyRemove);
 
-        if (this.parentNode) {
-            this.parentNode.removeChild(this);
+        if (deKey.parentNode) {
+            deKey.parentNode.removeChild(deKey);
         }
     }
 
@@ -73,24 +84,25 @@ function createKeyline(opt) {
             }
 
             var rx = /cubic-bezier\(\s*([\d\.]+)\s*,\s*([\d\.]+)\s*,\s*([\d\.]+)\s*,\s*([\d\.]+)\s*\)/,
-                m = rx.exec(deKey.ease);
-
-            if (!m) {
-                return;
-            }
-
-            var x = deKey.offsetX,
-                w = deKey.offsetWidth,
+                m = rx.exec(deKey.ease),
+                x = deKey.offsetLeft,
+                w = deKeys[idx+1].offsetLeft - x,
                 h = de.offsetHeight,
                 path = document.createElement('path'),
                 d = '';
 
-            d += 'M' + x + ',' + h + ' ';
-            d += 'C' + (x + w*m[1]) + ',' + (h - h*m[2]) + ' ';
-            d += (x + w*m[2]) + ',' + (h - h*m[3]) + ' ';
-            d += (x + w) + ',0';
+            if (m) {
+                d += 'M' + x + ',' + h + ' ';
+                d += 'C' + (x + w*m[1]) + ',' + (h - h*m[2]) + ' ';
+                d += (x + w*m[2]) + ',' + (h - h*m[3]) + ' ';
+                d += (x + w) + ',0';
+            }
+            else {
+                d += 'M' + x + ',' + h + ' ';
+                d += 'L' + (x + w) + ',0';
+            }
 
-            path.d = d;
+            path.setAttribute('d', d);
             svgEase.appendChild(path);
         });
     }
@@ -114,10 +126,8 @@ function createKey(opt) {
     key.style.borderStyle = 'solid';
     key.style.borderWidth = '21px 4px 0 4px';
     key.style.borderColor = '#7700ff transparent transparent transparent';
+    key.style.transform = 'translateX(-4px)';
     de.appendChild(key);
-
-    setLeft();
-    de.setEase(opt.ease);
 
     amgui.makeDraggable({
         deTarget: de,
@@ -135,7 +145,7 @@ function createKey(opt) {
             }
             
             return {
-                dragged: 0;
+                dragged: 0
             }
         },
         onMove: function (mx, my, md) {
@@ -188,6 +198,9 @@ function createKey(opt) {
         de.dispatchEvent(new Event('remove'));
     }
 
+    setLeft();
+    de.setEase(opt.ease);
+
     return de;
 
     ///////////////////////////////////////////////////////
@@ -195,7 +208,7 @@ function createKey(opt) {
 
     function setLeft() {
 
-        de.style.left = ((time * timescale) - 4) + 'px';
+        de.style.left = (time * timescale) + 'px';
     }
 
     function toggleUserSelected() {

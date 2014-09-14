@@ -8,7 +8,7 @@
 
     {{#saveJson}}
     /** @amsave */
-    var SAVEJSON = '{{{saveJson}}}',
+    var SAVEJSON = '{{{saveJson}}}';
     {{/saveJson}}
 
     var reg = root.am.pageScripts.{{name}} = {

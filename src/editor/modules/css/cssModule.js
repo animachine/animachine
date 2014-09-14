@@ -57,7 +57,7 @@ function onSelectDomElement(de) {
 
             console.log('is owned', de)
             sequ.select();
-            selectBox.hide();
+            am.domPicker.hide();
             return true;
         }
     }

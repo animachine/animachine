@@ -10,6 +10,8 @@ var Windooman = require('./windooman');
 var Warehouseman = require('./warehouseman');
 var Chronicler = require('./chronicler');
 var DomPicker = require('./dom-picker');
+var dialogFeatureDoesntExits = require('./commonDialogs/dialogFeatureDoesntExits');
+var dialogFeedback = require('./commonDialogs/dialogFeedback');
 var modules = {
     css: require('./modules/css')
 };
@@ -53,6 +55,11 @@ am.throwHandler = function (handler) {
 
 domready(function () {
 
+    am.dialogs = {
+        featureDoesntExist: dialogFeatureDoesntExits,
+        feedback: dialogFeedback,
+    };
+
     am.workspace = new Windooman();
     am.workspace.loadWorkspaces({
         base: getBaseWorkspace()
@@ -94,6 +101,7 @@ domready(function () {
 
     am.toolbar.addIcon({
         icon: 'upload-cloud',
+        separator: 'global',
         onClick: function () {
             
             am.storage.showSaveDialog({
@@ -110,6 +118,7 @@ domready(function () {
 
     am.toolbar.addIcon({
         icon: 'download-cloud',
+        separator: 'global',
         onClick: function () {
             am.storage.showOpenDialog({
 
@@ -121,6 +130,14 @@ domready(function () {
                     am.timeline.useSave(save);
                 }
             });
+        }
+    });
+
+    am.toolbar.addIcon({
+        icon: 'megaphone',
+        separator: 'rest',
+        onClick: function () {
+            am.dialogs.feedback.show()
         }
     });
 
@@ -141,7 +158,10 @@ domready(function () {
 
 function onClickRoot(e) {
 
-    am.domPicker.focusElem(e.target);
+    if (am.isPickableDomElem(e.target)) {
+
+        am.domPicker.focusElem(e.target);
+    }
 }
 
 function onSelectWithDomPicker(de) {
@@ -180,6 +200,10 @@ am.isPickableDomElem = function (deTest) {
 };
 
 function createAmRoot() {
+
+    $('body').css('opacity', .23)
+        // .mouseenter(function () {$('body').css('opacity', 1)})
+        // .mouseleave(function () {$('body').css('opacity', .23)});
     
     var de = document.createElement('div');
     de.style.position = 'fixed';
@@ -201,11 +225,6 @@ function createAmRoot() {
     }
 
     document.body.appendChild(de);
-
-    de.addEventListener('mousedown', function (e) {
-
-        // e.preventDefault();
-    });
 
     var sr = de.createShadowRoot();
         

@@ -6,20 +6,16 @@ var CssTransformParameter = require('./CssTransformParameter');
 var Key = require('./Key');
 var Transhand = require('../../transhand/Transhand');
 var mstPlayer = require('./script.player.mst');
-var DialogSequOptions = require('./DialogSequOptions');
-
-var dialogSequOptions;
+var dialogSequOptions = require('./dialogSequOptions');
 
 function CssSequence(opt) {
 
     EventEmitter.call(this);
 
-    if (!dialogSequOptions) {
-        dialogSequOptions = new DialogSequOptions();
-    }
-
     this._selectors = [];
     this._parameters = [];
+    this._fill = 'forward';
+    this._iterations = 1;
 
     this._baseH = 21;
     this._selectedElems = [];
@@ -38,6 +34,8 @@ function CssSequence(opt) {
     this._onToggleParams = this._onToggleParams.bind(this);
     this._onClickTggHide = this._onClickTggHide.bind(this);
     this._onClickName = this._onClickName.bind(this);
+    this._onChangeName = this._onChangeName.bind(this);
+    this._onChangeIterations = this._onChangeIterations.bind(this);
     this._onChangeName = this._onChangeName.bind(this);
     this._onChangeSelectors = this._onChangeSelectors.bind(this);
 
@@ -101,6 +99,32 @@ Object.defineProperties(p, {
 
             return this._name;
         }
+    },
+
+    fill: {
+        set: function (v) {
+
+            if (v === this._fill) return;
+
+            this._fill = v;
+        },
+        get: function () {
+
+            return this._fill;
+        }
+    },
+
+    iterations: {
+        set: function (v) {
+
+            if (v === this._iterations) return;
+
+            this._iterations = v;
+        },
+        get: function () {
+
+            return this._iterations;
+        }
     }
 });
 
@@ -113,6 +137,8 @@ p.getSave = function () {
 
     var save = {
         name: this.name,
+        fill: this.fill,
+        iterations: this.iterations,
         selectors: _.clone(this._selectors),
         parameters: [],
     };
@@ -134,6 +160,8 @@ p.useSave = function (save) {
     this._selectors = save.selectors || [];
 
     this.name = save.name;
+    this.fill = save.fill;
+    this.iterations = save.iterations;
 
     if (save.parameters) {
 
@@ -155,8 +183,8 @@ p.getScript = function () {
     options = {
       direction: "normal",
       duration: am.timeline.length,
-      iterations: 1,
-      fill: 'both',
+      iterations: this.iterations,
+      fill: this.fill,
     };
 
     selectors = this._selectors.join(',').replace('\\','\\\\');
@@ -588,7 +616,11 @@ p._onClickName = function () {
     dialogSequOptions.show({
         name: this._name,
         selectors: this._selectors,
-        onChangeName: this._onChangeName, 
+        fill: this.fill,
+        iterations: this.iterations,
+        onChangeName: this._onChangeName,
+        onChangeFill: this._onChangeFill,
+        onChangeIterations: this._onChangeIterations,
         onChangeSelectors: this._onChangeSelectors
     });
 };
@@ -596,6 +628,16 @@ p._onClickName = function () {
 p._onChangeName = function (name) {
 
     this.name = name;
+};
+
+p._onChangeFill = function (name) {
+
+    this.fill = fill;
+};
+
+p._onChangeIterations = function (name) {
+
+    this.iterations = itarations;
 };
 
 p._onChangeSelectors = function (selectors) {

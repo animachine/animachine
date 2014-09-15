@@ -98,7 +98,7 @@ function bindDropdown(opt) {
         
         amgui.placeToPoint(deDropdown, e.clientX, e.clientY, opt.side);
 
-        var deCont = amgui.deOverlayCont || deBtn;
+        var deCont = opt.menuParent || amgui.deOverlayCont || deBtn;
 
         deCont.appendChild(deDropdown);
         window.addEventListener('click', close);

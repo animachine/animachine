@@ -155,7 +155,7 @@ p.getScript = function (opt) {
     });
 
     script = Mustache.render(mstSaveScript, {
-        name: 'anim1',
+        name: 'amsave',
         saveJson: opt.includeSave && this.getSave(),
         sequPlayerGens: playerScripts.join(',\n'),
         autoPlay: opt.autoPlay
@@ -163,15 +163,48 @@ p.getScript = function (opt) {
 
     if (opt.minify) {
 
-        script = UglifyJS.minify(script, {
-            fromString: true,
-            comments: /@amsave/
-        }).code;
+    console.log(script);
+        script = minify(script);
     }
 
     console.log(script);
 
     return script;
+
+    function minify(code) {
+
+        return code;//TODO
+
+        var result = UglifyJS.minify(code, {
+            fromString: true,
+            mangle: false,
+            output: {
+                comments: /@amsave/,
+            },
+            compress: {
+                // reserved: 'JSON_SAVE',
+            }
+        });
+
+        return result.code;
+
+        var toplevel = null;
+        toplevel = UglifyJS.parse(code, {
+            filename: 'save',
+            toplevel: toplevel
+        });
+
+        toplevel.figure_out_scope();
+
+        var compressor = UglifyJS.Compressor({mangle: false});
+        var compressed_ast = toplevel.transform(compressor);
+
+        compressed_ast.figure_out_scope();
+        compressed_ast.compute_char_frequency();
+        compressed_ast.mangle_names();
+
+        return compressed_ast.print_to_string({comments: 'all'});
+    } 
 };
 
 p.clear = function () {

@@ -1,15 +1,15 @@
 ;(function (root) {
     'use strict';
 
-    root.am = root.am || {};
-    root.am.pageScripts = root.am.pageScripts || {};
+    {{#saveJson}}
+    /**@amsave*/
+    var SAVEJSON = '{{{saveJson}}}';
+    {{/saveJson}}
 
     var sequPlayerGens = [{{{sequPlayerGens}}}];
 
-    {{#saveJson}}
-    /** @amsave */
-    var SAVEJSON = '{{{saveJson}}}';
-    {{/saveJson}}
+    root.am = root.am || {};
+    root.am.pageScripts = root.am.pageScripts || {};
 
     var reg = root.am.pageScripts.{{name}} = {
         

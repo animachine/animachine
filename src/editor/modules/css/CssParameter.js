@@ -107,7 +107,7 @@ p.getScriptKeys = function () {
             offset: am.timeline.length / key.time,
         }
 
-        k[param.name] = param.getValue(key.time);
+        k[param.name] = this.getValue(key.time);
         
         if (key.ease && key.ease !== 'linear') {
 
@@ -115,7 +115,7 @@ p.getScriptKeys = function () {
         }
 
         keys.push(k);
-    });
+    }, this);
 
     keys.sort(function (a, b) {
 

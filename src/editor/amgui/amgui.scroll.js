@@ -19,7 +19,8 @@ function makeScrollable(opt) {
     var pos = 0,
         deConts = opt.deCont,
         deTargets = opt.deTarget,
-        range = opt.range;
+        deRange = opt.deRange,
+        ret = {dispose: dispose};
 
     if (!Array.isArray(deConts)) deConts = [deConts];
     if (!Array.isArray(deTargets)) deTargets = [deTargets];
@@ -29,10 +30,11 @@ function makeScrollable(opt) {
         deC.addEventListener('wheel', onWheel);
     });
 
-    if (opt.range) {
-
-        range.addEventListener('change', onChangeRange);
+    if (deRange) {
+        initRange()
     }
+
+    return ret;
 
     function onWheel(e) {
 
@@ -69,6 +71,47 @@ function makeScrollable(opt) {
     function getH(de) {
 
         return de.getBoundingClientRect().height;
+    }
+
+    function initRange() {
+
+        var saveDisplay = deRange.style.display,
+            isShowing = false,
+            refreshSetI;
+
+        deRange.style.display = 'none';
+
+        deRange.addEventListener('change', onChangeRange);
+
+        refreshSetI = setInterval(function () {
+
+            var needsRange = getTargetMaxH() > 0;
+
+            if (isShowing !== needsRange) {
+
+                isShowing = needsRange;
+
+                deRange.style.display = isShowing ? saveDisplay : 'none';
+            }
+        }, 312); 
+
+        var saveDispose = ret.dispose;
+        ret.dispose = function dispose () {
+
+            saveDispose();
+
+            clearInterval(refreshSetI);
+
+            deRange.removeEventListener('change', onChangeRange);
+        }
+    }
+
+    function dispose() {
+
+        deConts.forEach(function (deC) {
+
+            deC.removeEventListener('wheel', onWheel);
+        });
     }
 }
 
@@ -113,7 +156,7 @@ function createRange(opt) {
         onMove: function (md, mx, my) {
 
             var br = de.getBoundingClientRect(),
-                p = d(mx, my) - (d(br.top, br.left) + cursorWidth/2),
+                p = d(my, mx) - (d(br.top, br.left) + cursorWidth/2),
                 fw = d(br.height, br.width) - cursorWidth,
                 pos = Math.max(0, Math.min(1, p / fw));
 

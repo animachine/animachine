@@ -39,7 +39,7 @@ function createKeyline(opt) {
 
         de.appendChild(deKey);
 
-        deKey.addEventListener('changeEase', renderEase);
+        deKey.addEventListener('change', renderEase);
         deKey.addEventListener('remove', onKeyRemove);
         renderEase();
 
@@ -65,7 +65,7 @@ function createKeyline(opt) {
 
         deKeys.splice(idx, 1);
         
-        deKey.removeEventListener('changeEase', renderEase);
+        deKey.removeEventListener('change', renderEase);
         deKey.removeEventListener('remove', onKeyRemove);
 
         if (deKey.parentNode) {
@@ -168,6 +168,7 @@ function createKey(opt) {
 
         time = t;
         setLeft();
+        de.dispatchEvent(new Event('change'));
 
         de.dispatchEvent(new CustomEvent('changeTime', {detail: {time: time}}));
     };
@@ -177,6 +178,7 @@ function createKey(opt) {
 
         timescale = ts;
         setLeft();
+        de.dispatchEvent(new Event('change'));
     };
 
     de.setEase = function(ease) {
@@ -187,7 +189,7 @@ function createKey(opt) {
 
         de.ease = ease;
 
-        de.dispatchEvent(new Event('changeEase'));
+        de.dispatchEvent(new Event('change'));
     };
 
     de.remove = function() {

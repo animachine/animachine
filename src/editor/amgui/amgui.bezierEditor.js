@@ -106,7 +106,7 @@ function createBezierEditor(opt) {
             max = maxY(),
             full = max - min;
 
-        return ((p - min) / full) * h;
+        return h - (((p - min) / full) * h);
     }
   
     function minY() {
@@ -134,7 +134,37 @@ function createBezierEditor(opt) {
         deCp.style.background = 'rgba(256, 256, 256, 1)';
         de.appendChild(deCp);
       
-        deCp.addEventListener('mousedown', onDown);
+        amgui.makeDraggable({
+            deTarget: deCp,
+            onDown: function () {
+
+                deCp.style.cursor = 'grabbing';
+
+                var md = {};
+                md.minY = minY();
+                md.fullY = maxY() - md.minY;
+                return md;
+            },
+            onMove: function (md, mx, my) {
+
+                var br = de.getBoundingClientRect();
+
+                point.x = Math.max(0, Math.min(1, (mx - br.left) / w));
+                point.y = (((br.bottom - my) / h) * md.fullY) - md.minY;
+                
+                var fix = 1000;
+                point.x = parseInt(point.x * fix) / fix;
+                point.y = parseInt(point.y * fix) / fix;
+
+                render();
+              
+                de.dispatchEvent(new CustomEvent('change', {detail: {value: de.getValue()}}));
+            },
+            onUp: function () {
+
+                deCp.style.cursor = 'grab';
+            }
+        });
       
         deCp.refreshPosition = function () {
             
@@ -144,42 +174,5 @@ function createBezierEditor(opt) {
         deCp.refreshPosition();
       
         return deCp;
-
-        function onDown() {
-          
-            mdMinY = minY();
-            mdFullY = maxY() - mdMinY;
-
-            deCp.style.cursor = 'grabbing';
-
-            window.addEventListener('mousemove', onDrag);
-            window.addEventListener('mouseup', onUp);
-            window.addEventListener('mouseleave', onUp);
-        }
-
-        function onDrag(e) {
-
-            var br = de.getBoundingClientRect();
-
-            point.x = Math.max(0, Math.min(1, (e.pageX - br.left) / w));
-            point.y = (((e.pageY - br.top) / h) * mdFullY) - mdMinY;
-            
-            var fix = 1000;
-            point.x = parseInt(point.x * fix) / 1000;
-            point.y = parseInt(point.y * fix) / 1000;
-
-            render();
-          
-            de.dispatchEvent(new CustomEvent('change', {detail: {value: de.getValue()}}));
-        }
-
-        function onUp() {
-
-            deCp.style.cursor = 'grab';
-
-            window.removeEventListener('mousemove', onDrag);
-            window.removeEventListener('mouseup', onUp);
-            window.removeEventListener('mouseleave', onUp);
-        }
     }
 }

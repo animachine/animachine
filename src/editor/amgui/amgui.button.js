@@ -13,16 +13,27 @@ module.exports = function (_amgui) {
         createBtn: createBtn,
         createIconBtn: createIconBtn,
         createToggleIconBtn: createToggleIconBtn,
+        createLinebreak: createLinebreak,
     }
 };
 
 
+function createLinebreak(opt) {
 
+    var de = document.createElement('br');
+    de.innerHTML = opt.caption || 'label';
+    
+    if (opt.parent) {
+        opt.parent.appendChild(de);
+    }
+
+    return de;
+}
 
 function createLabel(opt) {
 
     var de = document.createElement('span');
-    de.textContent = opt.caption || 'label';
+    de.innerHTML = opt.caption || 'label';
 
     if ('fontSize' in opt) de.style.fontSize = opt.fontSize;
     if ('display' in opt) de.style.display = opt.display;

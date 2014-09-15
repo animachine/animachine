@@ -38,16 +38,17 @@ function createDialog(opt) {
     deTitle.style.color = amgui.color.text;
     de.appendChild(deTitle);
 
+    deTitleText = document.createElement('span');
+    deTitle.appendChild(deTitleText);
+
     if (opt.titleIcon) {
 
         deTitleIcon = amgui.createIcon({
             icon: opt.titleIcon,
-            parent: de
+            parent: deTitle,
+            display: 'inline-block',
         });
     }
-
-    deTitleText = document.createElement('span');
-    deTitle.appendChild(deTitleText);
 
     titleEnd = document.createElement('div');
     titleEnd.style.display = 'inline-block';

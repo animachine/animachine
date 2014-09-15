@@ -153,6 +153,11 @@ p._renderHandler = function () {
     ctx.lineTo(po.x, po.y + or);
     
 
+    // ctx.shadowColor = '#f00';
+    // ctx.shadowBlur = 3;
+    // ctx.shadowOffsetX = 0;
+    // ctx.shadowOffsetY = 0;
+
     ctx.strokeStyle = '#4f2';
     ctx.lineWidth = 1;
     ctx.stroke();

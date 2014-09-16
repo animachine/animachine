@@ -22,6 +22,7 @@ function CssSequence(opt) {
     this._headKeys = [];
     this._isOpened = false;
     this._isHidingSelectedElems = false;
+    this._isPlaying = false;
 
     this._onSelectClick = this._onSelectClick.bind(this);
     this._onChangeHandler = this._onChangeHandler.bind(this);
@@ -37,7 +38,12 @@ function CssSequence(opt) {
     this._onChangeName = this._onChangeName.bind(this);
     this._onChangeIterations = this._onChangeIterations.bind(this);
     this._onChangeName = this._onChangeName.bind(this);
+    this._onChangeFill = this._onChangeFill.bind(this);
+    this._onChangeIterations = this._onChangeIterations.bind(this);
     this._onChangeSelectors = this._onChangeSelectors.bind(this);
+    this._onWindowResize = this._onWindowResize.bind(this);
+    this._onWindowResize = this._onWindowResize.bind(this);
+    this._animPlay = this._animPlay.bind(this);
 
     this.deOptions = document.createElement('div');
     this.deKeys = document.createElement('div');
@@ -90,9 +96,9 @@ Object.defineProperties(p, {
     name: {
         set: function (v) {
 
-            if (this._name && v === this._name) return;
+            if (v === this._name) return;
 
-            this._name = v || this._selectors[0] ||'unnamed';
+            this._name = v || 'unnamed';
             this._deName.textContent = this._name;
         },
         get: function () {
@@ -159,9 +165,9 @@ p.useSave = function (save) {
 
     this._selectors = save.selectors || [];
 
-    this.name = save.name;
-    this.fill = save.fill;
-    this.iterations = save.iterations;
+    if ('name' in save) this.name = save.name;
+    if ('fill' in save) this.fill = save.fill;
+    if ('iterations' in save) this.iterations = save.iterations;
 
     if (save.parameters) {
 
@@ -272,7 +278,9 @@ p.moveParameter = function (param, way) {
     this._refreshParameterOrdering();
 };
 
-p.select = function () {
+p.select = function (opt) {
+
+    opt = opt || {};
 
     if (this._isSelected) return;
     this._isSelected = true;
@@ -283,12 +291,13 @@ p.select = function () {
     }
 
     this._handler.on('change', this._onChangeHandler);
+    window.addEventListener('resize', this._onWindowResize);
 
     this.selectElements();
 
     if (this._selectedElems.length) {
 
-        this._focusHandler(this._selectedElems[0]);
+        this._focusHandler(opt.focusElem || this._selectedElems[0]);
     }
 
     this.deHighlight.style.opacity = 1;
@@ -304,6 +313,8 @@ p.deselect = function () {
     this._blurHandler();
 
     this.deHighlight.style.opacity = 0;
+
+    window.removeEventListener('resize', this._onWindowResize);
 
     if (this._handler) {
 
@@ -340,10 +351,14 @@ p._onPick = function (de) {
 
 p.play = function () {
 
+    this._isPlaying = true;
+
     this._animPlay();
 };
 
 p.pause = function () {
+
+    this._isPlaying = false;
 
     window.cancelAnimationFrame(this._animPlayRafid);
 };
@@ -406,7 +421,7 @@ p._focusHandler = function (de) {
     var transformParam = this.getParameter('transform');
     var transformOriginParam = this.getParameter('transform-origin');
 
-    if (transformParam) {
+    if (transformParam instanceof CssTransformParameter) {
 
         _.extend(handOpt.params, transformParam.getRawValue());
     }
@@ -432,7 +447,7 @@ p._focusHandler = function (de) {
 
 p._blurHandler = function () {
 
-    // this._currHandledDe = undefined;
+    this._currHandledDe = undefined;
 
     if (this._handler && this._handler.domElem && this._handler.domElem.parentNode) {
 
@@ -534,6 +549,10 @@ p._onChangeHandler = function(params, type) {
 
 p._onChangeTime = function (time) {
 
+    if (this._isPlaying) {
+        return;
+    }
+
     this._parameters.forEach(function (param) {
 
         this.renderTime(time);
@@ -550,6 +569,12 @@ p._onChangeParameter = function () {
     this._refreshTgglKey();
 
     this.emit('change');
+};
+
+
+p._onWindowResize = function () {
+
+    this._focusHandler();
 };
 
 p._onDeleteParameter = function (param) {
@@ -630,12 +655,12 @@ p._onChangeName = function (name) {
     this.name = name;
 };
 
-p._onChangeFill = function (name) {
+p._onChangeFill = function (fill) {
 
     this.fill = fill;
 };
 
-p._onChangeIterations = function (name) {
+p._onChangeIterations = function (itarations) {
 
     this.iterations = itarations;
 };
@@ -754,6 +779,14 @@ p._createHeadOptions = function (){
     this._deName.style.height = this._baseH  + 'px';
     this._deName.style.cursor = 'pointer';
     this._deName.addEventListener('click', this._onClickName);
+
+    var deNameIcon = amgui.createIcon({
+        icon: 'cog',
+        parent: de
+    });
+    deNameIcon.style.display = 'none';
+    this._deName.addEventListener('mouseenter', function () {deNameIcon.style.display = 'inline-block';})
+    this._deName.addEventListener('mouseleave', function () {deNameIcon.style.display = 'none';})
 
     var space = document.createElement('div');
     space.style.display = 'inline-block';

@@ -59,10 +59,9 @@ p.setup = function (opt) {
 };
 
 p.activate = function () {
-console.log('activate')
+
     if (this._isActivated) return;
     this._isActivated = true;
-console.log('>activate')
 
     window.addEventListener('mousemove', this._onMouseMove);
     window.addEventListener('mousedown', this._onMouseDown);
@@ -70,10 +69,8 @@ console.log('>activate')
 
 p.deactivate = function () {
 
-console.log('deactivate')
     if (!this._isActivated) return;
     this._isActivated = false;
-console.log('>deactivate')
     
     window.removeEventListener('mousemove', this._onMouseMove);
     window.removeEventListener('mousedown', this._onMouseDown);

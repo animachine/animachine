@@ -38,7 +38,8 @@ function onSelectDomElement(de) {
                     console.log('selector:', selector);
 
                     var sequ = new CssSequence({
-                        selectors: [selector]
+                        selectors: [selector],
+                        name: selector
                     });
 
                     am.timeline.addSequence(sequ);
@@ -56,7 +57,7 @@ function onSelectDomElement(de) {
         if (sequ instanceof CssSequence && sequ.isOwnedDomElem(de)) {
 
             console.log('is owned', de)
-            sequ.select();
+            sequ.select({focusElem: de});
             am.domPicker.hide();
             return true;
         }

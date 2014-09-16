@@ -10,6 +10,7 @@ function DomPicker(opt) {
     this._crumbs = [];
 
     this._onMMove = this._onMMove.bind(this);
+    this._render = this._render.bind(this);
     window.addEventListener('mousemove', this._onMMove);
 
     this._createBase();
@@ -41,30 +42,45 @@ p.focusElem = function (target) {
 
     this._deTarget = target;
 
-    var br = target.getBoundingClientRect();
-    this.domElem.style.left = br.left + 'px';
-    this.domElem.style.top = br.top + 'px';
-    this.domElem.style.width = br.width + 'px';
-    this.domElem.style.height = br.height + 'px';
-    this.domElem.style.display = 'block';
 
-    var p = am.isPickableDomElem;
-    var top = p(target.parentElement)
-    var right = p(target.nextElementSibling)
-    var bottom = p(target.firstElementChild)
-    var left = p(target.previousElementSibling)
+    var p = am.isPickableDomElem,
+        top = p(target.parentElement),
+        right = p(target.nextElementSibling),
+        bottom = p(target.firstElementChild),
+        left = p(target.previousElementSibling);
+
     this._btnTop.style.display = top ? 'block' : 'none';
     this._btnRight.style.display = right ? 'block' : 'none';
     this._btnBottom.style.display = bottom ? 'block' : 'none';
     this._btnLeft.style.display = left ? 'block' : 'none';
+
+    this.domElem.style.display = 'block';
+
+    this._render();
+
+    this._rerenderSetI = setInterval(this._render, 123);
+    window.addEventListener('resize', this._render);
 
     this.emit('pick', target);
 };
 
 p.hide = function () {
 
+    clearInterval(this._rerenderSetI);
+    window.removeEventListener('resize', this._render);
+
     this.domElem.style.display = 'none';
 };
+
+p._render = function () {
+
+    var br = this._deTarget.getBoundingClientRect();
+
+    this.domElem.style.left = br.left + 'px';
+    this.domElem.style.top = br.top + 'px';
+    this.domElem.style.width = br.width + 'px';
+    this.domElem.style.height = br.height + 'px';
+}
 
 p._onMMove =  function (e) {
 

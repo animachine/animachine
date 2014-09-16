@@ -27,16 +27,16 @@ Object.defineProperties(p, {
     name: {
         set: function (v) {
 
-            if (this._name.value === v) {
+            if (this._name === v) {
                 return;
             }
 
-            this._name.value = v;
+            this._name = v;
             this._inpName.value = v;
             this.emit('changeName', v);
         },
         get: function () {
-            return this._name.value;
+            return this._name;
         }
     },
 
@@ -72,15 +72,16 @@ Object.defineProperties(p, {
     iterations: {
         set: function (v) {
 
-            if (this._inpIterations.value === v) {
+            if (this._iterations === v) {
                 return;
             }
 
+            this._iterations = v;
             this._inpIterations.value = v;
             this.emit('changeIterations', v);
         },
         get: function () {
-            return this._inpIterations.value;
+            return this._iterations;
         }
     },
 });
@@ -95,7 +96,10 @@ p.show = function (opt) {
     if ('fill' in opt) this.fill = opt.fill;
     if ('iterations' in opt) this.iterations = opt.iterations;
     if ('selectors' in opt) this.selectors = opt.selectors;
+
     if ('onChangeName' in opt) this.on('changeName', opt.onChangeName);
+    if ('onChangeFill' in opt) this.on('changeFill', opt.onChangeFill);
+    if ('onChangeIterations' in opt) this.on('changeIterations', opt.onChangeIterations);
     if ('onChangeSelectors' in opt) this.on('changeSelectors', opt.onChangeSelectors);
 
     this.domElem.showModal();
@@ -106,6 +110,8 @@ p.hide = function () {
     this.domElem.close();
 
     this.removeAllListeners('changeName');
+    this.removeAllListeners('changeFill');
+    this.removeAllListeners('changeIterations');
     this.removeAllListeners('changeSelectors');
 };
 
@@ -143,7 +149,7 @@ p._onSelectFill = function (e) {
 
 p._onChangeIterations = function () {
 
-    this.iterations = this._inpIterations.value;
+    this.iterations = parseInt(this._inpIterations.value);
 };
 
 
@@ -217,7 +223,9 @@ p._createContent = function () {
 
     this._inpIterations = document.createElement('input');
     this._inpIterations.type = 'number';
-    this._inpIterations.value = 1;
+    this._inpIterations.step = 1;
+    this._inpIterations.min = 0;
+    this._inpIterations.max = 999999999999;
     this._inpIterations.style.fontSize = '14px';
     this._inpIterations.style.fontFamily = amgui.FONT_FAMILY;
     this._inpIterations.style.background = 'none';

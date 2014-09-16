@@ -22,7 +22,7 @@ var externalStylesheets = [
 
 
 
-var handlerBuff = [];
+var isInited = false, handlerBuff = [];
 
 
 var am = window.am = module.exports = _.extend(new EventEmitter(), {
@@ -53,7 +53,24 @@ am.throwHandler = function (handler) {
     handlerBuff.push(handler);
 };
 
-domready(function () {
+am.open = function (save) {
+
+    am._init();
+
+    if (save) {
+
+        if (typeof(save) === 'string') {
+
+            save = JSON.parse(save);
+        }
+
+        am.timeline.useSave(save);
+    }
+}
+
+am._init = function () {
+
+    if (isInited) return;
 
     am.dialogs = {
         featureDoesntExist: dialogFeatureDoesntExits,
@@ -154,7 +171,7 @@ domready(function () {
     document.body.addEventListener('click', onClickRoot);
 
     modules.css.init(am);
-});
+};
 
 function onClickRoot(e) {
 

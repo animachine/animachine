@@ -5,6 +5,7 @@ function Chronicler() {
     this._stack = [], 
     this._pointer = -1;
     this._chains = [];
+    this._flagCounter = 0;
 }
 
 var p = Chronicler.prototype;
@@ -25,6 +26,60 @@ p.redo = function () {
     }
 };
 
+p.undo = function() {
+
+    if (this._pointer < 0) {
+
+        return false;
+    }
+
+    var rec = this._stack[this._pointer--];
+
+    if (typeof(rec) === 'number') {
+
+        var startFlagIdx = this._stack.indexOf(rec - 1);
+
+        if (startFlagIdx !== -1) {
+
+            while (this._pointer !== startFlagIdx) {
+
+                call(this._stack[this._pointer--].undo);
+            }
+
+            this._pointer--;
+        }
+    }
+    else {
+        call(rec.undo);
+    }
+};
+
+p.redo = function() {
+
+    if (this._pointer >= this._stack.length - 1) {
+
+        return false;
+    }
+
+    var rec = this._stack[++this._pointer];
+    
+    if (typeof(rec) === 'number') {
+
+        var endFlagIdx = this._stack.indexOf(rec + 1);
+
+        if (endFlagIdx !== -1) {
+
+            while (++this._pointer !== endFlagIdx) {
+
+                call(this._stack[this._pointer].redo);
+            }
+        }
+    }
+    else {
+        call(rec.redo);
+    }
+};
+
 function call(reg) {
 
     if (typeof reg === 'function') {
@@ -42,6 +97,42 @@ p.save = function (undo, redo) {
 
     this._stack.splice(++this._pointer, this._stack.length, reg);
 };
+
+
+
+
+
+
+
+p.startFlag = function () {
+
+        this.save([this._flagCounter++]);
+        return this._flagCounter++;
+};
+
+p.endFlag = function (flag) {
+
+    this.save([flag]);
+};
+
+p.wrap = function (fn, ctx) {
+
+    return function () {
+
+        var endFlag = this.startFlag();
+
+        fn.apply(ctx, Array.prototype.slice.call(arguments,  2));
+
+        this.endFlag(endFlag);
+    }.bind(this);
+};
+
+
+
+
+
+
+
 
 p.saveChain = function (id, undo, redo, delay) {
 

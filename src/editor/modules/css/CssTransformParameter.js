@@ -214,8 +214,11 @@ p._createTransformInputs = function () {
         inputs3d = this._inputs3d,
         onChangeInput = this._onChangeInput;
 
-    deOptions.style.height = lineH * this._lineCount + 'px';
+    deOptions.style.height = (lineH * this._lineCount) + 'px';
     deOptions.style.flexWrap = 'wrap';
+
+    this.deKeyline.style.height = lineH + 'px'
+    this.deKeyline.style.marginBottom = (lineH * (this._lineCount-1)) + 'px'
 
     var label = document.createElement('span');
     label.textContent = 'transform';

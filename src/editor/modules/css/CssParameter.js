@@ -79,7 +79,7 @@ p.getSave = function () {
         keys: [],
     }
 
-    this._keys.forEach(function (keySave) {
+    this._keys.forEach(function (key) {
 
         save.keys.push(key.getSave());
     });
@@ -107,7 +107,7 @@ p.getScriptKeys = function () {
             offset: am.timeline.length / key.time,
         }
 
-        k[param.name] = this.getValue(key.time);
+        k[this.name] = this.getValue(key.time);
         
         if (key.ease && key.ease !== 'linear') {
 

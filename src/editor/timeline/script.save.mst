@@ -13,13 +13,13 @@
 
     var reg = root.am.pageScripts.{{name}} = {
         
-        createPlayer: function () {
+        createPlayer: function (opt) {
 
             var sequencePlayers = [];
 
             sequPlayerGens.forEach(function (create) {
 
-                sequencePlayers.push(create());
+                sequencePlayers.push(create(opt))   ;
             });
 
             return {

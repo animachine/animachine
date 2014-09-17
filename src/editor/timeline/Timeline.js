@@ -134,8 +134,8 @@ p.useSave = function (save) {
 
     save.sequences.forEach(function (sequData) {
 
-        var SequClass = new am.sequenceTypes[sequData.type],
-            sequ = new SequClass(sequData);
+        var SequClass = am.sequenceTypes[sequData.type],
+            sequ = new SequClass(sequData.data);
 
         this.addSequence(sequ);
     }, this);

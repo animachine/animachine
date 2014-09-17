@@ -72,19 +72,22 @@ Object.defineProperties(p, {
 
     'currTime': {
         get: function () {
-            return this._timebar._currTime
+            return this._timebar._currTime;
         }
     },
-
     'timescale': {
         get: function () {
-            return this._timebar.timescale
+            return this._timebar.timescale;
         }
     },
-
     'sequences': {
         get: function () {
             return this._sequences;
+        }
+    },
+    'length': {
+        get: function () {
+            return this._timebar.length;
         }
     }
 });

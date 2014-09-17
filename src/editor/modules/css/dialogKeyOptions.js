@@ -1,3 +1,5 @@
+'use strict';
+
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../../amgui');
@@ -7,6 +9,7 @@ function DialogKeyOptions () {
     EventEmitter.call(this);
 
     this._onSelectEase = this._onSelectEase.bind(this);
+    this._onChangeEase = this._onChangeEase.bind(this);
     this._onChangeBezier = this._onChangeBezier.bind(this);
     this._onClickOk = this._onClickOk.bind(this); 
 }
@@ -14,13 +17,34 @@ function DialogKeyOptions () {
 inherits(DialogKeyOptions, EventEmitter);
 var p = DialogKeyOptions.prototype;
 
+Object.defineProperties(p, {
+
+    ease: {
+
+        set: function (v) {
+
+            if (this._ease === v) return;
+            
+            this._inpEase.value = v;
+            this._beizerEditor.setValue(v);
+
+            this.emit('changeEase', v);
+        },
+        get: function () {
+
+            return this._ease;
+        }
+    }
+});
+
+
 p.show = function (opt) {
 
     opt = opt || {};
 
     this._createDialog();
 
-    this.setValue(opt.ease);
+    this.ease = opt.ease;
 
     this.domElem.showModal();
 };
@@ -68,6 +92,7 @@ p._createContent = function () {
     this._inpEase.style.background = 'none';
     this._inpEase.style.border = 'none';
     this._inpEase.style.color = amgui.color.text;
+    this._inpEase.addEventListener('change', this._onChangeEase);
     this._deContent.appendChild(this._inpEase);
 
     this._btnSelectEase = amgui.createIconBtn({
@@ -80,9 +105,10 @@ p._createContent = function () {
     amgui.bindDropdown({
         deTarget: this._btnSelectEase,
         deMenu: amgui.createDropdown({
-            options: ['linear', 'ease', 'ease-in', 'ease-out', 'ease-in-out', 'cubic-beizer(0,0,1,1)'],
-            onSelect: this._onSelectEase
-        })
+            options: ['linear', 'ease', 'ease-in', 'ease-out', 'ease-in-out', 'steps(1)', 'cubic-bezier(0,0,1,1)'],
+            onSelect: this._onSelectEase,
+        }),
+        menuParent: this._deContent
     });
 
     this._beizerEditor = amgui.createBezierEditor({
@@ -100,22 +126,17 @@ p._onClickOk = function (e) {
 
 p._onSelectEase = function (e) {
 
-    this.setValue(e.detail.selection);
+    this.ease = e.detail.selection;
+};
+
+p._onChangeEase = function (e) {
+
+    this.ease = this._inpEase.value;
 };
 
 p._onChangeBezier = function (e) {
 
-    this.setValue(e.detail.value);
+    this.ease = e.detail.value;
 };
-
-p.setValue = function (v) {
-
-    if (this._inpEase.value === v) {
-        return;
-    }
-
-    this._inpEase.value = v;
-    this.emit('changeEase', v);
-}
 
 module.exports = new DialogKeyOptions();

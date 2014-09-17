@@ -316,6 +316,7 @@ p._createEndShadow = function () {
     this._deEndShadow.style.right = '0px';
     this._deEndShadow.style.height = '100%';
     this._deEndShadow.style.width = '0px';
+    this._deEndShadow.style.pointerEvents = 'none';
     this._deEndShadow.style.backgroundColor = 'rgba(83,83,83,0.73)';
     this.domElem.appendChild(this._deEndShadow); 
 
@@ -326,6 +327,7 @@ p._createEndShadow = function () {
     handler.style.height = '100%';
     handler.style.width = '3px';
     handler.style.cursor = 'ew-resize';
+    handler.style.pointerEvents = 'auto';
     this._deEndShadow.appendChild(handler);
 
     amgui.makeDraggable({

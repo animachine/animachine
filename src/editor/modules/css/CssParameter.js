@@ -104,7 +104,7 @@ p.getScriptKeys = function () {
     this._keys.forEach(function (key) {
 
         var k = {
-            offset: am.timeline.length / key.time,
+            offset: key.time / am.timeline.length,
         }
 
         k[this.name] = this.getValue(key.time);

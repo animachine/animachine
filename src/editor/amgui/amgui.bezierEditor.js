@@ -8,19 +8,24 @@ module.exports = function (_amgui) {
 
     return {
         createBezierEditor: createBezierEditor,
+
+        EASE2BEZIER: {
+            'ease': 'cubic-bezier(.25,.1,.25,1)',
+            'linear': 'cubic-bezier(0,0,1,1)',
+            'ease-in': 'cubic-bezier(.42,0,1,1)',
+            'ease-out': 'cubic-bezier(0,0,.58,1)',
+            'ease-in-out': 'cubic-bezier(.42,0,.58,1)',
+        },
     }
 };
-
-
-
 
 
 function createBezierEditor(opt) {
 
     opt = opt || {};
 
-    var p0 = {x: 0.3, y: 0.1},
-        p1 = {x: 0.7, y: 0.9},
+    var p0 = {x: 0.3, y: 0.3},
+        p1 = {x: 0.7, y: 0.7},
         w = opt.width || 312,
         h = opt.height || 312;
 
@@ -45,6 +50,34 @@ function createBezierEditor(opt) {
     };
 
     de.setValue = function (points) {
+
+        if (amgui.EASE2BEZIER.hasOwnProperty(points)) {
+
+            points = amgui.EASE2BEZIER[points];
+        }
+
+        if (typeof(points) === 'string') {
+
+            var rx = /cubic-bezier\(\s*([\d\.]+)\s*,\s*([\d\.]+)\s*,\s*([\d\.]+)\s*,\s*([\d\.]+)\s*\)/,
+                m = rx.exec(points);
+
+            if (m) {
+                points = {
+                    cp0x: m[1],
+                    cp0y: m[2],
+                    cp1x: m[3],
+                    cp1y: m[4],
+                };
+            }
+            else {
+                points = {
+                    cp0x: .3,
+                    cp0y: .3,
+                    cp1x: .7,
+                    cp1y: .7,
+                };
+            }
+        }
 
         p0.x = points.cp0x;
         p0.y = points.cp0y;
@@ -142,7 +175,7 @@ function createBezierEditor(opt) {
 
                 var md = {};
                 md.minY = minY();
-                md.fullY = maxY() - md.minY;
+                md.fullY = maxY() - md.minY;    
                 return md;
             },
             onMove: function (md, mx, my) {

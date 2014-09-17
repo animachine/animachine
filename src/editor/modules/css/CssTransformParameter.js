@@ -26,11 +26,11 @@ function CssTransformParameter (opt) {
 
     this._noBaseKeyValueInput = true;
 
-    CssParameter.call(this, _.extend({name: 'transform'}, opt));
-
     this._inputs = {};
     this._inputs3d = [];
     this._lineCount = 6;
+
+    CssParameter.call(this, _.extend({name: 'transform'}, opt));
 
     this._onToggle3d = this._onToggle3d.bind(this);
 
@@ -121,13 +121,17 @@ p.getRawValue = function (time) {
     }
 };
 
-p.addKey = function (opt) {
+p.addKey = function (opt, skipHistory) {
 
     var key = this.getKey(opt.time);
 
     if (key) {
 
         if ('value' in opt) {
+
+            if (!skipHistory) {
+                am.history.saveChain(key, [this.addKey, this, key, true], [this.addKey, this, opt, true]);
+            }
 
             key.value = _.extend(key.value, opt.value);
         }
@@ -140,6 +144,11 @@ p.addKey = function (opt) {
         key.on('delete', this._onDeleteKey);
 
         this._keys.push(key);
+
+        if (!skipHistory) {
+            am.history.closeChain(key);
+            am.history.save([this.removeKey, this, opt.time, true], [this.addKey, this, opt, true]);
+        }
     }
 
     this._refreshInput();

@@ -174,7 +174,9 @@ p.useSave = function (save) {
         save.parameters.forEach(this.addParameter, this);
     }
 
-    return save;
+    
+    this._refreshHeadKeyline();
+    this._refreshTgglKey();
 };
 
 p.getScript = function () {
@@ -719,8 +721,11 @@ p._refreshHeadKeyline = function () {
     times.forEach(function (time) {
 
         var key = oldKeys.pop() || new Key({
-            deKeyline: this._deHeadKeyline
+            deKeyline: this._deHeadKeyline,
+            ease: 'none'
         });
+
+        key.domElem.style.pointerEvents = 'none';//hack! until finish the control with head keys
 
         key.time = time;
 

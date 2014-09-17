@@ -42,6 +42,20 @@
         {{/saveJson}}
     };
 
+
+    if (typeof define === 'function' && define.amd) {
+        
+        define(function () {
+            return reg;
+        });
+    }
+
+    if (typeof exports === 'object') {
+        
+        module.exports = reg;
+    }
+
+
     {{#autoPlay}}
     if (document.readyState == 'interactive' || document.readyState == 'complete') {
 

@@ -116,39 +116,6 @@ am._init = function () {
         onClick: am.history.redo.bind(am.history)
     });
 
-    am.toolbar.addIcon({
-        icon: 'upload-cloud',
-        separator: 'global',
-        onClick: function () {
-            
-            am.storage.showSaveDialog({
-
-                getSave: function () {
-                    
-                    var opt = am.storage.getSaveOptions();
-
-                    return am.timeline.getScript(opt);
-                }
-            });
-        }
-    });
-
-    am.toolbar.addIcon({
-        icon: 'download-cloud',
-        separator: 'global',
-        onClick: function () {
-            am.storage.showOpenDialog({
-
-                onOpen: function (save) {
-
-                    console.log(save);
-
-                    am.timeline.clear();
-                    am.timeline.useSave(save);
-                }
-            });
-        }
-    });
 
     am.toolbar.addIcon({
         icon: 'megaphone',
@@ -171,7 +138,62 @@ am._init = function () {
     document.body.addEventListener('click', onClickRoot);
 
     modules.css.init(am);
+
+    createMenu();
+    createStatusLabel()
 };
+
+function createMenu() {
+    
+    var iconMenu = am.toolbar.addIcon({
+        icon: 'menu',
+        separator: 'global',
+    });
+
+    amgui.bindDropdown({
+        deTarget: iconMenu,
+        deMenu: amgui.createDropdown({
+            options: [
+                {text: 'new', onSelect: onSelectNew},
+                {text: 'save', onSelect: onSelectSave},
+                {text: 'saveAs', onSelect: onSelectSave},
+                {text: 'open', onSelect: onSelectOpen},
+            ]
+        })
+    });
+
+    function onSelectNew() {
+
+        am.timeline.clear();
+    }
+
+    function onSelectSave() {
+
+        am.storage.showSaveDialog({
+
+            getSave: function () {
+                
+                var opt = am.storage.getSaveOptions();
+
+                return am.timeline.getScript(opt);
+            }
+        });
+    }
+
+    function onSelectOpen() {
+
+        am.storage.showOpenDialog({
+
+            onOpen: function (save) {
+
+                console.log(save);
+
+                am.timeline.clear();
+                am.timeline.useSave(save);
+            }
+        });
+    }
+}
 
 function onClickRoot(e) {
 
@@ -370,6 +392,22 @@ function getBaseWorkspace() {
                 tabs: [{name: 'timeline'}],
             }]
     };
+}
+
+function createStatusLabel() {
+
+    var deTitle = amgui.createLabel({
+        caption: 'Animachine (alpha)',
+        parent: am.deDialogCont,
+        position: 'fixed',
+        fontSize: '18px'
+    });
+
+    deTitle.style.pointerEvents = 'none';
+    deTitle.style.top = '32px';
+    deTitle.style.left = '3px';
+    deTitle.style.opacity = '0.23';
+    deTitle.style.fontWeight = 'bold';
 }
 
 ///polyfills

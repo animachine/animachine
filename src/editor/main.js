@@ -75,7 +75,7 @@ am.open = function (save) {
 am._init = function () {
 
     if (isInited) return;
-
+    
     am.dialogs = {
         featureDoesntExist: dialogFeatureDoesntExits,
         feedback: dialogFeedback,

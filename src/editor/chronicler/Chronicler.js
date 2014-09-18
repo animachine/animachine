@@ -96,6 +96,8 @@ p.save = function (undo, redo) {
     var reg = {undo: undo, redo: redo};
 
     this._stack.splice(++this._pointer, this._stack.length, reg);
+
+    return reg;
 };
 
 
@@ -139,14 +141,16 @@ p.saveChain = function (id, undo, redo, delay) {
     var chain = this.getChain(id);
 
     if (chain) {
-
+        console.log('chain');
         chain.reg.redo = redo;
     }
     else {
+        console.log('new chain, id:', id);
         chain = {
             id: id,
             reg: this.save(undo, redo)
         };
+        this._chains.push(chain);
     }
 
     if (delay === undefined) {

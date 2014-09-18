@@ -43,7 +43,13 @@ function makeScrollable(opt) {
         
         pos = Math.max(0, Math.min(maxH, pos + way));
 
+        if (deRange) {
+
+            deRange.setValue(pos / maxH);
+        }
+
         scroll();
+
     }
 
     function onChangeRange(e) {

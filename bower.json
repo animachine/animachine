@@ -19,6 +19,7 @@
     "polymer": "~0.4.0",
     "lodash": "^2.4.1",
     "web-animations-js": "https://github.com/web-animations/web-animations-js.git",
-    "mustache": "~0.8.2"
+    "mustache": "~0.8.2",
+    "codemirror": "~4.5.0"
   }
 }

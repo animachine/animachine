@@ -17,10 +17,9 @@ var modules = {
 };
 var externalStylesheets = [
     // require('./assets/fontello/css/amgui.css'),
-    // require('./assets/dialog-polyfill.css'),
+    require('./am.css'),
 ];
-
-
+window.dialogScript = require('./modules/javascript/dialogScriptEditor');;
 
 var isInited = false, handlerBuff = [];
 
@@ -54,6 +53,11 @@ am.throwHandler = function (handler) {
 };
 
 am.open = function (save) {
+
+    if (!window.chrome) {
+    
+        return alertUnsupportedBrowsers();
+    }
 
     am._init();
 
@@ -140,7 +144,7 @@ am._init = function () {
     modules.css.init(am);
 
     createMenu();
-    createStatusLabel()
+    createStatusLabel();
 };
 
 function createMenu() {
@@ -240,7 +244,7 @@ am.isPickableDomElem = function (deTest) {
 
 function createAmRoot() {
 
-    // $('body').css('opacity', .23)
+    $('body').css('opacity', .23)
         // .mouseenter(function () {$('body').css('opacity', 1)})
         // .mouseleave(function () {$('body').css('opacity', .23)});
     
@@ -274,7 +278,7 @@ function createAmRoot() {
         var style = document.createElement('style');
         style.innerHTML = css;
         //TODO
-        // sr.appendChild(style);
+        sr.appendChild(style);
         // document.head.appendChild(style);
     });
 
@@ -408,6 +412,24 @@ function createStatusLabel() {
     deTitle.style.left = '3px';
     deTitle.style.opacity = '0.23';
     deTitle.style.fontWeight = 'bold';
+}
+
+function alertUnsupportedBrowsers() {
+
+    var deSorry = document.createElement('div');
+    deSorry.textContent = 'Sorry, this demo is currently only supported by chrome. ';
+    amgui.createIcon({icon: 'emo-unhappy', parent: deSorry, display: 'inline'})
+    deSorry.style.display = 'fixed';
+    deSorry.style.margin = 'auto';
+    deSorry.style.fontFamily = amgui.FONT_FAMILY;
+    deSorry.style.fontSize = '21px';
+    deSorry.style.color = amgui.color.text;
+    deSorry.style.background = amgui.color.overlay;
+    deSorry.style.top = 0;
+    deSorry.style.right = 0;
+    deSorry.style.bottom = 0;
+    deSorry.style.left = 0;
+    document.body.appendChild(deSorry);
 }
 
 ///polyfills

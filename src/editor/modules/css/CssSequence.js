@@ -174,7 +174,7 @@ p.useSave = function (save) {
         save.parameters.forEach(this.addParameter, this);
     }
 
-    
+    this._selectElements();
     this._refreshHeadKeyline();
     this._refreshTgglKey();
 };
@@ -295,7 +295,7 @@ p.select = function (opt) {
     this._handler.on('change', this._onChangeHandler);
     window.addEventListener('resize', this._onWindowResize);
 
-    this.selectElements();
+    this._selectElements();
 
     if (this._selectedElems.length) {
 
@@ -672,7 +672,7 @@ p._onChangeSelectors = function (selectors) {
     this._selectors.length = 0;
     this._selectors = this._selectors.concat(selectors);
 
-    this.selectElements();
+    this._selectElements();
 };
 
 
@@ -838,7 +838,7 @@ p.isOwnedDomElem = function (de) {
     return this._selectedElems.indexOf(de) !== -1;
 };
 
-p.selectElements = function () {
+p._selectElements = function () {
 
     var list = [];
 

@@ -57,7 +57,7 @@ function createDialog(opt) {
     titleEnd.style.verticalAlign = 'bottom';
     titleEnd.style.borderStyle = 'solid';
     titleEnd.style.borderWidth = '34px 0 0 8px';
-    titleEnd.style.borderColor = 'transparent transparent transparent ' + amgui.color.overlay;;
+    titleEnd.style.borderColor = 'transparent transparent transparent ' + amgui.color.overlay;
     de.appendChild(titleEnd);
 
     
@@ -102,6 +102,7 @@ function createDialog(opt) {
             btn.style.display = 'inline-block';
             btn.style.fontWeight = 'bold';
             btn.style.fontSize = '18px';
+            btn.style.background = 'none';
             buttonsCont.appendChild(btn);
 
             btn.addEventListener('click', function () {
@@ -122,7 +123,7 @@ function createDialog(opt) {
     buttonsEnd.style.verticalAlign = 'top';
     buttonsEnd.style.borderStyle = 'solid';
     buttonsEnd.style.borderWidth = '0 6px 21px 0';
-    buttonsEnd.style.borderColor = 'transparent '+amgui.color.bg0+' transparent transparent';
+    buttonsEnd.style.borderColor = 'transparent '+amgui.color.overlay+' transparent transparent';
     de.appendChild(buttonsEnd);
 
     return de;

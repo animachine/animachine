@@ -199,16 +199,4 @@ function () {
         
         module.exports = reg;
     }
-
-
-    if (document.readyState == 'interactive' || document.readyState == 'complete') {
-
-        reg.createPlayer().play();
-    }
-    else {
-        document.addEventListener('DOMContentLoaded', function () {
-
-            reg.createPlayer().play();
-        });
-    }
 }(this));

@@ -143,6 +143,8 @@ p.useSave = function (save) {
         this.addSequence(sequ);
     }, this);
 
+    _.invoke(this._sequences, 'renderTime', this.currTime);
+
     am.history.clear();
 };
 
@@ -376,7 +378,10 @@ p._onChangeTime = function () {
 
 p._onChangeTape = function () {
 
-    this._deKeylineCont.style.left = (this._timebar.start * this.timescale) + 'px';
+    var left = (this._timebar.start * this.timescale);
+
+    this._deKeylineCont.style.left = left + 'px';
+    this._deKeylineCont.style.width = 'calc(100% + ' + (-left) + 'px)';
 };
 
 p._onChangeSequenceHeight = function (sequ) {
@@ -510,41 +515,46 @@ p._createBase = function () {
     this._timebar.domElem.style.height = '23px';
     this._deRight.appendChild(this._timebar.domElem);
 
-    this._deKeylineContCont = document.createElement('div');
-    this._deKeylineContCont.style.position = 'relative';
-    this._deKeylineContCont.style.display = 'flex';
-    this._deKeylineContCont.style.flex = '1';
-    this._deKeylineContCont.style.height = '100%';
-    this._deKeylineContCont.style.width = '100%';
-    this._deKeylineContCont.style.overflow = 'hidden';
-    this._deRight.appendChild(this._deKeylineContCont);
+    this._deKeylineCont3 = document.createElement('div');
+    this._deKeylineCont3.style.position = 'relative';
+    this._deKeylineCont3.style.display = 'flex';
+    this._deKeylineCont3.style.flex = '1';
+    this._deKeylineCont3.style.height = '100%';
+    this._deKeylineCont3.style.width = '100%';
+    this._deKeylineCont3.style.overflow = 'hidden';
+    this._deRight.appendChild(this._deKeylineCont3);
 
-    this._deOptionsContCont = document.createElement('div');
-    this._deOptionsContCont.style.position = 'relative';
-    this._deOptionsContCont.style.flex = '1';
-    this._deOptionsContCont.style.width = '100%';
-    this._deOptionsContCont.style.height = '100%';
-    this._deOptionsContCont.style.overflow = 'hidden';
-    this._deLeft.appendChild(this._deOptionsContCont);
+    this._deOptionsCont2 = document.createElement('div');
+    this._deOptionsCont2.style.position = 'relative';
+    this._deOptionsCont2.style.flex = '1';
+    this._deOptionsCont2.style.width = '100%';
+    this._deOptionsCont2.style.height = '100%';
+    this._deOptionsCont2.style.overflow = 'hidden';
+    this._deLeft.appendChild(this._deOptionsCont2);
+
+    this._deKeylineCont2 = document.createElement('div');
+    this._deKeylineCont2.style.position = 'relative';
+    this._deKeylineCont2.style.flex = '1';
+    this._deKeylineCont3.appendChild(this._deKeylineCont2);
 
     this._deKeylineCont = document.createElement('div');
     this._deKeylineCont.style.position = 'relative';
-    this._deKeylineCont.style.flex = '1';
-    this._deKeylineContCont.appendChild(this._deKeylineCont);
+    this._deKeylineCont.style.width = '100%';
+    this._deKeylineCont2.appendChild(this._deKeylineCont);
 
     this._deOptionsCont = document.createElement('div');
     this._deOptionsCont.style.position = 'relative';
-    this._deOptionsContCont.appendChild(this._deOptionsCont);
+    this._deOptionsCont2.appendChild(this._deOptionsCont);
 
     this._deRange = amgui.createRange({
         width: '6px',
-        height: '100%',
-        parent: this._deKeylineContCont,
+        height: 'auto',
+        parent: this._deKeylineCont3,
         vertical: true
     });
 
     amgui.makeScrollable({
-        deCont: [this._deOptionsContCont, this._deKeylineContCont],
+        deCont: [this._deOptionsCont2, this._deKeylineCont3],
         deTarget: [this._deOptionsCont, this._deKeylineCont],
         deRange: this._deRange
     });

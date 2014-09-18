@@ -57,7 +57,7 @@ function createKeyline(opt) {
 
     function onKeyRemove () {
 
-        var deKey = this;
+        var deKey = this,
             idx = deKeys.indexOf(deKey);
 
         if (idx === -1) {
@@ -72,6 +72,8 @@ function createKeyline(opt) {
         if (deKey.parentNode) {
             deKey.parentNode.removeChild(deKey);
         }
+
+        renderEase();
     }
 
     function renderEase() {
@@ -196,7 +198,7 @@ function createKey(opt) {
 
         if (de.ease === ease) {
             return;
-        }
+        }   
 
         de.ease = ease;
 

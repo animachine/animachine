@@ -248,26 +248,33 @@ p.getValue = function (time) {
 
 p.removeKey = function (key, skipHistory) {
 
+    if (typeof(key) === 'number') {
+
+        key = this.getKey(key);
+    }
+
+    var idx = this._keys.indexOf(key);
+
+    if (idx === -1) {
+
+        return;
+    }
+
     if (!skipHistory) {
         am.history.save([this.addKey, this, key, true],
             [this.removeKey, this, key, true]);
     }
 
-    var idx = this._keys.indexOf(key);
+    this._keys.splice(idx, 1);
 
-    if (idx !== -1) {
+    key.dispose();
 
-        this._keys.splice(idx, 1);
+    key.removeListener('changeTime', this._onChangeKeyTime);
+    key.removeListener('delete', this._onDeleteKey);
 
-        key.dispose();
+    this._refreshBtnToggleKey();
 
-        key.removeListener('changeTime', this._onChangeKeyTime);
-        key.removeListener('delete', this._onDeleteKey);
-
-        this._refreshBtnToggleKey();
-
-        this.emit('change');
-    }
+    this.emit('change');
 };
 
 p.getKey = function (time) {

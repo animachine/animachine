@@ -3,6 +3,7 @@ var gulp = require('gulp');
 var gutil = require('gulp-util');
 var connect = require('gulp-connect');
 var concat = require('gulp-concat');
+var concatCss = require('gulp-concat-css');
 var rimraf = require('gulp-rimraf');
 var size = require('gulp-size');
 var watch = require('gulp-watch');
@@ -30,12 +31,15 @@ gulp.task('clean', function(cb) {
 gulp.task('vendor', function () {
   return gulp.src([
       paths.assets + 'js/webfont.js',
+      paths.node + 'css.escape/css.escape.js',
       paths.bower + 'web-animations-js/web-animations.js',
       paths.bower + 'lodash/dist/lodash.min.js',
       paths.bower + 'jquery/dist/jquery.js',
       paths.bower + 'jQuery.Autosize.Input/jquery.autosize.input.js',
+      paths.bower + 'jReject/js/jquery.reject.js',
       paths.bower + 'mustache/mustache.js',
-      paths.node + 'css.escape/css.escape.js',
+      paths.bower + 'codemirror/lib/codemirror.js',
+      paths.bower + 'codemirror/mode/javascript/javascript.js',
       // paths.bower + 'pojoviz/build/pojoviz-vendor.js',
       // paths.bower + 'pojoviz/build/pojoviz.js',
       // paths.bower + 'pojoviz-renderers.js',
@@ -98,6 +102,16 @@ gulp.task('js', function () {
   return rebundle();
 });
 
+gulp.task('css', function () {
+
+  return gulp.src([
+    paths.bower + 'codemirror/lib/codemirror.css',
+    paths.bower + 'codemirror/theme/pastel-on-dark.css'
+  ])
+    .pipe(concatCss('am.css'))
+    .pipe(gulp.dest('src/editor/'));
+});
+
 gulp.task('js-chrome', function () {
 
   var files = ['./build/vendor.js', './build/main.js', './src/chrome/js/content_script_footer.js'];
@@ -121,5 +135,5 @@ gulp.task('connect', function() {
 
 
 gulp.task('dev',  function (cb) {
-  runSequence('clean', ['init-build', 'init-build-chrome'], 'init-build-chrome-assets', 'vendor', 'connect', 'js', 'js-chrome', cb);
+  runSequence('clean', 'css', ['init-build', 'init-build-chrome'], 'init-build-chrome-assets', 'vendor', 'connect', 'js', 'js-chrome', cb);
 });

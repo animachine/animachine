@@ -20,7 +20,8 @@ function Key (opt) {
     this.domElem = this._deKeyline.addKey({
         timescale: am.timeline.timescale,
         time: this.time,
-        ease: this.ease
+        ease: this.ease,
+        color: opt.color
     });
 
     this._deMenu = amgui.createDropdown({

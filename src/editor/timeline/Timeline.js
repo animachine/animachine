@@ -281,6 +281,8 @@ p.removeSequence = function (sequ, skipHistory) {
     sequ.removeListener('delete', this._onDeleteSequence);
     sequ.removeListener('move', this._onMoveSequence);
     sequ.removeListener('changeHeight', this._onChangeSequenceHeight);
+
+    sequ.dispose();
 };
 
 p.moveSequence = function (sequ, way) {
@@ -424,8 +426,8 @@ p._refreshSequenceOrdering = function () {
 
         var sequData = this._mapSequenceDatas.get(sequ);
 
-        this._deOptionsCont.appendChild(sequData.deOptions);
-        this._deKeylineCont.appendChild(sequData.deKeyline);
+        this._deOptionsCont.appendChild(sequData.deContOpt);
+        this._deKeylineCont.appendChild(sequData.deContKf);
     }, this);
 };
 

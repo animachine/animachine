@@ -134,7 +134,7 @@ function createRange(opt) {
     de.style.position = 'relative';
     de.style.width = opt.width || '12px';
     de.style.height = opt.height || '140px';
-    de.style.background = 'grey';
+    de.style.background = amgui.color.bg1;
     de.style.cursor = 'pointer';
 
     var deCursor = document.createElement('div');
@@ -142,7 +142,7 @@ function createRange(opt) {
     deCursor.style[d('left','top')] = '0';
     deCursor.style[d('right','bottom')] = '0';
     deCursor.style.margin = d('auto 0','0 auto');
-    deCursor.style.background = 'orange';
+    deCursor.style.background = amgui.color.bg3;
     deCursor.style[d('width','height')] = opt.cursorHeight || '100%';
     de.appendChild(deCursor);
 

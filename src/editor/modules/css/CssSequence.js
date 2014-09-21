@@ -722,7 +722,8 @@ p._refreshHeadKeyline = function () {
 
         var key = oldKeys.pop() || new Key({
             deKeyline: this._deHeadKeyline,
-            ease: 'none'
+            ease: 'none',
+            color: '#063501'
         });
 
         key.domElem.style.pointerEvents = 'none';//hack! until finish the control with head keys
@@ -851,6 +852,13 @@ p._selectElements = function () {
 
     this._selectedElems = list;
 };
+
+p.dispose = function () {
+
+    am.timeline.removeListener('changeTime', this._onChangeTime);
+
+    //TODO
+}
 
 module.exports = CssSequence;
 

@@ -125,6 +125,10 @@ function createKeyline(opt) {
 
 function createKey(opt) {
 
+    opt = opt || {};
+
+    opt.color = opt.color || '#7700ff';
+
     var isUserSelected = false, 
         mdx, mDragged,
         time = opt.time || 0, 
@@ -139,7 +143,7 @@ function createKey(opt) {
     key.style.height = '0';
     key.style.borderStyle = 'solid';
     key.style.borderWidth = '21px 4px 0 4px';
-    key.style.borderColor = '#7700ff transparent transparent transparent';
+    key.style.borderColor = opt.color + ' transparent transparent transparent';
     de.appendChild(key);
 
     amgui.makeDraggable({

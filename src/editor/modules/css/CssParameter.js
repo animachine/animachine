@@ -143,6 +143,7 @@ p.addKey = function (opt, skipHistory) {
     else {
 
         key = new Key(_.extend({deKeyline: this.deKeyline}, opt));
+        key.value = opt.value || this.getValue(opt.time);
 
         key.on('changeTime', this._onChangeKeyTime);
         key.on('delete', this._onDeleteKey);
@@ -440,5 +441,10 @@ p._createParameterOptions = function () {
 
     return de;
 };
+
+p.dispose = function () {
+
+    //TODO
+}
 
 module.exports = CssParameter;

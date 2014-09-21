@@ -201,8 +201,9 @@ function createMenu() {
 
 function onClickRoot(e) {
 
-    if (am.isPickableDomElem(e.target)) {
-
+    if (am.isPickableDomElem(e.target) && 
+        e.target !== am.selectedElement) //hack!
+    {
         am.domPicker.focusElem(e.target);
     }
 }
@@ -244,7 +245,7 @@ am.isPickableDomElem = function (deTest) {
 
 function createAmRoot() {
 
-    $('body').css('opacity', .23)
+    // $('body').css('opacity', .23)
         // .mouseenter(function () {$('body').css('opacity', 1)})
         // .mouseleave(function () {$('body').css('opacity', .23)});
     

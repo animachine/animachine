@@ -38,7 +38,7 @@ function makeScrollable(opt) {
 
     function onWheel(e) {
 
-        var way = e.deltaY/18,
+        var way = e.deltaY/3,
             maxH = getTargetMaxH();
         
         pos = Math.max(0, Math.min(maxH, pos + way));

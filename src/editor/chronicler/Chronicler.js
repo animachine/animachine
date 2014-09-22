@@ -141,11 +141,11 @@ p.saveChain = function (id, undo, redo, delay) {
     var chain = this.getChain(id);
 
     if (chain) {
-        console.log('chain');
+        
         chain.reg.redo = redo;
     }
     else {
-        console.log('new chain, id:', id);
+
         chain = {
             id: id,
             reg: this.save(undo, redo)

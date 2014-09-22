@@ -134,7 +134,7 @@ p.addKey = function (opt, skipHistory) {
                     [this.addKey, this, _.cloneDeep(key.getSave()), true], 
                     [this.addKey, this, _.cloneDeep(opt), true]);
             }
-            console.log(opt.value);
+            
             key.value = _.extend(key.value, opt.value);
         }
     }

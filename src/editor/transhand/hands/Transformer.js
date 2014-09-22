@@ -93,7 +93,7 @@ p._refreshPoints = function () {
 
     base.x += params.tx;
     base.y += params.ty;
-
+    
     po.x = base.x + (base.w * params.ox);
     po.y = base.y + (base.h * params.oy);
 
@@ -125,10 +125,10 @@ p._renderHandler = function () {
         or = this._originRadius,
         ctx = c.getContext('2d'),
         margin = 7,
-        minX = Math.min(p[0].x, p[1].x, p[2].x, p[3].x),
-        maxX = Math.max(p[0].x, p[1].x, p[2].x, p[3].x),
-        minY = Math.min(p[0].y, p[1].y, p[2].y, p[3].y),
-        maxY = Math.max(p[0].y, p[1].y, p[2].y, p[3].y);
+        minX = Math.min(p[0].x, p[1].x, p[2].x, p[3].x, po.x),
+        maxX = Math.max(p[0].x, p[1].x, p[2].x, p[3].x, po.x),
+        minY = Math.min(p[0].y, p[1].y, p[2].y, p[3].y, po.y),
+        maxY = Math.max(p[0].y, p[1].y, p[2].y, p[3].y, po.y);
 
     c.style.left = (minX - margin) + 'px';
     c.style.top = (minY - margin) + 'px';
@@ -395,7 +395,7 @@ p._setFinger = function (e) {
         this._cursorFunc = this._getScaleCursor;
     }
     else {
-        this._cursorFunc = undefined
+        this._cursorFunc = undefined;
         
         if (this._finger) {
 

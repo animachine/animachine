@@ -301,7 +301,7 @@ p.play = function () {
     if (this._isPlaying) return;
     this._isPlaying = true;
 
-    this._btnTogglePlay.setToggle(false);
+    this._btnTogglePlay.setToggle(true);
 
     _.invoke(this._sequences, 'play', this.currTime);
 
@@ -315,7 +315,7 @@ p.pause = function () {
     if (!this._isPlaying) return;
     this._isPlaying = false;
 
-    this._btnTogglePlay.setToggle(true);
+    this._btnTogglePlay.setToggle(false);
 
     _.invoke(this._sequences, 'pause');
 

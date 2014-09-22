@@ -20,7 +20,7 @@ function CssSequence(opt) {
     this._baseH = 21;
     this._selectedElems = [];
     this._headKeys = [];
-    this._isOpened = false;
+    this._isShowingParams = false;
     this._isHidingSelectedElems = false;
     this._isPlaying = false;
 
@@ -32,8 +32,8 @@ function CssSequence(opt) {
     this._onMoveParameter = this._onMoveParameter.bind(this);
     this._onChangeBlankParameter = this._onChangeBlankParameter.bind(this);
     this._onClickTgglKey = this._onClickTgglKey.bind(this);
-    this._onToggleParams = this._onToggleParams.bind(this);
-    this._onClickTggHide = this._onClickTggHide.bind(this);
+    this._onClickTgglHide = this._onClickTgglHide.bind(this);
+    this._onClickTgglShowParams = this._onClickTgglShowParams.bind(this);
     this._onClickName = this._onClickName.bind(this);
     this._onChangeName = this._onChangeName.bind(this);
     this._onChangeIterations = this._onChangeIterations.bind(this);
@@ -81,7 +81,7 @@ Object.defineProperties(p, {
 
             var ret = this._baseH;
 
-            if (this._isOpened) {
+            if (this._isShowingParams) {
 
                 this._parameters.forEach(function (param) {
 
@@ -147,6 +147,7 @@ p.getSave = function () {
         iterations: this.iterations,
         selectors: _.clone(this._selectors),
         parameters: [],
+        isShowingParams: this._isShowingParams,
     };
 
     this._parameters.forEach(function (param) {
@@ -177,6 +178,11 @@ p.useSave = function (save) {
     this._selectElements();
     this._refreshHeadKeyline();
     this._refreshTgglKey();
+
+    if (save.isShowingParams) {
+
+        this._showParams();
+    }
 };
 
 p.getScript = function () {
@@ -499,6 +505,24 @@ p._showSelectedElems = function () {
     });
 };
 
+p._showParams = function () {
+
+    if (this._isShowingParams) return;
+    this._isShowingParams = true;
+
+    this._tgglParams.setToggle(true);
+    this.emit('changeHeight', this);
+};
+
+p._hideParams = function () {
+
+    if (!this._isShowingParams) return;
+    this._isShowingParams = false;
+
+    this._tgglParams.setToggle(false);
+    this.emit('changeHeight', this);
+};
+
 
 
 
@@ -622,13 +646,17 @@ p._onClickTgglKey = function () {
     this._refreshTgglKey();
 };
 
-p._onToggleParams = function (e) {
+p._onClickTgglShowParams = function () {
 
-    this._isOpened = e.detail.state;
-    this.emit('changeHeight', this);
+    if (this._isShowingParams) {
+        this._hideParams();
+    }
+    else {
+        this._showParams();
+    }
 };
 
-p._onClickTggHide = function () {
+p._onClickTgglHide = function () {
 
     if (this._isHidingSelectedElems) {
         this._showSelectedElems();
@@ -777,7 +805,7 @@ p._createHeadOptions = function (){
         iconOn: 'angle-down',
         iconOff: 'angle-right',
         height: this._baseH,
-        onToggle: this._onToggleParams,
+        onClick: this._onClickTgglShowParams,
         parent: de
     });
 
@@ -805,7 +833,7 @@ p._createHeadOptions = function (){
         iconOff: 'eye', 
         height: this._baseH,
         defaultToggle: false,
-        onClick: this._onClickTggHide,
+        onClick: this._onClickTgglHide,
         changeColor: true,
         parent: de
     });

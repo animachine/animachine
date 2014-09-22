@@ -36,12 +36,10 @@ function CssSequence(opt) {
     this._onClickTgglShowParams = this._onClickTgglShowParams.bind(this);
     this._onClickName = this._onClickName.bind(this);
     this._onChangeName = this._onChangeName.bind(this);
-    this._onChangeIterations = this._onChangeIterations.bind(this);
     this._onChangeName = this._onChangeName.bind(this);
     this._onChangeFill = this._onChangeFill.bind(this);
     this._onChangeIterations = this._onChangeIterations.bind(this);
     this._onChangeSelectors = this._onChangeSelectors.bind(this);
-    this._onWindowResize = this._onWindowResize.bind(this);
     this._onWindowResize = this._onWindowResize.bind(this);
     this._animPlay = this._animPlay.bind(this);
 
@@ -216,7 +214,7 @@ p.addParameter = function (opt, skipHistory) {
 
     opt = opt || {};
 
-    var param = this.getParameter(opt.name);
+    var param = this._getParameter(opt.name);
     
 
     if (param) {
@@ -426,8 +424,8 @@ p._focusHandler = function (de) {
         },
         params: {}
     };
-    var transformParam = this.getParameter('transform');
-    var transformOriginParam = this.getParameter('transform-origin');
+    var transformParam = this._getParameter('transform');
+    var transformOriginParam = this._getParameter('transform-origin');
 
     if (transformParam instanceof CssTransformParameter) {
 
@@ -627,7 +625,7 @@ p._onChangeBlankParameter = function () {
 
 p._onClickTgglKey = function () {
 
-    var time = am.timeline.currTime;
+    var time = am.timeline.currTime,
         allHaveKey = this._isAllParamsHaveKey(time);
 
     this._parameters.forEach(function (param) {
@@ -721,7 +719,7 @@ p._isAllParamsHaveKey = function (time) {
     });
 };
 
-p.getParameter = function (name) {
+p._getParameter = function (name) {
 
     return this._parameters.find(function(param) {
 

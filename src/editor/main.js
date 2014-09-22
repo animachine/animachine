@@ -13,7 +13,8 @@ var DomPicker = require('./dom-picker');
 var dialogFeatureDoesntExits = require('./commonDialogs/dialogFeatureDoesntExits');
 var dialogFeedback = require('./commonDialogs/dialogFeedback');
 var modules = {
-    css: require('./modules/css')
+    css: require('./modules/css'),
+    js: require('./modules/javascript')
 };
 var externalStylesheets = [
     // require('./assets/fontello/css/amgui.css'),

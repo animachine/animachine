@@ -1,6 +1,6 @@
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
-var dialogKeyOptions = require('./dialogKeyOptions');
+var dialogScriptEditor = require('./dialogScriptEditor');
 var amgui = require('../../amgui');
 
 function Key (opt) {

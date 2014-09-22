@@ -2,7 +2,6 @@
 
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
-var uncalc = require('./uncalc');
 var Key = require('./Key');
 var amgui = require('../../amgui');
 

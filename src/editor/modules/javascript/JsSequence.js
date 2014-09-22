@@ -1,8 +1,8 @@
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../../amgui');
-var CssParameter = require('./CssParameter');
-var Key = require('./Key');
+var IntervalScript = require('./IntervalScript');
+var MomentScript = require('./MomentScript');
 var mstPlayer = require('./script.player.mst');
 var dialogSequOptions = require('./dialogSequOptions');
 
@@ -13,7 +13,7 @@ function JsSequence(opt) {
     this._intervalScripts = [];
     this._momentScripts = [];
     this._baseH = 21;
-    this._isShowingInternalScrips = false;
+    this._isShowingIntervalScrips = false;
     this._isHidingSelectedElems = false;
     this._isPlaying = false;
 
@@ -63,11 +63,11 @@ Object.defineProperties(p, {
 
             var ret = this._baseH;
 
-            if (this._isShowingInternalScrips) {
+            if (this._isShowingIntervalScrips) {
 
-                this._intervalScripts.forEach(function (internalScript) {
+                this._intervalScripts.forEach(function (intervalScript) {
 
-                    ret += internalScript.height;
+                    ret += intervalScript.height;
                 });
             }
 
@@ -99,16 +99,13 @@ p.getSave = function () {
 
     var save = {
         name: this.name,
-        fill: this.fill,
-        iterations: this.iterations,
-        selectors: _.clone(this._selectors),
-        parameters: [],
-        isShowingIntervalScripts: this._isShowingInternalScrips,
+        intervalScripts: [],
+        isShowingIntervalScripts: this._isShowingIntervalScrips,
     };
 
-    this._intervalScripts.forEach(function (internalScript) {
+    this._intervalScripts.forEach(function (intervalScript) {
 
-        save.parameters.push(internalScript.getSave());
+        save.intervalScripts.push(intervalScript.getSave());
     });
 
     return save;
@@ -124,9 +121,9 @@ p.useSave = function (save) {
 
     if ('name' in save) this.name = save.name
 
-    if (save.parameters) {
+    if (save.intervalScripts) {
 
-        save.parameters.forEach(this.addParameter, this);
+        save.intervalScripts.forEach(this._addIntervalScript, this);
     }
 
     this._selectElements();
@@ -143,9 +140,9 @@ p.getScript = function () {
 
     var paramKeys = [], code = '', options, selectors;
 
-    this._intervalScripts.forEach(function (internalScript) {
+    this._intervalScripts.forEach(function (intervalScript) {
 
-        paramKeys.push(internalScript.getScriptKeys());
+        paramKeys.push(intervalScript.getScriptKeys());
     });
 
     options = {
@@ -166,54 +163,54 @@ p.getScript = function () {
     return code;
 };
 
-p.addParameter = function (opt, skipHistory) {
+p._addIntervalScript = function (opt, skipHistory) {
 
     opt = opt || {};
 
-    var internalScript = this.getParameter(opt.name);
+    var intervalScript = this.getParameter(opt.name);
     
 
-    if (internalScript) {
+    if (intervalScript) {
 
-        return internalScript;
+        return intervalScript;
     }
     else {
 
         if (opt.name === 'transform') {
 
-            internalScript = new CssTransformParameter(opt);
+            intervalScript = new CssTransformParameter(opt);
         }
         else {
 
-            internalScript = new CssParameter(opt);
+            intervalScript = new IntervalScript(opt);
         }
 
         if (!skipHistory) {
-            am.history.save([this.removeIntervalScript, this, internalScript, true],
-                [this.addParameter, this, internalScript, true]);
+            am.history.save([this.removeIntervalScript, this, intervalScript, true],
+                [this._addIntervalScript, this, intervalScript, true]);
         }
 
-        this._intervalScripts.push(internalScript);
-        internalScript.on('change', this._onChangeIntervalScript);
-        internalScript.on('delete', this._onDeleteIntervalScript);
-        internalScript.on('move', this._onMoveIntervalScript);
+        this._intervalScripts.push(intervalScript);
+        intervalScript.on('change', this._onChangeIntervalScript);
+        intervalScript.on('delete', this._onDeleteIntervalScript);
+        intervalScript.on('move', this._onMoveIntervalScript);
 
-        this._refreshInternalScriptOrdering();
+        this._refreshIntervalScriptOrdering();
         this._moveBlankParameterDown();
         this.emit('changeHeight', this);
 
-        return internalScript;
+        return intervalScript;
     }
 };
 
-p.removeIntervalScript = function (internalScript, skipHistory) {
+p.removeIntervalScript = function (intervalScript, skipHistory) {
 
     if (!skipHistory) {
-        am.history.save([this.addParameter, this, internalScript, true],
-            [this.removeIntervalScript, this, internalScript, true]);
+        am.history.save([this._addIntervalScript, this, intervalScript, true],
+            [this.removeIntervalScript, this, intervalScript, true]);
     }
 
-    var idx = this._intervalScripts.indexOf(internalScript);
+    var idx = this._intervalScripts.indexOf(intervalScript);
 
     if (idx === -1) {
         return;
@@ -221,23 +218,23 @@ p.removeIntervalScript = function (internalScript, skipHistory) {
 
     this._intervalScripts.splice(idx, 1);
 
-    internalScript.removeListener('change', this._onChangeIntervalScript);
-    internalScript.removeListener('delete', this._onDeleteIntervalScript);
-    internalScript.removeListener('move', this._onMoveIntervalScript);
+    intervalScript.removeListener('change', this._onChangeIntervalScript);
+    intervalScript.removeListener('delete', this._onDeleteIntervalScript);
+    intervalScript.removeListener('move', this._onMoveIntervalScript);
 
-    $(internalScript.deOptions).remove();
-    $(internalScript.deKeyline).remove();
+    $(intervalScript.deOptions).remove();
+    $(intervalScript.deKeyline).remove();
 };
 
-p.moveIntervalScript = function (internalScript, way) {
+p.moveIntervalScript = function (intervalScript, way) {
 
-    var idx = this._intervalScripts.indexOf(internalScript);
+    var idx = this._intervalScripts.indexOf(intervalScript);
 
     this._intervalScripts.splice(idx, 1);
     idx = Math.min(this._intervalScripts.length, Math.max(0, idx + way));
-    this._intervalScripts.splice(idx, 0, internalScript);
+    this._intervalScripts.splice(idx, 0, intervalScript);
 
-    this._refreshInternalScriptOrdering();
+    this._refreshIntervalScriptOrdering();
 };
 
 p.select = function (opt) {
@@ -268,11 +265,11 @@ p.renderTime = function (time) {
 
     var selection = _.toArray(am.deRoot.querySelectorAll(this._selectors.join(',')));
 
-    this._intervalScripts.forEach(function (internalScript) {
+    this._intervalScripts.forEach(function (intervalScript) {
 
         selection.forEach(function (de) {
 
-            de.style[internalScript.name] = internalScript.getValue(time);
+            de.style[intervalScript.name] = intervalScript.getValue(time);
         });
     });
 };
@@ -321,8 +318,8 @@ p._animPlay = function () {
 
 p._showIntervalScripts = function () {
 
-    if (this._isShowingInternalScrips) return;
-    this._isShowingInternalScrips = true;
+    if (this._isShowingIntervalScrips) return;
+    this._isShowingIntervalScrips = true;
 
     this._tgglShowIntervalScripts.setToggle(true);
     this.emit('changeHeight', this);
@@ -330,8 +327,8 @@ p._showIntervalScripts = function () {
 
 p._hideIntervalScripts = function () {
 
-    if (!this._isShowingInternalScrips) return;
-    this._isShowingInternalScrips = false;
+    if (!this._isShowingIntervalScrips) return;
+    this._isShowingIntervalScrips = false;
 
     this._tgglShowIntervalScripts.setToggle(false);
     this.emit('changeHeight', this);
@@ -354,7 +351,7 @@ p._onChangeTime = function (time) {
 //TODO
     this._refreshTgglKey();
     
-    this._intervalScripts.forEach(function (internalScript) {
+    this._intervalScripts.forEach(function (intervalScript) {
 
         this.renderTime(time);
         this._focusHandler();
@@ -368,19 +365,19 @@ p._onChangeIntervalScript = function () {
     this.emit('change');
 };
 
-p._onDeleteIntervalScript = function (internalScript) {
+p._onDeleteIntervalScript = function (intervalScript) {
 
-    this.removeIntervalScript(internalScript);
+    this.removeIntervalScript(intervalScript);
 };
 
-p._onMoveIntervalScript = function (internalScript, way) {
+p._onMoveIntervalScript = function (intervalScript, way) {
 
-    this.moveIntervalScript(internalScript, way);
+    this.moveIntervalScript(intervalScript, way);
 };
 
 p._onClickTgglShowIntervalScripts = function () {
 
-    if (this._isShowingInternalScrips) {
+    if (this._isShowingIntervalScrips) {
         this._hideIntervalScripts   ();
     }
     else {
@@ -428,12 +425,12 @@ p._refreshTgglMomentScript = function () {
     //TODO
 };
 
-p._refreshInternalScriptOrdering = function () {
+p._refreshIntervalScriptOrdering = function () {
 
-    this._intervalScripts.forEach(function (internalScript) {
+    this._intervalScripts.forEach(function (intervalScript) {
 
-        this.deOptions.appendChild(internalScript.deOptions);
-        this.deKeys.appendChild(internalScript.deKeyline);
+        this.deOptions.appendChild(intervalScript.deOptions);
+        this.deKeys.appendChild(intervalScript.deKeyline);
     }, this);
 };
 

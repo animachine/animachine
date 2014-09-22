@@ -202,21 +202,30 @@ function createMenu() {
 
 function onClickRoot(e) {
 
-    if (am.isPickableDomElem(e.target) && 
-        e.target !== am.selectedElement) //hack!
-    {
-        am.domPicker.focusElem(e.target);
+    if (am.isPickableDomElem(e.target)) {
+        
+        if (e.target !== am.selectedElement) {//hack!
+            
+            am.domPicker.focusElem(e.target);
+        }
+    }
+    else {
+        setSelectedElement(undefined);
     }
 }
 
 function onSelectWithDomPicker(de) {
+
+    setSelectedElement(de);
+}
+
+function setSelectedElement(de) {
 
     if (am.selectedElement !== de) {
 
         am.selectedElement = de;
         am.emit('selectDomElement', am.selectedElement);
     }
-
 }
 
 am.isPickableDomElem = function (deTest) {

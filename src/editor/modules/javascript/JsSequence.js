@@ -103,12 +103,18 @@ p.getSave = function () {
     var save = {
         name: this.name,
         intervalScripts: [],
+        momentScripts: [],
         isShowingIntervalScripts: this._isShowingIntervalScrips,
     };
 
     this._intervalScripts.forEach(function (intervalScript) {
 
         save.intervalScripts.push(intervalScript.getSave());
+    });
+
+    this._momentScripts.forEach(function (momentScript) {
+
+        save.momentScripts.push(momentScript.getSave());
     });
 
     return save;
@@ -122,11 +128,16 @@ p.useSave = function (save) {
 
     this._selectors = save.selectors || [];
 
-    if ('name' in save) this.name = save.name
+    if ('name' in save) this.name = save.name;
 
     if (save.intervalScripts) {
 
-        save.intervalScripts.forEach(this._addIntervalScript, this);
+        save.intervalScripts.forEach(this.addIntervalScript, this);
+    }
+
+    if (save.momentScripts) {
+
+        save.momentScripts.forEach(this.addMomentScript, this);
     }
 
     this._selectElements();
@@ -139,34 +150,23 @@ p.useSave = function (save) {
     }
 };
 
-p.getScript = function () {
+p.getScript = function () {//TODO
 
-    var paramKeys = [], code = '', options, selectors;
+    var momentScripts = [], intervalScripts = [];
 
     this._intervalScripts.forEach(function (intervalScript) {
 
-        paramKeys.push(intervalScript.getScriptKeys());
     });
-
-    options = {
-      direction: "normal",
-      duration: am.timeline.length,
-      iterations: this.iterations,
-      fill: this.fill,
-    };
-
-    selectors = this._selectors.join(',').replace('\\','\\\\');
 
     code = Mustache.render(mstPlayer, {
-        paramKeys: JSON.stringify(paramKeys),
-        options: JSON.stringify(options),
-        selectors: selectors
+        momentScripts: JSON.stringify(momentScripts),
+        intervalScripts: JSON.stringify(intervalScripts)
     });
 
-    return code;
+    return 'function () {/*TODO*/}';
 };
 
-p._addIntervalScript = function (opt, skipHistory) {
+p.addIntervalScript = function (opt, skipHistory) {
 
     opt = opt || {};
 
@@ -191,7 +191,7 @@ p._addIntervalScript = function (opt, skipHistory) {
 p.removeIntervalScript = function (intervalScript, skipHistory) {
 
     if (!skipHistory) {
-        am.history.save([this._addIntervalScript, this, intervalScript, true],
+        am.history.save([this.addIntervalScript, this, intervalScript, true],
             [this.removeIntervalScript, this, intervalScript, true]);
     }
 
@@ -487,7 +487,7 @@ p._onClickTgglShowIntervalScripts = function () {
 
 p._onClickAddIntervalScript = function () {
 
-    this._addIntervalScript();
+    this.addIntervalScript();
 };
 
 p._onClickName = function () {

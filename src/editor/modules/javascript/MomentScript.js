@@ -95,7 +95,7 @@ Object.defineProperties(p, {
 p.getSave = function () {
 
     return {
-        script: this.script,
+        script: this.script.replace('\\','\\\\'),
         time: this.time,
         ease: this.ease
     }
@@ -103,14 +103,14 @@ p.getSave = function () {
 
 p.useSave = function (save) {
 
-    this.script = save.script;
-    this.time = save.time;
-    this.ease = save.ease;
+    if ('script' in save) this.script = save.script;
+    if ('time' in save) this.time = save.time;
+    if ('ease' in save) this.ease = save.ease;
 };
 
 p.runScript = function () {
 
-    (new Function(this.script))();//TDOD hack!!!
+    (new Function(this.script))();//TODO hack!!!
 };
 
 

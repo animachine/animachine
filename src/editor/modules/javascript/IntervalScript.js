@@ -60,6 +60,12 @@ Object.defineProperties(p, {
             return this._script;
         }
     },
+    bounds: {
+        get: function () {
+
+            return this._bounds.slice();
+        }
+    },
 });
 
 
@@ -70,7 +76,7 @@ p.getSave = function () {
 
     var save = {
         name: this.name,
-        script: this.script,
+        script: JSON.stringify(this.script),
         bounds: this._bounds.slice(),
     };
 
@@ -137,7 +143,7 @@ p.isInsideBounds = function (time) {
 
 p.runScript = function () {
 
-    (new Function(this.script))();//TDOD hack!!!
+    (new Function(this.script))();//TODO hack!!!
 };
 
 

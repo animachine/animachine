@@ -11,14 +11,14 @@ function IntervalScript(opt) {
 
     this._lineH =  21;
     this._script =  '/**/';
-    this._boundaries = [0, am.timeline.length];
+    this._bounds = [0, am.timeline.length];
 
     this._onChangeTime = this._onChangeTime.bind(this);
     this._onClickOpenScript = this._onClickOpenScript.bind(this);
     this._onChangeScript = this._onChangeScript.bind(this);
 
     this.deOptions = this._createParameterOptions();
-    this.deKeyline = this._createBoundariesLine();
+    this.deKeyline = this._createBoundsLine();
 
     am.timeline.on('changeTime', this._onChangeTime);
 
@@ -71,7 +71,7 @@ p.getSave = function () {
     var save = {
         name: this.name,
         script: this.script,
-        boundaries: this._boundaries.slice(),
+        bounds: this._bounds.slice(),
     };
 
     return save;
@@ -81,7 +81,7 @@ p.useSave = function(save) {
 
     if ('name' in save) this.name = save.name;
     if ('script' in save) this.script = save.script;
-    if ('boundaries' in save) this._boundaries = save.boundaries;
+    if ('bounds' in save) this._bounds = save.bounds;
 
     this._refreshBounaries();
 };
@@ -122,6 +122,22 @@ p.addKey = function (opt, skipHistory) {
     this.emit('change');
 
     return key;
+};
+
+p.isInsideBounds = function (time) {
+
+    for (var i = 0; i < this._bounds.length; i += 2) {
+
+        if (this._bounds[i] <= time && this._bounds[i+1] >= time) {
+
+            return true;
+        }
+    }
+};
+
+p.runScript = function () {
+
+    (new Function(this.script))();//TDOD hack!!!
 };
 
 
@@ -188,11 +204,13 @@ p._onChangeScript = function (script) {
 
 p._refreshBounaries = function () {
 
+    var deKeyline = this.deKeyline;
+    
     deKeyline.innerHTML = '';
 
-    for (var i = 0; i < this._boundaries.length; i += 2) {
+    for (var i = 0; i < this._bounds.length; i += 2) {
 
-        createBound(this._boundaries[i], this._boundaries[i+1]);
+        createBound(this._bounds[i], this._bounds[i+1]);
     }
 
     function createBound (start, end) {
@@ -200,7 +218,7 @@ p._refreshBounaries = function () {
         var de = document.createElement('div');
         de.style.left = start * am.timeline.timeScale + 'px';
         de.style.width = (end - start) * am.timeline.timeScale + 'px';;
-        de.style.height = this._lineH + 'px';
+        de.style.height = '100%';
         de.style.background = 'blue';
         de.style.position = 'relative';
 
@@ -217,12 +235,12 @@ p._refreshBounaries = function () {
 
 
 
-p._createParameterOptions = function () {
+p._createBoundsLine = function () {
 
     var de = document.createElement('div');
     de.style.width = '100%';
     de.style.height = this._lineH + 'px';
-    de.style.background = opt.background || 'grey';
+    de.style.background = 'grey';
     de.style.position = 'relative';
 
     return de;

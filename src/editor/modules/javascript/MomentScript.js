@@ -108,6 +108,21 @@ p.useSave = function (save) {
     this.ease = save.ease;
 };
 
+p.runScript = function () {
+
+    (new Function(this.script))();//TDOD hack!!!
+};
+
+
+
+
+
+
+
+
+
+
+
 p._onChangeDeTime = function (e) {
 
     this.time = e.detail.time;
@@ -142,6 +157,9 @@ p._onChangeTape = function () {
 
     this.domElem.setTimescale(am.timeline.timescale);
 };
+
+
+
 
 p.dispose = function () {
 

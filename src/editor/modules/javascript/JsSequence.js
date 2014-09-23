@@ -322,19 +322,7 @@ p.deselect = function () {
 
 p.renderTime = function (time) {
 
-    if (this._selectors.length === 0) {
-        return;
-    }
-
-    var selection = _.toArray(am.deRoot.querySelectorAll(this._selectors.join(',')));
-
-    this._intervalScripts.forEach(function (intervalScript) {
-
-        selection.forEach(function (de) {
-
-            de.style[intervalScript.name] = intervalScript.getValue(time);
-        });
-    });
+    //TODO
 };
 
 p.play = function () {
@@ -375,8 +363,27 @@ p.getMagnetPoints = function () {
 p._animPlay = function () {
 
     this._animPlayRafid = window.requestAnimationFrame(this._animPlay);
-    //TODO
-    this.renderTime(am.timeline.currTime);
+    
+    var currTime = am.timeline.currTime, 
+        prevTime = this.prevRenderTime;
+
+    this._momentScripts.forEach(function (momentScript) {
+
+        if (momentScript.time > prevTime && momentScript.time <= currTime) {
+
+            momentScript.runScript();
+        }
+    });
+
+    this._intervalScripts.forEach(function (intervalScript) {
+
+        if (intervalScript.isInsideBounds(currTime)) {
+
+            intervalScript.runScript();
+        }
+    });
+
+    this.prevRenderTime = currTime;
 };
 
 p._showIntervalScripts = function () {

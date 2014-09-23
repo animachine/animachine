@@ -11,15 +11,14 @@ function IntervalScript(opt) {
 
     this._lineH =  21;
     this._script =  '/**/';
-    this._boundaries = [];
-
-    this.deOptions = this._createParameterOptions();
-    this.deKeyline = amgui.createKeyline({
-        timescale: am.timeline.timescale
-    });
+    this._boundaries = [0, am.timeline.length];
 
     this._onChangeTime = this._onChangeTime.bind(this);
     this._onClickOpenScript = this._onClickOpenScript.bind(this);
+    this._onChangeScript = this._onChangeScript.bind(this);
+
+    this.deOptions = this._createParameterOptions();
+    this.deKeyline = this._createBoundariesLine();
 
     am.timeline.on('changeTime', this._onChangeTime);
 
@@ -46,7 +45,21 @@ Object.defineProperties(p, {
             
             return this._lineH;
         }
-    }
+    },
+    script: {
+        set: function (v) {
+
+            v = v || '';
+
+            if (this._script === v) return;
+
+            this._script = v;
+        },
+        get: function () {
+
+            return this._script;
+        }
+    },
 });
 
 
@@ -66,14 +79,11 @@ p.getSave = function () {
 
 p.useSave = function(save) {
 
-    this.name = save.name;
-    this.script = save.name;
-    this._boundaries = save.boundaries;
+    if ('name' in save) this.name = save.name;
+    if ('script' in save) this.script = save.script;
+    if ('boundaries' in save) this._boundaries = save.boundaries;
 
-    if (save.keys) {
-
-        save.keys.forEach(this.addKey, this);
-    }
+    this._refreshBounaries();
 };
 
 p.addKey = function (opt, skipHistory) {
@@ -142,11 +152,6 @@ p._onChangeInput = function (e) {
     this.emit('change');
 };
 
-p._onChangeKeyTime = function () {
-
-    this.emit('change');
-};
-
 p._onDeleteKey = function (key) {
 
     this.removeKey(key);
@@ -154,7 +159,20 @@ p._onDeleteKey = function (key) {
 
 p._onChangeTime = function () {
 
+    this._refreshBounaries();
+};
 
+p._onClickOpenScript = function () {
+
+    dialogScriptEditor.show({
+        script: this.script,
+        onChangeScript: this._onChangeScript,
+    });
+};
+
+p._onChangeScript = function (script) {
+
+    this.script = script;
 };
 
 
@@ -167,6 +185,30 @@ p._onChangeTime = function () {
 
 
 
+
+p._refreshBounaries = function () {
+
+    deKeyline.innerHTML = '';
+
+    for (var i = 0; i < this._boundaries.length; i += 2) {
+
+        createBound(this._boundaries[i], this._boundaries[i+1]);
+    }
+
+    function createBound (start, end) {
+
+        var de = document.createElement('div');
+        de.style.left = start * am.timeline.timeScale + 'px';
+        de.style.width = (end - start) * am.timeline.timeScale + 'px';;
+        de.style.height = this._lineH + 'px';
+        de.style.background = 'blue';
+        de.style.position = 'relative';
+
+        deKeyline.appendChild(de);
+
+        return de;
+    }
+}
 
 
 
@@ -178,10 +220,28 @@ p._onChangeTime = function () {
 p._createParameterOptions = function () {
 
     var de = document.createElement('div');
+    de.style.width = '100%';
+    de.style.height = this._lineH + 'px';
+    de.style.background = opt.background || 'grey';
+    de.style.position = 'relative';
+
+    return de;
+}
+
+
+p._createParameterOptions = function () {
+
+    var de = document.createElement('div');
     de.style.display = 'flex';
     de.style.width = '100%';
     de.style.height = this._lineH + 'px';
-    de.style.background = 'linear-gradient(to bottom, #184F12 18%,#1B4417 96%)';
+    de.style.background = 'linear-gradient(to bottom, blue 18%,darkblue 96%)';
+
+    var space = document.createElement('div');
+    space.style.display = 'inline-block';
+    space.style.flex = '1';
+    space.style.pointerEvents = 'none';
+    de.appendChild(space);
 
     this._btnOpenScript = amgui.createIconBtn({
         icon: 'code',
@@ -207,7 +267,10 @@ p._createParameterOptions = function () {
                 {text: 'add', icon: 'plus'},
                 {text: 'remove', icon: 'minus'},
             ]
-        })
+        }),
+        onSelect: function () {
+            am.dialogs.featureDoesntExist.show();
+        }
     });
 
     amgui.bindDropdown({

@@ -125,45 +125,6 @@ p.getScriptKeys = function () {
     return keys;
 };
 
-p.addKey = function (opt, skipHistory) {
-    
-    var key = this.getKey(opt.time);
-
-    if (key) {
-
-        if ('value' in opt) {
-
-            if (!skipHistory) {
-                am.history.saveChain(key, [this.addKey, this, key, true], [this.addKey, this, opt, true]);
-            }
-
-            key.value = opt.value;
-        }
-    }
-    else {
-
-        key = new Key(_.extend({deKeyline: this.deKeyline}, opt));
-        key.value = opt.value || this.getValue(opt.time);
-
-        key.on('changeTime', this._onChangeKeyTime);
-        key.on('delete', this._onDeleteKey);
-
-        this._keys.push(key);
-
-        if (!skipHistory) {
-            am.history.closeChain(key);
-            am.history.save([this.removeKey, this, opt.time, true], [this.addKey, this, opt, true]);
-        }
-    }
-
-    this._refreshInput();
-    this._refreshBtnToggleKey();
-
-    this.emit('change');
-
-    return key;
-};
-
 p.getValue = function (time) {
 
     if (!_.isNumber(time)) {
@@ -245,6 +206,45 @@ p.getValue = function (time) {
         }
     }
     
+};
+
+p.addKey = function (opt, skipHistory) {
+    
+    var key = this.getKey(opt.time);
+
+    if (key) {
+
+        if ('value' in opt) {
+
+            if (!skipHistory) {
+                am.history.saveChain(key, [this.addKey, this, key, true], [this.addKey, this, opt, true]);
+            }
+
+            key.value = opt.value;
+        }
+    }
+    else {
+
+        key = new Key(_.extend({deKeyline: this.deKeyline}, opt));
+        key.value = opt.value || this.getValue(opt.time);
+
+        key.on('changeTime', this._onChangeKeyTime);
+        key.on('delete', this._onDeleteKey);
+
+        this._keys.push(key);
+
+        if (!skipHistory) {
+            am.history.closeChain(key);
+            am.history.save([this.removeKey, this, opt.time, true], [this.addKey, this, opt, true]);
+        }
+    }
+
+    this._refreshInput();
+    this._refreshBtnToggleKey();
+
+    this.emit('change');
+
+    return key;
 };
 
 p.removeKey = function (key, skipHistory) {

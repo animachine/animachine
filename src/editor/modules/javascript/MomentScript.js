@@ -8,7 +8,7 @@ function MomentScript(opt) {
     EventEmitter.call(this);
     
     this._time =  0;
-    this._value =  '';
+    this._script =  '';
     this._ease = 'linear';
     this._deKeyline = opt.deKeyline;
 
@@ -61,16 +61,16 @@ Object.defineProperties(p, {
             return this._time;
         }
     },
-    value: {
+    script: {
         set: function (v) {
 
-            if (this._value === v) return;
+            if (this._script === v) return;
 
-            this._value = v;
+            this._script = v;
         },
         get: function () {
 
-            return this._value;
+            return this._script;
         }
     },
     ease: {
@@ -95,7 +95,7 @@ Object.defineProperties(p, {
 p.getSave = function () {
 
     return {
-        value: this.value,
+        script: this.script,
         time: this.time,
         ease: this.ease
     }
@@ -103,7 +103,7 @@ p.getSave = function () {
 
 p.useSave = function (save) {
 
-    this.value = save.value;
+    this.script = save.script;
     this.time = save.time;
     this.ease = save.ease;
 };

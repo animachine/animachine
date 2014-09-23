@@ -1,4 +1,4 @@
-var CssSequence = require('./JsSequence');
+var JsSequence = require('./JsSequence');
 var qsgen = require('../../qsgen');
 
 var am, iconNew, qsModal;

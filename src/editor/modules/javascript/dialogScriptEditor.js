@@ -25,6 +25,8 @@ Object.defineProperties(p, {
     script: {
         set: function (v) {
 
+            v = v || '';
+
             if (this._script === v) {
                 return;
             }
@@ -94,7 +96,8 @@ p._onChangeScript = function (e) {
 p._createContent = function () {
 
     this._deContent = document.createElement('div');
-    this._deContent.style.width = '330px';
+    this._deContent.style.width = '480px';
+    this._deContent.style.height = '330px';
     this._deContent.style.padding = '30px 12px';
 
     this._textarea = document.createElement('textarea');
@@ -104,7 +107,6 @@ p._createContent = function () {
 
         this._cm = new CodeMirror.fromTextArea(this._textarea, {
             lineNumbers: true,
-            value: this.script,
             theme: 'pastel-on-dark',
             mode: 'javascript'
         });

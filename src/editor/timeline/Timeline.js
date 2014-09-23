@@ -22,6 +22,7 @@ function Timeline(opt) {
     this._onChangeTime = this._onChangeTime.bind(this);
     this._onChangeTape = this._onChangeTape.bind(this);
     this._onWindowResize = this._onWindowResize.bind(this);
+    this._onSelectNewSequ = this._onSelectNewSequ.bind(this);
     this._onTogglePlayPause = this._onTogglePlayPause.bind(this);
     this._onTimebarSeek = this._onTimebarSeek.bind(this);
     this._onChangeSequenceHeight = this._onChangeSequenceHeight.bind(this);
@@ -411,7 +412,30 @@ p._onTogglePlayPause = function () {
     }
 };
 
+p._onSelectNewSequ = function (e) {
 
+    var addSequ = function (type) {
+
+        var SequClass = am.sequenceTypes[type];
+
+        this.addSequence(new SequClass);
+    }.bind(this);
+
+    switch (e.detail.selection) {
+
+        case 'css':
+            addSequ('css_sequ_type');
+            break;
+
+        case 'js':
+            addSequ('js_sequ_type');
+            break;
+
+        case 'default':
+            am.dialogs.featureDoesntExist.show();
+            
+    }
+}
 
 
 
@@ -589,10 +613,13 @@ p._createSettingsHead = function () {
         parent: this._deSettingsHead,
         display: 'inline-block'
     });
-    this._dropdownNewSequ = amgui.createDropdown({options: ['css', 'script', 'attribute', 'media', 'timeline']});
+
     amgui.bindDropdown({
         deTarget: this._btnNewSequ,
-        deMenu: this._dropdownNewSequ
+        deMenu: amgui.createDropdown({
+            options: ['css', 'js', 'attribute', 'media', 'timeline', 'three.js', 'pixi.js'],
+            onSelect: this._onSelectNewSequ
+        })
     });
 
     

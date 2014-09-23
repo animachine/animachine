@@ -15,7 +15,7 @@ module.exports = function (_amgui) {
 
 function addTooltip(opt) {
 
-    var showSetT, delay = 798, mx = 0, my = 0;
+    var showSetT, delay = 423, mx = 0, my = 0;
 
     var de = document.createElement('div');
     de.textContent = opt.text;

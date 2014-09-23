@@ -5,6 +5,7 @@ var IntervalScript = require('./IntervalScript');
 var MomentScript = require('./MomentScript');
 var mstPlayer = require('./script.player.mst');
 var dialogSequOptions = require('./dialogSequOptions');
+var dialogScriptEditor = require('./dialogScriptEditor');
 
 function JsSequence(opt) {
 
@@ -24,6 +25,8 @@ function JsSequence(opt) {
     this._onMoveIntervalScript = this._onMoveIntervalScript.bind(this);
     this._onClickAddIntervalScript = this._onClickAddIntervalScript.bind(this);
     this._onClickTgglShowIntervalScripts = this._onClickTgglShowIntervalScripts.bind(this);
+    this._onClickTgglMomentScript = this._onClickTgglMomentScript.bind(this);
+    this._onClickEditMomentScript = this._onClickEditMomentScript.bind(this);
     this._onClickName = this._onClickName.bind(this);
     this._onChangeName = this._onChangeName.bind(this);
     this._onChangeName = this._onChangeName.bind(this);
@@ -167,40 +170,22 @@ p._addIntervalScript = function (opt, skipHistory) {
 
     opt = opt || {};
 
-    var intervalScript = this.getParameter(opt.name);
+    var intervalScript = new IntervalScript(opt);
+
+    if (!skipHistory) {
+        am.history.save([this._removeIntervalScript, this, intervalScript, true],
+            [this.addIntervalScript, this, opt, true]);
+    }
     
+    this._intervalScripts.push(intervalScript);
+    intervalScript.on('change', this._onChangeIntervalScript);
+    intervalScript.on('delete', this._onDeleteIntervalScript);
+    intervalScript.on('move', this._onMoveIntervalScript);
 
-    if (intervalScript) {
+    this._refreshIntervalScriptOrdering();
+    this.emit('changeHeight', this);
 
-        return intervalScript;
-    }
-    else {
-
-        if (opt.name === 'transform') {
-
-            intervalScript = new CssTransformParameter(opt);
-        }
-        else {
-
-            intervalScript = new IntervalScript(opt);
-        }
-
-        if (!skipHistory) {
-            am.history.save([this.removeIntervalScript, this, intervalScript, true],
-                [this._addIntervalScript, this, intervalScript, true]);
-        }
-
-        this._intervalScripts.push(intervalScript);
-        intervalScript.on('change', this._onChangeIntervalScript);
-        intervalScript.on('delete', this._onDeleteIntervalScript);
-        intervalScript.on('move', this._onMoveIntervalScript);
-
-        this._refreshIntervalScriptOrdering();
-        this._moveBlankParameterDown();
-        this.emit('changeHeight', this);
-
-        return intervalScript;
-    }
+    return intervalScript;
 };
 
 p.removeIntervalScript = function (intervalScript, skipHistory) {
@@ -236,6 +221,84 @@ p.moveIntervalScript = function (intervalScript, way) {
 
     this._refreshIntervalScriptOrdering();
 };
+
+
+p.addMomentScript = function (opt, skipHistory) {
+    
+    var ms = this.getMomentScript(opt.time);
+
+    if (ms) {
+
+        if ('script' in opt) {
+
+            if (!skipHistory) {
+                am.history.saveChain(ms, [this.addMomentScript, this, ms, true], [this.addMomentScript, this, opt, true]);
+            }
+
+            ms.script = opt.script;
+        }
+    }
+    else {
+
+        ms = new MomentScript(_.extend({deKeyline: this._deHeadKeyline}, opt));
+
+        // ms.on('changeTime', this._onChangeKeyTime);//TODO
+        // ms.on('delete', this._onDeleteKey);//TODO
+
+        this._momentScripts.push(ms);
+
+        if (!skipHistory) {
+            am.history.closeChain(ms);
+            am.history.save([this.removeMomentScript, this, opt.time, true], [this.addMomentScript, this, opt, true]);
+        }
+    }
+
+    this._refreshTgglMomentScript();
+
+    this.emit('change');
+
+    return ms;
+};
+
+p.removeMomentScript = function (ms, skipHistory) {
+
+    if (typeof(ms) === 'number') {
+
+        ms = this.getMomentScript(ms);
+    }
+
+    var idx = this._momentScripts.indexOf(ms);
+
+    if (idx === -1) {
+
+        return;
+    }
+
+    if (!skipHistory) {
+        am.history.save([this.addMomentScript, this, ms, true],
+            [this.removeMomentScript, this, ms, true]);
+    }
+
+    this._momentScripts.splice(idx, 1);
+
+    ms.dispose();
+
+    // ms.removeListener('changeTime', this._onChangeKeyTime);//TODO
+    // ms.removeListener('delete', this._onDeleteKey);//TODO
+
+    this._refreshBtnToggleKey();
+
+    this.emit('change');
+};
+
+p.getMomentScript = function (time) {
+
+    return this._momentScripts.find(function(ms) {
+
+        return ms.time === time;
+    });
+};
+
 
 p.select = function (opt) {
 
@@ -341,21 +404,18 @@ p._hideIntervalScripts = function () {
 
 
 
+p._onSelectClick = function () {
 
+    this.select();
+};
 
 p._onChangeTime = function (time) {
 
     if (this._isPlaying) {
         return;
     }
-//TODO
-    this._refreshTgglKey();
-    
-    this._intervalScripts.forEach(function (intervalScript) {
 
-        this.renderTime(time);
-        this._focusHandler();
-    }, this);
+    this._refreshTgglMomentScript();
 };
 
 p._onChangeIntervalScript = function () {
@@ -375,6 +435,39 @@ p._onMoveIntervalScript = function (intervalScript, way) {
     this.moveIntervalScript(intervalScript, way);
 };
 
+p._onClickTgglMomentScript = function () {
+
+    var time = am.timeline.currTime,
+        momentScript = this.getMomentScript(time);
+    
+    if (momentScript) {
+
+        this.removeMomentScript(momentScript);
+    }
+    else {
+        this.addMomentScript({time: time});
+    }
+
+    this._refreshTgglMomentScript();
+};
+
+p._onClickEditMomentScript = function () {
+
+    var momentScript = this.getMomentScript(am.timeline.currTime);
+
+    if (momentScript) {
+
+        dialogScriptEditor.show({
+
+            script: momentScript.script,
+            onChangeScript: function (script) {
+
+                momentScript.script = script;
+            }
+        });
+    }
+}
+
 p._onClickTgglShowIntervalScripts = function () {
 
     if (this._isShowingIntervalScrips) {
@@ -387,12 +480,7 @@ p._onClickTgglShowIntervalScripts = function () {
 
 p._onClickAddIntervalScript = function () {
 
-    if (this._isHidingSelectedElems) {
-        this._showSelectedElems();
-    }
-    else {
-        this._hideSelectedElems();
-    }
+    this._addIntervalScript();
 };
 
 p._onClickName = function () {
@@ -422,7 +510,10 @@ p._onChangeName = function (name) {
 
 p._refreshTgglMomentScript = function () {
 
-    //TODO
+    var momentScript = this.getMomentScript(am.timeline.currTime);
+
+    this._tgglMomentScript.setToggle(!!momentScript);
+    this._tgglEditMomentScript.setToggle(!!momentScript);
 };
 
 p._refreshIntervalScriptOrdering = function () {
@@ -497,14 +588,23 @@ p._createHeadOptions = function (){
         parent: de
     });
 
-    this._tgglMomentScript = amgui.createToggleIconBtn({
+    this._tgglEditMomentScript = amgui.createToggleIconBtn({
         icon: 'code',
+        height: this._baseH,
+        onClick: this._onClickEditMomentScript,
+        changeColor: true,
+        parent: de
+    });
+
+    this._tgglMomentScript = amgui.createToggleIconBtn({
+        iconOn: 'circle',
+        iconOff: 'circle-empty',
         height: this._baseH,
         onClick: this._onClickTgglMomentScript,
         changeColor: true,
         parent: de
     });
-    this._refreshTgglKey();
+    this._refreshTgglMomentScript();
 
     amgui.bindDropdown({
         asContextMenu: true,

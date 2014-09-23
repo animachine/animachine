@@ -61,7 +61,7 @@ p._createContent = function () {
     this._deContent.style.padding = '30px 12px';
 
     amgui.createLabel({
-        caption: 'Hi! This program is in alpha state, so most of the thins will change and most of the bugs are known. But if you have any question, feedback, feature request, bug report or just feel the need for contact, you can use the azazzdeaz@gmail.com or the <a style="color:white;" href="https://github.com/animachine/animachine/issues">github issues</a>.',
+        caption: 'Hi! This program is in alpha state, so most of the things will change and most of the bugs are known. But if you have any question, feedback, feature request, bug report or just feel the need for contact, you can use the azazdeaz@gmail.com or the <a style="color:white;" href="https://github.com/animachine/animachine/issues">github issues</a>.',
         fontSize: '18px',
         display: 'block',
         parent: this._deContent

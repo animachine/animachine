@@ -20,7 +20,6 @@ var externalStylesheets = [
     // require('./assets/fontello/css/amgui.css'),
     require('./am.css'),
 ];
-window.dialogScript = require('./modules/javascript/dialogScriptEditor');;
 
 var isInited = false, handlerBuff = [];
 
@@ -142,7 +141,12 @@ am._init = function () {
 
     document.body.addEventListener('click', onClickRoot);
 
-    modules.css.init(am);
+    Object.keys(modules).forEach(function (moduleName) {
+
+        console.log('init', moduleName, 'module...');
+
+        modules[moduleName].init(am);
+    });
 
     createMenu();
     createStatusLabel();

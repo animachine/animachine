@@ -31,11 +31,11 @@ Object.defineProperties(p, {
                 return;
             }
 
-            this._script = v;
-
             if (this._cm && this._cm.getValue() !== v) {
                 this._cm.setValue(v);
             }
+
+            this._script = v;
             this.emit('changeScript', v);
         },
         get: function () {
@@ -51,9 +51,9 @@ p.show = function (opt) {
 
     this._createDialog();
 
-    this.domElem.showModal();
-
     if ('script' in opt) this.script = opt.script;
+
+    this.domElem.showModal();
 
     if ('onChangeScript' in opt) this.on('changeScript', opt.onChangeScript);
 };
@@ -110,6 +110,7 @@ p._createContent = function () {
             theme: 'pastel-on-dark',
             mode: 'javascript'
         });
+        this._cm.setValue(this.script);
         this._cm.on('change', this._onChangeScript);
     }, this)
 };

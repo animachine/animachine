@@ -49,3 +49,6 @@
 .icon-resize-full:before { content: '\e82d'; } /* '' */
 .icon-eye:before { content: '\e82e'; } /* '' */
 .icon-eye-off:before { content: '\e82f'; } /* '' */
+.icon-menu:before { content: '\e830'; } /* '' */
+.icon-circle-empty:before { content: '\e831'; } /* '' */
+.icon-circle:before { content: '\e832'; } /* '' */

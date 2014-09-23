@@ -76,7 +76,7 @@ p.getSave = function () {
 
     var save = {
         name: this.name,
-        script: JSON.stringify(this.script),
+        script: JSON.stringify(this.script).slice(1, -1),
         bounds: this._bounds.slice(),
     };
 
@@ -222,8 +222,8 @@ p._refreshBounaries = function () {
     function createBound (start, end) {
 
         var de = document.createElement('div');
-        de.style.left = start * am.timeline.timeScale + 'px';
-        de.style.width = (end - start) * am.timeline.timeScale + 'px';;
+        de.style.left = start * am.timeline.timescale + 'px';
+        de.style.width = (end - start) * am.timeline.timescale + 'px';;
         de.style.height = '100%';
         de.style.background = 'blue';
         de.style.position = 'relative';

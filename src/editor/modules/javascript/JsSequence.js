@@ -140,10 +140,6 @@ p.useSave = function (save) {
         save.momentScripts.forEach(this.addMomentScript, this);
     }
 
-    this._selectElements();
-    this._refreshHeadKeyline();
-    this._refreshTgglKey();
-
     if (save.isShowingIntervalScripts) {
 
         this._showIntervalScripts();
@@ -286,7 +282,7 @@ p.removeMomentScript = function (ms, skipHistory) {
     // ms.removeListener('changeTime', this._onChangeKeyTime);//TODO
     // ms.removeListener('delete', this._onDeleteKey);//TODO
 
-    this._refreshBtnToggleKey();
+    this._refreshTgglMomentScript();
 
     this.emit('change');
 };

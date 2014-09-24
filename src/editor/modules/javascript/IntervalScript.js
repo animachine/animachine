@@ -4,6 +4,7 @@ var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var dialogScriptEditor = require('./dialogScriptEditor');
 var amgui = require('../../amgui');
+var interval = require('./Interval');
 
 function IntervalScript(opt) {
 
@@ -11,14 +12,15 @@ function IntervalScript(opt) {
 
     this._lineH =  21;
     this._script =  '/**/';
-    this._bounds = [0, am.timeline.length];
+    this._intervals = [];
 
-    this._onChangeTime = this._onChangeTime.bind(this);
     this._onClickOpenScript = this._onClickOpenScript.bind(this);
     this._onChangeScript = this._onChangeScript.bind(this);
 
     this.deOptions = this._createParameterOptions();
     this.deKeyline = this._createBoundsLine();
+
+    this._addInterval();
 
     am.timeline.on('changeTime', this._onChangeTime);
 
@@ -59,13 +61,7 @@ Object.defineProperties(p, {
 
             return this._script;
         }
-    },
-    bounds: {
-        get: function () {
-
-            return this._bounds.slice();
-        }
-    },
+    }
 });
 
 
@@ -77,8 +73,13 @@ p.getSave = function () {
     var save = {
         name: this.name,
         script: JSON.stringify(this.script).slice(1, -1),
-        bounds: this._bounds.slice(),
+        intervals: [],
     };
+
+    this._intervals.forEach(function (interval) {
+
+        save.interval.push(interval.getSave());
+    });
 
     return save;
 };
@@ -87,58 +88,29 @@ p.useSave = function(save) {
 
     if ('name' in save) this.name = save.name;
     if ('script' in save) this.script = save.script;
-    if ('bounds' in save) this._bounds = save.bounds;
+    if ('intervals' in save) {
 
-    this._refreshBounaries();
-};
+        while (this._intervals.length) {
 
-p.addKey = function (opt, skipHistory) {
-    
-    var key = this.getKey(opt.time);
-
-    if (key) {
-
-        if ('value' in opt) {
-
-            if (!skipHistory) {
-                am.history.saveChain(key, [this.addKey, this, key, true], [this.addKey, this, opt, true]);
-            }
-
-            key.value = opt.value;
+            this._removeInterval(this.intervals[0]);
         }
+
+        save.intervals.forEach(function (intervalSave) {
+
+            this._intervals.push(new Interval(intervalSave));
+        }, this);
     }
-    else {
-
-        key = new Key(_.extend({deKeyline: this.deKeyline}, opt));
-
-        key.on('changeTime', this._onChangeKeyTime);
-        key.on('delete', this._onDeleteKey);
-
-        this._keys.push(key);
-
-        if (!skipHistory) {
-            am.history.closeChain(key);
-            am.history.save([this.removeKey, this, opt.time, true], [this.addKey, this, opt, true]);
-        }
-    }
-
-    this._refreshInput();
-    this._refreshBtnToggleKey();
-
-    this.emit('change');
-
-    return key;
 };
 
 p.isInsideBounds = function (time) {
 
-    for (var i = 0; i < this._bounds.length; i += 2) {
+    this._intervals.forEach(function (interval) {
 
-        if (this._bounds[i] <= time && this._bounds[i+1] >= time) {
+        if (interval.start <= time && interval.end >= time) {
 
             return true;
         }
-    }
+    });
 };
 
 p.runScript = function () {
@@ -154,34 +126,42 @@ p.runScript = function () {
 
 
 
+p._addInterval = function (interval) {
 
+    if (!(interval instanceof Interval) {
 
-
-
-p._onChangeInput = function (e) {
-
-    if ('key' in e.detail) {
-        this.name = e.detail.key;
+        interval = new Interval(interval);
     }
 
-    if ('value' in e.detail) {
-        this.addKey({
-            time: am.timeline.currTime,
-            value: e.detail.value
-        });
+    this.deKeyline.appendChild(interval.domElem);
+
+    this._intervals.push(interval);
+}
+
+p._removeInterval = function (interval) {
+
+    var idx = this._intervals.indexOf(interval);
+
+    if (idx === -1) {
+        return;
     }
 
-    this.emit('change');
-};
+    this._intervals.splice(idx, 1);
+
+    interval.domElem.parent.removeChild(interval.domElem);
+    interval.dispose();
+}
+
+
+
+
+
+
+
 
 p._onDeleteKey = function (key) {
 
     this.removeKey(key);
-};
-
-p._onChangeTime = function () {
-
-    this._refreshBounaries();
 };
 
 p._onClickOpenScript = function () {
@@ -202,37 +182,6 @@ p._onChangeScript = function (script) {
 
 
 
-
-
-
-
-
-
-p._refreshBounaries = function () {
-
-    var deKeyline = this.deKeyline;
-    
-    deKeyline.innerHTML = '';
-
-    for (var i = 0; i < this._bounds.length; i += 2) {
-
-        createBound(this._bounds[i], this._bounds[i+1]);
-    }
-
-    function createBound (start, end) {
-
-        var de = document.createElement('div');
-        de.style.left = start * am.timeline.timescale + 'px';
-        de.style.width = (end - start) * am.timeline.timescale + 'px';;
-        de.style.height = '100%';
-        de.style.background = 'blue';
-        de.style.position = 'relative';
-
-        deKeyline.appendChild(de);
-
-        return de;
-    }
-}
 
 
 
@@ -310,6 +259,11 @@ p._createParameterOptions = function () {
     });
 
     return de;
+};
+
+p.dispose = function () {
+
+    //TODO
 };
 
 module.exports = IntervalScript;

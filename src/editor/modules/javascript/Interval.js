@@ -122,14 +122,10 @@ p._onDragMove = function () {
 
 
 
-
-
-
-
 p._refreshDomElem = function () {
 
-    this.domElem.style.left = this.start * am.timeline.timescale;
-    this.domElem.style.width = (this.end - this.start) * am.timeline.timescale;
+    this.domElem.style.left = this.start * am.timeline.timescale + 'px';
+    this.domElem.style.width = (this.end - this.start) * am.timeline.timescale + 'px';
 }
 
 
@@ -153,7 +149,8 @@ p._createDomElem = function (left, rigth) {
     this.domElem = de;
 
     amgui.bindDropdown({
-        deTarget: this._btnEdit,
+        asContextMenu: true,
+        deTarget: de,
         deMenu: amgui.createDropdown({
             options: [
                 {text: 'split here'},

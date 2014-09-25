@@ -2,7 +2,7 @@
     'use strict';
 
     /**@amsave*/
-    var SAVEJSON = '{"timebar":{"currTime":0,"timescale":0.12,"length":6000},"sequences":[{"type":"js_sequ_type","data":{"intervalScripts":[{"script":"\"// Call the paintCanvas function here so that our canvas\\n// will get re-painted in each next frame\\npaintCanvas();\\n\\n// Call the function that will draw the balls using a loop\\nfor (var i = 0; i < particles.length; i++) {\\n  p = particles[i];\\n  p.draw();\\n}\\n\\n//Finally call the update function\\nupdate();\"","bounds":[0,6000]}],"momentScripts":[],"isShowingIntervalScripts":true}}]}';
+    var SAVEJSON = '{"timebar":{"currTime":1647,"timescale":0.12,"length":2058.333333333333},"sequences":[{"type":"js_sequ_type","data":{"intervalScripts":[{"script":"// Call the paintCanvas function here so that our canvas\\n// will get re-painted in each next frame\\npaintCanvas();\\n\\n// Call the function that will draw the balls using a loop\\nfor (var i = 0; i < particles.length; i++) {\\n  p = particles[i];\\n  p.draw();\\n}\\n\\n//Finally call the update function\\nupdate();","intervals":[{"start":0,"end":6000}]}],"momentScripts":[{"script":"\"color = \\\\\'#\\\\\'+Math.random().toString(16).substr(-6);\"","time":983,"ease":"linear"}],"isShowingIntervalScripts":true}}]}';
 
     var sequPlayerGens = [function () {/*TODO*/}];
 

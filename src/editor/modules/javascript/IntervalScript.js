@@ -4,7 +4,7 @@ var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var dialogScriptEditor = require('./dialogScriptEditor');
 var amgui = require('../../amgui');
-var interval = require('./Interval');
+var Interval = require('./Interval');
 
 function IntervalScript(opt) {
 
@@ -21,8 +21,6 @@ function IntervalScript(opt) {
     this.deKeyline = this._createBoundsLine();
 
     this._addInterval();
-
-    am.timeline.on('changeTime', this._onChangeTime);
 
     if (opt) {
         this.useSave(opt);
@@ -78,7 +76,7 @@ p.getSave = function () {
 
     this._intervals.forEach(function (interval) {
 
-        save.interval.push(interval.getSave());
+        save.intervals.push(interval.getSave());
     });
 
     return save;
@@ -92,7 +90,7 @@ p.useSave = function(save) {
 
         while (this._intervals.length) {
 
-            this._removeInterval(this.intervals[0]);
+            this._removeInterval(this._intervals[0]);
         }
 
         save.intervals.forEach(function (intervalSave) {
@@ -104,7 +102,7 @@ p.useSave = function(save) {
 
 p.isInsideBounds = function (time) {
 
-    this._intervals.forEach(function (interval) {
+    return this._intervals.some(function (interval) {
 
         if (interval.start <= time && interval.end >= time) {
 
@@ -128,7 +126,7 @@ p.runScript = function () {
 
 p._addInterval = function (interval) {
 
-    if (!(interval instanceof Interval) {
+    if (!(interval instanceof Interval)) {
 
         interval = new Interval(interval);
     }
@@ -148,7 +146,7 @@ p._removeInterval = function (interval) {
 
     this._intervals.splice(idx, 1);
 
-    interval.domElem.parent.removeChild(interval.domElem);
+    interval.domElem.parentNode.removeChild(interval.domElem);
     interval.dispose();
 }
 

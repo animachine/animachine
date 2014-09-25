@@ -431,7 +431,7 @@ p._onSelectNewSequ = function (e) {
             addSequ('js_sequ_type');
             break;
 
-        case 'default':
+        default:
             am.dialogs.featureDoesntExist.show();
             
     }

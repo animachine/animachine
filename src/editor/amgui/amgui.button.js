@@ -108,14 +108,14 @@ function createIconBtn(opt) {
 
     function onMOver() {
 
-        this.style.background = amgui.color.bgHover;
+        de.style.background = amgui.color.bgHover;
     }
 
     function onMOut() {
         
         if (isFixedHighlight) return;
 
-        this.style.background = 'none';
+        de.style.background = 'none';
     }
 
     de.fixHighlight = function () {

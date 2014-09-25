@@ -50,7 +50,7 @@ p.selectStorage = function (storage) {
 
     this._currStorage = storage;
 
-    this.emit('changeSrorage');
+    this.emit('changeCurrSrorage');
 };
 
 p.save = function (name, data, path) {

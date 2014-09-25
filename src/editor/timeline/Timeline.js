@@ -26,6 +26,9 @@ function Timeline(opt) {
     this._onTogglePlayPause = this._onTogglePlayPause.bind(this);
     this._onTimebarSeek = this._onTimebarSeek.bind(this);
     this._onChangeSequenceHeight = this._onChangeSequenceHeight.bind(this);
+    this._onStartEditCurrTime = this._onStartEditCurrTime.bind(this);
+    this._onFinishEditCurrTime = this._onStartEditCurrTime.bind(this);
+    this._onEditInpCurrTime = this._onEditInpCurrTime.bind(this);
     this._animPlay = this._animPlay.bind(this);
     
     this._timebar = new Timebar({
@@ -435,7 +438,28 @@ p._onSelectNewSequ = function (e) {
             am.dialogs.featureDoesntExist.show();
             
     }
-}
+};
+
+p._onStartEditCurrTime = function () {
+
+    this._inpCurrTime.value = this.currTime;
+
+    this._deCurrTime.style.display = 'none';
+    this._inpCurrTime.style.display = 'block';
+
+    this._inpCurrTime.focus();
+};
+
+p._onFinishEditCurrTime = function () {
+
+    this._inpCurrTime.style.display = 'none';
+    this._deCurrTime.style.display = 'block';
+};
+
+p._onEditInpCurrTime = function () {
+
+    this._tape.currTime = this._inpCurrTime.value;
+};
 
 
 
@@ -640,6 +664,21 @@ p._createSettingsHead = function () {
     this._deCurrTime.style.fontSize = '12px';
     this._deCurrTime.style.marginRight = '2px';
     this._deCurrTime.style.color = amgui.color.bg3;
+    this._deCurrTime.addEventListener('mousedown', this._onStartEditCurrTime)
+
+    this._inpCurrTime = amgui.createInput({
+        type: 'number',
+        parent: this._deSettingsHead
+
+    });
+    this._inpCurrTime.style.display = 'none';
+    this._inpCurrTime.style.flex = '1';
+    this._inpCurrTime.textAlign = 'right';
+    this._inpCurrTime.style.fontSize = '12px';
+    this._inpCurrTime.style.marginRight = '2px';
+    this._inpCurrTime.style.color = amgui.color.bg3;
+    this._inpCurrTime.addEventListener('mousedown', this._onFinishEditCurrTime)
+    this._inpCurrTime.addEventListener('change', this._onChangeInpCurrTime)
 };
 
 p._createDividerHandler = function () {

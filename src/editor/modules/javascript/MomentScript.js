@@ -95,7 +95,7 @@ Object.defineProperties(p, {
 p.getSave = function () {
 
     return {
-        script: JSON.stringify(this.script.replace(/'/g, '\\\'')),
+        script: JSON.stringify(this.script).slice(1, -1).replace(/'/g, '\\\''),
         time: this.time,
         ease: this.ease
     }

@@ -86,6 +86,8 @@ function createBtn(opt) {
 
 function createIconBtn(opt) {
 
+    var isFixedHighlight = false;
+
     var de = amgui.createIcon({
         size: opt.height, 
         icon: opt.icon,
@@ -111,8 +113,22 @@ function createIconBtn(opt) {
 
     function onMOut() {
         
+        if (isFixedHighlight) return;
+
         this.style.background = 'none';
     }
+
+    de.fixHighlight = function () {
+
+        isFixedHighlight = true;
+        onMOver();
+    };
+
+    de.removeFixHighlight = function () {
+
+        isFixedHighlight = false;
+        onMOut();
+    };
 
     return de;
 }

@@ -18,6 +18,8 @@ function decorDialog(whm) {
         openOptions = opt;
         mode = 'save';
 
+        deStorageSelector.refresh();
+
         selectedName = opt.name || '';
         selectedData = opt.data || '';
         selectedPath = opt.path || '';
@@ -36,6 +38,8 @@ function decorDialog(whm) {
 
         openOptions = opt;
         mode = 'open';
+
+        deStorageSelector.refresh();
 
         selectedName = opt.name || '';
         selectedPath = opt.path || '';
@@ -65,11 +69,11 @@ function decorDialog(whm) {
     }
 
 
-    function refresh() {
+    function onChangeCurrStorage() {
 
         deBreadcrumbs.refresh();
         deDirectory.refresh();
-        deStorageSelector.refresh();
+        deStorageSelector.refreshSelection();
         inpName.refresh();
 
         showHide(deDirectory, feature('browse'));
@@ -98,7 +102,7 @@ function decorDialog(whm) {
         createDirectory();
         createOptions();
 
-        whm.on('changeSrorage', refresh);
+        whm.on('changeCurrStorage', onChangeCurrStorage);
     }
 
     function onSave() {
@@ -127,6 +131,14 @@ function decorDialog(whm) {
 
         dialog.close();
     }
+
+
+
+
+
+
+
+
 
     function createDialog () {
 
@@ -158,11 +170,6 @@ function decorDialog(whm) {
         dialog.addEventListener('click_open', onOpen);
         dialog.addEventListener('click_close', onClose);
     }
-
-
-
-
-
 
 
     function createBreadcrumbs() {
@@ -355,7 +362,7 @@ function decorDialog(whm) {
 
     function createStorageSelector() {
 
-        var btnSize = 52;
+        var btnSize = 52, buttons = [];
 
         deStorageSelector = document.createElement('div');
         deStorageSelector.style.display = 'inline-block';
@@ -373,32 +380,73 @@ function decorDialog(whm) {
             }
         });
 
+        function removeButtons() {
+
+            buttons.forEach(function (btn) {
+
+                if (btn.domElem.parentNode) {
+                    btn.domElem.parentNode.removeChild(btn.domElem);
+                }
+
+                btn.removeEventListener('click', onClickBtn);
+            });
+        }
+
         deStorageSelector.refresh = function () {
 
-            deStorageSelector.innerHTML = '';
+            removeButtons();
 
             whm._storages.forEach(function (storage, idx) {
 
                 if (storage.features.placeholder || storage.features[mode]) {
 
-                    createItem(storage.icon, idx);
+                    createItem(storage);
+                }
+            });
+
+            deStorageSelector.refreshSelection();
+        };
+
+        deStorageSelector.refreshSelection = function () {
+
+            buttons.forEach(function (btn) {
+
+                if (btn.storage === whm._currStorage) {
+
+                    btn.domElem.fixHighlight();
+                }
+                else {
+                    btn.domElem.removeFixHighlight();
                 }
             });
         };
+
+        function onClickBtn(e) {
+
+            buttons.forEach(function (btn) {
+
+                if (btn.domElem === e.currentTarget) {
+
+                    whm.selectStorage(btn.storage);
+                }
+            })
+        }
   
-        function createItem(icon, value) {
+        function createItem(storage) {
 
-            var deItem = document.createElement('div');
-            
-            deItem = amgui.createIconBtn({
-                icon: icon,
-                parent: deStorageSelector,
-                width: btnSize,
-                height: btnSize,
-                display: 'inline-block'
-            });
+            var btn = {
+                domElem: amgui.createIconBtn({
+                    icon: storage.icon,
+                    parent: deStorageSelector,
+                    width: btnSize,
+                    height: btnSize,
+                    display: 'inline-block',
+                    onClick: onClickBtn,
+                }),
+                storage: storage
+            };
 
-            deItem._storageIdx = value;
+            buttons.push(btn);
         }
     }
 

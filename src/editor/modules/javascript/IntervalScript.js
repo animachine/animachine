@@ -70,7 +70,7 @@ p.getSave = function () {
 
     var save = {
         name: this.name,
-        script: JSON.stringify(this.script).slice(1, -1),
+        script: JSON.stringify(this.script).slice(1, -1).replace(/'/g, '\\\''),
         intervals: [],
     };
 

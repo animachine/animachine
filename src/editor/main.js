@@ -242,7 +242,10 @@ am.isPickableDomElem = function (deTest) {
 
     function step(de) {
 
-        if (de.hasAttribute('data-am-pick')) {
+        if (!de) {
+            return false;
+        }
+        else if (de.hasAttribute('data-am-pick')) {
             return true;
         }
         else if (de.hasAttribute('data-am-nopick')) {

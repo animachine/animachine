@@ -14,6 +14,7 @@ function Download(opt) {
     this._root = opt.root || '_Download/';
 
     this.icon = 'download';
+    this.tooltip = 'Download';
 }
 
 inherits(Download, EventEmitter);

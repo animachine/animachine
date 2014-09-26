@@ -98,7 +98,7 @@ p.useSave = function(save) {
 
         save.intervals.forEach(function (intervalSave) {
 
-            this._intervals.push(new Interval(intervalSave));
+            this._addInterval(intervalSave);
         }, this);
     }
 };

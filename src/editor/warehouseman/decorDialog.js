@@ -18,8 +18,6 @@ function decorDialog(whm) {
         openOptions = opt;
         mode = 'save';
 
-        deStorageSelector.refresh();
-
         selectedName = opt.name || '';
         selectedData = opt.data || '';
         selectedPath = opt.path || '';
@@ -28,6 +26,7 @@ function decorDialog(whm) {
 
         dialog.setTitle('Save');
         dialog.setButtons(['save', 'close']);
+        deStorageSelector.refresh();
         refresh();
         dialog.showModal();
     };
@@ -39,8 +38,6 @@ function decorDialog(whm) {
         openOptions = opt;
         mode = 'open';
 
-        deStorageSelector.refresh();
-
         selectedName = opt.name || '';
         selectedPath = opt.path || '';
 
@@ -48,6 +45,7 @@ function decorDialog(whm) {
 
         dialog.setTitle('Open');
         dialog.setButtons(['open', 'close']);
+        deStorageSelector.refresh();
         refresh();
         dialog.showModal();
     };
@@ -70,6 +68,11 @@ function decorDialog(whm) {
 
 
     function onChangeCurrStorage() {
+
+        refresh()
+    }
+
+    function refresh() {
 
         deBreadcrumbs.refresh();
         deDirectory.refresh();
@@ -388,7 +391,7 @@ function decorDialog(whm) {
                     btn.domElem.parentNode.removeChild(btn.domElem);
                 }
 
-                btn.removeEventListener('click', onClickBtn);
+                btn.domElem.removeEventListener('click', onClickBtn);
             });
         }
 
@@ -445,6 +448,11 @@ function decorDialog(whm) {
                 }),
                 storage: storage
             };
+
+            amgui.addTooltip({
+                deTarget: btn.domElem, 
+                text: storage.tooltip
+            })
 
             buttons.push(btn);
         }

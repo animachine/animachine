@@ -27,7 +27,7 @@ function Warehouseeman(opt) {
     this.addStorage({icon: 'dropbox', tooltip: 'Dropbox'});
     this.addStorage({icon: 'history', tooltip: 'auto save'});
 
-    this.selectStorage(this._storages[0]);
+    this.selectStorage(this._storages[2]);
 }
 
 inherits(Warehouseeman, EventEmitter);
@@ -51,7 +51,12 @@ p.selectStorage = function (storage) {
 
     this._currStorage = storage;
 
-    this.emit('changeCurrSrorage');
+    if (storage.features.placeholder) {
+
+        am.dialogs.featureDoesntExist.show();
+    }
+
+    this.emit('changeCurrStorage');
 };
 
 p.save = function (name, data, path) {

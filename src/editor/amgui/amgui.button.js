@@ -92,8 +92,8 @@ function createIconBtn(opt) {
         size: opt.height, 
         icon: opt.icon,
         parent: opt.parent,
-        tooltip: opt.tooltip
-        display: opt.display
+        tooltip: opt.tooltip,
+        display: opt.display,
     });
     de.style.width = (opt.width || 21) + 'px';
     de.style.cursor = 'pointer';

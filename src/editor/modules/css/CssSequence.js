@@ -15,6 +15,7 @@ function CssSequence(opt) {
     this._selectors = [];
     this._parameters = [];
     this._fill = 'forward';
+    this._name = 'unnamed';
     this._iterations = 1;
 
     this._baseH = 21;
@@ -96,7 +97,7 @@ Object.defineProperties(p, {
 
             if (v === this._name) return;
 
-            this._name = v || 'unnamed';
+            this._name = v;
             this._deName.textContent = this._name;
         },
         get: function () {
@@ -402,7 +403,7 @@ p._focusHandler = function (de) {
     de = de || this._currHandledDe;
     this._currHandledDe = de;
 
-    if (!this._currHandledDe) return;
+    if (!this._currHandledDe) return this._blurHandler();
 
     var transformSave;
     if (de.style.transform) {
@@ -702,6 +703,13 @@ p._onChangeSelectors = function (selectors) {
     this._selectors = this._selectors.concat(selectors);
 
     this._selectElements();
+
+    if (this._selectedElems.indexOf(this._currHandledDe) === -1) {
+
+        this._currHandledDe = undefined;
+    }
+
+    this._focusHandler(this._currHandledDe || this._selectedElems[0])
 };
 
 

@@ -43,10 +43,9 @@ Object.defineProperties(p, {
     selectors: {
         set: function (v) {
 
-            this._deSelectorCont.innerHTML = '';
             this._selectors.slice().map(this._removeSelector, this);
             v.map(this._addSelector, this);
-            
+            this.emit('changeSelectors', this.selectors);
         },
         get: function () {
             return _.pluck(this._selectors, 'value'); 
@@ -160,15 +159,16 @@ p._createContent = function () {
     this._deContent.style.padding = '30px 12px';
 
     amgui.createLabel({
-        caption: 'Name',
+        caption: 'Name: ',
         fontSize: '18px',
-        display: 'block',
+        // display: 'block',
         parent: this._deContent
     });
 
     this._inpName = document.createElement('input');
     this._inpName.type = 'text';
     this._inpName.value = this.name;
+    this._inpName.style.display = 'inline-block';
     this._inpName.style.width = '245px';
     this._inpName.style.fontSize = '14px';
     this._inpName.style.fontFamily = amgui.FONT_FAMILY;
@@ -192,19 +192,26 @@ p._createContent = function () {
 
     amgui.createIconBtn({
         icon: 'plus',
+        display: 'inline-block',
         onClick: this._addSelector.bind(this, ''),
         parent: this._deContent
     });
 
     amgui.createIconBtn({
         icon: 'code',
+        display: 'inline-block',
         onClick: function () {am.dialogs.featureDoesntExist.show()},
         parent: this._deContent,
         tooltip: 'select from options'
     });
 
+    amgui.createLinebreak({
+        parent:this._deContent
+    });
+
     amgui.createLabel({
-        caption: 'fill mode: ',
+        caption: 'Fill mode: ',
+        fontSize: '18px',
         parent: this._deContent
     });
     this._deFill = amgui.createLabel({
@@ -224,7 +231,8 @@ p._createContent = function () {
     });
 
     amgui.createLabel({
-        caption: 'iterations: ',
+        fontSize: '18px',
+        caption: 'Iterations: ',
         parent: this._deContent
     });
 
@@ -248,6 +256,7 @@ p._addSelector = function(value) {
     var selector = {
         value: value,
     };
+    this._selectors.push(selector);
 
     var height = 23;
 
@@ -274,6 +283,9 @@ p._addSelector = function(value) {
     selector.domElem.appendChild(inp);
 
     inp.addEventListener('change', function () {
+
+        selector.value = inp.value;
+
         this.emit('changeSelectors', this.selectors);
     }.bind(this));
 

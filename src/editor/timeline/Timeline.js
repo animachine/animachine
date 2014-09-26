@@ -518,7 +518,7 @@ p._refreshDeCurrTime = function () {
     }
     if (sec) {
         str += sec + ':';
-        ms = ('0000' + ms).substr(-4);
+        ms = ('000' + ms).substr(-3);
     }
     str += ms;
     this._deCurrTime.textContent = str;

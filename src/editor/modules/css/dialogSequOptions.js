@@ -196,6 +196,13 @@ p._createContent = function () {
         parent: this._deContent
     });
 
+    amgui.createIconBtn({
+        icon: 'code',
+        onClick: function () {am.dialogs.featureDoesntExist.show()},
+        parent: this._deContent,
+        tooltip: 'select from options'
+    });
+
     amgui.createLabel({
         caption: 'fill mode: ',
         parent: this._deContent

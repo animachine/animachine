@@ -626,7 +626,8 @@ p._onChangeBlankParameter = function () {
 p._onClickTgglKey = function () {
 
     var time = am.timeline.currTime,
-        allHaveKey = this._isAllParamsHaveKey(time);
+        allHaveKey = this._isAllParamsHaveKey(time),
+        flag = am.history.startFlag();
 
     this._parameters.forEach(function (param) {
 
@@ -642,6 +643,8 @@ p._onClickTgglKey = function () {
     });
 
     this._refreshTgglKey();
+
+    am.history.endFlag(flag);
 };
 
 p._onClickTgglShowParams = function () {

@@ -21,10 +21,11 @@ function Warehouseeman(opt) {
     this.addStorage(new WebStorageman());
     this.addStorage(new Download());
     // this.addStorage(new Copy());
-    this.addStorage({icon: 'hdd'});
-    this.addStorage({icon: 'git'});
-    this.addStorage({icon: 'evernote'});
-    this.addStorage({icon: 'dropbox'});
+    this.addStorage({icon: 'hdd', tooltip: 'local file system'});
+    this.addStorage({icon: 'git', tooltip: 'Git'});
+    this.addStorage({icon: 'evernote', tooltip: 'Evernote'});
+    this.addStorage({icon: 'dropbox', tooltip: 'Dropbox'});
+    this.addStorage({icon: 'history', tooltip: 'auto save'});
 
     this.selectStorage(this._storages[0]);
 }

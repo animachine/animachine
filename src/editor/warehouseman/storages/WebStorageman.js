@@ -14,6 +14,7 @@ function WebStorageman(opt) {
 
     this.icon = 'bullseye';
     this.rootName = 'webstorage';
+    this.tooltip = 'webstorage, store data in your browser';
 
     this._folders = window.localStorage.getItem(ROOT + FOLDERS);
     

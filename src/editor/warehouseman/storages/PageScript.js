@@ -14,6 +14,7 @@ function PageScript(opt) {
     this._root = opt.root || '_PageScript/';
 
     this.icon = 'code';
+    this.tooltip = 'running Animachine pagescripts';
 
     this._folders = window.localStorage.getItem(this._root + FOLDERS);
     

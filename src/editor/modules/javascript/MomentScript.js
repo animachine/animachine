@@ -9,22 +9,22 @@ function MomentScript(opt) {
     
     this._time =  0;
     this._script =  '';
-    this._ease = 'linear';
     this._deKeyline = opt.deKeyline;
 
     this._onChangeDeTime = this._onChangeDeTime.bind(this);
     this._onSelectDropdown = this._onSelectDropdown.bind(this);
-    this._onChangeEase = this._onChangeEase.bind(this);
     this._onChangeTape = this._onChangeTape.bind(this);
+    this._onDblclickKey = this._onDblclickKey.bind(this);
 
     this.domElem = this._deKeyline.addKey({
         timescale: am.timeline.timescale,
         time: this.time,
-        ease: this.ease
+        ease: 'none'
     });
 
+
     this._deMenu = amgui.createDropdown({
-        options: ['ease', 'delete']
+        options: ['script', 'delete']
     });
     this._deMenu.addEventListener('select', this._onSelectDropdown);
 
@@ -36,6 +36,8 @@ function MomentScript(opt) {
         deMenu: this._deMenu,
         asContextMenu: true
     });
+
+    this.domElem.addEventListener('dblclick', this._onDblclickKey);
 
     if (opt) {
         this.useSave(opt);
@@ -72,22 +74,6 @@ Object.defineProperties(p, {
 
             return this._script;
         }
-    },
-    ease: {
-        set: function (v) {
-
-            if (!v || this._ease === v) return;
-
-            this._ease = v;
-
-            this.domElem.setEase(v);
-
-            this.emit('changeEase', v);
-        },
-        get: function () {
-
-            return this._ease;
-        }
     }
 });
 
@@ -97,7 +83,6 @@ p.getSave = function () {
     return {
         script: JSON.stringify(this.script).slice(1, -1).replace(/'/g, '\\\''),
         time: this.time,
-        ease: this.ease
     }
 };
 
@@ -105,7 +90,6 @@ p.useSave = function (save) {
 
     if ('script' in save) this.script = save.script;
     if ('time' in save) this.time = save.time;
-    if ('ease' in save) this.ease = save.ease;
 };
 
 p.runScript = function () {
@@ -113,10 +97,17 @@ p.runScript = function () {
     (new Function(this.script))();//TODO hack!!!
 };
 
+p.editScript = function () {
 
+    dialogScriptEditor.show({
 
+        script: this.script,
+        onChangeScript: function (script) {
 
-
+            this.script = script;
+        }
+    });
+}
 
 
 
@@ -134,28 +125,24 @@ p._onSelectDropdown = function (e) {
     
     var selection = e.detail.selection;
 
-    if (selection === 'ease') {
-
-        dialogKeyOptions.show({
-            ease: this.ease,
-        });
-        
-        dialogKeyOptions.on('changeEase', this._onChangeEase);
-    }
-    else if (selection === 'delete') {
+    if (selection === 'delete') {
 
         this.emit('delete', this);
     }
-};
+    else if (selection === 'edit script') {
 
-p._onChangeEase = function (ease) {
-
-    this.ease = ease;
+        this.editScript();
+    }
 };
 
 p._onChangeTape = function () {
 
     this.domElem.setTimescale(am.timeline.timescale);
+};
+
+p._onDblclickKey = function () {
+
+    this.editScript();
 };
 
 

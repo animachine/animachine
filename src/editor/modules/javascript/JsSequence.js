@@ -460,14 +460,7 @@ p._onClickEditMomentScript = function () {
 
     if (momentScript) {
 
-        dialogScriptEditor.show({
-
-            script: momentScript.script,
-            onChangeScript: function (script) {
-
-                momentScript.script = script;
-            }
-        });
+        momentScript.editScript();
     }
 }
 

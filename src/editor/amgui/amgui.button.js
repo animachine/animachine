@@ -92,6 +92,7 @@ function createIconBtn(opt) {
         size: opt.height, 
         icon: opt.icon,
         parent: opt.parent,
+        tooltip: opt.tooltip
         display: opt.display
     });
     de.style.width = (opt.width || 21) + 'px';
@@ -218,6 +219,13 @@ function createIcon(opt) {
     };
 
     de.setIcon(opt.icon);
+
+    if (opt.tooltip) {
+        amgui.addTooltip({
+            deTarget: de,
+            text: opt.tooltip
+        });
+    }
 
     if (opt.parent) {
         opt.parent.appendChild(de);

@@ -16,11 +16,14 @@ function IntervalScript(opt) {
 
     this._onClickOpenScript = this._onClickOpenScript.bind(this);
     this._onChangeScript = this._onChangeScript.bind(this);
+    this._onDblclickKeyline = this._onDblclickKeyline.bind(this);
 
     this.deOptions = this._createParameterOptions();
     this.deKeyline = this._createBoundsLine();
 
     this._addInterval();
+
+    this.deKeyline.addEventListener('dblclick', this._onDblclickKeyline)
 
     if (opt) {
         this.useSave(opt);
@@ -116,6 +119,18 @@ p.runScript = function () {
     (new Function(this.script))();//TODO hack!!!
 };
 
+p.editScript = function () {
+
+    dialogScriptEditor.show({
+
+        script: this.script,
+        onChangeScript: function (script) {
+
+            this.script = script;
+        }
+    });
+}
+
 
 
 
@@ -173,6 +188,11 @@ p._onClickOpenScript = function () {
 p._onChangeScript = function (script) {
 
     this.script = script;
+};
+
+p._onDblclickKeyline = function (script) {
+
+    this.editScript();
 };
 
 

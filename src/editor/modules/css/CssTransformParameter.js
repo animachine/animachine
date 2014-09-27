@@ -94,6 +94,8 @@ p.getRawValue = function (time) {
                 av = after.value,
                 bv = before.value;
 
+            p = this._applyEase(before.ease, p);
+
             Object.keys(bv).forEach(function (name) {
 
                 if (name in av) {

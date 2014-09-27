@@ -233,7 +233,7 @@ function setSelectedElement(de) {
 }
 
 am.isPickableDomElem = function (deTest) {
-
+    //TODO use .compareDocumentPosition()
     if (!deTest) {
         return false;
     }

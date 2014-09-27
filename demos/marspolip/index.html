@@ -24,6 +24,8 @@
       <div class="mars">
         <div class="tentacle"></div>
         <div class="flag">
+          <div class="staff"></div>
+          <div class="color"></div>
           <div class="small-tentacle"></div>
         </div>
         <div class="planet">
@@ -85,14 +87,14 @@
         left: -1px;
         animation: flag-pole 12s cubic-bezier(0.645, 0.045, 0.355, 1) infinite;
       }
-      .space .mars .flag:before {
+      .space .mars .flag .staff {
         content: "";
         position: absolute;
         height: 17px;
         width: 2px;
         background: #eee;
       }
-      .space .mars .flag:after {
+      .space .mars .flag .color {
         content: "";
         position: absolute;
         height: 10px;
@@ -423,7 +425,7 @@
     </style>
     <script>
       am.open(am.pageScripts.amsave.saveJson);
-      // am.timeline.play();
+      am.timeline.play();
     </script>
   </body>
 </html>

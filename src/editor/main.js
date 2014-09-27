@@ -245,6 +245,9 @@ am.isPickableDomElem = function (deTest) {
         if (!de) {
             return false;
         }
+        else if (de.nodeType === 9) {
+            return false;
+        }
         else if (de.hasAttribute('data-am-pick')) {
             return true;
         }

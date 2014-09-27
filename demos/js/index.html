@@ -10,7 +10,22 @@
   </head>
   <body>
     <canvas id="canvas" class="data-am-nopick"></canvas>
+    
+    <a id="artist" href="http://codepen.io/cstumph/pen/bauwm?editors=001" target="_blank" data-am-nopick><img src="../cplink_white.png"></a>
+
     <style>
+
+      #artist {
+        position: absolute;
+        top: 6px;
+        right: 12px;
+      }
+
+      #artist img {
+        right: 0px;
+        width: 134px;
+      }
+      
       body {
         padding: 0;
         margin: 0;
@@ -21,6 +36,7 @@
     <script src="points.am.js"></script>
     <script>
       am.open(am.pageScripts.amsave.saveJson);
+      am.timeline.play();
     </script>
   </body>
 </html>

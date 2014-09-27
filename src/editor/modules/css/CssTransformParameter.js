@@ -43,12 +43,30 @@ function CssTransformParameter (opt) {
         onClick: this._onToggle3d,
     });
     this.deOptions.insertBefore(this._btnToggle3d, this._btnToggleKey);
-    this._showing3d = true;
-    this._showHide3d(false);
+    
+    this._showing3d = !this._showing3d;//TODO do this somehow else!
+    this._showHide3d(!this._showing3d);
 }
 
 inherits(CssTransformParameter, CssParameter);
 var p = CssTransformParameter.prototype;
+
+
+p.getSave = function () {
+
+    var save = CssParameter.prototype.getSave.call(this);
+
+    save.showing3d = this._showing3d;
+
+    return save;
+};
+
+p.useSave = function(save) {
+
+    CssParameter.prototype.useSave.call(this, save);
+
+    this._showing3d = !!save.showing3d;
+};
 
 p.getValue = function (time) {
 
@@ -324,7 +342,6 @@ function convertTransformValue(v) {
     }
 
     if (rx && ry && rz) ret += 'rotate3d('+v.rx+'rad,'+v.ry+'rad,'+v.rz+'rad) ';
-    else if (rx && ry) ret += 'rotate('+v.rx+'rad,'+v.ry+'rad) ';
     else {
         if (rx) ret += 'rotateX('+v.rx+'rad) ';
         if (ry) ret += 'rotateY('+v.ry+'rad) ';

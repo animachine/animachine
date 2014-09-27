@@ -95,10 +95,17 @@ p.save = function (undo, redo) {
 
     var reg = {undo: undo, redo: redo};
 
-    this._stack.splice(++this._pointer, this._stack.length, reg);
+    this._saveReg(reg)
 
     return reg;
 };
+
+
+p._saveReg = function (reg) {
+
+    this._stack.splice(++this._pointer, this._stack.length, reg);
+}
+
 
 
 
@@ -108,13 +115,13 @@ p.save = function (undo, redo) {
 
 p.startFlag = function () {
 
-        this.save([this._flagCounter++]);
-        return this._flagCounter++;
+    this._saveReg(this._flagCounter++);
+    return this._flagCounter++;
 };
 
 p.endFlag = function (flag) {
 
-    this.save([flag]);
+    this._saveReg(flag);
 };
 
 p.wrap = function (fn, ctx) {

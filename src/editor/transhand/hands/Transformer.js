@@ -161,19 +161,6 @@ p._renderHandler = function () {
     ctx.restore();
 };
 
-
-p._onMouseMove = function (e) {
-
-    if (!this._isHandle) {
-
-        this._setFinger(e);
-    }
-
-    if (this._cursorFunc) {
-        this._setCursor(this._cursorFunc(e.clientX, e.clientY));
-    }
-};
-
 p._onDrag = function (e) {
 
     var params = this._params,
@@ -413,11 +400,26 @@ p._setCursor = function (cursor) {
 
     this.domElem.style.cursor = cursor;
     document.querySelector("html").style.cursor = cursor;//hack! TODO
-} 
+};
+
+p._onMouseMove = function (e) {
+
+    if (!this._isHandle) {
+
+        if (am.isPickableDomElem(e.target)) {            
+
+            this._setFinger(e);
+        }
+    }
+
+    if (this._cursorFunc) {
+        this._setCursor(this._cursorFunc(e.clientX, e.clientY));
+    }
+};
 
 p._onMouseDown = function (e) {
 
-    if (!this._finger) {
+    if (!this._finger || !am.isPickableDomElem(e.target)) {
         return;
     }
 

@@ -341,12 +341,12 @@ function convertTransformValue(v) {
         if (tz) ret += 'translateZ('+v.tz+'px) ';
     }
 
-    if (rx && ry && rz) ret += 'rotate3d('+v.rx+'rad,'+v.ry+'rad,'+v.rz+'rad) ';
-    else {
+    // if (rx && ry && rz) ret += 'rotate3d('+v.rx+'rad,'+v.ry+'rad,'+v.rz+'rad) ';
+    // else {
         if (rx) ret += 'rotateX('+v.rx+'rad) ';
         if (ry) ret += 'rotateY('+v.ry+'rad) ';
         if (rz) ret += 'rotate('+v.rz+'rad) ';
-    }
+    // }
 
     if (sx && sy && sz) ret += 'scale3d('+v.sx+','+v.sy+','+v.sz+') ';
     else if (sx && sy) ret += 'scale('+v.sx+','+v.sy+') ';

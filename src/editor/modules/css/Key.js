@@ -53,7 +53,7 @@ Object.defineProperties(p, {
 
             if (!Number.isFinite(v) || this._time === v) return;
 
-            this._time = v;
+            this._time = parseInt(v);
 
             this.domElem.setTime(this._time);
         },

@@ -114,9 +114,7 @@ Object.defineProperties(p, {
 
             this._currTime = v;
 
-            var pos = (v / this.visibleTime) * this.width;
-
-            this._dePointer.style.left = pos + 'px';
+            this._refreshPointer();
 
             this.emit('changeTime', this._currTime);
         },
@@ -148,6 +146,18 @@ Object.defineProperties(p, {
         }
     },
 });
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -209,6 +219,17 @@ p._renderTape = function () {
     this._deEndShadow.style.width = Math.max(0, Math.min(width, endWidth)) + 'px';
 };
 
+
+
+
+
+
+
+
+
+
+
+
 function onMDown(e) {
 
     e.stopPropagation();
@@ -240,6 +261,8 @@ function onMMove(e) {
 
         time = (mouseX / this.width) * this.visibleTime;
 
+        time -= this._start;
+
         this._magnetPoints.forEach(function (mp) {
 
             var diff = Math.abs(mp - time);
@@ -255,7 +278,7 @@ function onMMove(e) {
             time = magnetPoint;
         }
 
-        this.currTime = this._start + time;
+        this.currTime = time;
 
         this.emit('seek');
     }
@@ -275,6 +298,31 @@ function onMUp() {
     window.removeEventListener('mouseup', this._onMUp);
     window.removeEventListener('mouseleave', this._onMUp);
 }
+
+
+
+
+
+
+
+
+
+
+p._refreshPointer = function () {
+
+    var pos = ((this.start + this.currTime) / this.visibleTime) * this.width;
+
+    this._dePointer.style.left = pos + 'px';
+}
+
+
+
+
+
+
+
+
+
 
 
 p._createBase = function () {

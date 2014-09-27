@@ -376,8 +376,7 @@ p._onMoveSequence = function (sequ, way) {
 
 p._onChangeTime = function () {
 
-    var left = this.currTime * this.timescale;
-    this._dePointerLine.style.left = left + 'px';
+    this._refreshDePointer();
 
     this._refreshDeCurrTime();
 };
@@ -499,6 +498,12 @@ p._refreshMagnetPoints = function () {
 p._refreshTimebarWidth = function () {
 
     this._timebar.width = this._deRight.offsetWidth;
+};
+
+p._refreshDePointer = function () {
+
+    var left = (this._timebar.start + this.currTime) * this.timescale;
+    this._dePointerLine.style.left = left + 'px';
 };
 
 p._refreshDeCurrTime = function () {

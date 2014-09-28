@@ -344,7 +344,7 @@ p.isValid = function () {
 
 p._applyEase = function (ease, value) {
 
-    var rx = /cubic-bezier\(\s*([\d\.]+)\s*,\s*([\d\.]+)\s*,\s*([\d\.]+)\s*,\s*([\d\.]+)\s*\)/,
+    var rx = /cubic-bezier\(\s*([\d\.]+)\s*,\s*([\d\.-]+)\s*,\s*([\d\.]+)\s*,\s*([\d\.-]+)\s*\)/,
         m = rx.exec(ease);
 
     if (!m) {

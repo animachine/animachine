@@ -94,7 +94,7 @@ function createKeyline(opt) {
                 ease = amgui.EASE2BEZIER[ease];
             }
 
-            var rx = /cubic-bezier\(\s*([\d\.]+)\s*,\s*([\d\.]+)\s*,\s*([\d\.]+)\s*,\s*([\d\.]+)\s*\)/,
+            var rx = /cubic-bezier\(\s*([\d\.]+)\s*,\s*([\d\.-]+)\s*,\s*([\d\.]+)\s*,\s*([\d\.-]+)\s*\)/,
                 m = rx.exec(ease),
                 x = deKey.offsetLeft,
                 w = deKeys[idx+1].offsetLeft - x,

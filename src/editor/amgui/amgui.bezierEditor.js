@@ -58,7 +58,7 @@ function createBezierEditor(opt) {
 
         if (typeof(points) === 'string') {
 
-            var rx = /cubic-bezier\(\s*([\d\.]+)\s*,\s*([\d\.]+)\s*,\s*([\d\.]+)\s*,\s*([\d\.]+)\s*\)/,
+            var rx = /cubic-bezier\(\s*([\d\.]+)\s*,\s*([\d\.-]+)\s*,\s*([\d\.]+)\s*,\s*([\d\.-]+)\s*\)/,
                 m = rx.exec(points);
 
             if (m) {
@@ -184,7 +184,7 @@ function createBezierEditor(opt) {
 
                 point.x = Math.max(0, Math.min(1, (mx - br.left) / w));
                 point.y = (((br.bottom - my) / h) * md.fullY) - md.minY;
-                
+                console.log(point)
                 var fix = 1000;
                 point.x = parseInt(point.x * fix) / fix;
                 point.y = parseInt(point.y * fix) / fix;

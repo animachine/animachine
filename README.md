@@ -1,3 +1,5 @@
+![](http://img.shields.io/badge/status-experimental-orange.svg?style=flat-square)
+
 Animachine is an animation tool for HTML and JS projects. You can use it as a Chrome extension or a Polymer Element to create complex animations to your web page or game with the power of script driven animation and traditional animation tools.
 
 The program is currently in the technical preview state, but you can see the core of the idea on these [demos](#demos) and follow the project to get the updates.

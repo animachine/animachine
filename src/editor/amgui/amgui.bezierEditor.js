@@ -16,7 +16,7 @@ module.exports = function (_amgui) {
             'ease-out': 'cubic-bezier(0,0,.58,1)',
             'ease-in-out': 'cubic-bezier(.42,0,.58,1)',
         },
-    }
+    };
 };
 
 
@@ -71,10 +71,10 @@ function createBezierEditor(opt) {
             }
             else {
                 points = {
-                    cp0x: .3,
-                    cp0y: .3,
-                    cp1x: .7,
-                    cp1y: .7,
+                    cp0x: 0.3,
+                    cp0y: 0.3,
+                    cp1x: 0.7,
+                    cp1y: 0.7,
                 };
             }
         }
@@ -154,7 +154,7 @@ function createBezierEditor(opt) {
 
     function createCp(point) {
 
-        var r = 6, mdMinY, mdFullY;
+        var r = 6;
 
         var deCp = document.createElement('div');
         deCp.style.position = 'absolute';
@@ -184,7 +184,7 @@ function createBezierEditor(opt) {
 
                 point.x = Math.max(0, Math.min(1, (mx - br.left) / w));
                 point.y = (((br.bottom - my) / h) * md.fullY) - md.minY;
-                console.log(point)
+                
                 var fix = 1000;
                 point.x = parseInt(point.x * fix) / fix;
                 point.y = parseInt(point.y * fix) / fix;

@@ -1,3 +1,5 @@
+'use strict';
+
 var rx = /^calc\((.*?)\)$/;
     
 module.exports = function uncalc (value) {
@@ -11,4 +13,4 @@ module.exports = function uncalc (value) {
 
         return value;
     }
-}
+};

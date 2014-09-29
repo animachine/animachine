@@ -9,7 +9,7 @@ function Interval(opt) {
     EventEmitter.call(this);
 
     this._lineH =  21;
-    this._start = 0
+    this._start = 0;
     this._end = am.timeline.length;
 
     this._onDragResize = this._onDragResize.bind(this);
@@ -105,7 +105,7 @@ p._onChangeTime = function () {
     this._refreshDomElem();
 };
 
-p._onDragResize = function (md, mx) {
+p._onDragResize = function () {
 
     //TODO
 };
@@ -126,7 +126,7 @@ p._refreshDomElem = function () {
 
     this.domElem.style.left = this.start * am.timeline.timescale + 'px';
     this.domElem.style.width = (this.end - this.start) * am.timeline.timescale + 'px';
-}
+};
 
 
 
@@ -135,7 +135,7 @@ p._refreshDomElem = function () {
 
 
 
-p._createDomElem = function (left, rigth) {
+p._createDomElem = function () {
 
     var de = document.createElement('div');
     de.style.width = '100%';
@@ -143,8 +143,8 @@ p._createDomElem = function (left, rigth) {
     de.style.background = 'blue';
     de.style.position = 'relative';
 
-    var lHandler = createHandler('left');
-    var rHandler = createHandler('right');
+    createHandler('left');
+    createHandler('right');
 
     this.domElem = de;
 
@@ -175,13 +175,13 @@ p._createDomElem = function (left, rigth) {
         handler.style.pointerEvents = 'auto';
         de.appendChild(handler);
     }
-}
+};
 
 
 
 p.dispose = function () {
 
     //TODO
-}
+};
 
 module.exports = Interval;

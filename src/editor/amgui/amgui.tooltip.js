@@ -8,7 +8,7 @@ module.exports = function (_amgui) {
 
     return {
         addTooltip: addTooltip,
-    }
+    };
 };
 
 
@@ -36,7 +36,7 @@ function addTooltip(opt) {
         onMMove(e);
     }
 
-    function onMLeave(e) {
+    function onMLeave() {
 
         opt.deTarget.removeEventListener('mousemove', onMMove);
         opt.deTarget.removeEventListener('mouseleave', onMLeave);

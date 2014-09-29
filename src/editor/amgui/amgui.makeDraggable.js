@@ -8,7 +8,7 @@ module.exports = function (_amgui) {
 
     return {
         makeDraggable: makeDraggable,
-    }
+    };
 };
 
 function makeDraggable(opt) {
@@ -69,7 +69,7 @@ function makeDraggable(opt) {
 
         if (name in opt) {
 
-            return opt[name].apply(opt.thisArg, args)
+            return opt[name].apply(opt.thisArg, args);
         }
     }
 }

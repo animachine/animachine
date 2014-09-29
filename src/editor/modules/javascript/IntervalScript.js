@@ -23,7 +23,7 @@ function IntervalScript(opt) {
 
     this._addInterval();
 
-    this.deKeyline.addEventListener('dblclick', this._onDblclickKeyline)
+    this.deKeyline.addEventListener('dblclick', this._onDblclickKeyline);
 
     if (opt) {
         this.useSave(opt);
@@ -129,7 +129,7 @@ p.editScript = function () {
             this.script = script;
         }
     });
-}
+};
 
 
 
@@ -149,7 +149,7 @@ p._addInterval = function (interval) {
     this.deKeyline.appendChild(interval.domElem);
 
     this._intervals.push(interval);
-}
+};
 
 p._removeInterval = function (interval) {
 
@@ -163,7 +163,7 @@ p._removeInterval = function (interval) {
 
     interval.domElem.parentNode.removeChild(interval.domElem);
     interval.dispose();
-}
+};
 
 
 
@@ -190,7 +190,7 @@ p._onChangeScript = function (script) {
     this.script = script;
 };
 
-p._onDblclickKeyline = function (script) {
+p._onDblclickKeyline = function () {
 
     this.editScript();
 };
@@ -217,7 +217,7 @@ p._createBoundsLine = function () {
     de.style.position = 'relative';
 
     return de;
-}
+};
 
 
 p._createParameterOptions = function () {

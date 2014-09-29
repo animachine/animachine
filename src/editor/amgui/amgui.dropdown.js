@@ -9,7 +9,7 @@ module.exports = function (_amgui) {
     return {
         createDropdown: createDropdown,
         bindDropdown: bindDropdown,
-    }
+    };
 };
 
 

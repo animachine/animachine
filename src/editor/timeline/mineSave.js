@@ -47,5 +47,5 @@ function extractJSON(str) {
             firstClose = str.substr(0, firstClose).lastIndexOf('}');
         } while(firstClose > firstOpen);
         firstOpen = str.indexOf('{', firstOpen + 1);
-    } while(firstOpen != -1);
+    } while(firstOpen !== -1);
 }

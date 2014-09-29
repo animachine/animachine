@@ -119,7 +119,7 @@ p._createContent = function () {
     });
 };
 
-p._onClickOk = function (e) {
+p._onClickOk = function () {
 
     this.hide();
 };
@@ -129,7 +129,7 @@ p._onSelectEase = function (e) {
     this.ease = e.detail.selection;
 };
 
-p._onChangeEase = function (e) {
+p._onChangeEase = function () {
 
     this.ease = this._inpEase.value;
 };

@@ -173,7 +173,6 @@ p._onDrag = function (e) {
         dy = pMouse.y - md.pMouse.y,
         alt = e.altKey,
         shift = e.shiftKey,
-        mr, dr,
         change = {};
 
     if (finger === 'origin') {
@@ -461,7 +460,7 @@ p._getScaleCursor = (function () {
 
     var FINGERS = ['0100', '0110', '0010', '0011', '0001', '1001', '1000', '1100'];
 
-    return function (mx, my) {
+    return function () {
 
         var rBase = FINGERS.indexOf(this._finger) * 45;
 

@@ -3,8 +3,6 @@
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 
-var FOLDERS = '<folders>';
-
 function Download(opt) {
 
     EventEmitter.call(this);
@@ -22,11 +20,11 @@ var p = Download.prototype;
 
 p.features = {
     save: true,
-}
+};
 
-p.save = function (name, data, path) {
+p.save = function (name, data) {
 
-    var data = 'data:application/javascript;charset=utf-8,' + encodeURIComponent(data);
+    data = 'data:application/javascript;charset=utf-8,' + encodeURIComponent(data);
     $('<a download="' + name + '" href="' + data + '"></a>')[0].click();
 };
 

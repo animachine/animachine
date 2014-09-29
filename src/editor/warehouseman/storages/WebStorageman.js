@@ -36,7 +36,7 @@ p.features = {
     save: true,
     open: true,
     browse: true,
-}
+};
 
 
 p.save = function (name, data, path) {

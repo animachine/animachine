@@ -31,7 +31,7 @@ function Timebar(opt) {
     this._createEndShadow();
 
     this._renderTape();
-
+//TODO use amgui.makeDraggable()
     this._canvasTape.addEventListener('mousedown', this._onMDown);
 
     decorTimebarNavigator(this);
@@ -64,6 +64,8 @@ Object.defineProperties(p, {
     start: {
         set: function (v) {
 
+            v = parseInt(v);
+
             if (!Number.isFinite(v) || this._start === v) return;
 
             this._start = Math.min(0, v);
@@ -77,6 +79,8 @@ Object.defineProperties(p, {
 
     width: {
         set: function (v) {
+
+            v = parseInt(v);
 
             if (!Number.isFinite(v) || this._width === v) return;
             
@@ -125,15 +129,17 @@ Object.defineProperties(p, {
     
     magnetPoints: {
         set: function (v) {
-            return this._magnetPoints = v;
+            this._magnetPoints = v;
         },
         get: function () {
-            return this._magnetPoints
+            return this._magnetPoints;
         }
     },
 
     length: {
         set: function (v) {
+
+            v = parseInt(v);
 
             if (!Number.isFinite(v) || this._length === v) return;
             this._length = v;
@@ -142,7 +148,7 @@ Object.defineProperties(p, {
             this.emit('changeTape');
         },
         get: function () {
-            return this._length
+            return this._length;
         }
     },
 });
@@ -190,7 +196,7 @@ p._renderTape = function () {
         ctx.linweidth = 0.5;
         ctx.strokeStyle = amgui.color.bg3;
         ctx.fillStyle = amgui.color.bg3;
-        ctx.font = ~~(this._height * 0.5) + 'px "Open Sans"'
+        ctx.font = ~~(this._height * 0.5) + 'px "Open Sans"';
 
         for (i = start % step.small; i < visibleTime; i += step.small) {
 
@@ -214,6 +220,8 @@ p._renderTape = function () {
         }
         ctx.stroke();
     }
+
+    this._refreshPointer();
 
     var endWidth = ((visibleTime - (start + length)) * scale);
     this._deEndShadow.style.width = Math.max(0, Math.min(width, endWidth)) + 'px';
@@ -289,6 +297,9 @@ function onMMove(e) {
     else if (this._dragMode === 'scale') {
 
         this.timescale = this._mdTimescale + (move/1000);
+
+        var mdPos = (this._mdStart + this.currTime) * this._mdTimescale;
+        this.start = -((this.currTime * this.timescale) - mdPos) / this.timescale;
     }
 }
 
@@ -313,7 +324,7 @@ p._refreshPointer = function () {
     var pos = ((this.start + this.currTime) / this.visibleTime) * this.width;
 
     this._dePointer.style.left = pos + 'px';
-}
+};
 
 
 
@@ -384,14 +395,14 @@ p._createEndShadow = function () {
         onDown: function () {
             return {
                 length: this.length,
-            }
+            };
         },
         onMove: function (md, mx) {
 
             var dx = mx - md.mx;
             this.length = md.length + (dx / this.timescale);
         }
-    })
+    });
 };
 
 
@@ -472,10 +483,5 @@ function getSteps() {
     function two(num) {
 
         return ('00' + num).substr(-2);
-    }
-
-    function four(num) {
-
-        return ('0000' + num).substr(-4);
     }
 }

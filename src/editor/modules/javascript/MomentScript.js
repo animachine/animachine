@@ -1,3 +1,5 @@
+'use strict';
+
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var dialogScriptEditor = require('./dialogScriptEditor');
@@ -83,7 +85,7 @@ p.getSave = function () {
     return {
         script: JSON.stringify(this.script).slice(1, -1).replace(/'/g, '\\\''),
         time: this.time,
-    }
+    };
 };
 
 p.useSave = function (save) {
@@ -107,7 +109,7 @@ p.editScript = function () {
             this.script = script;
         }
     });
-}
+};
 
 
 

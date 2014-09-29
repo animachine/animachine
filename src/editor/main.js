@@ -1,6 +1,5 @@
 'use strict';
 
-var domready = require('domready');
 var amgui = require('./amgui');
 var EventEmitter = require('events').EventEmitter;
 var Transhand = require('./transhand');
@@ -70,7 +69,7 @@ am.open = function (save) {
 
         am.timeline.useSave(save);
     }
-}
+};
 
 am._init = function () {
 
@@ -108,7 +107,7 @@ am._init = function () {
     am.workspace.fillTab('tools', am.toolbar.domElem);
 
     am.deHandlerCont.appendChild(am.domPicker.domElem);
-    am.domPicker.on('pick', onSelectWithDomPicker)
+    am.domPicker.on('pick', onSelectWithDomPicker);
 
     am.toolbar.addIcon({
         icon: 'ccw',
@@ -125,7 +124,7 @@ am._init = function () {
         icon: 'megaphone',
         separator: 'rest',
         onClick: function () {
-            am.dialogs.feedback.show()
+            am.dialogs.feedback.show();
         }
     });
 
@@ -439,7 +438,7 @@ function alertUnsupportedBrowsers() {
 
     var deSorry = document.createElement('div');
     deSorry.textContent = 'Sorry, this demo is currently only supported by chrome. ';
-    amgui.createIcon({icon: 'emo-unhappy', parent: deSorry, display: 'inline'})
+    amgui.createIcon({icon: 'emo-unhappy', parent: deSorry, display: 'inline'});
     deSorry.style.display = 'fixed';
     deSorry.style.margin = 'auto';
     deSorry.style.fontFamily = amgui.FONT_FAMILY;

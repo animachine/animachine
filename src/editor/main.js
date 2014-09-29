@@ -450,6 +450,7 @@ function alertUnsupportedBrowsers() {
     deSorry.style.right = 0;
     deSorry.style.bottom = 0;
     deSorry.style.left = 0;
+    document.body.innerHTML = '';
     document.body.appendChild(deSorry);
 }
 

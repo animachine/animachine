@@ -1,7 +1,9 @@
+'use strict';
+
 var CssSequence = require('./CssSequence');
 var qsgen = require('../../qsgen');
 
-var am, iconNew, qsModal;
+var am, iconNew;
 
 exports.init = function (_am) {
 
@@ -10,7 +12,7 @@ exports.init = function (_am) {
     am.registerSequenceType(CssSequence, CssSequence.prototype.type);
 
     am.on('selectDomElement', onSelectDomElement);
-}
+};
 
 function onSelectDomElement(de) {
 
@@ -56,7 +58,7 @@ function onSelectDomElement(de) {
 
         if (sequ instanceof CssSequence && sequ.isOwnedDomElem(de)) {
 
-            console.log('is owned', de)
+            console.log('is owned', de);
             sequ.select({focusElem: de});
             am.domPicker.hide();
             return true;

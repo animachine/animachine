@@ -1,3 +1,5 @@
+'use strict';
+
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../../amgui');
@@ -473,7 +475,7 @@ p._moveBlankParameterDown = function () {
 
     if (idx < this._parameters.length - 1) {
 
-        this.moveParameter(this._blankParameter, (this._parameters.length - 1) - idx)
+        this.moveParameter(this._blankParameter, (this._parameters.length - 1) - idx);
     }
 };
 
@@ -536,8 +538,8 @@ p._onSelectClick = function () {
 
 p._onChangeHandler = function(params, type) {
 
-    var time = am.timeline.currTime,
-        name, prop, value;
+    var time = am.timeline.currTime, 
+        prop, value;
 
     if (type === 'transform') {
 
@@ -578,12 +580,9 @@ p._onChangeTime = function (time) {
         return;
     }
 
-    this._parameters.forEach(function (param) {
-
-        this.renderTime(time);
-        this._focusHandler();
-        this._refreshTgglKey();
-    }, this);
+    this.renderTime(time);
+    this._focusHandler();
+    this._refreshTgglKey();
 };
 
 p._onChangeParameter = function () {
@@ -618,7 +617,7 @@ p._onChangeBlankParameter = function () {
 
         this._blankParameter.removeListener('change', this._onChangeBlankParameter);
         this._blankParameter = undefined;
-    };
+    }
 
     this._blankParameter = this.addParameter();
     this._blankParameter.on('change', this._onChangeBlankParameter);
@@ -709,7 +708,7 @@ p._onChangeSelectors = function (selectors) {
         this._currHandledDe = undefined;
     }
 
-    this._focusHandler(this._currHandledDe || this._selectedElems[0])
+    this._focusHandler(this._currHandledDe || this._selectedElems[0]);
 };
 
 
@@ -828,8 +827,8 @@ p._createHeadOptions = function (){
         parent: de
     });
     deNameIcon.style.display = 'none';
-    this._deName.addEventListener('mouseenter', function () {deNameIcon.style.display = 'inline-block';})
-    this._deName.addEventListener('mouseleave', function () {deNameIcon.style.display = 'none';})
+    this._deName.addEventListener('mouseenter', function () {deNameIcon.style.display = 'inline-block';});
+    this._deName.addEventListener('mouseleave', function () {deNameIcon.style.display = 'none';});
 
     var space = document.createElement('div');
     space.style.display = 'inline-block';
@@ -895,7 +894,7 @@ p.dispose = function () {
     am.timeline.removeListener('changeTime', this._onChangeTime);
 
     //TODO
-}
+};
 
 module.exports = CssSequence;
 

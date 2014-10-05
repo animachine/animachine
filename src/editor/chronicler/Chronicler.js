@@ -87,7 +87,7 @@ function call(reg) {
         reg();
     }
     else {
-        reg[0].apply(reg[1], reg.slice(2))
+        reg[0].apply(reg[1], reg.slice(2));
     }
 }
 
@@ -95,7 +95,7 @@ p.save = function (undo, redo) {
 
     var reg = {undo: undo, redo: redo};
 
-    this._saveReg(reg)
+    this._saveReg(reg);
 
     return reg;
 };
@@ -104,7 +104,7 @@ p.save = function (undo, redo) {
 p._saveReg = function (reg) {
 
     this._stack.splice(++this._pointer, this._stack.length, reg);
-}
+};
 
 
 
@@ -184,11 +184,11 @@ p.clear = function () {
 
     while (this._chains.length) {
         this.closeChain(this._chains[0].id);
-    };
+    }
     
     this._stack.length = 0, 
     this._pointer = -1;
-}
+};
 
 p.getChain = function (id) {
 

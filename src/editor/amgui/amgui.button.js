@@ -14,7 +14,7 @@ module.exports = function (_amgui) {
         createIconBtn: createIconBtn,
         createToggleIconBtn: createToggleIconBtn,
         createLinebreak: createLinebreak,
-    }
+    };
 };
 
 
@@ -60,7 +60,7 @@ function createBtn(opt) {
     de.setCaption = function (caption) {
 
         de.textContent = caption;
-    }
+    };
     
     de.setCaption(opt.caption || 'button');
 
@@ -172,7 +172,7 @@ function createToggleIconBtn(opt) {
     de.state = function () {
 
         return isOn;
-    }
+    };
 
 
     function onClick() {
@@ -211,7 +211,7 @@ function createIcon(opt) {
 
         var glyph = fontelloConf.glyphs.find(function (glyph) {
 
-            return glyph.css === icon
+            return glyph.css === icon;
         });
 
         var code = glyph ? glyph.code : 59407;

@@ -1,3 +1,5 @@
+'use strict';
+
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../../amgui');
@@ -5,7 +7,6 @@ var IntervalScript = require('./IntervalScript');
 var MomentScript = require('./MomentScript');
 var mstPlayer = require('./script.player.mst');
 var dialogSequOptions = require('./dialogSequOptions');
-var dialogScriptEditor = require('./dialogScriptEditor');
 
 function JsSequence(opt) {
 
@@ -154,7 +155,7 @@ p.getScript = function () {//TODO
 
     });
 
-    code = Mustache.render(mstPlayer, {
+    var code = Mustache.render(mstPlayer, {
         momentScripts: JSON.stringify(momentScripts),
         intervalScripts: JSON.stringify(intervalScripts)
     });
@@ -412,7 +413,7 @@ p._onSelectClick = function () {
     this.select();
 };
 
-p._onChangeTime = function (time) {
+p._onChangeTime = function () {
 
     if (this._isPlaying) {
         return;
@@ -462,7 +463,7 @@ p._onClickEditMomentScript = function () {
 
         momentScript.editScript();
     }
-}
+};
 
 p._onClickTgglShowIntervalScripts = function () {
 
@@ -567,8 +568,8 @@ p._createHeadOptions = function (){
         parent: de
     });
     deNameIcon.style.display = 'none';
-    this._deName.addEventListener('mouseenter', function () {deNameIcon.style.display = 'inline-block';})
-    this._deName.addEventListener('mouseleave', function () {deNameIcon.style.display = 'none';})
+    this._deName.addEventListener('mouseenter', function () {deNameIcon.style.display = 'inline-block';});
+    this._deName.addEventListener('mouseleave', function () {deNameIcon.style.display = 'none';});
 
     var space = document.createElement('div');
     space.style.display = 'inline-block';
@@ -617,7 +618,7 @@ p._createHeadOptions = function (){
     return de;
 };
 
-p.isOwnedDomElem = function (de) {
+p.isOwnedDomElem = function () {
 
     return false;
 };
@@ -627,7 +628,7 @@ p.dispose = function () {
     am.timeline.removeListener('changeTime', this._onChangeTime);
 
     //TODO
-}
+};
 
 module.exports = JsSequence;
 

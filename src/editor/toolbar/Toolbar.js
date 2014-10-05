@@ -59,7 +59,7 @@ p.addIcon = function (opt) {
 p.removeIcon = function (deIcon) {
 
     deIcon.parentNode.removeChild(deIcon);
-} 
+};
 
 p.addSeparator = function (name) {
 

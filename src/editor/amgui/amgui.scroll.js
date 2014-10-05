@@ -9,7 +9,7 @@ module.exports = function (_amgui) {
     return {
         createRange: createRange,
         makeScrollable: makeScrollable,
-    }
+    };
 };
 
 
@@ -31,7 +31,7 @@ function makeScrollable(opt) {
     });
 
     if (deRange) {
-        initRange()
+        initRange();
     }
 
     return ret;
@@ -62,7 +62,7 @@ function makeScrollable(opt) {
 
         deTargets.forEach(function (deT) {
 
-            deT.style.top = -pos + 'px'
+            deT.style.top = -pos + 'px';
         });
     }
 
@@ -109,7 +109,7 @@ function makeScrollable(opt) {
             clearInterval(refreshSetI);
 
             deRange.removeEventListener('change', onChangeRange);
-        }
+        };
     }
 
     function dispose() {
@@ -148,7 +148,7 @@ function createRange(opt) {
 
     if (opt.parent) {
         opt.parent.appendChild(de);
-    };
+    }
 
     de.setCursorWidth = function (w) {
 
@@ -193,4 +193,4 @@ function createRange(opt) {
     }
 
     return de;
-};
+}

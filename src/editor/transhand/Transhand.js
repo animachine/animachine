@@ -1,3 +1,5 @@
+'use strict';
+
 var Transformer = require('./hands/Transformer');
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
@@ -33,7 +35,7 @@ p.setup = function (opt) {
         this._currHand = hand;
     }
     else {
-        throw 'Unknown hand type: ' + opt.hand.type
+        throw 'Unknown hand type: ' + opt.hand.type;
     }
 
     if (typeof(opt.on) === 'object') {

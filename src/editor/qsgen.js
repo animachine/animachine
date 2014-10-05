@@ -1,3 +1,5 @@
+'use strict';
+
 var EXATTR = ['id', 'class', 'style'];
 
 function generate(de, root) {
@@ -11,7 +13,7 @@ function generate(de, root) {
     while (true) {
 
         do {
-            qsCurr = gen(deCurr, rootCurr)
+            qsCurr = gen(deCurr, rootCurr);
         }
         while(!qsCurr && 
             deCurr.parentNode !== rootCurr &&
@@ -60,7 +62,7 @@ function gen(de, root) {
 
             if (root.querySelectorAll(selector).length === 1) {
                 matches.push(selector);
-            };
+            }
         });
 
         if (matches.length) {
@@ -82,7 +84,7 @@ function possibleClasses(de, max) {
 
     return Array.prototype.slice.call(de.classList, 0)
         .map(function (className) {
-            return '.' + CSS.escape(className)
+            return '.' + CSS.escape(className);
         });
 }
 

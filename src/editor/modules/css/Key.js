@@ -1,3 +1,5 @@
+'use strict';
+
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var dialogKeyOptions = require('./dialogKeyOptions');
@@ -99,7 +101,7 @@ p.getSave = function () {
         value: this.value,
         time: this.time,
         ease: this.ease
-    }
+    };
 };
 
 p.useSave = function (save) {

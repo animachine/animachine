@@ -5,7 +5,6 @@ var inherits = require('inherits');
 var WebStorageman = require('./storages/WebStorageman');
 var PageScript = require('./storages/PageScript');
 var Download = require('./storages/Download');
-var Copy = require('./storages/Copy');
 var decorDialog = require('./decorDialog');
 
 function Warehouseeman(opt) {
@@ -37,7 +36,7 @@ p.addStorage = function (storage) {
 
     storage.features = storage.features || {
         placeholder: true,
-    }
+    };
 
     this._storages.push(storage);
     this.emit('changeStorages');

@@ -92,7 +92,7 @@ p._onClickOk = function () {
     this.hide();
 };
 
-p._onChangeScript = function (e) {
+p._onChangeScript = function () {
 
     this.script = this._cm.getValue();
 };
@@ -118,7 +118,6 @@ p._createContent = function () {
         
         this._cm.setValue(this.script);
         this._cm.on('change', this._onChangeScript);
-        window.cm = this._cm
     }, this);
 };
 

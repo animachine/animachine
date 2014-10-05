@@ -5,8 +5,7 @@ var amgui = require('../amgui');
 
 function decorTimebarNavigator (timebar) {
 
-    var deNav, deLeftHand, deRightHand, 
-        dragMode, md = {};
+    var deNav, deLeftHand, deRightHand, dragMode;
     
     createBase();
     timebar.domElem.appendChild(deNav);
@@ -23,7 +22,7 @@ function decorTimebarNavigator (timebar) {
                 start: timebar.start,
                 visibleTime: timebar.visibleTime,
                 timescale: timebar.timescale,
-            }
+            };
         },
         onMove: function (md, mx) {
 
@@ -43,6 +42,9 @@ function decorTimebarNavigator (timebar) {
             else if (dragMode === 'end') {
 
                 timebar.visibleTime = md.visibleTime + move;
+
+                var mdPos = (md.start + timebar.currTime) * md.timescale;
+                timebar.start = -((timebar.currTime * timebar.timescale) - mdPos) / timebar.timescale;
             }   
         },
         onUp: function () {

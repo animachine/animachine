@@ -8,7 +8,7 @@ module.exports = function (_amgui) {
 
     return {
         createDialog: createDialog,
-    }
+    };
 };
 
 
@@ -91,7 +91,7 @@ function createDialog(opt) {
     de.setButtons = function (buttons) {
 
         if (!buttons) {
-            return
+            return;
         }
 
         buttonsCont.innerHTML = '';

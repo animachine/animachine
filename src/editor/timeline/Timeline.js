@@ -38,7 +38,6 @@ function Timeline(opt) {
     });
     
     this._createBase();
-    // this._createTimeline();
     this._createPointerLine();
 
 
@@ -122,7 +121,7 @@ p.getSave = function () {
 
 p.useSave = function (save) {
 
-    var save = mineSave(save);
+    save = mineSave(save);
 
     if (!save) {
         alert('Can\'t use this save');
@@ -133,7 +132,7 @@ p.useSave = function (save) {
     save = _.extend({
         timebar: {},
         sequences: []
-    }, save)
+    }, save);
 
     this._timebar.currTime = save.timebar.currTime;
     this._timebar.timescale = save.timebar.timescale;
@@ -222,7 +221,7 @@ p.clear = function () {
 
         this.removeSequence(this._sequences[0]);
     }
-}
+};
 
 p.addSequence = function (sequ, skipHistory) {
 
@@ -323,7 +322,7 @@ p.pause = function () {
 
     _.invoke(this._sequences, 'pause');
 
-    window.cancelAnimationFrame(this._animPlayRafid)
+    window.cancelAnimationFrame(this._animPlayRafid);
 };
 
 
@@ -344,7 +343,7 @@ p._animPlay = function () {
 p._onTimebarSeek = function () {
 
     this.pause();
-}
+};
 
 p._onSelectSequence = function(sequ) {
 
@@ -359,7 +358,7 @@ p._onSelectSequence = function(sequ) {
     this._currSequence = sequ;
 };
 
-p._onChangeSequence = function(sequ) {
+p._onChangeSequence = function() {
 
     this._refreshMagnetPoints();
 };
@@ -387,6 +386,8 @@ p._onChangeTape = function () {
 
     this._deKeylineCont.style.left = left + 'px';
     this._deKeylineCont.style.width = 'calc(100% + ' + (-left) + 'px)';
+
+    this._refreshDePointer();
 };
 
 p._onChangeSequenceHeight = function (sequ) {
@@ -420,7 +421,7 @@ p._onSelectNewSequ = function (e) {
 
         var SequClass = am.sequenceTypes[type];
 
-        this.addSequence(new SequClass);
+        this.addSequence(new SequClass());
     }.bind(this);
 
     switch (e.detail.selection) {
@@ -439,7 +440,7 @@ p._onSelectNewSequ = function (e) {
     }
 };
 
-p._onStartEditCurrTime = function (e) {
+p._onStartEditCurrTime = function () {
 
     this._inpCurrTime.value = this.currTime;
 
@@ -527,7 +528,7 @@ p._refreshDeCurrTime = function () {
     }
     str += ms;
     this._deCurrTime.textContent = str;
-}
+};
 
 
 
@@ -617,16 +618,6 @@ p._createBase = function () {
     this._createDividerHandler();
 };
 
-// p._createTimeline = function () {
-
-//     this._deRight.style.backgroundColor = amgui.color.bg1;
-//     this._deRight.position = 'absolute';
-//     this._deRight.style.top = '0px';
-//     this._deRight.style.right = '0px';
-//     this._deRight.style.width = '30%';
-//     this._deRight.style.height = '100%';
-// };
-
 
 p._createSettingsHead = function () {
 
@@ -671,7 +662,7 @@ p._createSettingsHead = function () {
     this._deCurrTime.style.fontSize = '12px';
     this._deCurrTime.style.marginRight = '2px';
     this._deCurrTime.style.color = amgui.color.bg3;
-    this._deCurrTime.addEventListener('click', this._onStartEditCurrTime)
+    this._deCurrTime.addEventListener('click', this._onStartEditCurrTime);
 
     this._inpCurrTime = amgui.createInput({
         type: 'number',
@@ -683,8 +674,8 @@ p._createSettingsHead = function () {
     this._inpCurrTime.style.fontSize = '12px';
     this._inpCurrTime.style.marginRight = '2px';
     this._inpCurrTime.style.color = amgui.color.bg3;
-    this._inpCurrTime.addEventListener('blur', this._onFinishEditCurrTime)
-    this._inpCurrTime.addEventListener('change', this._onChangeInpCurrTime)
+    this._inpCurrTime.addEventListener('blur', this._onFinishEditCurrTime);
+    this._inpCurrTime.addEventListener('change', this._onChangeInpCurrTime);
 };
 
 p._createDividerHandler = function () {
@@ -714,7 +705,7 @@ p._createDividerHandler = function () {
             this._refreshTimebarWidth();
         }
     });
-}
+};
 
 p._createPointerLine = function () {
 

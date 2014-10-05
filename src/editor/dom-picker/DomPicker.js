@@ -1,8 +1,10 @@
+"use strict";
+
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../amgui');
 
-function DomPicker(opt) {
+function DomPicker() {
 
     EventEmitter.call(this);
 
@@ -23,7 +25,7 @@ module.exports = DomPicker;
 
 p.focusElem = function (target) {
 
-    var oldTarget = this._deTarget
+    var oldTarget = this._deTarget,
         crumbs = this._crumbs,
         lastCrumb = crumbs[crumbs.length-1];
 
@@ -80,7 +82,7 @@ p._render = function () {
     this.domElem.style.top = br.top + 'px';
     this.domElem.style.width = br.width + 'px';
     this.domElem.style.height = br.height + 'px';
-}
+};
 
 p._onMMove =  function (e) {
 

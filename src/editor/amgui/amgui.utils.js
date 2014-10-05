@@ -9,7 +9,7 @@ module.exports = function (_amgui) {
     return {
         placeToPoint: placeToPoint,
         callOnAdded: callOnAdded,
-    }
+    };
 };
 
 
@@ -41,11 +41,10 @@ function placeToPoint(de, mx, my, way) {
             py = my;
             break;
 
-        case 'left':
         default:
+        case 'left':
             px = mx - w;
             py = my - (h / 2);
-            break;
     }
 
     if (py < 0) py = 0;

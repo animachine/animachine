@@ -8,7 +8,7 @@ module.exports = function (_amgui) {
 
     return {
         createKeyValueInput: createKeyValueInput,
-    }
+    };
 };
 
 

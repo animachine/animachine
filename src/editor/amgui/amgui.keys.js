@@ -9,7 +9,7 @@ module.exports = function (_amgui) {
     return {
         createKeyline: createKeyline,
         createKey: createKey
-    }
+    };
 };
 
 
@@ -45,7 +45,7 @@ function createKeyline(opt) {
         renderEase();
 
         return deKey;
-    }
+    };
 
     function sortKeys() {
 
@@ -129,8 +129,7 @@ function createKey(opt) {
 
     opt.color = opt.color || '#7700ff';
 
-    var isUserSelected = false, 
-        mdx, mDragged,
+    var isUserSelected = false,
         time = opt.time || 0, 
         timescale = opt.timescale || 1;
 
@@ -163,16 +162,16 @@ function createKey(opt) {
             
             return {
                 dragged: 0,
-            }
+            };
         },
-        onMove: function (md, mx, my) {
+        onMove: function (md, mx) {
 
             var diff = mx - md.mx,
                 diffTime = (diff / timescale) - md.dragged;
                 
             md.dragged += diffTime;
 
-            amgui.emit('translateSelectedKeys', diffTime)
+            amgui.emit('translateSelectedKeys', diffTime);
         }
     });
 
@@ -215,7 +214,7 @@ function createKey(opt) {
         amgui.removeListener('translateSelectedKeys', onTranslateSelectedKeys);
 
         de.dispatchEvent(new Event('remove'));
-    }
+    };
 
     setLeft();
     de.setEase(opt.ease);

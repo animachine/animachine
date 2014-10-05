@@ -200,7 +200,7 @@ p._createContent = function () {
     amgui.createIconBtn({
         icon: 'code',
         display: 'inline-block',
-        onClick: function () {am.dialogs.featureDoesntExist.show()},
+        onClick: function () {am.dialogs.featureDoesntExist.show();},
         parent: this._deContent,
         tooltip: 'select from options'
     });

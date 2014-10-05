@@ -77,7 +77,7 @@ p.getSave = function () {
     var save = {
         name: this.name,
         keys: [],
-    }
+    };
 
     this._keys.forEach(function (key) {
 
@@ -105,7 +105,7 @@ p.getScriptKeys = function () {
 
         var k = {
             offset: key.time / am.timeline.length,
-        }
+        };
 
         k[this.name] = this.getValue(key.time);
         
@@ -164,7 +164,7 @@ p.getValue = function (time) {
 
             p = this._applyEase(before.ease, p);
 
-            return createCalc(av, bv, p)
+            return createCalc(av, bv, p);
         }
         else if (before) {
             
@@ -368,7 +368,7 @@ p._applyEase = function (ease, value) {
         p[i+0] = p[i+0] + (p[i+2] - p[i+0]) * value;
         p[i+1] = p[i+1] + (p[i+3] - p[i+1]) * value;
     }
-}
+};
 
 
 
@@ -478,6 +478,6 @@ p._createParameterOptions = function () {
 p.dispose = function () {
 
     //TODO
-}
+};
 
 module.exports = CssParameter;

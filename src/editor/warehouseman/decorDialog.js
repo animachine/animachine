@@ -69,7 +69,7 @@ function decorDialog(whm) {
 
     function onChangeCurrStorage() {
 
-        refresh()
+        refresh();
     }
 
     function refresh() {
@@ -85,7 +85,7 @@ function decorDialog(whm) {
 
         function showHide(de, show) {
 
-            de.style.display = show ? 'block' || de.baseDisplay : 'hidden'
+            de.style.display = show ? 'block' || de.baseDisplay : 'hidden';
         }
     }
 
@@ -100,7 +100,7 @@ function decorDialog(whm) {
         createStorageSelector();
         createBreadcrumbs();
         createBtnNewFolder();
-        createBtnSettings()
+        createBtnSettings();
         createNameInput();
         createDirectory();
         createOptions();
@@ -112,7 +112,7 @@ function decorDialog(whm) {
 
         var save = openOptions.getSave(),
             name = selectedName || 'anim.am.js';
-            console.log('onSave', save, name)
+
         whm.save(name, save, selectedPath);
 
         onClose();
@@ -285,7 +285,7 @@ function decorDialog(whm) {
 
                 inpName.value = selectedName;
             }
-        }
+        };
     }
 
 
@@ -399,7 +399,7 @@ function decorDialog(whm) {
 
             removeButtons();
 
-            whm._storages.forEach(function (storage, idx) {
+            whm._storages.forEach(function (storage) {
 
                 if (storage.features.placeholder || storage.features[mode]) {
 
@@ -432,7 +432,7 @@ function decorDialog(whm) {
 
                     whm.selectStorage(btn.storage);
                 }
-            })
+            });
         }
   
         function createItem(storage) {
@@ -452,7 +452,7 @@ function decorDialog(whm) {
             amgui.addTooltip({
                 deTarget: btn.domElem, 
                 text: storage.tooltip
-            })
+            });
 
             buttons.push(btn);
         }
@@ -478,14 +478,14 @@ function decorDialog(whm) {
                 includeSave: checkSave.checked,
                 minify: checkMinify.checked,
                 autoPlay: checkAuto.checked
-            }
+            };
         };
 
         deOptions.setOptions = function (opt) {
 
-            checkSave.checked = otp.includeSave;
-            checkMinify.checked = otp.minify;
-            checkAuto.checked = otp.autoPlay;
+            checkSave.checked = opt.includeSave;
+            checkMinify.checked = opt.minify;
+            checkAuto.checked = opt.autoPlay;
         };
 
         deOptions.toggle = function () {
@@ -493,7 +493,7 @@ function decorDialog(whm) {
             isOpened = !isOpened;
 
             deOptions.style.display = isOpened ? 'block' : 'none';
-        }
+        };
 
         function createCheckbox(name, checked) {
 

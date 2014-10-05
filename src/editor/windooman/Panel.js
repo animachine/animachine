@@ -25,7 +25,7 @@ function Panel(opt) {
         opt.tabs.forEach(this.addTab, this);
     }
 
-    if (!this._tabs.some(function (tab) {return tab.selected}) &&
+    if (!this._tabs.some(function (tab) {return tab.selected;}) &&
         this._tabs.length)
     {
         this._tabs[0].select();

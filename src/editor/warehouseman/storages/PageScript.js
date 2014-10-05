@@ -47,7 +47,7 @@ p.open = function (name) {
     }
 };
 
-p.dir = function (path) {
+p.dir = function () {
 
     var ret = [];
 

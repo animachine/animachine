@@ -2,7 +2,6 @@
 
 var inherits = require('inherits');
 var CssParameter = require('./CssParameter');
-var uncalc = require('./uncalc');
 var Key = require('./Key');
 var amgui = require('../../amgui');
 
@@ -250,8 +249,8 @@ p._createTransformInputs = function () {
     deOptions.style.height = (lineH * this._lineCount) + 'px';
     deOptions.style.flexWrap = 'wrap';
 
-    this.deKeyline.style.height = lineH + 'px'
-    this.deKeyline.style.marginBottom = (lineH * (this._lineCount-1)) + 'px'
+    this.deKeyline.style.height = lineH + 'px';
+    this.deKeyline.style.marginBottom = (lineH * (this._lineCount-1)) + 'px';
 
     var label = document.createElement('span');
     label.textContent = 'transform';

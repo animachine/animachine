@@ -638,9 +638,10 @@ p._createSettingsHead = function () {
     this._deLeft.appendChild(this._deSettingsHead);
 
     this._btnNewSequ = amgui.createIconBtn({
+        tooltip: 'add new sequence',
         icon: 'plus-squared',
         parent: this._deSettingsHead,
-        display: 'inline-block'
+        display: 'inline-block',
     });
 
     amgui.bindDropdown({
@@ -653,6 +654,7 @@ p._createSettingsHead = function () {
 
     
     this._btnTogglePlay = amgui.createToggleIconBtn({
+        tooltip: 'play/pause preview',
         iconOn: 'pause', 
         iconOff: 'play',
         parent: this._deSettingsHead,

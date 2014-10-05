@@ -40,11 +40,14 @@ p.addIcon = function (opt) {
         onClick: opt.onClick
     });
 
-    amgui.addTooltip({
-        deTarget: deIcon,
-        text: 'tooltip',
-        side: 'bottom'
-    });
+    if (opt.tooltip) {
+        
+        amgui.addTooltip({
+            deTarget: deIcon,
+            text: opt.tooltip,
+            side: 'bottom'
+        });
+    }
 
     deIcon.style.display = 'inline-block';
 

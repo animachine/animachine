@@ -111,17 +111,20 @@ am._init = function () {
     am.domPicker.on('pick', onSelectWithDomPicker)
 
     am.toolbar.addIcon({
+        tooltip: 'undo',
         icon: 'ccw',
         onClick: am.history.undo.bind(am.history)
     });
 
     am.toolbar.addIcon({
+        tooltip: 'redo',
         icon: 'cw',
         onClick: am.history.redo.bind(am.history)
     });
 
 
     am.toolbar.addIcon({
+        tooltip: 'feedback',
         icon: 'megaphone',
         separator: 'rest',
         onClick: function () {
@@ -155,6 +158,7 @@ am._init = function () {
 function createMenu() {
     
     var iconMenu = am.toolbar.addIcon({
+        tooltip: 'file',
         icon: 'menu',
         separator: 'global',
     });
@@ -310,9 +314,9 @@ function createAmRoot() {
 function addToggleGui() {
 
     am.toolbar.addIcon({
+        tooltip: 'show/hide editor',
         icon: 'resize-small',
         separator: 'first',
-        tooltip: 'hide editor',
         onClick: function () {
 
             am.deGuiCont.style.display = 'none';

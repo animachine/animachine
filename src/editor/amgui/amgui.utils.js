@@ -15,45 +15,48 @@ module.exports = function (_amgui) {
 
 function placeToPoint(de, mx, my, way) {
 
-    var px = 0, py = 0,
-        br = de.getBoundingClientRect(),
-        w = br.width,
-        h = br.height,
-        ww = window.innerWidth,
-        wh = window.innerHeight;
+    amgui.callOnAdded(de, function () {
 
-    way = way || 'left';
+        var px = 0, py = 0,
+            br = de.getBoundingClientRect(),
+            w = br.width,
+            h = br.height,
+            ww = window.innerWidth,
+            wh = window.innerHeight;
 
-    switch (way) {
+        way = way || 'left';
 
-        case 'top':
-            px = mx - (w / 2);
-            py = my - h;
-            break;
+        switch (way) {
 
-        case 'right':
-            px = mx;
-            py = my - (h / 2);
-            break;
+            case 'top':
+                px = mx - (w / 2);
+                py = my - h;
+                break;
 
-        case 'bottom':
-            px = mx - (w / 2);
-            py = my;
-            break;
+            case 'right':
+                px = mx;
+                py = my - (h / 2);
+                break;
 
-        default:
-        case 'left':
-            px = mx - w;
-            py = my - (h / 2);
-    }
+            case 'bottom':
+                px = mx - (w / 2);
+                py = my;
+                break;
 
-    if (py < 0) py = 0;
-    if (px + w > ww) px -= (px + w) - ww;
-    if (py + h > wh) py -= (py + h) - wh;
-    if (px < 0) px = 0;
+            default:
+            case 'left':
+                px = mx - w;
+                py = my - (h / 2);
+        }
 
-    de.style.left = px + 'px';
-    de.style.top = py + 'px';
+        if (py < 0) py = 0;
+        if (px + w > ww) px -= (px + w) - ww;
+        if (py + h > wh) py -= (py + h) - wh;
+        if (px < 0) px = 0;
+
+        de.style.left = px + 'px';
+        de.style.top = py + 'px';
+    });
 }
 
 function callOnAdded(de, cb, thisArg) {

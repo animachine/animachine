@@ -385,11 +385,11 @@ p._setFinger = function (e) {
         
         if (this._finger) {
 
-            this.domElem.style.pointerEvents = 'auto';
+            // this.domElem.style.pointerEvents = 'auto';
             this._setCursor(MOUSESTATES[this._finger]);
         }
         else {
-            this.domElem.style.pointerEvents = 'none';
+            // this.domElem.style.pointerEvents = 'none';
             this._setCursor('auto');
         }
     }
@@ -404,7 +404,7 @@ p._setCursor = function (cursor) {
 p._onMouseMove = function (e) {
 
     if (!this._isHandle) {
-
+        
         if (am.isPickableDomElem(e.target)) {            
 
             this._setFinger(e);

@@ -9,6 +9,7 @@ var Windooman = require('./windooman');
 var Warehouseman = require('./warehouseman');
 var Chronicler = require('./chronicler');
 var DomPicker = require('./dom-picker');
+var Mouse = require('./mouse');
 var dialogFeatureDoesntExits = require('./commonDialogs/dialogFeatureDoesntExits');
 var dialogFeedback = require('./commonDialogs/dialogFeedback');
 var modules = {
@@ -85,6 +86,8 @@ am._init = function () {
         base: getBaseWorkspace()
     });
     am.workspace.load('base');
+
+    am.mouse = new Mouse();
 
     am.storage = new Warehouseman();
 

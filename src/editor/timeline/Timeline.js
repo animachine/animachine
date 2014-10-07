@@ -325,6 +325,11 @@ p.pause = function () {
     window.cancelAnimationFrame(this._animPlayRafid);
 };
 
+p.screenXToTime = function (screenX) {
+
+    return this._timebar.screenXToTime(screenX);
+}
+
 
 
 

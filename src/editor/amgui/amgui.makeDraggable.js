@@ -46,13 +46,13 @@ function makeDraggable(opt) {
         call('onMove', [md, e.clientX, e.clientY, e]);
     }
 
-    function onUp() {
+    function onUp(e) {
 
         window.removeEventListener('mousemove', onMove);
         window.removeEventListener('mouseup', onUp);
         window.removeEventListener('mouseleave', onUp);
 
-        call('onUp');
+        call('onUp', [md, e.clientX, e.clientY, e]);
     }
 
     function onEnter() {

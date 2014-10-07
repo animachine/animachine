@@ -163,6 +163,22 @@ Object.defineProperties(p, {
 
 
 
+p.screenXToTime = function (screenX) {
+
+    var left = this._canvasTape.getBoundingClientRect().left,
+        mouseX = screenX - left,
+        time = (mouseX / this.width) * this.visibleTime;
+
+    time -= this.start;
+
+    return time;
+};
+
+
+
+
+
+
 
 
 
@@ -260,16 +276,12 @@ function onMDown(e) {
 
 function onMMove(e) {
 
-    var left = this._canvasTape.getBoundingClientRect().left,
-        mouseX = Math.max(0, Math.min(this.width, e.pageX - left)),
-        move = e.pageX - this._mdX,
+    var move = e.screenX - this._mdX,
         time, magnetPoint, magnetPointDiff;
 
     if (this._dragMode === 'seek') {
 
-        time = (mouseX / this.width) * this.visibleTime;
-
-        time -= this._start;
+        time -= this.screenXToTime(e.screenX);
 
         this._magnetPoints.forEach(function (mp) {
 

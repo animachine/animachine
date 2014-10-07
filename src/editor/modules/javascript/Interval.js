@@ -13,6 +13,7 @@ function Interval(opt) {
     this._end = am.timeline.length;
 
     this._onDragResize = this._onDragResize.bind(this);
+    this._onFinishResize = this._onFinishResize.bind(this);
     this._onDragMove = this._onDragMove.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
 
@@ -42,6 +43,8 @@ Object.defineProperties(p, {
     start: {
         set: function (v) {
 
+            v = parseInt(v);
+
             if (this._start === v) return;
 
             this._start = v;
@@ -55,6 +58,8 @@ Object.defineProperties(p, {
     },
     end: {
         set: function (v) {
+
+            v = parseInt(v);
 
             if (this._end === v) return;
 
@@ -89,7 +94,54 @@ p.useSave = function(save) {
     if ('end' in save) this.end = save.end;
 };
 
+p.showNeighbours = function (neighbours) {
 
+    this._neighbourIntervals = neighbours;
+};
+
+
+
+
+
+
+
+
+
+
+p._nextInterval = function () {
+
+    return this.__neighbourInterval(true);
+};
+
+p._prevInterval = function () {
+
+    return this.__neighbourInterval(false);
+};
+
+p.__neighbourInterval = function (forward) {
+
+    var pos, neighbour;
+
+    this._neighbourIntervals.forEach(function (interval) {
+
+        var next = forward ? interval.start : interval.end;
+
+        if (interval !== this && 
+            (forward ? next > this.end : next < this.start) &&
+            (pos === undefined || (forward === (pos > next))))
+        {
+            pos = next;
+            neighbour = interval;
+        }
+    }, this);
+
+    return neighbour;
+};
+
+p._remove = function () {
+
+    this.emit('remove', this);
+};
 
 
 
@@ -105,14 +157,85 @@ p._onChangeTime = function () {
     this._refreshDomElem();
 };
 
-p._onDragResize = function () {
+p._onDragResize = function (md, mx) {
 
-    //TODO
+    var neighbour, 
+        timePos = am.timeline.screenXToTime(mx);
+
+    if (md.side === 'left') {
+
+        neighbour = this._prevInterval();
+
+        if (neighbour && timePos < neighbour.end) {
+
+            timePos = neighbour.end;
+        }
+
+        this.start = timePos;
+    }
+    else {
+
+        neighbour = this._nextInterval();
+
+        if (neighbour && timePos > neighbour.start) {
+
+            timePos = neighbour.start;
+        }
+
+        this.end = timePos;
+    }
 };
 
-p._onDragMove = function () {
+p._onFinishResize = function (md) {
 
-    //TODO
+    var neighbour;
+
+    if (md.side === 'left') {
+
+        neighbour = this._prevInterval();
+
+        if (neighbour && neighbour.end === this.start) {
+
+            neighbour.end = this.end;
+            this._remove();
+        }
+    }
+    else {
+
+        neighbour = this._nextInterval();
+
+        if (neighbour && neighbour.start === this.end) {
+
+            neighbour.start = this.start;
+            this._remove();
+        }
+    }
+};
+
+p._onDragMove = function (md, mx) {
+
+    var timePos = am.timeline.screenXToTime(mx),
+        move = timePos - md.timePos,
+        nextInterval = this._nextInterval(),
+        prevInterval = this._prevInterval();
+
+    if (nextInterval && md.end + move > nextInterval.start) {
+
+        move = nextInterval.start - md.end;
+    }
+
+    if (prevInterval && md.start + move < prevInterval.end) {
+
+        move = prevInterval.end - md.start;
+    }
+
+    if (md.start + move < 0) {
+
+        move = -md.start;
+    }
+
+    this.start = md.start + move;
+    this.end = md.end + move;
 };
 
 
@@ -143,10 +266,23 @@ p._createDomElem = function () {
     de.style.background = 'blue';
     de.style.position = 'relative';
 
-    createHandler('left');
-    createHandler('right');
+    createHandler.call(this, 'left');
+    createHandler.call(this, 'right');
 
     this.domElem = de;
+
+    amgui.makeDraggable({
+        deTarget: de,
+        thisArg: this,
+        onDown: function (e) {
+            return {
+                start: this.start,
+                end: this.end,
+                timePos: am.timeline.screenXToTime(e.screenX)
+            };
+        },
+        onMove: this._onDragMove,
+    });
 
     amgui.bindDropdown({
         asContextMenu: true,
@@ -157,9 +293,15 @@ p._createDomElem = function () {
                 {text: 'remove'}
             ]
         }),
-        onSelect: function () {
-            //TODO
-            am.dialogs.featureDoesntExist.show();
+        onSelect: function (selection) {
+            
+            if (selection === 'split here') {
+
+                this._remove();
+            }
+            else {
+                am.dialogs.featureDoesntExist.show();
+            }
         }
     });
 
@@ -174,6 +316,23 @@ p._createDomElem = function () {
         handler.style.cursor = 'ew-resize';
         handler.style.pointerEvents = 'auto';
         de.appendChild(handler);
+
+        amgui.makeDraggable({
+            deTarget: handler,
+            onDown: function () {
+                return {
+                    side: side
+                };
+            },
+            onMove: this._onDragResize,
+            onUp: this._onFinishResize,
+            onEnter: function () {
+                handler.style.background = 'white';
+            },
+            onLeave: function () {
+                handler.style.background = '';
+            }
+        });
     }
 };
 

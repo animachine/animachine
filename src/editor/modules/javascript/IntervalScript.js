@@ -16,6 +16,8 @@ function IntervalScript(opt) {
 
     this._onClickOpenScript = this._onClickOpenScript.bind(this);
     this._onChangeScript = this._onChangeScript.bind(this);
+    this._onRemoveInterval = this._onRemoveInterval.bind(this);
+    this.onSelectAddInterval = this.onSelectAddInterval.bind(this);
     this._onDblclickKeyline = this._onDblclickKeyline.bind(this);
 
     this.deOptions = this._createParameterOptions();
@@ -139,15 +141,14 @@ p.editScript = function () {
 
 
 
-p._addInterval = function (interval) {
+p._addInterval = function (opt) {
 
-    if (!(interval instanceof Interval)) {
+    var interval = new Interval(opt);
 
-        interval = new Interval(interval);
-    }
+    interval.showNeighbours(this._intervals);
+    interval.on('remove', this._onRemoveInterval);
 
     this.deKeyline.appendChild(interval.domElem);
-
     this._intervals.push(interval);
 };
 
@@ -162,6 +163,7 @@ p._removeInterval = function (interval) {
     this._intervals.splice(idx, 1);
 
     interval.domElem.parentNode.removeChild(interval.domElem);
+    interval.removeListener('remove', this._onRemoveInterval);
     interval.dispose();
 };
 
@@ -190,9 +192,44 @@ p._onChangeScript = function (script) {
     this.script = script;
 };
 
+p._onRemoveInterval = function (interval) {
+
+    this._removeInterval(interval);
+};
+
 p._onDblclickKeyline = function () {
 
     this.editScript();
+};
+
+p.onSelectAddInterval = function () {
+
+    var time = am.timeline.screenXToTime(am.mouse.screenX),
+        nextStart = time - 500, 
+        prevEnd = time + 500;
+
+    if (this.isInsideBounds(time)) {
+
+        return;
+    }
+
+    this._intervals.forEach(function (interval) {
+
+        if (interval.end < time && (!prevEnd || prevEnd < interval.end)) {
+
+            prevEnd = interval.end;
+        }
+
+        if (interval.start > time && (!nextStart || nextStart > interval.start)) {
+
+            nextStart = interval.start;
+        }
+    });
+
+    this._addInterval({
+        start: time - Math.min(500, (prevEnd - time) * 0.8, time),
+        end: time + Math.min(500, (time - nextStart) * 0.8),
+    });
 };
 
 
@@ -215,6 +252,16 @@ p._createBoundsLine = function () {
     de.style.height = this._lineH + 'px';
     de.style.background = 'grey';
     de.style.position = 'relative';
+
+    amgui.bindDropdown({
+        asContextMenu: true,
+        deTarget: de,
+        deMenu: amgui.createDropdown({
+            options: [
+                {text: 'add interval', onSelect: this.onSelectAddInterval}
+            ]
+        })
+    });
 
     return de;
 };
@@ -241,28 +288,28 @@ p._createParameterOptions = function () {
         parent: de
     });
 
-    this._btnEdit = amgui.createIconBtn({
-        icon: 'wrench',
-        height: this._baseH,
-        parent: de
-    });
+    // this._btnEdit = amgui.createIconBtn({
+    //     icon: 'wrench',
+    //     height: this._baseH,
+    //     parent: de
+    // });
 
-    amgui.bindDropdown({
-        deTarget: this._btnEdit,
-        deMenu: amgui.createDropdown({
-            options: [
-                {text: 'merge'},
-                {text: 'split'},
-                {text: 'end here'},
-                {text: 'start here'},
-                {text: 'add', icon: 'plus'},
-                {text: 'remove', icon: 'minus'},
-            ]
-        }),
-        onSelect: function () {
-            am.dialogs.featureDoesntExist.show();
-        }
-    });
+    // amgui.bindDropdown({
+    //     deTarget: this._btnEdit,
+    //     deMenu: amgui.createDropdown({
+    //         options: [
+    //             {text: 'merge'},
+    //             {text: 'split'},
+    //             {text: 'end here'},
+    //             {text: 'start here'},
+    //             {text: 'add', icon: 'plus'},
+    //             {text: 'remove', icon: 'minus'},
+    //         ]
+    //     }),
+    //     onSelect: function () {
+    //         am.dialogs.featureDoesntExist.show();
+    //     }
+    // });
 
     amgui.bindDropdown({
         asContextMenu: true,

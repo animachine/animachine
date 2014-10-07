@@ -281,7 +281,7 @@ function onMMove(e) {
 
     if (this._dragMode === 'seek') {
 
-        time -= this.screenXToTime(e.screenX);
+        time = this.screenXToTime(e.screenX);
 
         this._magnetPoints.forEach(function (mp) {
 

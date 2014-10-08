@@ -65,4 +65,7 @@ p._createDomElem = function () {
     this.domElem.style.height = '100%';
 };
 
+p._calcBorders = function () {
+};
+
 module.exports = Windooman;

@@ -2,15 +2,15 @@
 
 var Tab = require('./Tab');
 var amgui = require('../amgui');
+var Block = require('./Block');
+var inherits = require('inherits');
 
 function Panel(opt) {
 
-    this._tabs = [];
-    
-    this.size = opt.size;
-    this.scaleMode = opt.scaleMode;
+    Block.call(this, opt);
 
-    this._createDomElem();
+    this._tabs = [];
+
     this._createTabBase();
 
     this._empty = false;
@@ -32,7 +32,9 @@ function Panel(opt) {
     }
 }
 
+inherits(Panel, Block);
 var p = Panel.prototype;
+module.exports = Panel;
 
 Object.defineProperties(p, {
 
@@ -117,13 +119,6 @@ p.showTab = function (tab) {
     });
 };
 
-p._createDomElem = function () {
-
-    this.domElem = document.createElement('div');
-    this.domElem.style.width = '100%';
-    this.domElem.style.height = '100%';
-};
-
 p._createTabBase = function () {
 
     this._deTabBase = document.createElement('div');
@@ -148,5 +143,3 @@ p._createTabBase = function () {
     this._deTabContent.style.flex = 1;
     this._deTabBase.appendChild(this._deTabContent);
 };
-
-module.exports = Panel;

@@ -28,16 +28,16 @@ function CssSequence(opt) {
     this._isPlaying = false;
 
     this._onSelectClick = this._onSelectClick.bind(this);
-    this._onChangeHandler = this._onChangeHandler.bind(this);
-    this._onChangeTime = this._onChangeTime.bind(this);
-    this._onChangeParameter = this._onChangeParameter.bind(this);
     this._onDeleteParameter = this._onDeleteParameter.bind(this);
     this._onMoveParameter = this._onMoveParameter.bind(this);
-    this._onChangeBlankParameter = this._onChangeBlankParameter.bind(this);
     this._onClickTgglKey = this._onClickTgglKey.bind(this);
     this._onClickTgglHide = this._onClickTgglHide.bind(this);
     this._onClickTgglShowParams = this._onClickTgglShowParams.bind(this);
     this._onClickName = this._onClickName.bind(this);
+    this._onChangeBlankParameter = this._onChangeBlankParameter.bind(this);
+    this._onChangeHandler = this._onChangeHandler.bind(this);
+    this._onChangeTime = this._onChangeTime.bind(this);
+    this._onChangeParameter = this._onChangeParameter.bind(this);
     this._onChangeName = this._onChangeName.bind(this);
     this._onChangeName = this._onChangeName.bind(this);
     this._onChangeFill = this._onChangeFill.bind(this);
@@ -237,7 +237,7 @@ p.addParameter = function (opt, skipHistory) {
 
         if (!skipHistory) {
             am.history.save([this.removeParameter, this, param, true],
-                [this.addParameter, this, param, true]);
+                [this.addParameter, this, param, true], 'add parameter');
         }
 
         this._parameters.push(param);
@@ -257,7 +257,7 @@ p.removeParameter = function (param, skipHistory) {
 
     if (!skipHistory) {
         am.history.save([this.addParameter, this, param, true],
-            [this.removeParameter, this, param, true]);
+            [this.removeParameter, this, param, true], 'remove parameter');
     }
 
     var idx = this._parameters.indexOf(param);
@@ -627,7 +627,7 @@ p._onClickTgglKey = function () {
 
     var time = am.timeline.currTime,
         allHaveKey = this._isAllParamsHaveKey(time),
-        flag = am.history.startFlag();
+        flag = am.history.startFlag('toggle keys');
 
     this._parameters.forEach(function (param) {
 

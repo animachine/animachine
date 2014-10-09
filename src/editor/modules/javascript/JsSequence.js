@@ -171,7 +171,7 @@ p.addIntervalScript = function (opt, skipHistory) {
 
     if (!skipHistory) {
         am.history.save([this._removeIntervalScript, this, intervalScript, true],
-            [this.addIntervalScript, this, opt, true]);
+            [this.addIntervalScript, this, opt, true], 'add interval script');
     }
     
     this._intervalScripts.push(intervalScript);
@@ -189,7 +189,7 @@ p.removeIntervalScript = function (intervalScript, skipHistory) {
 
     if (!skipHistory) {
         am.history.save([this.addIntervalScript, this, intervalScript, true],
-            [this.removeIntervalScript, this, intervalScript, true]);
+            [this.removeIntervalScript, this, intervalScript, true], 'remove interval script');
     }
 
     var idx = this._intervalScripts.indexOf(intervalScript);
@@ -229,7 +229,10 @@ p.addMomentScript = function (opt, skipHistory) {
         if ('script' in opt) {
 
             if (!skipHistory) {
-                am.history.saveChain(ms, [this.addMomentScript, this, ms, true], [this.addMomentScript, this, opt, true]);
+                am.history.saveChain(ms, 
+                    [this.addMomentScript, this, ms, true], 
+                    [this.addMomentScript, this, opt, true], 
+                    'edit moment script');
             }
 
             ms.script = opt.script;
@@ -246,7 +249,10 @@ p.addMomentScript = function (opt, skipHistory) {
 
         if (!skipHistory) {
             am.history.closeChain(ms);
-            am.history.save([this.removeMomentScript, this, opt.time, true], [this.addMomentScript, this, opt, true]);
+            am.history.save(
+                [this.removeMomentScript, this, opt.time, true], 
+                [this.addMomentScript, this, opt, true], 
+                'add moment script');
         }
     }
 
@@ -272,8 +278,10 @@ p.removeMomentScript = function (ms, skipHistory) {
     }
 
     if (!skipHistory) {
-        am.history.save([this.addMomentScript, this, ms, true],
-            [this.removeMomentScript, this, ms, true]);
+        am.history.save(
+            [this.addMomentScript, this, ms, true],
+            [this.removeMomentScript, this, ms, true], 
+            'remove moment script');
     }
 
     this._momentScripts.splice(idx, 1);

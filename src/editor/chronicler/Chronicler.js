@@ -5,26 +5,10 @@ function Chronicler() {
     this._stack = [], 
     this._pointer = -1;
     this._chains = [];
-    this._flagCounter = 0;
 }
 
+module.exports = Chronicler;
 var p = Chronicler.prototype;
-
-p.undo = function () {
-
-    if (this._pointer > -1) {
-
-        call(this._stack[this._pointer--].undo);
-    }
-};
-
-p.redo = function () {
-
-    if (this._pointer < this._stack.length - 1) {
-
-        call(this._stack[++this._pointer].redo);
-    }
-};
 
 p.undo = function() {
 
@@ -35,9 +19,9 @@ p.undo = function() {
 
     var rec = this._stack[this._pointer--];
 
-    if (typeof(rec) === 'number') {
+    if (rec instanceof Flag) {
 
-        var startFlagIdx = this._stack.indexOf(rec - 1);
+        var startFlagIdx = this._stack.indexOf(rec.pair);
 
         if (startFlagIdx !== -1) {
 
@@ -63,9 +47,9 @@ p.redo = function() {
 
     var rec = this._stack[++this._pointer];
     
-    if (typeof(rec) === 'number') {
+    if (rec instanceof Flag) {
 
-        var endFlagIdx = this._stack.indexOf(rec + 1);
+        var endFlagIdx = this._stack.indexOf(rec.pair);
 
         if (endFlagIdx !== -1) {
 
@@ -91,9 +75,9 @@ function call(reg) {
     }
 }
 
-p.save = function (undo, redo) {
+p.save = function (undo, redo, name) {
 
-    var reg = {undo: undo, redo: redo};
+    var reg = {undo: undo, redo: redo, name: name};
 
     this._saveReg(reg);
 
@@ -108,15 +92,85 @@ p._saveReg = function (reg) {
 
 
 
+p.getNames = function () {
+
+    var names = [], currFlag;
+
+    this._stack.forEach(function (item, idx) {
+
+        if (currFlag) {
+
+            if (item === currFlag.pair) {
+
+                currFlag = undefined;
+            }
+        }
+        else {
+
+            if (item instanceof Flag) {
+
+                currFlag = item;
+                add(item.name, this._stack.indexOf(item.pair) - 1);
+            }
+            else {
+                add(item.name, idx);
+            }
+        }
+    });
+
+    return names;
+
+
+    function add(name, idx) {
+
+        names.push({
+            name: name || 'unnamed redord',
+            idx: idx
+        });
+    }
+};
+
+p.goto = function (idx) {
+
+    idx = Math.max(-1, Math.min(this._stack.length-1, parseInt(idx)));
+
+    if (idx < this._pointer) {
+
+        while (idx < this._pointer) {
+
+            this.undo();
+        }
+    }
+    else if (idx > this._pointer) {
+
+        while (idx > this._pointer) {
+
+            this.redo();
+        }
+    }
+};
 
 
 
 
 
-p.startFlag = function () {
 
-    this._saveReg(this._flagCounter++);
-    return this._flagCounter++;
+
+function Flag(name, pair) {
+
+    this.name = name;
+    this.pair = pair || new Flag(name, this);
+    
+    Object.freeze(this);
+}
+
+p.startFlag = function (name) {
+
+    var flag = new Flag(name);
+
+    this._saveReg(flag);
+
+    return flag.pair;
 };
 
 p.endFlag = function (flag) {
@@ -143,7 +197,7 @@ p.wrap = function (fn, ctx) {
 
 
 
-p.saveChain = function (id, undo, redo, delay) {
+p.saveChain = function (id, undo, redo, name, delay) {
 
     var chain = this.getChain(id);
 
@@ -155,7 +209,7 @@ p.saveChain = function (id, undo, redo, delay) {
 
         chain = {
             id: id,
-            reg: this.save(undo, redo)
+            reg: this.save(undo, redo, name)
         };
         this._chains.push(chain);
     }
@@ -197,5 +251,3 @@ p.getChain = function (id) {
         return chain.id === id;
     });
 };
-
-module.exports = Chronicler;

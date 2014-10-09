@@ -218,7 +218,7 @@ p.addKey = function (opt, skipHistory) {
         if ('value' in opt) {
 
             if (!skipHistory) {
-                am.history.saveChain(key, [this.addKey, this, key, true], [this.addKey, this, opt, true]);
+                am.history.saveChain(key, [this.addKey, this, key, true], [this.addKey, this, opt, true], 'edit key');
             }
 
             key.value = opt.value;
@@ -236,7 +236,7 @@ p.addKey = function (opt, skipHistory) {
 
         if (!skipHistory) {
             am.history.closeChain(key);
-            am.history.save([this.removeKey, this, opt.time, true], [this.addKey, this, opt, true]);
+            am.history.save([this.removeKey, this, opt.time, true], [this.addKey, this, opt, true], 'add key');
         }
     }
 
@@ -264,7 +264,7 @@ p.removeKey = function (key, skipHistory) {
 
     if (!skipHistory) {
         am.history.save([this.addKey, this, key, true],
-            [this.removeKey, this, key, true]);
+            [this.removeKey, this, key, true], 'remove key');
     }
 
     this._keys.splice(idx, 1);

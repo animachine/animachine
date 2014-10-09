@@ -226,8 +226,10 @@ p.clear = function () {
 p.addSequence = function (sequ, skipHistory) {
 
     if (!skipHistory) {
-        am.history.save([this.removeSequence, this, sequ, true],
-            [this.addSequence, this, sequ, true]);
+        am.history.save(
+            [this.removeSequence, this, sequ, true],
+            [this.addSequence, this, sequ, true],
+            'add track');
     }
     
     this._sequences.push(sequ);
@@ -262,8 +264,10 @@ p.addSequence = function (sequ, skipHistory) {
 p.removeSequence = function (sequ, skipHistory) {
 
     if (!skipHistory) {
-        am.history.save([this.addSequence, this, sequ, true],
-            [this.removeSequence, this, sequ, true]);
+        am.history.save(
+            [this.addSequence, this, sequ, true],
+            [this.removeSequence, this, sequ, true],
+            'remove track');
     }
 
     var idx = this._sequences.indexOf(sequ);

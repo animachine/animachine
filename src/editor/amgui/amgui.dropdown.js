@@ -16,22 +16,22 @@ module.exports = function (_amgui) {
 
 function createDropdown(opt) {
 
-    var options = opt.options || [];
+    opt = opt || {};
 
     var de = document.createElement('ul');
     de.style.listStyleType = 'none';
     de.style.margin = 0;
     de.style.padding = 0;
 
-    options.forEach(function (opt) {
+    de.addItem = function (optItem) {
 
-        if (typeof(opt) === 'string') {
+        if (typeof(optItem) === 'string') {
 
-            opt = {text: opt};
+            optItem = {text: optItem};
         }
 
         var li = document.createElement('li');
-        li.textContent = opt.text;
+        li.textContent = optItem.text;
         li.style.textAlign = 'left';
         li.style.fontFamily = amgui.FONT_FAMILY;
         li.style.fontSize = '14px';
@@ -44,14 +44,32 @@ function createDropdown(opt) {
 
             e.stopPropagation();
 
-            if (opt.onSelect) {
-                opt.onSelect();
+            if (optItem.onSelect) {
+                optItem.onSelect();
             }
 
-            de.dispatchEvent(new CustomEvent('select', {detail: {selection: opt.text}}));
+            de.dispatchEvent(new CustomEvent('select', {detail: {selection: optItem.text}}));
         });
         de.appendChild(li);
-    });
+
+        return li;
+    }
+
+    de.removeItem = function (li) {
+
+        if (li.parentNode) {
+
+            li.parentNode.removeChild(li);
+        }
+    }
+
+    if (opt.options) {
+
+        opt.options.forEach(function (optItem) {
+
+           de.addItem(optItem);
+        });
+    }
 
     if (opt.onSelect) {
 

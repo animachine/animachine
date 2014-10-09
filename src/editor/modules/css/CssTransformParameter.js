@@ -151,7 +151,8 @@ p.addKey = function (opt, skipHistory) {
             if (!skipHistory) {
                 am.history.saveChain(key, 
                     [this.addKey, this, _.cloneDeep(key.getSave()), true], 
-                    [this.addKey, this, _.cloneDeep(opt), true]);
+                    [this.addKey, this, _.cloneDeep(opt), true],
+                    'change transform key');
             }
             
             key.value = _.extend(key.value, opt.value);
@@ -170,7 +171,8 @@ p.addKey = function (opt, skipHistory) {
             am.history.closeChain(key);
             am.history.save(
                 [this.removeKey, this, opt.time, true], 
-                [this.addKey, this, opt, true]);
+                [this.addKey, this, opt, true],
+                'create transform key');
         }
     }
 

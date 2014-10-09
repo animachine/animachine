@@ -171,18 +171,34 @@ p._createBase = function () {
     this._btnClose.style.right = -btnSize + 'px';
     this._btnClose.style.top = -btnSize + 'px';
 
+    this._btnMenu = createBtn('ellipsis-vert', 'menu');
+    this._btnMenu.style.right = -btnSize + 'px';
+    this._btnMenu.style.bottom = '0';
+
+    this.dropdownMenu = amgui.createDropdown();
+
+    amgui.bindDropdown({
+        deTarget: this._btnMenu,
+        deMenu: this.dropdownMenu
+    });
+
     function createBtn(icon, tooltip, onClick) {
 
         var deIcon = amgui.createIconBtn({
             icon: icon,
             widht: btnSize,
             height: btnSize,
-            onClick: function (e) {
-                e.stopPropagation();
-                onClick();
-            },
             parent: de
         });
+
+        if (onClick) {
+
+            deIcon.addEventListener('click', function (e) {
+            
+                e.stopPropagation();
+                onClick();
+            })
+        }
 
         amgui.addTooltip({
             deTarget: deIcon,

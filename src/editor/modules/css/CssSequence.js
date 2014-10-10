@@ -438,7 +438,7 @@ p._focusHandler = function (de) {
     if (transformOriginParam) {
 
         var val = transformOriginParam.getValue(),
-            match = /\s*([\d\.]+)%\s*([\d\.]+)%/.exec(val);
+            match = /\s*(-?[\d\.]+)%\s*(-?[\d\.]+)%/.exec(val);
 
         if (match) {
             handOpt.params.ox = match[1] / 100;

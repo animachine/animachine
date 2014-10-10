@@ -1,24 +1,32 @@
 'use strict';
 
+var EventEmitter = require('events').EventEmitter;
+var inherits = require('inherits');
+
 function Block(opt) {
+
+    EventEmitter.call(this);
 
     this._createDomElem();
 
-    this.size = opt.size;
-    this.scaleMode = opt.scaleMode;
+    this.size = opt.size || 1;
+    this.scaleMode = opt.scaleMode || 'flex';
 }
 
+inherits(Block, EventEmitter);
 var p = Block.prototype;
+module.exports = Block;
 
 Object.defineProperties(p, {
 
     size: {
         set: function (v) {
 
-            if (this._size === v) return;
+            if (typeof(v) !== 'number' || this._size === v) return;
 
             this._size = v;
             this._refresh();
+            this.bubbleResize();
         },
         get: function () {
 
@@ -28,10 +36,11 @@ Object.defineProperties(p, {
     scaleMode: {
         set: function (v) {
 
-            if (this._scaleMode === v) return;
+            if (typeof(v) !== 'string' || this._scaleMode === v) return;
 
             this._scaleMode = v;
             this._refresh();
+            this.bubbleResize();
         },
         get: function () {
 
@@ -40,16 +49,21 @@ Object.defineProperties(p, {
     }
 });
 
+p.bubbleResize = function () {
+    //for override
+};
+
 p._refresh = function () {
 
-    var flex = '', width = '', height = ''; 
+    var flex = '', width = '', height = '';
 
     if (this.scaleMode === 'fix') {
 
         if (this._direction === 'row') {
 
-            width = this.size + 'px'; 
-        } else {
+            width = this.size + 'px';
+        } 
+        else {
             height = this.size + 'px';
         }
     }
@@ -66,12 +80,13 @@ p._refresh = function () {
 p._createDomElem = function () {
 
     this.domElem = document.createElement('div');
-    this.domElem.style.display = 'relative';
+    this.domElem.style.position = 'relative';
+    this.domElem.style.display = 'flex';
     this.domElem.style.width = '100%';
     this.domElem.style.height = '100%';
-    this.domElem.style.display = 'flex';
-    this.domElem.style.alignItems = 'stretch';
+    this.domElem.style.flex = '1';
+    this.domElem.style.alignSelf = 'stretch';
     this.domElem.style.pointerEvents = 'none';
-};
 
-module.exports = Block;
+    this.domElem.setAttribute('data-debug', 'block');
+};

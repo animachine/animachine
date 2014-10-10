@@ -119,13 +119,23 @@ p.showTab = function (tab) {
     });
 };
 
+p.bubbleResize = function () {
+
+    if (!this._tabs) return;
+
+    this._tabs.forEach(function (tab) {
+
+        tab.bubbleResize();
+    });
+};
+
 p._createTabBase = function () {
 
     this._deTabBase = document.createElement('div');
-    this._deTabBase.style.width = '100%';
-    this._deTabBase.style.height = '100%';
     this._deTabBase.style.display = 'flex';
     this._deTabBase.style.flexDirection = 'column';
+    this._deTabBase.style.alignSelf = 'stretch';
+    this._deTabBase.style.flex = '1';
     this.domElem.appendChild(this._deTabBase);
 
     this._deTabHead = document.createElement('div');

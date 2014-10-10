@@ -8,6 +8,7 @@ function Windooman() {
     this._workspaces = {};
 
     this._createDomElem();
+    this._initResize();
 }
 
 var p = Windooman.prototype;
@@ -58,14 +59,35 @@ p.fillTab = function (name, content) {
     }
 };
 
+p._initResize = function () {
+
+    var isWaiting = false;
+
+    var cb = function () {
+
+        if (this._root) {
+
+            this._root.bubbleResize();
+            isWaiting = false;
+        }
+    }.bind(this);
+
+    window.addEventListener('resize', function () {
+
+        if (!isWaiting) {
+
+            isWaiting = true;
+            window.requestAnimationFrame(cb);
+        }
+    });
+}
+
 p._createDomElem = function () {
 
     this.domElem = document.createElement('div');
     this.domElem.style.width = '100%';
     this.domElem.style.height = '100%';
-};
-
-p._calcBorders = function () {
+    this.domElem.style.display = 'flex';
 };
 
 module.exports = Windooman;

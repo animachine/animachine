@@ -136,10 +136,10 @@ am._init = function () {
 
 
 
-    am.timeline.domElem.style.position = 'fixed';
+    // am.timeline.domElem.style.position = 'fixed';
     am.timeline.domElem.style.width = '100%';
-    am.timeline.domElem.style.height = '230px';
-    am.timeline.domElem.style.bottom = '0px';
+    am.timeline.domElem.style.height = '100%';
+    // am.timeline.domElem.style.bottom = '0px';
     am.workspace.fillTab('timeline', am.timeline.domElem);
 
     addToggleGui();
@@ -271,7 +271,7 @@ am.isPickableDomElem = function (deTest) {
 
 function createAmRoot() {
 
-    // $('body').css('opacity', .23)
+    $('body').css('opacity', .23)
         // .mouseenter(function () {$('body').css('opacity', 1)})
         // .mouseleave(function () {$('body').css('opacity', .23)});
     

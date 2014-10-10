@@ -25,6 +25,13 @@ p.select = function () {
     this.deEar.style.borderBottomWidth = '2px';
 };
 
+p.bubbleResize = function () {
+
+    this.domElem.dispatchEvent(new Event('resize'));
+};
+
+
+
 p.deselect = function () {
 
     this.domElem.style.display = 'none';
@@ -38,6 +45,7 @@ p._createDomElem = function () {
     this.domElem.style.height = '100%';
     this.domElem.style.background = 'rgba(0,0,0,0.3)';
     this.domElem.style.pointerEvents = 'auto';
+    this.domElem.setAttribute('data-debug', 'tab - ' + this.name);
 };
 
 p._createTabEar = function () {

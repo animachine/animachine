@@ -6,12 +6,13 @@ var inherits = require('inherits');
 var amgui = require('../amgui');
 
 function Container(opt) {
-
+    
     Block.call(this, opt);
 
-    this.direction = opt.direction || 'row';
     this._children = [];
     this._deHandlers = [];
+
+    this.direction = opt.direction || 'row';
 
     opt.children.forEach(function (cData) {
 
@@ -24,6 +25,8 @@ function Container(opt) {
             this.addChild(new Panel(cData));
         }
     }, this);
+
+    amgui.callOnAdded(this.domElem, this._refreshHandlers.bind(this));
 }
 
 inherits(Container, Block);
@@ -70,22 +73,41 @@ p.findTab = function (name) {
     return tab;
 };
 
+p.bubbleResize = function () {
+
+    if (!this._children || !this._deHandlers) return;
+
+    this._children.forEach(function (child) {
+
+        child.bubbleResize();
+    });
+
+    this._refreshHandlers();
+};
 
 
-p._getFullFlex = function () {
+
+
+
+
+p._getFlexPerPx = function () {
 
     var br = this.domElem.getBoundingClientRect(),
-        full = this.direction === 'row' ? br.width : br.height;
+        fullPx = this.direction === 'row' ? br.width : br.height,
+        fullFlex = 0;
 
     this._children.forEach(function (child) {
 
         if (child.scaleMode === 'fix') {
 
-            full -= child.size;
+            fullPx -= child.size;
+        }
+        else {
+            fullFlex += child.size;
         }
     });
 
-    return full;
+    return fullFlex / fullPx;
 };
 
 p._refreshChildren = function () {
@@ -137,16 +159,29 @@ p._refreshHandlers = function () {
 
 
 
+
+p._onResize = function () {
+
+    this._refreshHandlers();
+}
+
 p._onDragHandler = function (md, mx, my) {
 
     var move = this.direction === 'row' ? mx - md.mx : my - md.my,
-        moveFlex = move / this._getFullFlex(),
+        moveFlex = move * this._getFlexPerPx(),
         prevChild = this._children[md.idx],
         nextChild = this._children[md.idx + 1];
 
-    prevChild.size = md.prevChildSize - (prevChild.scaleMode === 'fix' ? move : moveFlex);
+    prevChild.size = md.prevChildSize + (prevChild.scaleMode === 'fix' ? move : moveFlex);
     nextChild.size = md.nextChildSize - (nextChild.scaleMode === 'fix' ? move : moveFlex);
+
+    this._refreshHandlers();
 }
+
+
+
+
+
 
 
 
@@ -155,13 +190,18 @@ p._createHandler = function () {
 
     var de = document.createElement('div');
     de.style.position = 'absolute';
+    de.style.cursor = 'crosshair';
+    de.style.pointerEvents = 'auto';
 
     amgui.makeDraggable({
         deTarget: de,
         thisArg: this,
         onDown: function () {
+            var idx = this._deHandlers.indexOf(de);
             return {
-                idx: this._deHandlers.indexOf(de)
+                idx: idx,
+                prevChildSize: this._children[idx].size,
+                nextChildSize: this._children[idx + 1].size
             }
         },
         onMove: this._onDragHandler,

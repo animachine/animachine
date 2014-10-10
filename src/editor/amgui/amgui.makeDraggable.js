@@ -18,7 +18,7 @@ function makeDraggable(opt) {
     var md;
 
     opt.deTarget.addEventListener('mousedown', onDown);
-    opt.deTarget.addEventListener('mouseenter', onEnter);
+    opt.deTarget.addEventListener('mouseover', onEnter);
     opt.deTarget.addEventListener('mouseleave', onLeave);
 
     function onDown(e) {
@@ -66,7 +66,7 @@ function makeDraggable(opt) {
     }
 
     function call(name, args) {
-
+        
         if (name in opt) {
 
             return opt[name].apply(opt.thisArg, args);

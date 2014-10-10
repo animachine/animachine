@@ -43,7 +43,6 @@ function Transformer() {
 Transformer.id = 'transformer';
 
 inherits(Transformer, EventEmitter);
-
 var p = Transformer.prototype;
 
 p.setup = function (opt) {

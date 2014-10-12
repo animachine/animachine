@@ -109,17 +109,24 @@ p._onMMove =  function (e) {
 
 p._createBase = function () {
 
-    var btnSize = 21;
+    var btnSize = 21, borderSize = '2px';
 
     var de = document.createElement('div');
     de.style.position = 'fixed';
     de.style.boxSizing = 'border-box';
-    de.style.boxShadow = '0px 0px 1px 0px rgba(50, 50, 50, 0.75)';
     de.style.display = 'none';
     de.style.pointerEvents = 'none';
-    de.style.border = '2px dashed #eee';
+    de.style.border = 'solid #eee ' + borderSize;
     de.style.pointerEvents = 'none';
     am.deHandlerCont.appendChild(de);
+
+
+    var deDashed = document.createElement('div');
+    deDashed.style.width = '100%';
+    deDashed.style.height = '100%';
+    deDashed.style.border = 'dashed #444 ' + borderSize;
+    deDashed.style.transform = 'translate(-'+borderSize+',-'+borderSize+')';
+    de.appendChild(deDashed);
 
     de.addEventListener('mouseenter', this._onMEnter);
     de.addEventListener('mouseleave', this._onMLeave);
@@ -173,7 +180,7 @@ p._createBase = function () {
 
     this._btnMenu = createBtn('ellipsis-vert', 'menu');
     this._btnMenu.style.right = -btnSize + 'px';
-    this._btnMenu.style.bottom = '0';
+    this._btnMenu.style.bottom = -btnSize + 'px';
 
     this.dropdownMenu = amgui.createDropdown();
 
@@ -190,6 +197,8 @@ p._createBase = function () {
             height: btnSize,
             parent: de
         });
+
+        deIcon.style.textShadow = '0 0 4px #000';
 
         if (onClick) {
 

@@ -52,3 +52,9 @@
 .icon-menu:before { content: '\e830'; } /* '' */
 .icon-circle-empty:before { content: '\e831'; } /* '' */
 .icon-circle:before { content: '\e832'; } /* '' */
+.icon-ellipsis-vert:before { content: '\e833'; } /* '' */
+.icon-ellipsis:before { content: '\e834'; } /* '' */
+.icon-sitemap:before { content: '\e835'; } /* '' */
+.icon-expand:before { content: '\e836'; } /* '' */
+.icon-collapse:before { content: '\e837'; } /* '' */
+.icon-pencil:before { content: '\e838'; } /* '' */

@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Animachine png zombi demo</title>
+    <script src="../../build/vendor.js"></script>
+    <script src="../../build/main.js"></script>
+    <script src="zomb1.am.js"></script>
+    <link rel="stylesheet" href="../../build/assets/fontello/css/amgui.css">
+  </head>
+  <body>
+    <a id="artist" href="http://2dgameartforfree.blogspot.hu/" target="_blank" class="data-am-nopick"><img src="assets/artist.png"></a>
+    <div id="base">
+      <img id="lfoot" src="assets/lfoot.png">
+      <img id="rfoot" src="assets/rfoot.png">
+      <img id="lhand" src="assets/lhand.png">
+      <img id="rhand" src="assets/rhand.png">
+      <img id="lshoulder" src="assets/lshoulder.png">
+      <img id="rshoulder" src="assets/rshoulder.png">
+      <img id="head" src="assets/head.png">
+    </div>
+    <style>
+      body {
+        background: darkcyan;
+      }
+
+      img {
+        position: absolute;
+      }
+
+      #base {
+        margin: auto;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        position: absolute;
+        width: 100px;
+        height: 100px;
+      }
+
+      #artist {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+      }
+
+      #artist img {
+        right: 0px;
+        width: 234px;
+      }
+    </style>
+    <script>
+      am.open();
+    </script>
+  </body>
+</html>

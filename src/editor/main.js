@@ -394,7 +394,7 @@ function getBaseWorkspace() {
                 type: 'panel',
                 size: 32,
                 scaleMode: 'fix',
-                noHead: false,
+                noHead: true,
                 tabs: [{name: 'tools'}],
             },{
                 type: 'container',
@@ -407,7 +407,8 @@ function getBaseWorkspace() {
                     scaleMode: 'flex',
                     tabs: [
                         {name: 'Css Style'},
-                        {name: 'Dom Tree'}
+                        {name: 'Dom Tree'},
+                        {name: 'History'},
                     ]
                 }, {                    
                     type: 'panel',
@@ -419,7 +420,7 @@ function getBaseWorkspace() {
                 type: 'panel',
                 size: 4,
                 scaleMode: 'flex',
-                noHead: false,
+                noHead: true,
                 tabs: [{name: 'timeline'}],
             }]
     };

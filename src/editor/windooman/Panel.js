@@ -15,7 +15,7 @@ function Panel(opt) {
 
     this._empty = false;
     this._collapsed = false;
-    this._noHead = true;
+    this._noHead = false;
 
     if ('empty' in opt) this.empty = opt.empty;
     if ('collapsed' in opt) this.collapsed = opt.collapsed;
@@ -144,12 +144,12 @@ p._createTabBase = function () {
     this._deTabHead.style.display = 'flex';
     this._deTabHead.style.alignItems = 'stretch';
     this._deTabHead.style.background = amgui.color.bg1;
-    if (this._showHead) {
-        this._deTabBase.appendChild(this._deTabHead);
-    }
+    this._deTabHead.setAttribute('data-debug', 'tabhead')
+    this._deTabBase.appendChild(this._deTabHead);
 
     this._deTabContent = document.createElement('div');
     this._deTabContent.style.width = '100%';
     this._deTabContent.style.flex = 1;
+    this._deTabContent.setAttribute('data-debug', 'tabcontent')
     this._deTabBase.appendChild(this._deTabContent);
 };

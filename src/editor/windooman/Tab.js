@@ -17,6 +17,7 @@ p.setContent = function (deContent) {
 
     this.domElem.innerHTML = '';
     this.domElem.appendChild(deContent);
+    deContent.style.position = 'absolute';
 };
 
 p.select = function () {
@@ -41,6 +42,7 @@ p.deselect = function () {
 p._createDomElem = function () {
 
     this.domElem = document.createElement('div');
+    this.domElem.style.position = 'realtive';
     this.domElem.style.width = '100%';
     this.domElem.style.height = '100%';
     this.domElem.style.background = 'rgba(0,0,0,0.3)';

@@ -116,7 +116,7 @@ p.getNames = function () {
                 add(item.name, idx);
             }
         }
-    });
+    }, this);
 
     return names;
 

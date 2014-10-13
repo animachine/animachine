@@ -79,6 +79,12 @@
       "src": "fontawesome"
     },
     {
+      "uid": "d35a1d35efeb784d1dc9ac18b9b6c2b6",
+      "css": "pencil",
+      "code": 59448,
+      "src": "fontawesome"
+    },
+    {
       "uid": "f48ae54adfb27d8ada53d0fd9e34ee10",
       "css": "trash",
       "code": 59396,
@@ -193,6 +199,18 @@
       "src": "fontawesome"
     },
     {
+      "uid": "84bb9695b8662fa4783242f84c9e4682",
+      "css": "expand",
+      "code": 59446,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "7960517a504e42aea0641f15bc55fbed",
+      "css": "collapse",
+      "code": 59447,
+      "src": "fontawesome"
+    },
+    {
       "uid": "ce06b5805120d0c2f8d60cd3f1a4fdb5",
       "css": "play",
       "code": 59397,
@@ -208,6 +226,18 @@
       "uid": "8772331a9fec983cdb5d72902a6f9e0e",
       "css": "scissors",
       "code": 59424,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "107ce08c7231097c7447d8f4d059b55f",
+      "css": "ellipsis",
+      "code": 59444,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "750058837a91edae64b03d60fc7e81a7",
+      "css": "ellipsis-vert",
+      "code": 59443,
       "src": "fontawesome"
     },
     {
@@ -244,6 +274,12 @@
       "uid": "795efd07cd5205b589c883916a76cff0",
       "css": "hdd",
       "code": 59411,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "6fe95ffc3c807e62647d4f814a96e0d7",
+      "css": "sitemap",
+      "code": 59445,
       "src": "fontawesome"
     },
     {

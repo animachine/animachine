@@ -56,6 +56,7 @@ p._createTabEar = function () {
     de.textContent = this.name;
     de.style.flex = 1;
     de.style.boxSizing = 'border-box';
+    de.style.cursor = 'default';
     de.style.borderBottom = 'solid 1px white';
     de.style.alignSelf = 'stretch';
     de.style.overflow = 'hidden';

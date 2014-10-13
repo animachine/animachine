@@ -38,6 +38,7 @@ function Transformer() {
     this._onMouseUp = this._onMouseUp.bind(this);
     this._onMouseMove = this._onMouseMove.bind(this);
     this._onMouseDown = this._onMouseDown.bind(this);
+    this._rafOnDrag = this._rafOnDrag.bind(this);
 }
 
 Transformer.id = 'transformer';
@@ -161,6 +162,22 @@ p._renderHandler = function () {
 };
 
 p._onDrag = function (e) {
+
+    this._onDragMe = e;
+
+    if (!this._rafOnDragRafId) {
+
+        this._rafOnDragRafId = requestAnimationFrame(this._rafOnDrag);
+    }
+};
+
+p._rafOnDrag = function () {
+
+    var e = this._onDragMe;
+    this._onDragMe = undefined;
+
+    window.cancelAnimationFrame(this._rafOnDragRafId);
+    this._rafOnDragRafId = undefined;
 
     var params = this._params,
         base = this._base,
@@ -443,6 +460,10 @@ p._onMouseUp = function () {
     window.removeEventListener('mouseup', this._onMouseUp);
     window.removeEventListener('mouseleave', this._onMouseUp);
     window.removeEventListener('mousemove', this._onDrag);
+
+    if (this._rafOnDragRafId) {
+        this._rafOnDrag();
+    }
     
     this._isHandle = false;
 };

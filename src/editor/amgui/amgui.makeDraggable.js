@@ -15,7 +15,8 @@ function makeDraggable(opt) {
 
     opt = opt || {};
 
-    var md, isOver, isDrag;
+    var md, isOver, isDrag, 
+        waitingMoveEvent, waitingMoveRaf;
 
     opt.deTarget.addEventListener('mousedown', onDown);
     opt.deTarget.addEventListener('mouseover', onEnter);
@@ -45,7 +46,23 @@ function makeDraggable(opt) {
 
     function onMove(e) {
 
-        call('onMove', [md, e.clientX, e.clientY, e]);
+        waitingMoveEvent = e;
+
+        if (!waitingMoveRaf) {
+            
+            waitingMoveRaf = window.requestAnimationFrame(rafOnMove);
+        }
+    }
+
+    function rafOnMove() {
+
+        window.cancelAnimationFrame(waitingMoveRaf);
+
+        var wme = waitingMoveEvent;
+        waitingMoveRaf = undefined;
+        waitingMoveEvent = undefined;
+
+        call('onMove', [md, wme.clientX, wme.clientY, wme]);
     }
 
     function onUp(e) {
@@ -53,6 +70,10 @@ function makeDraggable(opt) {
         window.removeEventListener('mousemove', onMove);
         window.removeEventListener('mouseup', onUp);
         window.removeEventListener('mouseleave', onUp);
+
+        if (waitingMoveEvent) {
+            rafOnMove();
+        }
 
         isDrag = false;
         if (!isOver) {

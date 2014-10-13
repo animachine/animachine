@@ -19,6 +19,7 @@ function Timebar(opt) {
     this._length = opt.length || 60000;
 
     this._magnetPoints = [];
+    this._magnetDistancePx = 2.50;
 
     this._onMDown = onMDown.bind(this);
     this._onMMove = onMMove.bind(this);
@@ -174,6 +175,28 @@ p.screenXToTime = function (screenX) {
     return time;
 };
 
+p.magnetizeTime = function (time) {
+
+    var magnetPoint, magnetPointDiff = undefined;
+
+    this._magnetPoints.forEach(function (mp) {
+
+        var diff = Math.abs(mp - time);
+
+        if (diff < magnetPointDiff || magnetPointDiff === undefined) {
+            magnetPoint = mp;
+            magnetPointDiff = diff;
+        }
+    });
+    
+    if ((magnetPointDiff * this._timescale) < this._magnetDistancePx) {
+
+        time = magnetPoint;
+    }
+
+    return time;
+};
+
 
 
 
@@ -282,21 +305,7 @@ function onMMove(e) {
     if (this._dragMode === 'seek') {
 
         time = this.screenXToTime(e.screenX);
-
-        this._magnetPoints.forEach(function (mp) {
-
-            var diff = Math.abs(mp - time);
-
-            if (diff < magnetPointDiff || magnetPointDiff === undefined) {
-                magnetPoint = mp;
-                magnetPointDiff = diff;
-            }
-        });
-        
-        if ((magnetPointDiff * this._timescale) < 2) {
-
-            time = magnetPoint;
-        }
+        time = this.magnetizeTime(time);
 
         this.currTime = time;
 
@@ -405,14 +414,17 @@ p._createEndShadow = function () {
         deTarget: handler,
         thisArg: this,
         onDown: function () {
+            
             return {
                 length: this.length,
             };
         },
         onMove: function (md, mx) {
 
-            var dx = mx - md.mx;
-            this.length = md.length + (dx / this.timescale);
+            var time = this.screenXToTime(mx);
+            time = this.magnetizeTime(time);
+
+            this.length = time;
         }
     });
 };

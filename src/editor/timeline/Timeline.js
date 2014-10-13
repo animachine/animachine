@@ -148,6 +148,8 @@ p.useSave = function (save) {
 
     _.invoke(this._sequences, 'renderTime', this.currTime);
 
+    this._refreshMagnetPoints();
+
     am.history.clear();
 };
 

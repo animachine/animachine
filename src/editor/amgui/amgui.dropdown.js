@@ -89,7 +89,7 @@ function bindDropdown(opt) {
 
         deBtn.addEventListener('contextmenu', function (e) {
 
-            e.stopPropagation();
+            // e.stopPropagation();
             e.preventDefault();
             isOpened ? close(e) : open(e);
         });
@@ -98,7 +98,7 @@ function bindDropdown(opt) {
         
         deBtn.addEventListener('click', function (e) {
 
-            e.stopPropagation();
+            // e.stopPropagation();
             isOpened ? close(e) : open(e);
         });
     }

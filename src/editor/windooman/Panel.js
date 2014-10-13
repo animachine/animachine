@@ -11,6 +11,8 @@ function Panel(opt) {
 
     this._tabs = [];
 
+    this._onToggleCollapsed = this._onToggleCollapsed.bind(this);
+
     this._createTabBase();
 
     this._empty = false;
@@ -60,7 +62,7 @@ Object.defineProperties(p, {
             if (this._collapsed === v) return;
 
             this._collapsed = v;
-            this._deTabBase.style.display = this._collapsed ? 'none' : 'flex';
+            this._deTabContent.style.display = this._collapsed ? 'none' : 'flex';
         },
         get: function () {
             return this._collapsed;
@@ -88,6 +90,8 @@ p.addTab = function (tData) {
     this._deTabHead.appendChild(tab.deEar);
     this._deTabContent.appendChild(tab.domElem);
     this._tabs.push(tab);
+
+    tab.deEar.addEventListener('click', this.showTab.bind(this, tab));
 };
 
 
@@ -129,6 +133,24 @@ p.bubbleResize = function () {
     });
 };
 
+
+
+
+
+
+
+p._onToggleCollapsed = function () {
+
+    this.collapsed = !this.collapsed;
+
+    this._btnToggleCollapsed.setToggle(this.collapsed);
+};
+
+
+
+
+
+
 p._createTabBase = function () {
 
     this._deTabBase = document.createElement('div');
@@ -144,6 +166,7 @@ p._createTabBase = function () {
     this._deTabHead.style.display = 'flex';
     this._deTabHead.style.alignItems = 'stretch';
     this._deTabHead.style.background = amgui.color.bg1;
+    this._deTabHead.style.pointerEvents = 'auto';
     this._deTabHead.setAttribute('data-debug', 'tabhead')
     this._deTabBase.appendChild(this._deTabHead);
 
@@ -152,4 +175,14 @@ p._createTabBase = function () {
     this._deTabContent.style.flex = 1;
     this._deTabContent.setAttribute('data-debug', 'tabcontent')
     this._deTabBase.appendChild(this._deTabContent);
+
+    this._btnToggleCollapsed = amgui.createToggleIconBtn({
+        tooltip: 'show/hide tabs',
+        iconOn: 'collapse', 
+        iconOff: 'expand',
+        parent: this._deTabHead,
+        display: 'inline-block',
+        onClick: this._onToggleCollapsed
+    });
+    this._btnToggleCollapsed.style.order = 1;
 };

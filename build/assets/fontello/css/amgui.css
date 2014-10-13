@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'amgui';
-  src: url('../font/amgui.eot?21557563');
-  src: url('../font/amgui.eot?21557563#iefix') format('embedded-opentype'),
-       url('../font/amgui.woff?21557563') format('woff'),
-       url('../font/amgui.ttf?21557563') format('truetype'),
-       url('../font/amgui.svg?21557563#amgui') format('svg');
+  src: url('../font/amgui.eot?71604314');
+  src: url('../font/amgui.eot?71604314#iefix') format('embedded-opentype'),
+       url('../font/amgui.woff?71604314') format('woff'),
+       url('../font/amgui.ttf?71604314') format('truetype'),
+       url('../font/amgui.svg?71604314#amgui') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -14,7 +14,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'amgui';
-    src: url('../font/amgui.svg?21557563#amgui') format('svg');
+    src: url('../font/amgui.svg?71604314#amgui') format('svg');
   }
 }
 */
@@ -103,3 +103,9 @@
 .icon-menu:before { content: '\e830'; } /* '' */
 .icon-circle-empty:before { content: '\e831'; } /* '' */
 .icon-circle:before { content: '\e832'; } /* '' */
+.icon-ellipsis-vert:before { content: '\e833'; } /* '' */
+.icon-ellipsis:before { content: '\e834'; } /* '' */
+.icon-sitemap:before { content: '\e835'; } /* '' */
+.icon-expand:before { content: '\e836'; } /* '' */
+.icon-collapse:before { content: '\e837'; } /* '' */
+.icon-pencil:before { content: '\e838'; } /* '' */

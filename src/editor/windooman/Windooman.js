@@ -36,7 +36,7 @@ p.load = function (name) {
 
     Object.keys(this._tabMap).forEach(function (name) {
 
-        this.placeTab(name, this._tabMap[name]);
+        this.fillTab(name, this._tabMap[name]);
     }, this);
 };
 

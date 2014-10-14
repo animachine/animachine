@@ -9,6 +9,7 @@ var Windooman = require('./windooman');
 var Warehouseman = require('./warehouseman');
 var Chronicler = require('./chronicler');
 var DomPicker = require('./dom-picker');
+var Tour = require('./tour');
 var Mouse = require('./mouse');
 var dialogFeatureDoesntExits = require('./commonDialogs/dialogFeatureDoesntExits');
 var dialogFeedback = require('./commonDialogs/dialogFeedback');
@@ -90,6 +91,8 @@ am._init = function () {
     am.mouse = new Mouse();
 
     am.storage = new Warehouseman();
+
+    am.tour = new Tour();
 
     am.domElem = createAmRoot();
     am.deHandlerCont = createAmLayer();
@@ -271,7 +274,7 @@ am.isPickableDomElem = function (deTest) {
 
 function createAmRoot() {
 
-    // $('body').css('opacity', .23)
+    $('body').css('opacity', .23)
         // .mouseenter(function () {$('body').css('opacity', 1)})
         // .mouseleave(function () {$('body').css('opacity', .23)});
     
@@ -436,8 +439,8 @@ function createStatusLabel() {
     });
 
     deTitle.style.pointerEvents = 'none';
-    deTitle.style.top = '32px';
-    deTitle.style.left = '3px';
+    deTitle.style.width = '100%';
+    deTitle.style.textAlign = 'center';
     deTitle.style.opacity = '0.23';
     deTitle.style.fontWeight = 'bold';
 }

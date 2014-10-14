@@ -2,17 +2,107 @@
 
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
+var amgui = require('../amgui');
 
 function Tour() {
 
-
+	EventEmitter.call(this);
 }
 
 inherits(Tour, EventEmitter);
 var p = Tour.prototype;
 module.exports = Tour;
 
-p.createBase = function () {
+p.init = function () {
+
+	if (this._inited) return;
+	this._inited = true;
+
+
+	this._steps = [];
+
+	this._createBase();
+
+	this.prev = this.prev.bind(this);
+	this.next = this.next.bind(this);
+}
+
+p.setup = function (data) {
+
+	this.init();
+	this.clear();
+
+	data.steps.forEach(function (step) {
+
+		step.domElem = document.createElement('div');
+		step.domElem.innerHTML = step.content;
+
+		if (step.checkboxCount) {
+
+			step._deCheckboxes = [];
+			
+			for (var i = 0; i < step.checkboxCount; ++i) {
+
+				step._deCheckboxes.push(amgui.createToggleBtn({
+					iconOn: 'circle', 
+					iconOff: 'circle-empty'
+				}));
+			}
+		}
+
+		this._steps.push(step);
+	}, this);
+};
+
+p.clear = function () {
+
+};
+
+p.next = function () {
+
+	var idx = this._steps.indexOf(this._currStep) + 1;
+	this.goto(idx);
+};
+
+p.prev = function () {
+
+	var idx = this._steps.indexOf(this._currStep) - 1;
+	this.goto(idx);
+};
+
+p.goto = function (idx) {
+
+	idx = Math.max(0, Math.min(this._steps.length-1, idx));
+
+	if (this._currStep) {
+
+		this._deStepCont.removeChild(this._currStep.domElem);
+	}
+
+	this._currStep = this._steps.idx;
+	this._deStepCont.appendChild(this._currStep);
+	this._currStep.setup(this);
+
+	this._deState.textContent = (idx+1)+'/'+this._steps.length+' '+(this._currStep.title || '');
+};
+
+p.completeStep = function (step) {
+
+	step = step || this._currStep;
+
+	if (!step) return;
+
+	step._completed = true;	
+}
+
+p.addPointer = function (opt) {
+
+	if (!this._currStep) return;
+
+	var dePointer = this._createTriangle();
+}
+
+p._createBase = function () {
 
 	this.domElem = document.createElement('div');
 	this.domElem.style.width = '100%';
@@ -27,11 +117,39 @@ p.createBase = function () {
 	});
 	this._deState.style.flex = 1;
 
-	this._btnPrev = amgui.createButon({
+	this._btnPrev = amgui.createIconBtn({
 		parent: this._deHead,
-		caption: 'prev',
+		icon: 'angle-left',
+		onClick: this.prev
 	});
+
+	this._btnNext = amgui.createIconBtn({
+		parent: this._deHead,
+		icon: 'angle-right',
+		onClick: this.next
+	});
+
 	this._deState.style.flex = 1;
+}
+
+p._createTriangle = function () {
+
+	var de = document.createElement('div');
+	de.style.position = 'absolute';
+	de.style.pointerEvents = 'none';
+	am.deDialogCont.appendChild(de);z
+
+	var deTriangle = document.createElement('div');
+	deTriangle.style.position = 'absolute';
+	deTriangle.style.left = '25px';
+	deTriangle.style.width = '0';
+	deTriangle.style.height = '0';
+	deTriangle.style.borderStyle = 'solid';
+	deTriangle.style.borderWidth = '0 50px 100px 50px';
+	deTriangle.style.borderColor = 'transparent transparent #ff000d transparent';
+	de.appendChild(deTriangle);
+
+	return de;
 }
 
 

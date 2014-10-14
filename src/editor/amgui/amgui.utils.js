@@ -61,6 +61,19 @@ function placeToPoint(de, mx, my, way) {
 
 function callOnAdded(de, cb, thisArg) {
 
+    if (de instanceof Array) {
+
+        var deRest = de;
+        de = deRest.shift();
+
+        if (deRest.length !== 0) {
+
+            cb = callOnAdded.bind(this, deRest, cb, thisArg)
+        }
+    }
+
+
+
     var setI = setInterval(function () {
 
         if (check(de)) {

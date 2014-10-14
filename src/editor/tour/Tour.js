@@ -22,6 +22,7 @@ p.init = function () {
 	this._steps = [];
 
 	this._createBase();
+	am.workspace.fillTab('tour', this.domElem);
 
 	this.prev = this.prev.bind(this);
 	this.next = this.next.bind(this);
@@ -52,6 +53,8 @@ p.setup = function (data) {
 
 		this._steps.push(step);
 	}, this);
+
+	this.goto(0);
 };
 
 p.clear = function () {
@@ -79,9 +82,13 @@ p.goto = function (idx) {
 		this._deStepCont.removeChild(this._currStep.domElem);
 	}
 
-	this._currStep = this._steps.idx;
-	this._deStepCont.appendChild(this._currStep);
-	this._currStep.setup(this);
+	this._currStep = this._steps[idx];
+	this._deStepCont.appendChild(this._currStep.domElem);
+	
+	if (typeof(this._currStep.setup) === 'function') {
+		
+		this._currStep.setup(this);
+	}
 
 	this._deState.textContent = (idx+1)+'/'+this._steps.length+' '+(this._currStep.title || '');
 };
@@ -107,10 +114,17 @@ p._createBase = function () {
 	this.domElem = document.createElement('div');
 	this.domElem.style.width = '100%';
 	this.domElem.style.height = '100%';
+	this.domElem.style.background = amgui.color.bg0;
 
 	this._deHead = document.createElement('div');
+	this._deHead.style.display = 'flex';
 	this._deHead.style.width = '100%';
 	this._deHead.style.height = '23px';
+	this.domElem.appendChild(this._deHead);
+
+	this._deStepCont = document.createElement('div');
+	this._deStepCont.style.width = '100%';
+	this.domElem.appendChild(this._deStepCont);	
 
 	this._deState = amgui.createLabel({
 		parent: this._deHead,
@@ -128,8 +142,6 @@ p._createBase = function () {
 		icon: 'angle-right',
 		onClick: this.next
 	});
-
-	this._deState.style.flex = 1;
 }
 
 p._createTriangle = function () {
@@ -137,7 +149,7 @@ p._createTriangle = function () {
 	var de = document.createElement('div');
 	de.style.position = 'absolute';
 	de.style.pointerEvents = 'none';
-	am.deDialogCont.appendChild(de);z
+	am.deDialogCont.appendChild(de);
 
 	var deTriangle = document.createElement('div');
 	deTriangle.style.position = 'absolute';

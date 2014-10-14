@@ -24,9 +24,9 @@ $(function () {
 
 function getStep0Content() {
 
-    return '<img src="http://giphy.com/embed/IerVAJUS26GQg" style="width:100%;">',
-    + '<p>Hi! we\'ve made a quick tour to show how to use Animachine.</p>',
-    + '<p>If you wanna be quick, you can just watch the gif animations and do what you see, but you\'ll find the detailed version below them if it\'s needed.</p>',
+    return '<img src="http://giphy.com/embed/IerVAJUS26GQg" style="width:100%;">'
+    + '<p>Hi! we\'ve made a quick tour to show how to use Animachine.</p>'
+    + '<p>If you wanna be quick, you can just watch the gif animations and do what you see, but you\'ll find the detailed version below them if it\'s needed.</p>'
     + '<p>Click on the <span class="icon-angle-left"></span> for the first step.</p>';
 } 
 

@@ -50,8 +50,8 @@ function gen(de, root) {
 
     var singles, selectors, matches = [];
 
-    singles = selectors = [de.tagName].concat(
-        possibleIds(de),
+    singles = selectors = possibleIds(de).concat(
+        [de.tagName],
         possibleClasses(de, i),
         possibleAttributes(de, i)
     );

@@ -112,22 +112,24 @@ function bindDropdown(opt) {
 
         if (isOpened) return;
         isOpened = true;
-
         
         amgui.placeToPoint(deDropdown, e.clientX, e.clientY, opt.side);
 
         var deCont = opt.menuParent || amgui.deOverlayCont || deBtn;
 
         deCont.appendChild(deDropdown);
-        window.addEventListener('click', close);
-        window.addEventListener('contextmenu', close);
+
+        setTimeout(function () {
+            window.addEventListener('click', close);
+            window.addEventListener('contextmenu', close);
+        })
     }
 
-    function close() {
+    function close(e) {
 
         if (!isOpened) return;
         isOpened = false;
-        
+
         if (deDropdown.parentElement) {
             deDropdown.parentElement.removeChild(deDropdown);
         }

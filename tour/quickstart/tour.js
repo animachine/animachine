@@ -16,12 +16,14 @@ $(function () {
             {
                 title: 'Make a track!',
                 content: getStep1Content(),
-                checkboxCound: 2,
+                checklistLength: 2,
                 onReady: function (tour) {
 
-                    if (!tour.isChecked(0) {
+                    if (!tour.isChecked(0)) {
 
-                        tour.addPointer(deCookiejar);
+                        this._cookiePointer = tour.addPointer({
+                            deTarget: deCookiejar
+                        });
                     }
 
                     this._checkTestSetI = setInterval(function () {
@@ -29,7 +31,7 @@ $(function () {
                         if (!tour.isChecked(0) && am.selectedElement === deCookiejar) {
 
                             tour.checkIn(0);
-                            tour.removePointer(deCookiejar);
+                            tour.removePointer(this._cookiePointer);
                         }
 
                         if (!tour.isChecked(1) && am.timeline.sequences.length) {
@@ -96,7 +98,7 @@ function getWs() {
                     scaleMode: 'flex'
                 },{                    
                     type: 'panel',
-                    size: 3,
+                    size: 5,
                     scaleMode: 'flex',
                     noHead: true,
                     tabs: [{name: 'tour'}]

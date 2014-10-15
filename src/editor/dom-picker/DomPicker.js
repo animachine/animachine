@@ -104,6 +104,7 @@ p._onMMove =  function (e) {
         this._btnBottom.style.visibility = v;
         this._btnLeft.style.visibility = v;
         this._btnClose.style.visibility = v;
+        this._btnMenu.style.visibility = v;
     }
 };
 

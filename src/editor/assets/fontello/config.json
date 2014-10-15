@@ -253,6 +253,12 @@
       "src": "fontawesome"
     },
     {
+      "uid": "5774d0a0e50f6eefc8be01bd761e5dd3",
+      "css": "circle-thin",
+      "code": 59423,
+      "src": "fontawesome"
+    },
+    {
       "uid": "266d5d9adf15a61800477a5acf9a4462",
       "css": "chart-bar",
       "code": 59419,
@@ -335,12 +341,6 @@
       "css": "blank",
       "code": 59407,
       "src": "fontawesome"
-    },
-    {
-      "uid": "9c7fd7637a41b59a358cb70893f945a5",
-      "css": "rocket",
-      "code": 59423,
-      "src": "entypo"
     },
     {
       "uid": "e536c80e011366046360f5ffe669dbfd",

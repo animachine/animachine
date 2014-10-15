@@ -67,20 +67,24 @@ p.goto = function (idx) {
 
     if (this._currStep) {
 
+        if (typeof(this._currStep.onClose) === 'function') {
+        
+            this._currStep.onClose(this);
+        }
         this._deStepCont.removeChild(this._currStep.domElem);
     }
 
     this._currStep = this._steps[idx];
     this._deStepCont.appendChild(this._currStep.domElem);
     
-    if (typeof(this._currStep.setup) === 'function') {
+    if (typeof(this._currStep.onReady) === 'function') {
         
-        this._currStep.setup(this);
+        this._currStep.onReady(this);
     }
 
     this._deState.textContent = (idx+1)+'/'+this._steps.length+' '+(this._currStep.title || '');
 
-    p._refreshChecklist();
+    this._refreshChecklist();
 };
 
 p.checkIn = function (idx, step) {
@@ -98,9 +102,9 @@ p._check = function (idx, step, val) {
     step = step || this._currStep;
     if (!step) return;
 
-    step._ckecklist[idx] = val;
+    step._checklist[idx] = val;
 
-    p._refreshChecklist();
+    this._refreshChecklist();
 };
 
 p.isChecked = function (idx, step) {
@@ -108,7 +112,7 @@ p.isChecked = function (idx, step) {
     step = step || this._currStep;
     if (!step) return;
 
-    return step._ckecklist[idx]; 
+    return step._checklist[idx]; 
 };
 
 p.addPointer = function (opt) {
@@ -143,7 +147,7 @@ p.addPointer = function (opt) {
 
     dePointer.style.left = x + 'px'
     dePointer.style.top = y + 'px'
-    dePointer.style.transform = 'rotate(' + r + 'deg)'
+    dePointer.rotate(r);
 
     return dePointer;
 };
@@ -173,6 +177,8 @@ p.removeAllPointer = function () {
 
 
 p._refreshChecklist = function () {
+
+    if (!this._currStep) return;
 
     for (var i = 0; i < this._currStep.checklistLength; ++i) {
 
@@ -217,32 +223,37 @@ p._createBase = function () {
     this._deState.style.flex = 1;
 
     this._deCheckboxCont = document.createElement('span');
-    this._deCheckboxCont.style.width = '100%';
-    this.domElem.appendChild(this._deCheckboxCont);
+    this._deHead.appendChild(this._deCheckboxCont);
 
     this._btnPrev = amgui.createIconBtn({
         parent: this._deHead,
         icon: 'angle-left',
-        onClick: this.prev
+        onClick: this.prev.bind(this)
     });
 
     this._btnNext = amgui.createIconBtn({
         parent: this._deHead,
         icon: 'angle-right',
-        onClick: this.next
+        onClick: this.next.bind(this)
     });
 }
 
 p._createCheckbox = function () {
 
-    return amgui.createToggleIconBtn({
+    var de = amgui.createToggleIconBtn({
         parent: this._deCheckboxCont,
         iconOn: 'circle',
-        iconOff: 'circle-empty'
+        iconOff: 'circle-thin'
     });
+
+    de.style.pointerEvents = 'none';
+
+    return de;
 }
 
 p._createTriangle = function () {
+
+    var size = 12;
 
     var de = document.createElement('div');
     de.style.position = 'absolute';
@@ -251,14 +262,20 @@ p._createTriangle = function () {
 
     var deTriangle = document.createElement('div');
     deTriangle.style.position = 'absolute';
-    deTriangle.style.left = '25px';
     deTriangle.style.width = '0';
     deTriangle.style.height = '0';
     deTriangle.style.borderStyle = 'solid';
-    deTriangle.style.borderWidth = '50px 100px 50px 0';
+    deTriangle.style.transformOrigin = 'left center';
+    deTriangle.style.borderWidth = size+'px '+(2*size)+'px '+size+'px 0';
     deTriangle.style.borderColor = 'transparent #ff000d transparent transparent';
-;
+
     de.appendChild(deTriangle);
+
+
+    de.rotate = function (r) {
+
+        deTriangle.style.transform = 'rotate(' + r + 'deg)';
+    };
 
     return de;
 }

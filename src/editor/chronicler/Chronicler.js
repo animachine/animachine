@@ -255,6 +255,8 @@ p.clear = function () {
     
     this._stack.length = 0, 
     this._pointer = -1;
+
+    this.emit('change');
 };
 
 p.getChain = function (id) {

@@ -32,7 +32,7 @@ p._createBase = function () {
     this.domElem.style.height = '21px';
     this.domElem.style.background = amgui.color.bg1;
 
-    this._toggleState = amgui.createToggleBtn({
+    this._toggleState = amgui.createToggleIconBtn({
         parent: this.domElem,
         iconOn: 'circle',
         iconOff: 'circle-empty',

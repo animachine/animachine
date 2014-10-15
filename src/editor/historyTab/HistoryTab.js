@@ -19,7 +19,10 @@ module.exports = HistoryTab;
 
 p._addItem = function () {
 
+    var item = new Item();
     this._items.push(new Item());
+
+    this.domElem.appendChild(item.domElem);
 }
 
 p._removeItem = function (item) {
@@ -32,7 +35,7 @@ p._removeItem = function (item) {
 
         if (item.domElem.parentNode) {
 
-            item.domElem.parentNode.removeChild(item.domElem)
+            item.domElem.parentNode.removeChild(item.domElem);
         }
     }
 }
@@ -53,7 +56,7 @@ p._onHistoryChage = function () {
 
     while (this._items.length > records.length) {
 
-        this._removeItem(this.items[records.length]);
+        this._removeItem(this._items[records.length]);
     }
 }
 

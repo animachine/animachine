@@ -150,7 +150,7 @@ am._init = function () {
 
     addToggleGui();
 
-    document.body.addEventListener('click', onClickRoot);
+    window.addEventListener('click', onClickRoot);
 
     Object.keys(modules).forEach(function (moduleName) {
 
@@ -225,7 +225,8 @@ function onClickRoot(e) {
             am.domPicker.focusElem(e.target);
         }
     }
-    else {
+    else if (e.target === document.body || e.target.parentNode === document) {
+
         setSelectedElement(undefined);
     }
 }

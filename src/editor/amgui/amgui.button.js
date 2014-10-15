@@ -37,6 +37,7 @@ function createLabel(opt) {
 
     if ('fontSize' in opt) de.style.fontSize = opt.fontSize;
     if ('display' in opt) de.style.display = opt.display;
+    if ('flex' in opt) de.style.flex = opt.flex;
     if ('position' in opt) de.style.position = opt.position;
     
     if (opt.parent) {

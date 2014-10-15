@@ -4,6 +4,8 @@ $(function () {
     am.workspace.loadWorkspaces(getWs());
     am.workspace.load('tour');
 
+    var deCookiejar = document.querySelector('#cookie')
+
     am.tour.setup({
 
         steps: [
@@ -15,9 +17,33 @@ $(function () {
                 title: 'Make a track!',
                 content: getStep1Content(),
                 checkboxCound: 2,
+                onReady: function (tour) {
+
+                    if (!tour.isChecked(0) {
+
+                        tour.addPointer(deCookiejar);
+                    }
+
+                    this._checkTestSetI = setInterval(function () {
+
+                        if (!tour.isChecked(0) && am.selectedElement === deCookiejar) {
+
+                            tour.checkIn(0);
+                            tour.removePointer(deCookiejar);
+                        }
+
+                        if (!tour.isChecked(1) && am.timeline.sequences.length) {
+
+                            tour.checkIn(1);
+                        }
+                    }.bind(this), 312)
+                },
+                onClose: function () {
+                    clearInterval(this._checkTestSetI)
+                }
             },
 
-        ]
+        ],
     })
 
 });

@@ -1,12 +1,18 @@
 'use strict';
 
+var EventEmitter = require('events').EventEmitter;
+var inherits = require('inherits');
+
 function Chronicler() {
+
+    EventEmitter.call(this);
 
     this._stack = [], 
     this._pointer = -1;
     this._chains = [];
 }
 
+inherits(Chronicler, EventEmitter);
 module.exports = Chronicler;
 var p = Chronicler.prototype;
 
@@ -36,6 +42,8 @@ p.undo = function() {
     else {
         call(rec.undo);
     }
+
+    this.emit('change');
 };
 
 p.redo = function() {
@@ -62,6 +70,8 @@ p.redo = function() {
     else {
         call(rec.redo);
     }
+
+    this.emit('change');
 };
 
 function call(reg) {
@@ -80,6 +90,8 @@ p.save = function (undo, redo, name) {
     var reg = {undo: undo, redo: redo, name: name};
 
     this._saveReg(reg);
+    
+    this.emit('change');
 
     return reg;
 };
@@ -94,7 +106,7 @@ p._saveReg = function (reg) {
 
 p.getNames = function () {
 
-    var names = [], currFlag;
+    var items = [], currFlag;
 
     this._stack.forEach(function (item, idx) {
 
@@ -118,14 +130,15 @@ p.getNames = function () {
         }
     }, this);
 
-    return names;
+    return items;
 
 
     function add(name, idx) {
 
-        names.push({
+        items.push({
             name: name || 'unnamed redord',
-            idx: idx
+            idx: idx,
+            executed: idx <= this._pointer
         });
     }
 };

@@ -120,6 +120,7 @@ function bindDropdown(opt) {
 
         deCont.appendChild(deDropdown);
         window.addEventListener('click', close);
+        window.addEventListener('contextmenu', close);
     }
 
     function close() {
@@ -131,5 +132,6 @@ function bindDropdown(opt) {
             deDropdown.parentElement.removeChild(deDropdown);
         }
         window.removeEventListener('click', close);
+        window.removeEventListener('contextmenu', close);
     }
 }

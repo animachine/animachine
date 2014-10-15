@@ -104,9 +104,9 @@ p._saveReg = function (reg) {
 
 
 
-p.getNames = function () {
+p.getRecords = function () {
 
-    var items = [], currFlag;
+    var items = [], currFlag, pointer = this._pointer;
 
     this._stack.forEach(function (item, idx) {
 
@@ -138,7 +138,7 @@ p.getNames = function () {
         items.push({
             name: name || 'unnamed redord',
             idx: idx,
-            executed: idx <= this._pointer
+            executed: idx <= pointer
         });
     }
 };

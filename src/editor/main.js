@@ -6,6 +6,7 @@ var Transhand = require('./transhand');
 var Timeline = require('./timeline');
 var Toolbar = require('./toolbar');
 var Windooman = require('./windooman');
+var HistoryTab = require('./historyTab');
 var Warehouseman = require('./warehouseman');
 var Chronicler = require('./chronicler');
 var DomPicker = require('./dom-picker');
@@ -106,11 +107,13 @@ am._init = function () {
 
     am.deRoot = document.body;
     am.history = new Chronicler();
+    am.historyTab = new HistoryTab();
     am.toolbar = new Toolbar();
     am.timeline = new Timeline();
     am.domPicker = new DomPicker();
 
     am.workspace.fillTab('tools', am.toolbar.domElem);
+    am.workspace.fillTab('History', am.historyTab.domElem);
 
     am.deHandlerCont.appendChild(am.domPicker.domElem);
     am.domPicker.on('pick', onSelectWithDomPicker);
@@ -274,7 +277,7 @@ am.isPickableDomElem = function (deTest) {
 
 function createAmRoot() {
 
-    $('body').css('opacity', .023)
+    // $('body').css('opacity', .023)
         // .mouseenter(function () {$('body').css('opacity', 1)})
         // .mouseleave(function () {$('body').css('opacity', .23)});
     

@@ -20,7 +20,7 @@ p.setup = function (record) {
 
     this._rec = record;
 
-    this._label.textContent = record.name;
+    this._label.innerHTML = record.name;
     this._toggleState.setToggle(record.executed);
 }
 
@@ -35,11 +35,12 @@ p._createBase = function () {
     this._toggleState = amgui.createToggleIconBtn({
         parent: this.domElem,
         iconOn: 'circle',
-        iconOff: 'circle-empty',
+        iconOff: 'circle-thin',
     });
 
     this._label = amgui.createLabel({
         parent: this.domElem,
-        flex: 1
+        flex: 1,
+        caption: 'refsfsd' + Math.random()
     });
 }

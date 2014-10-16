@@ -11,7 +11,8 @@ function Item() {
 
     this.domElem.addEventListener('click', function () {
 
-        am.history.goto(this._rec.idx);
+        var idx = this._rec.executed ? this._rec.idx - 1 : this._rec.idx;
+        am.history.goto(idx);
 
     }.bind(this));
 }
@@ -25,7 +26,7 @@ p.setup = function (record) {
 
     this._label.innerHTML = record.name;
     this._toggleState.setToggle(record.executed);
-}
+};
 
 p._createBase = function () {
 
@@ -46,4 +47,4 @@ p._createBase = function () {
         flex: 1,
         caption: 'refsfsd' + Math.random()
     });
-}
+};

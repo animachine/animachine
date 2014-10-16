@@ -278,7 +278,7 @@ am.isPickableDomElem = function (deTest) {
 
 function createAmRoot() {
 
-    // $('body').css('opacity', .023)
+    // $('body').css('opacity', .23)
         // .mouseenter(function () {$('body').css('opacity', 1)})
         // .mouseleave(function () {$('body').css('opacity', .23)});
     

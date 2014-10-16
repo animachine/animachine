@@ -4,6 +4,9 @@ var amgui = require('../amgui');
 
 function Item() {
 
+    if (!window.ci) window.ci = [];
+    window.ci.push(this)
+
     this._createBase();
 
     this.domElem.addEventListener('click', function () {

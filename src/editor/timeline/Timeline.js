@@ -614,7 +614,6 @@ p._createBase = function () {
     this._deOptionsCont2.appendChild(this._deOptionsCont);
 
     this._deRange = amgui.createRange({
-        width: '6px',
         height: 'auto',
         parent: this._deKeylineCont3,
         vertical: true
@@ -646,7 +645,7 @@ p._createSettingsHead = function () {
         display: 'inline-block',
     });
 
-    amgui.bindDropdown({
+    amgui.bindDropdown({    
         deTarget: this._btnNewSequ,
         deMenu: amgui.createDropdown({
             options: ['css', 'js', 'attribute', 'media', 'timeline', 'three.js', 'pixi.js'],

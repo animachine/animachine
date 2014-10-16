@@ -132,7 +132,7 @@ function createRange(opt) {
 
     var de = document.createElement('div');
     de.style.position = 'relative';
-    de.style.width = opt.width || '12px';
+    de.style.width = opt.width || '6px';
     de.style.height = opt.height || '140px';
     de.style.background = amgui.color.bg1;
     de.style.cursor = 'pointer';

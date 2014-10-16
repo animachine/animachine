@@ -205,6 +205,8 @@ p._createBase = function () {
     this.domElem = document.createElement('div');
     this.domElem.style.width = '100%';
     this.domElem.style.height = '100%';
+    this.domElem.style.display = 'flex';
+    this.domElem.style.flexDirection = 'column';
     this.domElem.style.background = amgui.color.bg0;
 
     this._deHead = document.createElement('div');
@@ -213,9 +215,31 @@ p._createBase = function () {
     this._deHead.style.height = '23px';
     this.domElem.appendChild(this._deHead);
 
+    this._deStepContScroll = document.createElement('div');
+    this._deStepContScroll.style.position = 'relative';
+    this._deStepContScroll.style.flex = '1';
+    this.domElem.appendChild(this._deStepContScroll); 
+
     this._deStepCont = document.createElement('div');
+    this._deStepCont.style.position = 'absolute';
     this._deStepCont.style.width = '100%';
-    this.domElem.appendChild(this._deStepCont); 
+    this._deStepContScroll.appendChild(this._deStepCont); 
+
+    this._scrollRange = amgui.createRange({
+        parent: this._deStepContScroll,
+        height: '100%',
+        vertical: true
+    });
+
+    this._scrollRange.style.position = 'absolute';
+    this._scrollRange.style.top = '0px';
+    this._scrollRange.style.right = '0px';
+
+    amgui.makeScrollable({
+        deCont: this._deStepContScroll,
+        deTarget: this._deStepCont,
+        deRange: this._scrollRange
+    });
 
     this._deState = amgui.createLabel({
         parent: this._deHead,

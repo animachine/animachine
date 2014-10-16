@@ -20,7 +20,7 @@ module.exports = HistoryTab;
 p._addItem = function () {
 
     var item = new Item();
-    this._items.push(new Item());
+    this._items.push(item);
 
     this.domElem.appendChild(item.domElem);
 }

@@ -723,7 +723,7 @@ p._createPointerLine = function () {
     this._dePointerLine.style.top = this._headerH + 'px';
     this._dePointerLine.style.width = '0px';
     this._dePointerLine.style.position = 'absolute';
-    this._dePointerLine.style.userSelect = 'none';
+    this._dePointerLine.style.pointerEvents = 'none';
     this._dePointerLine.style.height = '100%';
     this._dePointerLine.style.borderLeft = '1px solid red';
     this._deRight.appendChild(this._dePointerLine);

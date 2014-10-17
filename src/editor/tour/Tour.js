@@ -223,7 +223,7 @@ p._createBase = function () {
     this._deStepCont = document.createElement('div');
     this._deStepCont.style.position = 'absolute';
     this._deStepCont.style.width = '100%';
-    this._deStepContScroll.appendChild(this._deStepCont); 
+    this._deStepContScroll.appendChild(this._deStepCont);
 
     this._scrollRange = amgui.createRange({
         parent: this._deStepContScroll,

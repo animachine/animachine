@@ -30,11 +30,31 @@ function makeScrollable(opt) {
         deC.addEventListener('wheel', onWheel);
     });
 
+
+    //create a basic scroll bar if it is not set at all
+    if (!('deRange' in opt)) {
+
+        deRange = this._scrollRange = amgui.createRange({
+            parent: deConts[0],
+            height: '100%',
+            vertical: true
+        });
+
+        deRange.style.position = 'absolute';
+        deRange.style.top = '0px';
+        deRange.style.right = '0px';
+    }
+
     if (deRange) {
         initRange();
     }
 
+
     return ret;
+
+
+
+
 
     function onWheel(e) {
 

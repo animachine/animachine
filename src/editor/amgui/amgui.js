@@ -12,6 +12,7 @@ var amgui = new EventEmitter();
 
 _.extend(amgui,
     require('./amgui.bezierEditor')(amgui),
+    require('./amgui.createBreadcrumbs')(amgui),
     require('./amgui.button')(amgui),
     require('./amgui.dialog')(amgui),
     require('./amgui.dropdown')(amgui),

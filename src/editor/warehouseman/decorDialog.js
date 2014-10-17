@@ -177,62 +177,40 @@ function decorDialog(whm) {
 
     function createBreadcrumbs() {
 
-        deBreadcrumbs = document.createElement('div');
+        deBreadcrumbs = amgui.createBreadcrumbs({
+            parent: deHead,
+        });
         deBreadcrumbs.style.display = 'inline-block';
         deBreadcrumbs.style.flex = '1';
-        deHead.appendChild(deBreadcrumbs);
 
-        deBreadcrumbs.addEventListener('click', function () {
+        deBreadcrumbs.addEventListener('select', function (e) {
 
-            if (this.crambValue) {
-
-                whm.cd(this.crambValue);
-            }
+            whm.cd(e.detail.selection.value);
         });
 
         deBreadcrumbs.refresh = function () {
 
-            var crumbs = selectedPath.split('/').filter(Boolean),
-                value = '';
-
-            deBreadcrumbs.innerHTML = '';
+            var names = selectedPath.split('/').filter(Boolean),
+                value = '',
+                crumbs = [];
             
-            createCrumb((whm._currStorage.rootName || 'root') + '://', value);
+            crumbs.push({
+                name: whm._currStorage.rootName || 'root') + '://', 
+                value: value
+            });
 
-            crumbs.forEach(function (crumbName) {
+            names.forEach(function (crumbName) {
 
                 value += crumbName + '/';
-                createCrumb(crumbName, value);
-                createSlash();
+
+                crumbs.push({
+                    name: crumbName, 
+                    value: value
+                });
             });
+
+            deBreadcrumbs.setItems(crumbs);
         };
-
-        function createSlash() {
-
-            var deSlash = createLi(' / ');
-            deSlash.style.pointerEvents = 'none';
-
-            return deSlash;
-        }
-
-        function createCrumb(content, value) {
-
-            var deChrumb = createLi(content);
-            deChrumb.style.pointerEvents = 'none';
-            deChrumb.crumbValue = value;
-
-            return deChrumb;
-        }
-  
-        function createLi(content) {
-
-            var li = document.createElement('span');
-            li.textContent = content;
-
-            deBreadcrumbs.appendChild(li);
-
-            return li;
-        }
     }
 
 

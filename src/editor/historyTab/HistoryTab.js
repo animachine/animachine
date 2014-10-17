@@ -22,7 +22,7 @@ p._addItem = function () {
     var item = new Item();
     this._items.push(item);
 
-    this.domElem.appendChild(item.domElem);
+    this._scrollCont.appendChild(item.domElem);
 }
 
 p._removeItem = function (item) {
@@ -66,4 +66,12 @@ p._createBase = function () {
     this.domElem.style.width = '100%';
     this.domElem.style.height = '100%';
     this.domElem.style.background = amgui.color.bg0;
+
+    this._scrollCont = document.createElement('div');
+    this._scrollCont.style.width = '100%';
+
+    amgui.makeScrollable({
+        deCont: this._deStepContScroll,
+        deTarget: this._deStepCont
+    });
 }

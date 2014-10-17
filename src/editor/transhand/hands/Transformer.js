@@ -417,21 +417,6 @@ p._setCursor = function (cursor) {
     document.querySelector("html").style.cursor = cursor;//hack! TODO
 };
 
-p._onMouseMove = function (e) {
-
-    if (!this._isHandle) {
-        
-        if (am.isPickableDomElem(e.target)) {            
-
-            this._setFinger(e);
-        }
-    }
-
-    if (this._cursorFunc) {
-        this._setCursor(this._cursorFunc(e.clientX, e.clientY));
-    }
-};
-
 p._onMouseDown = function (e) {
 
     if (!this._finger || !am.isPickableDomElem(e.target)) {
@@ -454,6 +439,21 @@ p._onMouseDown = function (e) {
     window.addEventListener('mouseup', this._onMouseUp);
     window.addEventListener('mousemove', this._onDrag);
 };
+
+p._onMouseMove = function (e) {
+
+    if (!this._isHandle) {
+        
+        if (am.isPickableDomElem(e.target)) {            
+
+            this._setFinger(e);
+        }
+    }
+
+    if (this._cursorFunc) {
+        this._setCursor(this._cursorFunc(e.clientX, e.clientY));
+    }
+}; 
 
 p._onMouseUp = function () {
 
@@ -491,6 +491,23 @@ p._getScaleCursor = (function () {
 
 
 module.exports = Transformer;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

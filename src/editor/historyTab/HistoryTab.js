@@ -23,7 +23,7 @@ p._addItem = function () {
     this._items.push(item);
 
     this._scrollCont.appendChild(item.domElem);
-}
+};
 
 p._removeItem = function (item) {
 
@@ -38,7 +38,7 @@ p._removeItem = function (item) {
             item.domElem.parentNode.removeChild(item.domElem);
         }
     }
-}
+};
 
 p._onHistoryChage = function () {
 
@@ -58,7 +58,7 @@ p._onHistoryChage = function () {
 
         this._removeItem(this._items[records.length]);
     }
-}
+};
 
 p._createBase = function () {
 
@@ -69,9 +69,10 @@ p._createBase = function () {
 
     this._scrollCont = document.createElement('div');
     this._scrollCont.style.width = '100%';
+    this.domElem.appendChild(this._scrollCont);
 
     amgui.makeScrollable({
-        deCont: this._deStepContScroll,
-        deTarget: this._deStepCont
+        deCont: this.domElem,
+        deTarget: this._scrollCont
     });
-}
+};

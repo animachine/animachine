@@ -4,9 +4,6 @@ var amgui = require('../amgui');
 
 function Item() {
 
-    if (!window.ci) window.ci = [];
-    window.ci.push(this)
-
     this._createBase();
 
     this.domElem.addEventListener('click', function () {
@@ -44,7 +41,6 @@ p._createBase = function () {
 
     this._label = amgui.createLabel({
         parent: this.domElem,
-        flex: 1,
-        caption: 'refsfsd' + Math.random()
+        flex: 1
     });
 };

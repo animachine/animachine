@@ -16,7 +16,8 @@ var dialogFeatureDoesntExits = require('./commonDialogs/dialogFeatureDoesntExits
 var dialogFeedback = require('./commonDialogs/dialogFeedback');
 var modules = {
     css: require('./modules/css'),
-    js: require('./modules/javascript')
+    js: require('./modules/javascript'),
+    domTree: require('./modules/am-domtree'),
 };
 var externalStylesheets = [
     // require('./assets/fontello/css/amgui.css'),
@@ -227,16 +228,16 @@ function onClickRoot(e) {
     }
     else if (e.target === document.body || e.target.parentNode === document) {
 
-        setSelectedElement(undefined);
+        am.selectDomElem(undefined);
     }
 }
 
 function onSelectWithDomPicker(de) {
 
-    setSelectedElement(de);
+    am.selectDomElem(de);
 }
 
-function setSelectedElement(de) {
+am.selectDomElem = function (de) {
 
     if (am.selectedElement !== de) {
 
@@ -278,7 +279,7 @@ am.isPickableDomElem = function (deTest) {
 
 function createAmRoot() {
 
-    // $('body').css('opacity', .23)
+    $('body').css('opacity', .23)
         // .mouseenter(function () {$('body').css('opacity', 1)})
         // .mouseleave(function () {$('body').css('opacity', .23)});
     

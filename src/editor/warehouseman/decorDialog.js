@@ -195,7 +195,7 @@ function decorDialog(whm) {
                 crumbs = [];
             
             crumbs.push({
-                name: whm._currStorage.rootName || 'root') + '://', 
+                name: (whm._currStorage.rootName || 'root') + '://', 
                 value: value
             });
 
@@ -204,7 +204,7 @@ function decorDialog(whm) {
                 value += crumbName + '/';
 
                 crumbs.push({
-                    name: crumbName, 
+                    name: crumbName,
                     value: value
                 });
             });

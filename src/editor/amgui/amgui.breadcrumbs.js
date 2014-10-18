@@ -17,6 +17,8 @@ function createBreadcrumbs(opt) {
     var de = document.createElement('div'),
         crumbs = [];
 
+    de.style.overflow ='hidden';
+
     if (opt.parent) {
         opt.parent.appendChild(de);
     }
@@ -41,11 +43,17 @@ function createBreadcrumbs(opt) {
 
         _crumbs.forEach(function (crumb) {
             
-            crumb.domElem = createCrumb(crumb.name);
+            crumb.domElem = createCrumb(crumb.name, crumb.value);
             crumb.deSlash = createSlash();
             crumbs.push(crumb);
         });
     };
+
+    return de;
+
+
+
+
 
     function removeItems() {
 
@@ -75,7 +83,7 @@ function createBreadcrumbs(opt) {
         return ret;
     }
 
-    function createCrumb(name) {
+    function createCrumb(name, value) {
 
         var deChrumb = createLi(name);
 
@@ -98,6 +106,7 @@ function createBreadcrumbs(opt) {
 
         var li = document.createElement('span');
         li.textContent = content;
+        li.style.float = 'left';
 
         de.appendChild(li);
 

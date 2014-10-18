@@ -25,6 +25,13 @@ function makeScrollable(opt) {
     if (!Array.isArray(deConts)) deConts = [deConts];
     if (!Array.isArray(deTargets)) deTargets = [deTargets];
 
+    deConts.forEach(function (cont) {
+        if (!cont) throw 'false contaiter';
+    });
+    deTargets.forEach(function (target) {
+        if (!target) throw 'false target';
+    });
+
     deConts.forEach(function (deC) {
 
         deC.addEventListener('wheel', onWheel);

@@ -131,4 +131,6 @@ p._createBase = function () {
         onSelect: this._onSelectCrumb
     });
     this._breadcrumbs.style.height = '22px';
+    this._breadcrumbs.style.minWidth = '100%';
+    // this._breadcrumbs.style.position = 'absolute';
 }

@@ -17,7 +17,10 @@ function createBreadcrumbs(opt) {
     var de = document.createElement('div'),
         crumbs = [];
 
-    de.style.overflow ='hidden';
+    // de.style.overflow = 'hidden';
+    de.style.position = 'relative';
+    // de.style.display = 'inline-block';
+    de.style.whiteSpace = 'nowrap';
 
     if (opt.parent) {
         opt.parent.appendChild(de);
@@ -87,11 +90,7 @@ function createBreadcrumbs(opt) {
 
         var deChrumb = createLi(name);
 
-        return {
-            domElem: deChrumb,
-            value: value,
-            deSlash: createSlash(),
-        }
+        return deChrumb;
     }
 
     function createSlash() {
@@ -104,9 +103,10 @@ function createBreadcrumbs(opt) {
 
     function createLi(content) {
 
-        var li = document.createElement('span');
+        var li = document.createElement('div');
         li.textContent = content;
-        li.style.float = 'left';
+        // li.style.float = 'left';
+        li.style.display = 'inline-block';
 
         de.appendChild(li);
 

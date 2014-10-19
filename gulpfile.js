@@ -7,6 +7,7 @@ var concatCss = require('gulp-concat-css');
 var rimraf = require('gulp-rimraf');
 var size = require('gulp-size');
 var watch = require('gulp-watch');
+var zip = require('gulp-zip');
 var uglify= require('gulp-uglify');
 var vulcanize = require('gulp-vulcanize');
 var source = require('vinyl-source-stream');
@@ -136,4 +137,11 @@ gulp.task('connect', function() {
 
 gulp.task('dev',  function (cb) {
   runSequence('clean', 'css', ['init-build', 'init-build-chrome'], 'init-build-chrome-assets', 'vendor', 'connect', 'js', 'js-chrome', cb);
+});
+
+gulp.task('zip', function () {
+    return gulp.src('build_chrome/**/*.*')
+        .pipe(zip('build_chrome.zip'))
+        .pipe(size())
+        .pipe(gulp.dest('./'));
 });

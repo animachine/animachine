@@ -848,11 +848,9 @@ p._createHeadOptions = function (){
         parent: de
     });
 
-    this._tgglKey = amgui.createToggleIconBtn({
-        icon: 'key',
+    this._tgglKey = amgui.createStepperKey({
         height: this._baseH,
         onClick: this._onClickTgglKey,
-        changeColor: true,
         parent: de
     });
     this._refreshTgglKey();

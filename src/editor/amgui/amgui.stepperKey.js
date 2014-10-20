@@ -18,7 +18,7 @@ function createStepperKey(opt) {
 
     opt.height = opt.height || amgui.lineHeight;
 
-    var stepperW = 12;
+    var stepperW = 8;
 
     var de = amgui.createToggleIconBtn({
         icon: 'key',
@@ -28,14 +28,41 @@ function createStepperKey(opt) {
         parent: opt.parent
     });
     de.style.position = 'relative';
+    de.style.overflow = '';
+    de.addEventListener('mouseenter', onMOver)
+    de.addEventListener('mouseleave', onMOut)
 
-    var dePrev = amgui.createIconBtn({
-        icon: 'angle-left',
-        height: opt.height,
-        width: stepperW,
-        onClick: opt.onClickPrev,
-        parent: de
-    });
-    dePrev.style.position = 'absolute';
-    dePrev.style.left = (-stepperW) + 'px';
+    var dePrev = createStepper(true);
+    var deNext = createStepper(false);
+
+    function onMOver() {
+
+        dePrev.style.display = 'block';
+        deNext.style.display = 'block';
+    }
+
+    function onMOut() {
+
+        dePrev.style.display = 'none';
+        deNext.style.display = 'none';
+    }
+
+    function createStepper(isLeft) {
+
+        var deStepper = amgui.createIconBtn({
+            icon: isLeft ? 'angle-left' : 'angle-right',
+            height: opt.height,
+            width: stepperW,
+            onClick: isLeft ? opt.onClickPrev : opt.onClickNext,
+            parent: de
+        });
+        deStepper.style.display = 'none';
+        deStepper.style.position = 'absolute';
+        deStepper.style.top = '0px'; 
+        deStepper.style[isLeft ? 'left' : 'right'] = (-stepperW) + 'px';
+
+        return deStepper;
+    }
+
+    return de;
 }

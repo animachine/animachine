@@ -208,6 +208,9 @@ function createIcon(opt) {
     de.style.fontSize = Math.round(opt.size * 0.72) + 'px';
     de.style.display = opt.display || 'block';
 
+    var textNode = document.createTextNode('');
+    de.appendChild(textNode);
+
     de.setIcon = function (icon) {
 
         var glyph = fontelloConf.glyphs.find(function (glyph) {
@@ -216,7 +219,7 @@ function createIcon(opt) {
         });
 
         var code = glyph ? glyph.code : 59407;
-        de.textContent = String.fromCharCode(code);
+        textNode.textContent = String.fromCharCode(code);
     };
 
     de.setIcon(opt.icon);

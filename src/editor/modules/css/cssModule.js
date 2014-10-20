@@ -1,6 +1,7 @@
 'use strict';
 
 var CssSequence = require('./CssSequence');
+var paramsTab = require('./paramsTab/paramsTab');
 var qsgen = require('../../qsgen');
 
 var am, iconNew;
@@ -13,6 +14,8 @@ exports.init = function (_am) {
 
     am.on('selectDomElement', onSelectDomElement);
 
+    am.workspace.fillTab('Css Style', paramsTab.domElem);
+
     am.domPicker.dropdownMenu.addItem({
         text: 'new css track',
         icon: 'plus',
@@ -21,7 +24,7 @@ exports.init = function (_am) {
 
             am.domPicker.hide();
 
-            var selector = qsgen(am.selectedElement);
+            var selector = qsgen(am.selectedElem);
             console.log('selector:', selector);
 
             var sequ = new CssSequence({

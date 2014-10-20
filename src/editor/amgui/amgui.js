@@ -15,12 +15,14 @@ _.extend(amgui,
     require('./amgui.breadcrumbs')(amgui),
     require('./amgui.button')(amgui),
     require('./amgui.dialog')(amgui),
+    require('./amgui.drawer')(amgui),
     require('./amgui.dropdown')(amgui),
     require('./amgui.input')(amgui),
     require('./amgui.keys')(amgui),
     require('./amgui.keyValueInput')(amgui),
     require('./amgui.makeDraggable')(amgui),
     require('./amgui.scroll')(amgui),
+    require('./amgui.stepperKey')(amgui),
     require('./amgui.tooltip')(amgui),
     require('./amgui.utils')(amgui),
     {
@@ -38,6 +40,8 @@ _.extend(amgui,
             overlay: 'rgba(0,0,0,.785)',
             bgHover: 'rgba(255,255,255,0.12)',
         },
+
+        lineHeight: 23,
 
         getStyleSheet: function () {
 

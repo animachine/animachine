@@ -33,6 +33,7 @@
     "watchify": "^1.0.1",
     "uglify-js": "^2.4.15",
     "gulp-uglify": "^1.0.1",
-    "gulp-concat-css": "^0.1.4"
+    "gulp-concat-css": "^0.1.4",
+    "gulp-zip": "^2.0.2"
   }
 }

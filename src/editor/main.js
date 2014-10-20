@@ -31,7 +31,7 @@ var am = window.am = module.exports = _.extend(new EventEmitter(), {
 
     sequenceTypes: {},
 
-    selectedElement: undefined,
+    selectedElem: undefined,
 
     registerSequenceType: function (Sequence, type) {
 
@@ -221,7 +221,7 @@ function onClickRoot(e) {
 
     if (am.isPickableDomElem(e.target)) {
         
-        if (e.target !== am.selectedElement) {//hack!
+        if (e.target !== am.selectedElem) {//hack!
             
             am.domPicker.focusElem(e.target);
         }
@@ -239,10 +239,10 @@ function onSelectWithDomPicker(de) {
 
 am.selectDomElem = function (de) {
 
-    if (am.selectedElement !== de) {
+    if (am.selectedElem !== de) {
 
-        am.selectedElement = de;
-        am.emit('selectDomElement', am.selectedElement);
+        am.selectedElem = de;
+        am.emit('selectDomElement', am.selectedElem);
     }
 }
 
@@ -279,7 +279,7 @@ am.isPickableDomElem = function (deTest) {
 
 function createAmRoot() {
 
-    // $('body').css('opacity', .23)
+    $('body').css('opacity', .23)
         // .mouseenter(function () {$('body').css('opacity', 1)})
         // .mouseleave(function () {$('body').css('opacity', .23)});
     

@@ -274,6 +274,8 @@ p.removeParameter = function (param, skipHistory) {
 
     $(param.deOptions).remove();
     $(param.deKeyline).remove();
+
+    this.emit('change');
 };
 
 p.moveParameter = function (param, way) {

@@ -29,22 +29,36 @@ function createStepperKey(opt) {
     });
     de.style.position = 'relative';
     de.style.overflow = '';
-    de.addEventListener('mouseenter', onMOver)
-    de.addEventListener('mouseleave', onMOut)
+    de.addEventListener('mouseenter', showSteppers)
+    de.addEventListener('mouseleave', hideSteppers)
 
     var dePrev = createStepper(true);
     var deNext = createStepper(false);
 
-    function onMOver() {
+    function showSteppers() {
 
-        dePrev.style.display = 'block';
-        deNext.style.display = 'block';
+        amgui.deOverlayCont.appendChild(dePrev);
+        amgui.deOverlayCont.appendChild(deNext);
+
+        var br = de.getBoundingClientRect();
+        console.log(br.left, br.right)
+
+        dePrev.style.left = (br.left - stepperW) + 'px';
+        dePrev.style.top = br.top + 'px';
+        
+        deNext.style.left = br.right + 'px';
+        deNext.style.top = br.top + 'px';
     }
 
-    function onMOut() {
+    function hideSteppers() {
 
-        dePrev.style.display = 'none';
-        deNext.style.display = 'none';
+        if (dePrev.parentNode) {
+            dePrev.parentNode.removeChild(dePrev);
+        }
+
+        if (deNext.parentNode) {
+            deNext.parentNode.removeChild(deNext);
+        }
     }
 
     function createStepper(isLeft) {
@@ -53,13 +67,10 @@ function createStepperKey(opt) {
             icon: isLeft ? 'angle-left' : 'angle-right',
             height: opt.height,
             width: stepperW,
-            onClick: isLeft ? opt.onClickPrev : opt.onClickNext,
-            parent: de
+            onClick: isLeft ? opt.onClickPrev : opt.onClickNext
         });
-        deStepper.style.display = 'none';
         deStepper.style.position = 'absolute';
-        deStepper.style.top = '0px'; 
-        deStepper.style[isLeft ? 'left' : 'right'] = (-stepperW) + 'px';
+        deStepper.style.pointerEvents = 'auto';
 
         return deStepper;
     }

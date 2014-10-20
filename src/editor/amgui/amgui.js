@@ -31,6 +31,8 @@ _.extend(amgui,
         FONT_SIZE: '15px',
         LINE_HEIGHT: 23,
 
+        deOverlayCont: undefined, //am._init() fill this
+
         color: {
             bg0: '#000',
             bg1: '#222',

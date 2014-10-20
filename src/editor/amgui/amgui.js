@@ -29,6 +29,7 @@ _.extend(amgui,
 
         FONT_FAMILY: '"Open Sans", sans-serif',
         FONT_SIZE: '15px',
+        LINE_HEIGHT: 23,
 
         color: {
             bg0: '#000',
@@ -40,8 +41,6 @@ _.extend(amgui,
             overlay: 'rgba(0,0,0,.785)',
             bgHover: 'rgba(255,255,255,0.12)',
         },
-
-        lineHeight: 23,
 
         getStyleSheet: function () {
 

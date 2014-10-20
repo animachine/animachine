@@ -21,7 +21,7 @@ function createDrawer(opt) {
     var de = document.createElement('div');
 
     de.deHead = document.createElement('div');
-    de.deHead.style.height = amgui.lineHeight + 'px';
+    de.deHead.style.height = amgui.LINE_HEIGHT + 'px';
     de.deHead.style.display = 'flex';
     de.appendChild(de.deHead);
 

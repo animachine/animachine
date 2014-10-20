@@ -19,8 +19,8 @@ function createInput(opt) {
     var inp = document.createElement('input');
     inp.type = opt.type || 'text';
     inp.style.width = opt.width || '245px';
-    inp.style.height = opt.height || amgui.lineHeight + 'px';
-    inp.style.fontSize = opt.fontSize || amgui.lineHeight + 'px';
+    inp.style.height = opt.height || amgui.LINE_HEIGHT + 'px';
+    inp.style.fontSize = opt.fontSize || amgui.LINE_HEIGHT + 'px';
     inp.style.fontFamily = amgui.FONT_FAMILY;
     inp.style.color = amgui.color.text;
     inp.style.background = 'none';

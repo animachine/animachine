@@ -16,7 +16,7 @@ function createStepperKey(opt) {
 
     opt = opt || {};
 
-    opt.height = opt.height || amgui.lineHeight;
+    opt.height = opt.height || amgui.LINE_HEIGHT;
 
     var stepperW = 8;
 

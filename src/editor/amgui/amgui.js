@@ -50,7 +50,18 @@ _.extend(amgui,
             style.innerHTML = 'dialog::backdrop { background:'+amgui.color.bgHover+' }';
 
             return style;
-        }
+        },
+
+        createDiv: function () {
+
+            var de = document.createElement('div');
+            de.style.webkitUserSelect = 'none';
+            de.style.mozUserSelect = 'none';
+            de.style.msUserSelect = 'none';
+            de.style.userSelect = 'none';
+
+            return de;
+        },
     }
 );
 

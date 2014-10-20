@@ -32,7 +32,7 @@ function createLinebreak(opt) {
 
 function createLabel(opt) {
 
-    var de = document.createElement('span');
+    var de = amgui.createDiv();
     de.innerHTML = opt.caption || 'label';
 
     if ('fontSize' in opt) de.style.fontSize = opt.fontSize;
@@ -51,7 +51,7 @@ function createBtn(opt) {
 
     opt.backgroundColor = opt.backgroundColor || amgui.color.bg0;
 
-    var de = document.createElement('div');
+    var de = amgui.createDiv();
     de.style.height = (opt.height || 21) + 'px';
     de.style.padding = '0 15px';
     de.style.cursor = 'pointer';
@@ -198,7 +198,7 @@ function createIcon(opt) {
     opt = opt || {};
     opt.size = opt.size || 23;
     
-    var de = document.createElement('div');
+    var de = amgui.createDiv();
     de.style.color = '#fff';
     de.style.width = opt.size + 'px';
     de.style.height = opt.size + 'px';

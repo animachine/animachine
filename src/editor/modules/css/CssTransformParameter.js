@@ -177,7 +177,7 @@ p.addKey = function (opt, skipHistory) {
     }
 
     this._refreshInput();
-    this._refreshBtnToggleKey();
+    this._refreshTgglKey();
 
     this.emit('change');
 

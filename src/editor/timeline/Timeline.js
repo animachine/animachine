@@ -74,8 +74,11 @@ module.exports = Timeline;
 Object.defineProperties(p, {
 
     'currTime': {
+        set: function (v) {
+            this._timebar.currTime = v;
+        },
         get: function () {
-            return this._timebar._currTime;
+            return this._timebar.currTime;
         }
     },
     'timescale': {

@@ -457,7 +457,7 @@ p._refreshTgglKey = function () {
     var key = this.getKey(am.timeline.currTime);
     this._tgglKey.style.color = key ? amgui.color.text : amgui.color.textInactive;
 
-    var time = ma.timeline.currTime;
+    var time = am.timeline.currTime;
     this._tgglKey.setSteppers(!!this.getPrevKey(time), !!this.getNextKey(time));
 };
 

@@ -54,10 +54,10 @@ function createStepperKey(opt) {
 
     return de;
 
-    function onMOverKey() { isMOverKey = true; }
-    function onMOutKey() { isMOverKey = false; }
-    function onMOverStepper() { isMOverStepper = true; }
-    function onMOutStepper() { isMOverStepper = false; }
+    function onMOverKey() { isMOverKey = true; onChangeOver(); }
+    function onMOutKey() { isMOverKey = false; onChangeOver(); }
+    function onMOverStepper() { isMOverStepper = true; onChangeOver(); }
+    function onMOutStepper() { isMOverStepper = false; onChangeOver(); }
 
     function onChangeOver () {
 

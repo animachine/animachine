@@ -10,7 +10,7 @@ function ParamsTab() {
 
     this._createBase();
 
-    this._onChangeTrack = this._onChangeTrack.bind(this);
+    this._onChangeTrack = this._onChangeTrack.bind(this);  
 }
 
 var p = ParamsTab.prototype;
@@ -54,8 +54,7 @@ p._refresh = function () {
 
         var param = track._getParameter(input.name);
 
-        input.active = !!param;
-        input.value = param ? param.value : '';
+        input.currParam = param;
     });
 };
 

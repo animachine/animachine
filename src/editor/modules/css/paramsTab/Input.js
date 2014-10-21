@@ -13,6 +13,10 @@ function Input(opt) {
     this._createBase();
 
     this._onChangeInput = this._onChangeInput.bind(this);
+    this._onChangeParam = this._onChangeParam.bind(this);
+    this._onClickStepPrevKey = this._onClickStepPrevKey.bind(this);
+    this._onClickStepNextKey = this._onClickStepNextKey.bind(this);
+    this._onClickTgglKey = this._onClickTgglKey.bind(this);
 }
 
 var p = Input.prototype;
@@ -32,35 +36,21 @@ Object.defineProperties(p, {
 
             return this._name;
         }
-    },
-    value: {
-        set: function (v) {
-
-            if (this._value === v) return;
-
-            this._value = v;
-        },
-        get: function () {
-
-            return this._value;
-        }
-    },
-    active: {
-        set: function (v) {
-
-            if (this._active === v) return;
-
-            this._active = v;
-            this._refreshActive();
-        },
-        get: function () {
-
-            return this._active;
-        }
     }
 });
 
+p.setParam = function (param) {
 
+    if (this._param === param) return;
+            
+    if (this._param) {
+
+        this._param.removeListener('change', this._onChangeParam);
+    }
+
+    this._param = param;
+    this._param.on('change', this._onChangeParam);
+};
 
 
 
@@ -69,6 +59,26 @@ Object.defineProperties(p, {
 p._onChangeInput = function () {
 
     this.value = this._inputValue.value; 
+};
+
+p._onChangeParam = function () {
+
+    this.value = this._inputValue.value; 
+};
+
+p._onClickStepPrevKey = function () {
+
+    this._param.gotoPrevKey();
+};
+
+p._onClickStepNextKey = function () {
+
+    this._param.gotoNextKey();
+};
+
+p._onClickTgglKey = function () {
+
+    this._param.toggleKey();
 };
 
 
@@ -80,7 +90,7 @@ p._refreshActive = function () {
 
     this._labelName.setActive(this.active);
     this._inputValue.setActive(this.active);
-}
+};
 
 
 
@@ -106,6 +116,13 @@ p._createBase = function () {
         onChange: this._onChangeInput,
     });
     this._inputValue.style.padding = '0 5px';
+
+    this._btnKey = amgui.createStepperKey({
+        parent: this.domElem,
+        onClickPrev: this._onClickStepPrevKey,
+        onClickNext: this._onClickStepNextKey,
+        onClick: this._onClickTgglKey,
+    });
 };
 
 

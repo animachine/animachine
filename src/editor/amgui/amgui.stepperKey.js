@@ -18,7 +18,12 @@ function createStepperKey(opt) {
 
     opt.height = opt.height || amgui.LINE_HEIGHT;
 
-    var stepperW = 8;
+    var hasPrev = false, 
+        hasNext = false,
+        isShowingSteppers = false,
+        isMOverKey = false,
+        isMOverStepper = false,
+        stepperW = 8;
 
     var de = amgui.createToggleIconBtn({
         icon: 'key',
@@ -29,28 +34,69 @@ function createStepperKey(opt) {
     });
     de.style.position = 'relative';
     de.style.overflow = '';
-    de.addEventListener('mouseenter', showSteppers)
-    de.addEventListener('mouseleave', hideSteppers)
+    de.addEventListener('mouseenter', onMOverKey);
+    de.addEventListener('mouseleave', onMOutKey);
 
     var dePrev = createStepper(true);
     var deNext = createStepper(false);
 
+    de.setSteppers = function (_hasPrev, _hasNext) {
+
+        hasPrev = _hasPrev;
+        hasNext = _hasNext;
+
+        if (isShowingSteppers) {
+            
+            hideSteppers();
+            showSteppers();
+        }
+    }
+
+    return de;
+
+    function onMOverKey() { isMOverKey = true; }
+    function onMOutKey() { isMOverKey = false; }
+    function onMOverStepper() { isMOverStepper = true; }
+    function onMOutStepper() { isMOverStepper = false; }
+
+    function onChangeOver () {
+
+        if (isMOverKey || isMOverStepper) {
+
+            if (!isShowingSteppers) {
+                showSteppers();
+            }
+        }
+        else if (!isMOverKey && !isMOverStepper) {
+
+            if (isShowingSteppers) {
+                hideSteppers();
+            }
+        }
+    };
+
     function showSteppers() {
 
-        amgui.deOverlayCont.appendChild(dePrev);
-        amgui.deOverlayCont.appendChild(deNext);
+        isShowingSteppers = true;
 
         var br = de.getBoundingClientRect();
-        console.log(br.left, br.right)
 
-        dePrev.style.left = (br.left - stepperW) + 'px';
-        dePrev.style.top = br.top + 'px';
+        if (hasPrev) {
+            amgui.deOverlayCont.appendChild(dePrev);
+            dePrev.style.left = (br.left - stepperW) + 'px';
+            dePrev.style.top = br.top + 'px';
+        }
         
-        deNext.style.left = br.right + 'px';
-        deNext.style.top = br.top + 'px';
+        if (hasNext) {
+            amgui.deOverlayCont.appendChild(deNext);
+            deNext.style.left = br.right + 'px';
+            deNext.style.top = br.top + 'px';
+        }
     }
 
     function hideSteppers() {
+
+        isShowingSteppers = false;
 
         if (dePrev.parentNode) {
             dePrev.parentNode.removeChild(dePrev);
@@ -71,9 +117,9 @@ function createStepperKey(opt) {
         });
         deStepper.style.position = 'absolute';
         deStepper.style.pointerEvents = 'auto';
+        deStepper.addEventListener('mouseenter', onMOverStepper);
+        deStepper.addEventListener('mouseleave', onMOutStepper);
 
         return deStepper;
     }
-
-    return de;
 }

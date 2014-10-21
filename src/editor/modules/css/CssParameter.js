@@ -13,34 +13,18 @@ function CssParameter (opt) {
     this._keys = [];
     this._lineH =  21;
 
+    this._onChangeInput = this._onChangeInput.bind(this);
+    this._onChangeTime = this._onChangeTime.bind(this);
+    this._onChangeKeyTime = this._onChangeKeyTime.bind(this);
+    this._onClickTgglKey = this._onClickTgglKey.bind(this);
+    this._onDeleteKey = this._onDeleteKey.bind(this);
+    this._onClickStepPrevKey = this._onClickStepPrevKey.bind(this);
+    this._onClickStepNextKey = this._onClickStepNextKey.bind(this);
+
     this.deOptions = this._createParameterOptions();
     this.deKeyline = amgui.createKeyline({
         timescale: am.timeline.timescale
     });
-
-    this._onChangeInput = this._onChangeInput.bind(this);
-    this._onChangeTime = this._onChangeTime.bind(this);
-    this._onChangeKeyTime = this._onChangeKeyTime.bind(this);
-    this._onToggleKey = this._onToggleKey.bind(this);
-    this._onDeleteKey = this._onDeleteKey.bind(this);
-
-    if (!this._noBaseKeyValueInput) {
-
-        this._input = amgui.createKeyValueInput({
-            parent: this.deOptions,
-            onChange: this._onChangeInput,
-            height: this._lineH
-        });
-        this._input.style.flex = 1;
-    }
-
-    this._btnToggleKey = amgui.createIconBtn({
-        icon: 'key',
-        height: 21,
-        parent: this.deOptions,
-        onClick: this._onToggleKey,
-    });
-    this._refreshBtnToggleKey();
 
     am.timeline.on('changeTime', this._onChangeTime);
 
@@ -241,7 +225,7 @@ p.addKey = function (opt, skipHistory) {
     }
 
     this._refreshInput();
-    this._refreshBtnToggleKey();
+    this._refreshTgglKey();
 
     this.emit('change');
 
@@ -274,7 +258,7 @@ p.removeKey = function (key, skipHistory) {
     key.removeListener('changeTime', this._onChangeKeyTime);
     key.removeListener('delete', this._onDeleteKey);
 
-    this._refreshBtnToggleKey();
+    this._refreshTgglKey();
 
     this.emit('change');
 };
@@ -317,6 +301,24 @@ p.getNextKey = function (time) {
     return retKey;
 };
 
+p.gotoPrevKey = function (time) {
+
+    var key = this.getPrevKey(am.timeline.currTime);
+
+    if (key) {
+        am.timeline.currTime = key.time;
+    }
+};
+
+p.gotoNextKey = function (time) {
+
+    var key = this.getNextKey(am.timeline.currTime);
+
+    if (key) {
+        am.timeline.currTime = key.time;
+    }
+};
+
 p.getKeyTimes = function () {
 
     var times = [];
@@ -327,6 +329,18 @@ p.getKeyTimes = function () {
     });
 
     return times;
+};
+
+p.toggleKey = function () {
+
+    var key = this.getKey(am.timeline.currTime);
+
+    if (key) {
+        this.removeKey(key);
+    }
+    else {
+        this.addKey({time: am.timeline.currTime});
+    }
 };
 
 p.isValid = function () {
@@ -406,19 +420,22 @@ p._onDeleteKey = function (key) {
 p._onChangeTime = function () {
 
     this._refreshInput();
-    this._refreshBtnToggleKey();
+    this._refreshTgglKey();
 };
 
-p._onToggleKey = function () {
+p._onClickTgglKey = function () {
 
-    var key = this.getKey(am.timeline.currTime);
+    this.toggleKey();
+};
 
-    if (key) {
-        this.removeKey(key);
-    }
-    else {
-        this.addKey({time: am.timeline.currTime});
-    }
+p._onClickStepPrevKey = function () {
+
+    this.gotoPrevKey();
+};
+
+p._onClickStepNextKey = function () {
+
+    this.gotoNextKey();
 };
 
 
@@ -435,10 +452,13 @@ p._refreshInput = function () {
     this._input.setValue(this.getValue());
 };
 
-p._refreshBtnToggleKey = function () {
+p._refreshTgglKey = function () {
 
     var key = this.getKey(am.timeline.currTime);
-    this._btnToggleKey.style.color = key ? amgui.color.text : amgui.color.textInactive;
+    this._tgglKey.style.color = key ? amgui.color.text : amgui.color.textInactive;
+
+    var time = ma.timeline.currTime;
+    this._tgglKey.setSteppers(!!this.getPrevKey(time), !!this.getNextKey(time));
 };
 
 
@@ -471,6 +491,25 @@ p._createParameterOptions = function () {
             ]
         })
     });
+
+    if (!this._noBaseKeyValueInput) {
+
+        this._input = amgui.createKeyValueInput({
+            parent: this.deOptions,
+            onChange: this._onChangeInput,
+            height: this._lineH
+        });
+        this._input.style.flex = 1;
+    }
+
+    this._tgglKey = amgui.createStepperKey({
+        height: 21,
+        onClick: this._onClickTgglKey,
+        parent: de,
+        onClickPrev: this._onClickStepPrevKey,
+        onClickNext: this._onClickStepNextKey,
+    });
+    this._refreshTgglKey();
 
     return de;
 };

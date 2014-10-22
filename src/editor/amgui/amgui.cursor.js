@@ -30,7 +30,7 @@ function createCursorFromText(opt) {
     var svg = 'url(\'data:image/svg+xml;utf8,'
         + '<svg xmlns="http://www.w3.org/2000/svg" width="'+opt.width+'" height="'+opt.height+'">'
         + '<text x="'+opt.ty+'" y="'+opt.ty+'" transform="rotate('+opt.r+', '+opt.cx+', '+opt.cy+')" '
-        + 'style="{font-family:\''+opt.fontFamily+'\';" font-size:'+opt.fontSize+'; color:'+opt.color+';}">'+opt.text+'</text>'
+        + 'fill="'+opt.color+'" font-size="'+opt.fontSize+'" font-family="'+opt.fontFamily+'">'+opt.text+'</text>'
         + '</svg>\') '+opt.cx+' '+opt.cy+', auto';
 
     return svg;

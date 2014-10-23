@@ -26,9 +26,9 @@ $(function () {
                         });
                     }
                 },
-                runningLoop: function () {
+                runningLoop: function (tour) {
 
-                    if (!tour.isChecked(0) && am.selectedElement === deCookiejar) {
+                    if (!tour.isChecked(0) && am.selectedElem === deCookiejar) {
 
                         tour.checkIn(0);
                         tour.removePointer(this._cookiePointer);
@@ -46,11 +46,17 @@ $(function () {
                 checklistLength: 1,
                 onReady: function (tour) {
                 },
-                runningLoop: function () {
+                runningLoop: function (tour) {
 
-                    if (!tour.isChecked(0) && ifItIsTransformed) {
+                    if (!tour.isChecked(0)) {
 
-                        tour.checkIn(0);
+                        am.timeline.sequences.forEach(function (sequ) {
+                            sequ._parameters.forEach(function (param) {
+                                if (param.name === 'transform') {
+                                    tour.checkIn(0);
+                                }
+                            });
+                        });
                     }
                 }
             },
@@ -60,15 +66,21 @@ $(function () {
                 checklistLength: 2,
                 onReady: function (tour) {
                 },
-                runningLoop: function () {
+                runningLoop: function (tour) {
 
-                    if (!tour.isChecked(0) && ifTimeIsnt0) {
+                    if (!tour.isChecked(0) && am.timeline.currTime !== 0) {
 
                         tour.checkIn(0);
                     }
-                    if (!tour.isChecked(1) && ifItsHaveTwoMainKey) {
+                    if (!tour.isChecked(1)) {
 
-                        tour.checkIn(1);
+                        am.timeline.sequences.forEach(function (sequ) {
+                            sequ._parameters.forEach(function (param) {
+                                if (param._keys.length > 1) {
+                                    tour.checkIn(1);
+                                }
+                            });
+                        });
                     }
                 }
             },
@@ -78,7 +90,7 @@ $(function () {
                 checklistLength: 3,
                 onReady: function (tour) {
                 },
-                runningLoop: function () {
+                runningLoop: function (tour) {
 
                     if (!tour.isChecked(0) && isSavePanelOpened) {
 
@@ -102,7 +114,7 @@ $(function () {
                 checklistLength: 3,
                 onReady: function (tour) {
                 },
-                runningLoop: function () {
+                runningLoop: function (tour) {
 
                     if (!tour.isChecked(0) && isSavePanelOpened) {
 
@@ -135,7 +147,7 @@ function getStep0Content() {
     return '<img src="http://zippy.gfycat.com/FluffySecondaryGnu.gif" style="width:100%;">'
     + '<p>Hi! We\'ve made a quick tour to show how to use Animachine Beta.</p>'
     + '<p>If you wanna be quick, you can just watch the gif animations and do what you see, but you\'ll find the detailed version below them if it\'s needed.</p>'
-    + '<p>Click on the <span class="icon-angle-left"></span> for the first step.</p>';
+    + '<p>Click on the <span class="icon-angle-right"></span> for the first step.</p>';
 }
 
 function getStep1Content() {

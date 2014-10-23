@@ -15,5 +15,7 @@ exports.init = function () {
 
 function onSelectDomElement(de) {
 
-    domTreeTab.focusElem(de);
+    if (de) {
+        domTreeTab.focusElem(de);
+    }
 }

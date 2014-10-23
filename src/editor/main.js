@@ -312,7 +312,6 @@ function createAmRoot() {
 
         var style = document.createElement('style');
         style.innerHTML = css;
-        //TODO
         sr.appendChild(style);
         // document.head.appendChild(style);
     });

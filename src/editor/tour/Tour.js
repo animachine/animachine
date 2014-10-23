@@ -4,6 +4,8 @@ var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../amgui');
 
+var cssAmgui = require('../assets/fontello/css/amgui.css');
+
 function Tour() {
 
     EventEmitter.call(this);
@@ -67,6 +69,8 @@ p.goto = function (idx) {
 
     if (this._currStep) {
 
+        clearInterval(this._runningLoopSetI);
+
         if (typeof(this._currStep.onClose) === 'function') {
         
             this._currStep.onClose(this);
@@ -80,6 +84,11 @@ p.goto = function (idx) {
     if (typeof(this._currStep.onReady) === 'function') {
         
         this._currStep.onReady(this);
+    }
+    
+    if (typeof(this._currStep.runningLoop) === 'function') {
+        
+        this._runningLoopSetI = setInterval(this._currStep.runningLoop.bind(this._currStep, this), 312);
     }
 
     this._deState.textContent = (idx+1)+'/'+this._steps.length+' '+(this._currStep.title || '');
@@ -219,11 +228,18 @@ p._createBase = function () {
     this._deStepContScroll.style.position = 'relative';
     this._deStepContScroll.style.flex = '1';
     this.domElem.appendChild(this._deStepContScroll); 
+    
+    this._srStepContScroll = this._deStepContScroll.createShadowRoot();
 
     this._deStepCont = document.createElement('div');
     this._deStepCont.style.position = 'absolute';
     this._deStepCont.style.width = '100%';
-    this._deStepContScroll.appendChild(this._deStepCont);
+    this._srStepContScroll.appendChild(this._deStepCont);
+
+    var style = document.createElement('style');
+    style.innerHTML = cssAmgui;
+    this._srStepContScroll.appendChild(style);
+
 
     this._scrollRange = amgui.createRange({
         parent: this._deStepContScroll,

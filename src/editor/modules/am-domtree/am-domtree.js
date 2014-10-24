@@ -10,12 +10,10 @@ exports.init = function () {
 
     am.on('selectDomElement', onSelectDomElement);
 
-    am.workspace.fillTab('Dom Tree', domTreeTab.domElem)
+    am.workspace.fillTab('Dom Tree', domTreeTab.domElem);
 };
 
 function onSelectDomElement(de) {
 
-    if (de) {
-        domTreeTab.focusElem(de);
-    }
+    domTreeTab.focusElem(de);
 }

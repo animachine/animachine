@@ -1,14 +1,14 @@
 'use strict';
 
 var CssSequence = require('./CssSequence');
-var paramsTab = require('./paramsTab/paramsTab');
+var ParamsTab = require('./paramsTab/ParamsTab');
 var qsgen = require('../../qsgen');
 
-var am, iconNew;
+var iconNew, paramsTab;
 
-exports.init = function (_am) {
+exports.init = function () {
 
-    am = _am;
+    paramsTab = new ParamsTab();
 
     am.registerSequenceType(CssSequence, CssSequence.prototype.type);
 
@@ -24,7 +24,7 @@ exports.init = function (_am) {
 
             am.domPicker.hide();
 
-            var selector = qsgen(am.selectedElem);
+            var selector = qsgen(am.selectedDomElem);
             console.log('selector:', selector);
 
             var sequ = new CssSequence({
@@ -34,7 +34,7 @@ exports.init = function (_am) {
 
             am.timeline.addSequence(sequ);
 
-            sequ.select();
+            am.selectTrack(sequ);
         }
     })
 };
@@ -47,12 +47,15 @@ function onSelectDomElement(de) {
 
             if (sequ.isOwnedDomElem(de)) {
 
-                console.log('is owned', de);
-                sequ.select({focusElem: de});
+                am.selectTrack(sequ);
+                sequ.focusHandler(de);
                 am.domPicker.hide();
             }
             else {
-                sequ.deselect();
+                if (am.selectedTrack === sequ) {
+
+                    am.deselectTrack();
+                } 
             }
         }
     });

@@ -8,16 +8,22 @@ function ParamsTab() {
     this._drawers = [];
     this._inputs = [];
 
+    this._onSelectTrack = this._onSelectTrack.bind(this);  
+    this._onDeselectTrack = this._onDeselectTrack.bind(this);  
+    this._onChangeTrack = this._onChangeTrack.bind(this);  
+    this._onInputCreate = this._onInputCreate.bind(this);
+
     this._createBase();
 
-    this._onChangeTrack = this._onChangeTrack.bind(this);  
+    am.on('selectTrack', this._onSelectTrack);
+    am.on('deselectTrack', this._onDeselectTrack);
 }
 
 var p = ParamsTab.prototype;
 
 p._listenToTrack = function (track) {
 
-    this._unlistenToTrack();
+    this._unlisten();
 
     this._currTrack = track;
 
@@ -26,7 +32,7 @@ p._listenToTrack = function (track) {
     this._refresh();
 };
 
-p._unlistenToTrack = function (track) {
+p._unlisten = function (track) {
 
     if (!this._currTrack) return;
 
@@ -37,9 +43,26 @@ p._unlistenToTrack = function (track) {
 
 
 
+p._onSelectTrack = function () {
+
+    this._listenToTrack(am.selectedTrack);
+};
+
+p._onDeselectTrack = function () {
+
+    this._unlisten();
+};
+
 p._onChangeTrack = function () {
 
     this._refresh();
+};
+
+p._onInputCreate = function (input) {
+
+    if (this._currTrack) {
+        this._currTrack.addParameter({name: input.name})
+    }
 };
 
 
@@ -52,10 +75,15 @@ p._refresh = function () {
 
     this._inputs.forEach(function (input) {
 
-        var param = track._getParameter(input.name);
+        var param = this._currTrack._getParameter(input.name);
 
-        input.currParam = param;
-    });
+        if (param) {
+            input.setParam(param);
+        }
+        else {
+            input.removeParam();
+        }
+    }, this);
 };
 
 
@@ -92,7 +120,14 @@ p._createBase = function () {
     addDrawer('Transform');
     addDrawer('Layout');
 
-    addInput('color', 'Text');
+    addInput('font-family', 'Font');
+    addInput('font-size', 'Font');
+    addInput('font-weight', 'Font');
+    addInput('font-style', 'Font');
+    addInput('font-variant', 'Font');
+    addInput('text-transform', 'Font', {options: ['uppercase', 'lovercase', 'capitalise', 'none']});
+    addInput('text-decoration', 'Font', {options: ['underline', 'overline', 'line-trough', 'none']});
+    addInput('color', 'Font', {type: 'color'});
 
     function addDrawer(name) {
 
@@ -112,9 +147,12 @@ p._createBase = function () {
                 input = new Input({name: name});
         }
 
+        input.on('create', that._onInputCreate);
         drawers[drawerName].deContent.appendChild(input.domElem);
+
+        that._inputs.push(input);
     }
 }
 
 
-module.exports = new ParamsTab();
+module.exports = ParamsTab;

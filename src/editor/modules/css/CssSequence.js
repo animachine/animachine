@@ -44,6 +44,8 @@ function CssSequence(opt) {
     this._onChangeIterations = this._onChangeIterations.bind(this);
     this._onChangeSelectors = this._onChangeSelectors.bind(this);
     this._onWindowResize = this._onWindowResize.bind(this);
+    this._onSelectTrack = this._onSelectTrack.bind(this);
+    this._onDeselectTrack = this._onDeselectTrack.bind(this);
     this._animPlay = this._animPlay.bind(this);
 
     this.deOptions = document.createElement('div');
@@ -56,6 +58,9 @@ function CssSequence(opt) {
     am.timeline.on('changeTime', this._onChangeTime);
     this.deOptions.addEventListener('click', this._onSelectClick);
     this.deKeys.addEventListener('click', this._onSelectClick);
+
+    am.on('selectTrack', this._onSelectTrack);
+    am.on('deselectTrack', this._onDeselectTrack);
 
     this._onChangeBlankParameter();
 
@@ -247,10 +252,13 @@ p.addParameter = function (opt, skipHistory) {
 
         this._refreshParameterOrdering();
         this._moveBlankParameterDown();
+     
         this.emit('changeHeight', this);
-
+        this.emit('change');
+    
         return param;
     }
+    
 };
 
 p.removeParameter = function (param, skipHistory) {
@@ -308,7 +316,7 @@ p.select = function (opt) {
 
     if (this._selectedElems.length) {
 
-        this._focusHandler(opt.focusElem || this._selectedElems[0]);
+        this.focusHandler(opt.focusElem || this._selectedElems[0]);
     }
 
     this.deHighlight.style.opacity = 1;
@@ -350,16 +358,6 @@ p.renderTime = function (time) {
     });
 };
 
-p._onPick = function (de) {
-
-    var items = am.deRoot.querySelectorAll(this.selectors.join(','));
-
-    if (items.indexOf(de)) {
-
-        this.select();
-    }
-};
-
 p.play = function () {
 
     this._isPlaying = true;
@@ -386,23 +384,7 @@ p.getMagnetPoints = function () {
     return times;
 };
 
-
-
-
-
-
-
-
-
-
-p._animPlay = function () {
-
-    this._animPlayRafid = window.requestAnimationFrame(this._animPlay);
-
-    this.renderTime(am.timeline.currTime);
-};
-
-p._focusHandler = function (de) {
+p.focusHandler = function (de) {
 
     de = de || this._currHandledDe;
     this._currHandledDe = de;
@@ -454,6 +436,22 @@ p._focusHandler = function (de) {
     this._handler.activate();
 
     am.deHandlerCont.appendChild(this._handler.domElem);
+};
+
+
+
+
+
+
+
+
+
+
+p._animPlay = function () {
+
+    this._animPlayRafid = window.requestAnimationFrame(this._animPlay);
+
+    this.renderTime(am.timeline.currTime);
 };
 
 p._blurHandler = function () {
@@ -533,9 +531,22 @@ p._hideParams = function () {
 
 
 
+p._onSelectTrack = function (track) {
+
+    if (track === this) {
+    
+        this.select();
+    }
+};
+
+p._onDeselectTrack = function () {
+
+    am.deselect();
+};
+
 p._onSelectClick = function () {
 
-    this.select();
+    am.selectTrack(this);
 };
 
 p._onChangeHandler = function(params, type) {
@@ -573,7 +584,7 @@ p._onChangeHandler = function(params, type) {
     }
 
     this.renderTime(time);
-    this._focusHandler();
+    this.focusHandler();
 };
 
 p._onChangeTime = function (time) {
@@ -583,14 +594,14 @@ p._onChangeTime = function (time) {
     }
 
     this.renderTime(time);
-    this._focusHandler();
+    this.focusHandler();
     this._refreshTgglKey();
 };
 
 p._onChangeParameter = function () {
 
     this.renderTime();
-    this._focusHandler();
+    this.focusHandler();
     this._refreshHeadKeyline();
     this._refreshTgglKey();
 
@@ -600,7 +611,7 @@ p._onChangeParameter = function () {
 
 p._onWindowResize = function () {
 
-    this._focusHandler();
+    this.focusHandler();
 };
 
 p._onDeleteParameter = function (param) {
@@ -710,7 +721,7 @@ p._onChangeSelectors = function (selectors) {
         this._currHandledDe = undefined;
     }
 
-    this._focusHandler(this._currHandledDe || this._selectedElems[0]);
+    this.focusHandler(this._currHandledDe || this._selectedElems[0]);
 };
 
 

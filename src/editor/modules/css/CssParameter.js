@@ -44,11 +44,25 @@ var p = CssParameter.prototype;
 
 
 
-Object.defineProperty(p, 'height', {
+Object.defineProperties(p, {
 
-    get: function () {
-        
-        return this._lineH;
+    height: {
+        get: function () {
+            
+            return this._lineH;
+        }
+    },
+    name: {
+        set: function (v) {
+
+            if (v === this._name) return;
+
+            this._name = v;
+            this._refreshInput();
+        },
+        get: function () {
+            return this._name
+        }
     }
 });
 
@@ -495,7 +509,7 @@ p._createParameterOptions = function () {
     if (!this._noBaseKeyValueInput) {
 
         this._input = amgui.createKeyValueInput({
-            parent: this.deOptions,
+            parent: de,
             onChange: this._onChangeInput,
             height: this._lineH
         });

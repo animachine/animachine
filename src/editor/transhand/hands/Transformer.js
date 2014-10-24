@@ -33,6 +33,8 @@ function Transformer() {
     this._points = [{}, {}, {}, {}];
     this._pOrigin = {};
     this._originRadius = 6;
+    this._rotateFingerDist = 16;
+
 
     this._onDrag = this._onDrag.bind(this);
     this._onMouseUp = this._onMouseUp.bind(this);
@@ -56,6 +58,7 @@ p.setup = function (opt) {
     _.extend(this._base, opt.base);
     this._refreshPoints();
     this._renderHandler();
+    this._refreshHitbox();
 };
 
 p.activate = function () {
@@ -76,13 +79,71 @@ p.deactivate = function () {
     window.removeEventListener('mousedown', this._onMouseDown);
 };
 
-p.createGraphics = function () {
 
-    this.domElem = document.createElement('canvas');
-    this.domElem.style.position = 'fixed';
-    this.domElem.style.pointerEvents = 'none';
-    // this.domElem.style.border = '1px solid red';
+
+
+
+
+p._onMouseMove = function (e) {
+
+    if (!this._isHandle) {
+        
+        if (am.isPickableDomElem(e.target)) {            
+
+            this._setFinger(e);
+        }
+        else {
+            this._setCursor('auto');
+        }
+    }
+
+    if (this._cursorFunc) {
+        this._setCursor(this._cursorFunc(e.clientX, e.clientY));
+    }
+}; 
+
+p._onMouseDown = function (e) {
+
+    if (!this._finger) {
+        return;
+    }
+
+    e.stopPropagation();
+    e.preventDefault();
+
+    this._isHandle = true;
+
+    this._mdPos = {
+        pMouse: {x: e.clientX, y: e.clientY},
+        params: _.cloneDeep(this._params),
+        points: _.cloneDeep(this._points),
+        pOrigin: _.cloneDeep(this._pOrigin)
+    };
+
+    window.addEventListener('mouseup', this._onMouseUp);
+    window.addEventListener('mouseup', this._onMouseUp);
+    window.addEventListener('mousemove', this._onDrag);
 };
+
+p._onMouseUp = function () {
+
+    window.removeEventListener('mouseup', this._onMouseUp);
+    window.removeEventListener('mouseleave', this._onMouseUp);
+    window.removeEventListener('mousemove', this._onDrag);
+
+    if (this._rafOnDragRafId) {
+        this._rafOnDrag();
+    }
+    
+    this._isHandle = false;
+};
+
+
+
+
+
+
+
 
 p._refreshPoints = function () {
 
@@ -117,11 +178,13 @@ p._refreshPoints = function () {
     }
 };
 
+
+
 p._renderHandler = function () {
 
     var p = this._points,
         po = this._pOrigin,
-        c = this.domElem,
+        c = this._deCanvas,
         or = this._originRadius,
         ctx = c.getContext('2d'),
         margin = 7,
@@ -159,7 +222,39 @@ p._renderHandler = function () {
     ctx.lineWidth = 1;
     ctx.stroke();
     ctx.restore();
+
 };
+
+p._refreshHitbox = function () {
+
+    var base = this._base, 
+        params = this._params,
+        rfd = this._rotateFingerDist;
+
+    this._deHitBox.style.left = (-rfd + base.x + params.tx) + 'px';
+    this._deHitBox.style.top = (-rfd + base.y + params.ty) + 'px';
+    this._deHitBox.style.width = (base.w * params.sx) + (rfd * 2) + 'px';
+    this._deHitBox.style.height = (base.h * params.sy) + (rfd * 2) + 'px';
+    this._deHitBox.style.transformOrigin = (params.ox * 100) + '% ' + (params.oy * 100) + '%';
+    this._deHitBox.style.transform = 'rotate(' + this._params.rz + 'rad)'; 
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 p._onDrag = function (e) {
 
@@ -329,6 +424,19 @@ p._rafOnDrag = function () {
     }
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 p._setFinger = function (e) {
 
     var base = this._base,
@@ -401,74 +509,28 @@ p._setFinger = function (e) {
         
         if (this._finger) {
 
-            // this.domElem.style.pointerEvents = 'auto';
             this._setCursor(MOUSESTATES[this._finger]);
         }
         else {
-            // this.domElem.style.pointerEvents = 'none';
             this._setCursor('auto');
         }
     }
 };
 
+
+
+
+
+
+
+
+
+
 p._setCursor = function (cursor) {
 
-    this.domElem.style.cursor = cursor;
-    document.querySelector("html").style.cursor = cursor;//hack! TODO
+    this._deHitBox.style.cursor = cursor;
+    // document.querySelector("html").style.cursor = cursor;//hack! TODO
 };
-
-p._onMouseDown = function (e) {
-
-    if (!this._finger || !am.isPickableDomElem(e.target)) {
-        return;
-    }
-
-    e.stopPropagation();
-    e.preventDefault();
-
-    this._isHandle = true;
-
-    this._mdPos = {
-        pMouse: {x: e.clientX, y: e.clientY},
-        params: _.cloneDeep(this._params),
-        points: _.cloneDeep(this._points),
-        pOrigin: _.cloneDeep(this._pOrigin)
-    };
-
-    window.addEventListener('mouseup', this._onMouseUp);
-    window.addEventListener('mouseup', this._onMouseUp);
-    window.addEventListener('mousemove', this._onDrag);
-};
-
-p._onMouseMove = function (e) {
-
-    if (!this._isHandle) {
-        
-        if (am.isPickableDomElem(e.target)) {            
-
-            this._setFinger(e);
-        }
-    }
-
-    if (this._cursorFunc) {
-        this._setCursor(this._cursorFunc(e.clientX, e.clientY));
-    }
-}; 
-
-p._onMouseUp = function () {
-
-    window.removeEventListener('mouseup', this._onMouseUp);
-    window.removeEventListener('mouseleave', this._onMouseUp);
-    window.removeEventListener('mousemove', this._onDrag);
-
-    if (this._rafOnDragRafId) {
-        this._rafOnDrag();
-    }
-    
-    this._isHandle = false;
-};
-
-
 
 p._getRotateCursor = function (mx, my) {
 
@@ -490,16 +552,31 @@ p._getScaleCursor = (function () {
 }());
 
 
+
+
+
+
+
+p.createGraphics = function () {
+
+    this.domElem = document.createElement('div');
+    this.domElem.style.pointerEvents = 'none';
+
+    this._deCanvas = document.createElement('canvas');
+    this._deCanvas.style.position = 'absolute';
+    this.domElem.appendChild(this._deCanvas);
+
+    this._deHitBox = document.createElement('div');
+    this._deHitBox.style.position = 'absolute';
+    this._deHitBox.style.pointerEvents = 'auto';
+    this._deHitBox.style.border = 'solid 1px red';
+    this._deHitBox.style.borderRadius = this._rotateFingerDist + 'px';
+    this._deHitBox.style.boxSizing = 'border-box';
+    this.domElem.appendChild(this._deHitBox);
+};
+
+
 module.exports = Transformer;
-
-
-
-
-
-
-
-
-
 
 
 

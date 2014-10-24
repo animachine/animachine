@@ -541,7 +541,7 @@ p._onSelectTrack = function (track) {
 
 p._onDeselectTrack = function () {
 
-    am.deselect();
+    this.deselect();
 };
 
 p._onSelectClick = function () {

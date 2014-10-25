@@ -28,7 +28,7 @@ $(function () {
                 },
                 runningLoop: function (tour) {
 
-                    if (!tour.isChecked(0) && am.selectedElem === deCookiejar) {
+                    if (!tour.isChecked(0) && am.selectedDomElem === deCookiejar) {
 
                         tour.checkIn(0);
                         tour.removePointer(this._cookiePointer);
@@ -144,7 +144,7 @@ $(function () {
 
 function getStep0Content() {
 
-    return '<img src="http://zippy.gfycat.com/FluffySecondaryGnu.gif" style="width:100%;">'
+    return '<img src="http://zippy.gfycat.com/ImpureSplendidHyracotherium.gif" style="width:100%;">'
     + '<p>Hi! We\'ve made a quick tour to show how to use Animachine Beta.</p>'
     + '<p>If you wanna be quick, you can just watch the gif animations and do what you see, but you\'ll find the detailed version below them if it\'s needed.</p>'
     + '<p>Click on the <span class="icon-angle-right"></span> for the first step.</p>';
@@ -152,14 +152,14 @@ function getStep0Content() {
 
 function getStep1Content() {
 
-    return '<img src="http://zippy.gfycat.com/ImpureSplendidHyracotherium.gif" style="width:100%;">'
+    return '<img src="http://zippy.gfycat.com/PoshHighlevelFalcon.gif" style="width:100%;">'
     + '<p>First, select the cookie jar on the screen by click on it</p>'
     + '<p> Than, click on the <span class="icon-ellipsis-vert"></span> in the right-left corner of the <a>Dom Picker<a/> and select the "new css track" menu.</p>';
 }
 
 function getStep2Content() {
 
-    return '<img src="http://zippy.gfycat.com/ImpureSplendidHyracotherium.gif" style="width:100%;">'
+    return '<img src="http://zippy.gfycat.com/IndolentBowedBustard.gif" style="width:100%;">'
     + '<p>Now, you can move, rotate and scale the cookie jar with the green transform tool around it.</p>';
 }
 

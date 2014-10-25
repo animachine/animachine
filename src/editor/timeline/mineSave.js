@@ -9,7 +9,7 @@ function mine(str) {
         return str;
     }
 
-    var rx = /\/\*\*[\s\S].*@amsave[\s\S].*\*\/[\s\S].*var\s.*SAVEJSON\s.*=([\s\S].*)/,
+    var rx = /\/\*\*[\s\S]*@amsave[\s\S]*\*\/[\s\S].*var\s.*SAVEJSON\s.*=([\s\S].*)/,
         m = rx.exec(str),
         json;
 

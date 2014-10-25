@@ -41,6 +41,8 @@ function Transformer() {
     this._onMouseMove = this._onMouseMove.bind(this);
     this._onMouseDown = this._onMouseDown.bind(this);
     this._rafOnDrag = this._rafOnDrag.bind(this);
+    this._onOverHitbox = this._onOverHitbox.bind(this);
+    this._onOutHitbox = this._onOutHitbox.bind(this);
 }
 
 Transformer.id = 'transformer';
@@ -67,7 +69,7 @@ p.activate = function () {
     this._isActivated = true;
 
     window.addEventListener('mousemove', this._onMouseMove);
-    window.addEventListener('mousedown', this._onMouseDown);
+    this._deHitbox.addEventListener('mousedown', this._onMouseDown);
 };
 
 p.deactivate = function () {
@@ -76,7 +78,7 @@ p.deactivate = function () {
     this._isActivated = false;
     
     window.removeEventListener('mousemove', this._onMouseMove);
-    window.removeEventListener('mousedown', this._onMouseDown);
+    this._deHitbox.removeEventListener('mousedown', this._onMouseDown);
 };
 
 
@@ -86,15 +88,9 @@ p.deactivate = function () {
 
 p._onMouseMove = function (e) {
 
-    if (!this._isHandle) {
+    if (!this._isHandle && this._isOverHitbox) {
         
-        if (am.isPickableDomElem(e.target)) {            
-
-            this._setFinger(e);
-        }
-        else {
-            this._setCursor('auto');
-        }
+        this._setFinger(e);
     }
 
     if (this._cursorFunc) {
@@ -112,6 +108,8 @@ p._onMouseDown = function (e) {
     e.preventDefault();
 
     this._isHandle = true;
+
+    this._deFullHit.style.pointerEvents = 'auto';
 
     this._mdPos = {
         pMouse: {x: e.clientX, y: e.clientY},
@@ -136,6 +134,18 @@ p._onMouseUp = function () {
     }
     
     this._isHandle = false;
+
+    this._deFullHit.style.pointerEvents = 'none';
+};
+
+p._onOverHitbox = function () {
+
+    this._isOverHitbox = true;
+};
+
+p._onOutHitbox = function () {
+
+    this._isOverHitbox = false;
 };
 
 
@@ -229,14 +239,20 @@ p._refreshHitbox = function () {
 
     var base = this._base, 
         params = this._params,
-        rfd = this._rotateFingerDist;
+        rfd = this._rotateFingerDist,
+        leftScale = (base.w * params.ox * (params.sx-1)),
+        topScale = (base.h * params.oy * (params.sy-1)),
+        w = (base.w * params.sx),
+        h = (base.h * params.sy),
+        ox = rfd + (w * params.ox),
+        oy = rfd + (h * params.oy);
 
-    this._deHitBox.style.left = (-rfd + base.x + params.tx) + 'px';
-    this._deHitBox.style.top = (-rfd + base.y + params.ty) + 'px';
-    this._deHitBox.style.width = (base.w * params.sx) + (rfd * 2) + 'px';
-    this._deHitBox.style.height = (base.h * params.sy) + (rfd * 2) + 'px';
-    this._deHitBox.style.transformOrigin = (params.ox * 100) + '% ' + (params.oy * 100) + '%';
-    this._deHitBox.style.transform = 'rotate(' + this._params.rz + 'rad)'; 
+    this._deHitbox.style.left = (-rfd + base.x + params.tx - leftScale) + 'px';
+    this._deHitbox.style.top = (-rfd + base.y + params.ty - topScale) + 'px';
+    this._deHitbox.style.width = w + 'px';
+    this._deHitbox.style.height = h + 'px';
+    this._deHitbox.style.transformOrigin = ox + 'px ' + oy + 'px';
+    this._deHitbox.style.transform = 'rotate(' + this._params.rz + 'rad)'; 
 };
 
 
@@ -495,7 +511,7 @@ p._setFinger = function (e) {
         this._finger = false;
     }
 
-
+console.log(this._finger)
     if (this._finger === 'rotate') {
 
         this._cursorFunc = this._getRotateCursor;
@@ -528,8 +544,8 @@ p._setFinger = function (e) {
 
 p._setCursor = function (cursor) {
 
-    this._deHitBox.style.cursor = cursor;
-    // document.querySelector("html").style.cursor = cursor;//hack! TODO
+    this._deHitbox.style.cursor = cursor;
+    this._deFullHit.style.cursor = cursor
 };
 
 p._getRotateCursor = function (mx, my) {
@@ -566,13 +582,21 @@ p.createGraphics = function () {
     this._deCanvas.style.position = 'absolute';
     this.domElem.appendChild(this._deCanvas);
 
-    this._deHitBox = document.createElement('div');
-    this._deHitBox.style.position = 'absolute';
-    this._deHitBox.style.pointerEvents = 'auto';
-    this._deHitBox.style.border = 'solid 1px red';
-    this._deHitBox.style.borderRadius = this._rotateFingerDist + 'px';
-    this._deHitBox.style.boxSizing = 'border-box';
-    this.domElem.appendChild(this._deHitBox);
+    this._deFullHit = document.createElement('div');
+    this._deFullHit.style.position = 'absolute';
+    this._deFullHit.style.pointerEvents = 'none';
+    this._deFullHit.style.width = '100%';
+    this._deFullHit.style.height = '100%';
+    this.domElem.appendChild(this._deFullHit);
+
+    this._deHitbox = document.createElement('div');
+    this._deHitbox.style.position = 'absolute';
+    this._deHitbox.style.pointerEvents = 'auto';
+    this._deHitbox.style.border = this._rotateFingerDist + 'px solid rgba(0,0,0,0)';
+    this._deHitbox.style.borderRadius = this._rotateFingerDist + 'px';
+    this._deHitbox.addEventListener('mouseenter', this._onOverHitbox);
+    this._deHitbox.addEventListener('mouseleave', this._onOutHitbox);
+    this.domElem.appendChild(this._deHitbox);
 };
 
 

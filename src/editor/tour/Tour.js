@@ -21,6 +21,7 @@ p.init = function () {
     if (this._inited) return;
     this._inited = true;
 
+    this._callRunningLoop = this._callRunningLoop.bind(this);
 
     this._steps = [];
     this._dePointers = [];
@@ -36,6 +37,8 @@ p.init = function () {
 p.setup = function (data) {
 
     this.init();
+
+    window.addEventListener('click', this._callRunningLoop);
 
     data.steps.forEach(function (step) {
 
@@ -88,7 +91,7 @@ p.goto = function (idx) {
     
     if (typeof(this._currStep.runningLoop) === 'function') {
         
-        this._runningLoopSetI = setInterval(this._currStep.runningLoop.bind(this._currStep, this), 312);
+        this._runningLoopSetI = setInterval(this._callRunningLoop, 312);
     }
 
     this._deState.textContent = (idx+1)+'/'+this._steps.length+' '+(this._currStep.title || '');
@@ -182,6 +185,16 @@ p.removeAllPointer = function () {
         this.removePointer(this._dePointers[0]);
     }
 };
+
+p._callRunningLoop = function () {
+
+    if (this._currStep && this._currStep.runningLoop) {
+
+        this._currStep.runningLoop(this);
+    }
+}
+
+
 
 
 

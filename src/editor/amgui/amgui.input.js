@@ -20,7 +20,7 @@ function createInput(opt) {
     inp.type = opt.type || 'text';
     inp.style.width = opt.width || '245px';
     inp.style.height = opt.height || amgui.LINE_HEIGHT + 'px';
-    inp.style.fontSize = opt.fontSize || amgui.LINE_HEIGHT + 'px';
+    inp.style.fontSize = opt.fontSize || amgui.FONT_SIZE;
     inp.style.fontFamily = amgui.FONT_FAMILY;
     inp.style.color = amgui.color.text;
     inp.style.background = 'none';
@@ -29,6 +29,10 @@ function createInput(opt) {
     if ('palceholder' in opt) inp.palceholder = opt.palceholder;
     if ('value' in opt) inp.value = opt.value;
     if ('flex' in opt) inp.style.flex = opt.flex;
+
+    if (opt.onChange) {
+        inp.addEventListener('change', opt.onChange);
+    }
 
     if (opt.parent) {
         opt.parent.appendChild(inp);

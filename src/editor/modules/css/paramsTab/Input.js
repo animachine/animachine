@@ -69,7 +69,10 @@ p.removeParam = function () {
 
 p._onChangeInput = function () {
 
-    this._currParam.value = this._inputValue.getValue(); 
+    this._currParam.addKey({
+        time: am.timeline.currTime,
+        value: this._inputValue.value,
+    }); 
 };
 
 p._onChangeParam = function () {
@@ -107,9 +110,11 @@ p._onSelect = function () {
 
 p._refreshInput = function () {
 
-    if (this._inputValue.value !== this._currParam.value) {
+    var paramValue = this._currParam.getValue();
 
-        this._inputValue.value = this._currParam.value;
+    if (this._inputValue.value !== paramValue) {
+
+        this._inputValue.value = paramValue;
     }
 };
 
@@ -150,6 +155,7 @@ p._createBase = function () {
 
     this._inputValue = amgui.createInput({
         flex: 1,
+        fontSize: '16px',
         parent: this.domElem,
         onChange: this._onChangeInput,
     });

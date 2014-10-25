@@ -433,6 +433,9 @@ p._rafOnDrag = function () {
             x = (Math.cos(r) * dist) / params.sx,
             y = (Math.sin(r) * dist) / params.sy;
 
+        x = parseInt(x * 1000) / 1000;//?hack??
+        y = parseInt(y * 1000) / 1000;
+
         change.ox = params.ox = md.params.ox + (x / base.w);
         change.oy = params.oy = md.params.oy + (y / base.h);
         change.tx = params.tx = md.params.tx + (mx - x);

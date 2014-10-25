@@ -585,6 +585,7 @@ p._createBase = function () {
     this._timebar.domElem.style.height = '23px';
     this._deRight.appendChild(this._timebar.domElem);
 
+    //keeps the scroll bar and the scroll container(_deKeylineCont2)
     this._deKeylineCont3 = document.createElement('div');
     this._deKeylineCont3.style.position = 'relative';
     this._deKeylineCont3.style.display = 'flex';
@@ -607,6 +608,7 @@ p._createBase = function () {
     this._deKeylineCont2.style.flex = '1';
     this._deKeylineCont3.appendChild(this._deKeylineCont2);
 
+    //this container is moving with the timeline
     this._deKeylineCont = document.createElement('div');
     this._deKeylineCont.style.position = 'relative';
     this._deKeylineCont.style.width = '100%';

@@ -20,6 +20,7 @@ function Timebar(opt) {
 
     this._magnetPoints = [];
     this._magnetDistancePx = 2.50;
+    this._startMargin = 5;
 
     this._onMDown = onMDown.bind(this);
     this._onMMove = onMMove.bind(this);
@@ -65,11 +66,11 @@ Object.defineProperties(p, {
     start: {
         set: function (v) {
 
-            v = parseInt(v);
+            v = Math.min(this._startMargin / this.timescale, parseInt(v));
 
             if (!Number.isFinite(v) || this._start === v) return;
 
-            this._start = Math.min(0, v);
+            this._start = v;
             this._renderTape();
             this.emit('changeTape');
         },
@@ -113,7 +114,7 @@ Object.defineProperties(p, {
     currTime: {
         set: function (v) {
 
-            v = parseInt(v);
+            v = Math.max(8, parseInt(v));
 
             if (!Number.isFinite(v) || this._currTime === v) return;
 

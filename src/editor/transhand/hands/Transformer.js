@@ -85,19 +85,6 @@ p.deactivate = function () {
 
 
 
-
-p._onMouseMove = function (e) {
-
-    if (!this._isHandle && this._isOverHitbox) {
-        
-        this._setFinger(e);
-    }
-
-    if (this._cursorFunc) {
-        this._setCursor(this._cursorFunc(e.clientX, e.clientY));
-    }
-}; 
-
 p._onMouseDown = function (e) {
 
     if (!this._finger) {
@@ -122,6 +109,18 @@ p._onMouseDown = function (e) {
     window.addEventListener('mouseup', this._onMouseUp);
     window.addEventListener('mousemove', this._onDrag);
 };
+
+p._onMouseMove = function (e) {
+
+    if (!this._isHandle && this._isOverHitbox) {
+        
+        this._setFinger(e);
+    }
+
+    if (this._cursorFunc) {
+        this._setCursor(this._cursorFunc(e.clientX, e.clientY));
+    }
+}; 
 
 p._onMouseUp = function () {
 
@@ -514,7 +513,6 @@ p._setFinger = function (e) {
         this._finger = false;
     }
 
-console.log(this._finger)
     if (this._finger === 'rotate') {
 
         this._cursorFunc = this._getRotateCursor;
@@ -592,6 +590,12 @@ p.createGraphics = function () {
     this._deFullHit.style.height = '100%';
     this.domElem.appendChild(this._deFullHit);
 
+    var onFitstMove = function () {
+
+        this._onOverHitbox();
+        this._deHitbox.removeEventListener('mousemove', onFitstMove);
+    }.bind(this);
+
     this._deHitbox = document.createElement('div');
     this._deHitbox.style.position = 'absolute';
     this._deHitbox.style.pointerEvents = 'auto';
@@ -599,7 +603,9 @@ p.createGraphics = function () {
     this._deHitbox.style.borderRadius = this._rotateFingerDist + 'px';
     this._deHitbox.addEventListener('mouseenter', this._onOverHitbox);
     this._deHitbox.addEventListener('mouseleave', this._onOutHitbox);
+    this._deHitbox.addEventListener('mousemove', onFitstMove);
     this.domElem.appendChild(this._deHitbox);
+
 };
 
 

@@ -755,36 +755,6 @@ p._refreshTgglKey = function () {
     this._tgglKey.setToggle( this._isAllParamsHaveKey(am.timeline.currTime));
 };
 
-
-p._refreshHeadKeyline = function () {
-
-    var times = [], oldKeys = this._headKeys.splice(0);
-
-    this._parameters.forEach(function (param) {
-
-        times = times.concat(param.getKeyTimes());
-    });
-
-    times = _.uniq(times);
-
-    times.forEach(function (time) {
-
-        var key = oldKeys.pop() || new Key({
-            deKeyline: this._deHeadKeyline,
-            ease: 'none',
-            color: '#063501'
-        });
-
-        key.domElem.style.pointerEvents = 'none';//hack! until finish the control with head keys
-
-        key.time = time;
-
-        this._headKeys.push(key);
-    }, this);
-
-    _.invoke(_.difference(oldKeys, this._headKeys), 'dispose');
-};
-
 p._refreshParameterOrdering = function () {
 
     this._parameters.forEach(function (param) {

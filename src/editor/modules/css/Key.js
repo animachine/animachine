@@ -132,7 +132,7 @@ p._onSelectDropdown = function (e) {
     }
     else if (selection === 'delete') {
 
-        this.emit('delete', this);
+        this.emit('needsRemove', this);
     }
 };
 

@@ -3,28 +3,30 @@
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var uncalc = require('./uncalc');
-var Key = require('./Key');
+var Key = require('../../utils/Key');
+var Keyline = require('../../utils/Keyline');
 var amgui = require('../../amgui');
 
 function CssParameter (opt) {
 
     EventEmitter.call(this);
 
-    this._keys = [];
     this._lineH =  21;
 
     this._onChangeInput = this._onChangeInput.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
-    this._onChangeKeyTime = this._onChangeKeyTime.bind(this);
+    this._onChangeKeyline = this._onChangeKeyline.bind(this);
+    this._onKeyNeedsRemove = this._onKeyNeedsRemove.bind(this);
     this._onClickTgglKey = this._onClickTgglKey.bind(this);
-    this._onDeleteKey = this._onDeleteKey.bind(this);
     this._onClickStepPrevKey = this._onClickStepPrevKey.bind(this);
     this._onClickStepNextKey = this._onClickStepNextKey.bind(this);
 
+    this._keyline = new Keyline();
+    this._keyline.on('change', this._onChangeKeyline);
+    this._keyline.on('keyNeedsRemove', this._onKeyNeedsRemove);
+
     this.deOptions = this._createParameterOptions();
-    this.deKeyline = amgui.createKeyline({
-        timescale: am.timeline.timescale
-    });
+    this.deKeyline = this._keyline.domElem;
 
     am.timeline.on('changeTime', this._onChangeTime);
 
@@ -77,7 +79,7 @@ p.getSave = function () {
         keys: [],
     };
 
-    this._keys.forEach(function (key) {
+    this._keyline.forEachKey(function (key) {
 
         save.keys.push(key.getSave());
     });
@@ -99,7 +101,7 @@ p.getScriptKeys = function () {
 
     var keys = [];
 
-    this._keys.forEach(function (key) {
+    this._keyline.forEachKey(function (key) {
 
         var k = {
             offset: key.time / am.timeline.length,
@@ -131,7 +133,7 @@ p.getValue = function (time) {
 
     var before, after, same;
 
-    this._keys.forEach(function (key) {
+    this._keyline.forEachKey(function (key) {
 
         if (key.time === time) {
         
@@ -224,13 +226,10 @@ p.addKey = function (opt, skipHistory) {
     }
     else {
 
-        key = new Key(_.extend({deKeyline: this.deKeyline}, opt));
+        key = new Key(opt);
         key.value = opt.value || this.getValue(opt.time);
 
-        key.on('changeTime', this._onChangeKeyTime);
-        key.on('delete', this._onDeleteKey);
-
-        this._keys.push(key);
+        this._keyline.addKey(key);
 
         if (!skipHistory) {
             am.history.closeChain(key);
@@ -248,14 +247,7 @@ p.addKey = function (opt, skipHistory) {
 
 p.removeKey = function (key, skipHistory) {
 
-    if (typeof(key) === 'number') {
-
-        key = this.getKey(key);
-    }
-
-    var idx = this._keys.indexOf(key);
-
-    if (idx === -1) {
+    if (!this._keyline.removeKey(key)) {
 
         return;
     }
@@ -265,13 +257,6 @@ p.removeKey = function (key, skipHistory) {
             [this.removeKey, this, key, true], 'remove key');
     }
 
-    this._keys.splice(idx, 1);
-
-    key.dispose();
-
-    key.removeListener('changeTime', this._onChangeKeyTime);
-    key.removeListener('delete', this._onDeleteKey);
-
     this._refreshTgglKey();
 
     this.emit('change');
@@ -279,40 +264,17 @@ p.removeKey = function (key, skipHistory) {
 
 p.getKey = function (time) {
 
-    return this._keys.find(function(key) {
-
-        return key.time === time;
-    });
+    return this._keyline.getKeyByTime(time);
 };
 
 p.getPrevKey = function (time) {
 
-    var retKey;
-    
-    this._keys.forEach(function(key) {
-
-        if (key.time < time && (!retKey || retKey.time < key.time)) {
-
-            retKey = key;
-        }
-    });
-
-    return retKey;
+    return this._keyline.getPrevKey(time);
 };
 
 p.getNextKey = function (time) {
 
-    var retKey;
-    
-    this._keys.forEach(function(key) {
-
-        if (key.time > time && (!retKey || retKey.time > key.time)) {
-
-            retKey = key;
-        }
-    });
-
-    return retKey;
+    return this._keyline.getNextKey(time);
 };
 
 p.gotoPrevKey = function (time) {
@@ -335,14 +297,7 @@ p.gotoNextKey = function (time) {
 
 p.getKeyTimes = function () {
 
-    var times = [];
-
-    this._keys.forEach(function (key) {
-
-        times.push(key.time);
-    });
-
-    return times;
+    return this._keyline.getKeyTimes();
 };
 
 p.toggleKey = function () {
@@ -359,7 +314,7 @@ p.toggleKey = function () {
 
 p.isValid = function () {
 
-    return !!(this.name && this._keys.length);
+    return !!(this.name && this._keyline.keyCount);
 };
 
 
@@ -421,12 +376,12 @@ p._onChangeInput = function (e) {
     this.emit('change');
 };
 
-p._onChangeKeyTime = function () {
+p._onChangeKeyline = function () {
 
     this.emit('change');
 };
 
-p._onDeleteKey = function (key) {
+p._onKeyNeedsRemove = function (key) {
 
     this.removeKey(key);
 };

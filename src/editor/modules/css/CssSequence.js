@@ -5,7 +5,7 @@ var inherits = require('inherits');
 var amgui = require('../../amgui');
 var CssParameter = require('./CssParameter');
 var CssTransformParameter = require('./CssTransformParameter');
-var Key = require('./Key');
+var inspectorKeyline = require('../utils/IndpectorKeyline');
 var Transhand = require('../../transhand/Transhand');
 var mstPlayer = require('./script.player.mst');
 var dialogSequOptions = require('./dialogSequOptions');
@@ -21,8 +21,7 @@ function CssSequence(opt) {
     this._iterations = 1;
 
     this._baseH = 21;
-    this._selectedElems = [];
-    this._headKeys = [];
+    this._selectedElems = []
     this._isShowingParams = false;
     this._isHidingSelectedElems = false;
     this._isPlaying = false;
@@ -374,14 +373,7 @@ p.pause = function () {
 
 p.getMagnetPoints = function () {
 
-    var times = [];
-
-    this._headKeys.forEach(function (key) {
-
-        times.push(key.time);
-    });
-
-    return times;
+    return this.inspectorKeyline.getKeyTimes();
 };
 
 p.focusHandler = function (de) {

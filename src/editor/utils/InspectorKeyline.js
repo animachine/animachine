@@ -1,12 +1,12 @@
 'use strict';
 
-var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
+var Keyline = require('Keyline');
 var amgui = require('../../amgui');
 
 function InspectorKeyline (opt) {
 
-    EventEmitter.call(this);
+    Keyline.call(this);
 
     this._keys = [];
 
@@ -18,7 +18,7 @@ function InspectorKeyline (opt) {
     amgui.callOnAdded(de, this._renderEase.bind(this));
 }
 
-inherits(Keyline, EventEmitter);
+inherits(Keyline, Keyline);
 var p = Keyline.prototype;
 module.exports = Keyline;
 
@@ -219,7 +219,34 @@ p._onKeyNeedsRemove = function (key) {
     this.emit('keyNeedsRemove', key);
 };
 
+p._refreshHeadKeyline = function () {
 
+    var times = [], oldKeys = this._headKeys.splice(0);
+
+    this._parameters.forEach(function (param) {
+
+        times = times.concat(param.getKeyTimes());
+    });
+
+    times = _.uniq(times);
+
+    times.forEach(function (time) {
+
+        var key = oldKeys.pop() || new Key({
+            deKeyline: this._deHeadKeyline,
+            ease: 'none',
+            color: '#063501'
+        });
+
+        key.domElem.style.pointerEvents = 'none';//hack! until finish the control with head keys
+
+        key.time = time;
+
+        this._headKeys.push(key);
+    }, this);
+
+    _.invoke(_.difference(oldKeys, this._headKeys), 'dispose');
+};
 
 
 

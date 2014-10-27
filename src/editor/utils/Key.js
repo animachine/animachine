@@ -98,7 +98,7 @@ Object.defineProperties(p, {
 
             this._refreshDomElem();
 
-            this.emit('change', this);
+            this.emit('changeTime', this);
         },
         get: function () {
 
@@ -126,7 +126,7 @@ Object.defineProperties(p, {
 
             this.domElem.setEase(v);
 
-            this.emit('change', this);
+            this.emit('changeEase', this);
         },
         get: function () {
 
@@ -159,22 +159,26 @@ p.useSave = function (save) {
     this.ease = save.ease;
 };
 
-this.select = function () {
+p.select = function () {
 
     if (this._isSelected) return;
 
     this._isSelected = true;
 
     this._refreshDomElem();
+
+    this.emit('select');
 }
 
-this.deselect = function () {
+p.deselect = function () {
 
     if (!this._isSelected) return;
 
     this._isSelected = false;
 
     this._refreshDomElem();
+
+    this.emit('deselect');
 }
 
 

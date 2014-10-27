@@ -5,7 +5,7 @@ var inherits = require('inherits');
 var amgui = require('../../amgui');
 var CssParameter = require('./CssParameter');
 var CssTransformParameter = require('./CssTransformParameter');
-var inspectorKeyline = require('../utils/IndpectorKeyline');
+var directorKeyline = require('../utils/DirectorKeyline');
 var Transhand = require('../../transhand/Transhand');
 var mstPlayer = require('./script.player.mst');
 var dialogSequOptions = require('./dialogSequOptions');
@@ -50,9 +50,10 @@ function CssSequence(opt) {
     this.deOptions = document.createElement('div');
     this.deKeys = document.createElement('div');
 
+    this._dirKeyline = new DirectorKeyline();
+
     this._deHeadOptinos = this._createHeadOptions();
-    this._deHeadKeyline = amgui.createKeyline({});
-    this.deKeys.appendChild(this._deHeadKeyline);
+    this.deKeys.appendChild(this._dirKeyline.domElem);
 
     am.timeline.on('changeTime', this._onChangeTime);
     this.deOptions.addEventListener('click', this._onSelectClick);
@@ -249,6 +250,8 @@ p.addParameter = function (opt, skipHistory) {
         param.on('delete', this._onDeleteParameter);
         param.on('move', this._onMoveParameter);
 
+        this._dirKeyline.addKeyline(param.getKeyline());
+
         this._refreshParameterOrdering();
         this._moveBlankParameterDown();
      
@@ -278,6 +281,8 @@ p.removeParameter = function (param, skipHistory) {
     param.removeListener('change', this._onChangeParameter);
     param.removeListener('delete', this._onDeleteParameter);
     param.removeListener('move', this._onMoveParameter);
+
+    this._dirKeyline.removeKeyline(param.getKeyline());
 
     $(param.deOptions).remove();
     $(param.deKeyline).remove();
@@ -373,7 +378,7 @@ p.pause = function () {
 
 p.getMagnetPoints = function () {
 
-    return this.inspectorKeyline.getKeyTimes();
+    return this._dirKeyline.getKeyTimes();
 };
 
 p.focusHandler = function (de) {

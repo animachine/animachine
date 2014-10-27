@@ -106,7 +106,7 @@ p._onMouseDown = function (e) {
     };
 
     window.addEventListener('mouseup', this._onMouseUp);
-    window.addEventListener('mouseup', this._onMouseUp);
+    window.addEventListener('mouseleave', this._onMouseUp);
     window.addEventListener('mousemove', this._onDrag);
 };
 
@@ -497,7 +497,7 @@ p._setFinger = function (e) {
         this._finger = 'origin';
     }
     else if (top || right || bottom || left) {
-
+        //TODO its sould be top-right-bottom-left
         this._finger = ('000' + (top * 1000 + left * 100 + bottom * 10 + right * 1)).substr(-4);
         cursorScale = true;
     }

@@ -10,7 +10,8 @@ function Keyline (opt) {
 
     this._keys = [];
 
-    this._onChangeKey = this._onChangeKey.bind(this);
+    this._onChangeKeyTime = this._onChangeKeyTime.bind(this);
+    this._onChangeKeyEase = this._onChangeKeyEase.bind(this);
     this._onKeyNeedsRemove = this._onKeyNeedsRemove.bind(this);
     
     this._createDomElem();
@@ -53,7 +54,8 @@ p.addKey = function (key) {
     key.keyline = this;
     de.appendChild(key.domElem);
 
-    key.on('change', this._onChangeKey);
+    key.on('changeTime', this._onChangeKeyTime);
+    key.on('changeEase', this._onChangeKeyEase);
     key.on('needsRemove', this._onKeyNeedsRemove);
     
     this._renderEase();
@@ -69,7 +71,8 @@ p.removeKey = function (key) {
 
     this._keys.splice(idx, 1);
     
-    key.removeListener('change', this._onChangeKey);
+    key.removeListener('changeTime', this._onChangeKeyTime);
+    key.removeListener('changeEase', this._onChangeKeyEase);
     key.removeListener('needsRemove', this._onKeyNeedsRemove);
 
     if (key.domElem.parentNode) {
@@ -208,9 +211,15 @@ p._sortKeys = function () {
 
 
 
-p._onChangeKey = function (key) {
+p._onChangeKeyEase = function (key) {
 
     this._renderEase();
+    this.emit('change');
+};
+
+p._onChangeKeyTime = function (key) {
+
+    this.emit('change');
 };
 
 p._onKeyNeedsRemove = function (key) {

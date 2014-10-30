@@ -19,21 +19,22 @@
     "events": "^1.0.1",
     "gulp": "^3.8.6",
     "gulp-concat": "^2.3.4",
+    "gulp-concat-css": "^0.1.4",
     "gulp-connect": "^2.0.6",
     "gulp-rimraf": "^0.1.0",
     "gulp-size": "^1.0.0",
+    "gulp-uglify": "^1.0.1",
     "gulp-util": "^3.0.0",
     "gulp-vulcanize": "^0.2.1",
     "gulp-watch": "^0.6.9",
+    "gulp-zip": "^2.0.2",
     "inherits": "^2.0.1",
     "lodash": "^2.4.1",
     "run-sequence": "^0.3.6",
     "stringify": "^2.2.0",
-    "vinyl-source-stream": "^0.1.1",
-    "watchify": "^1.0.1",
+    "transhand": "git+https://github.com/animachine/transhand#master",
     "uglify-js": "^2.4.15",
-    "gulp-uglify": "^1.0.1",
-    "gulp-concat-css": "^0.1.4",
-    "gulp-zip": "^2.0.2"
+    "vinyl-source-stream": "^0.1.1",
+    "watchify": "^1.0.1"
   }
 }

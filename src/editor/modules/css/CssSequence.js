@@ -5,8 +5,8 @@ var inherits = require('inherits');
 var amgui = require('../../amgui');
 var CssParameter = require('./CssParameter');
 var CssTransformParameter = require('./CssTransformParameter');
-var directorKeyline = require('../utils/DirectorKeyline');
-var Transhand = require('../../transhand/Transhand');
+var directorKeyline = require('../../utils/DirectorKeyline');
+var Transhand = require('transhand');
 var mstPlayer = require('./script.player.mst');
 var dialogSequOptions = require('./dialogSequOptions');
 

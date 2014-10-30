@@ -3,7 +3,7 @@
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var dialogKeyOptions = require('./dialogKeyOptions');
-var amgui = require('../../amgui');
+var amgui = require('../amgui');
 
 function Key (opt) {
 
@@ -199,7 +199,7 @@ p._onSelectDropdown = function (e) {
 
         dialogKeyOptions.show({
             ease: this.ease,
-            onChangeEase, this._onChangeEase,
+            onChangeEase: this._onChangeEase,
         });
     }
     else if (selection === 'delete') {
@@ -259,7 +259,7 @@ p._createDomElem = function (opt) {
 
     var color = this.color || '#7700ff';
 
-    var this.domElem = document.createElement('div');
+    this.domElem = document.createElement('div');
     this.domElem.style.position = 'absolute';
     this.domElem.style.transform = 'translateX(-4px)';
 

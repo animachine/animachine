@@ -1,8 +1,8 @@
 'use strict';
 
 var inherits = require('inherits');
-var Keyline = require('Keyline');
-var amgui = require('../../amgui');
+var Keyline = require('./Keyline');
+var amgui = require('../amgui');
 
 function DirectorKeyline (opt) {
 

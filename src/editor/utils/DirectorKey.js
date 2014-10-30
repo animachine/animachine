@@ -17,8 +17,9 @@ function DirectorKey(opt) {
     this._subkeys = [];
 }
 
-inherits(Key, EventEmitter);
-var p = Key.prototype;
+inherits(DirectorKey, Key);
+var p = DirectorKey.prototype;
+module.exports = DirectorKeys;
 
 
 
@@ -136,4 +137,3 @@ p.dispose = function () {
     if (this._deMenu.parentNode) this._deMenu.parentNode.removeChild(this._deMenu); 
 };
 
-module.exports = Key;

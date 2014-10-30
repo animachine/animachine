@@ -2,7 +2,7 @@
 
 var inherits = require('inherits');
 var CssParameter = require('./CssParameter');
-var Key = require('./Key');
+var Key = require('../../utils/Key');
 var amgui = require('../../amgui');
 
 var BASE_VALUES = {
@@ -80,7 +80,7 @@ p.getRawValue = function (time) {
 
     var before, after, same;
 
-    this._keys.forEach(function (key) {
+    this.keyline.forEachKey(function (key) {
 
         if (key.time === time) {
         
@@ -159,13 +159,10 @@ p.addKey = function (opt, skipHistory) {
         }
     }
     else {
-        key = new Key(_.extend({deKeyline: this.deKeyline}, opt));
+        key = new Key(opt);
         key.value = _.extend(this.getRawValue(opt.time), opt.value);
 
-        key.on('changeTime', this._onChangeKeyTime);
-        key.on('delete', this._onDeleteKey);
-
-        this._keys.push(key);
+        this.keyline.addKey(key);
 
         if (!skipHistory) {
             am.history.closeChain(key);

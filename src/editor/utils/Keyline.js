@@ -10,13 +10,15 @@ function Keyline (opt) {
 
     this._keys = [];
 
+    this._height = amgui.LINE_HEIGHT;
+
     this._onChangeKeyTime = this._onChangeKeyTime.bind(this);
     this._onChangeKeyEase = this._onChangeKeyEase.bind(this);
     this._onKeyNeedsRemove = this._onKeyNeedsRemove.bind(this);
     
     this._createDomElem();
 
-    amgui.callOnAdded(de, this._renderEase.bind(this));
+    amgui.callOnAdded(this.domElem, this._renderEase.bind(this));
 }
 
 inherits(Keyline, EventEmitter);
@@ -52,7 +54,7 @@ p.addKey = function (key) {
     
     this._keys.push(key);
     key.keyline = this;
-    de.appendChild(key.domElem);
+    this.domElem.appendChild(key.domElem);
 
     key.on('changeTime', this._onChangeKeyTime);
     key.on('changeEase', this._onChangeKeyEase);
@@ -157,15 +159,15 @@ p._renderEase = function () {
 
     this._sortKeys();
 
-    svgEase.innerHTML = '';
+    this._svgEase.innerHTML = '';
 
-    deKeys.forEach(function (deKey, idx) {
+    this.forEachKey(function (key, idx) {
 
-        if (idx === deKeys.length-1) {
+        if (idx === this._keys.length-1) {
             return;
         }
 
-        var ease = deKey.ease;
+        var ease = key.ease;
 
         if (amgui.EASE2BEZIER.hasOwnProperty(ease)) {
             ease = amgui.EASE2BEZIER[ease];
@@ -173,9 +175,9 @@ p._renderEase = function () {
 
         var rx = /cubic-bezier\(\s*([\d\.]+)\s*,\s*([\d\.-]+)\s*,\s*([\d\.]+)\s*,\s*([\d\.-]+)\s*\)/,
             m = rx.exec(ease),
-            x = deKey.offsetLeft,
-            w = deKeys[idx+1].offsetLeft - x,
-            h = de.offsetHeight,
+            x = key.domElem.offsetLeft,
+            w = this._keys[idx+1].domElem.offsetLeft - x,
+            h = this._height,
             path = document.createElementNS('http://www.w3.org/2000/svg', 'path'),
             d = '';
 
@@ -193,8 +195,8 @@ p._renderEase = function () {
         }
 
         path.setAttribute('d', d);
-        svgEase.appendChild(path);
-    });
+        this._svgEase.appendChild(path);
+    }, this);
 };
 
 p._sortKeys = function () {
@@ -240,21 +242,19 @@ p._onKeyNeedsRemove = function (key) {
 
 p._createDomElem = function createKeyline(opt) {
 
-    var deKeys = [];
-
     this.domElem = document.createElement('div');
     this.domElem.style.width = '100%';
-    this.domElem.style.height = (opt.height || 21) + 'px';
-    this.domElem.style.background = opt.background || 'grey';
+    this.domElem.style.height = (this._height || 21) + 'px';
+    this.domElem.style.background = this._background || 'grey';
     this.domElem.style.position = 'relative';
 
-    var svgEase = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svgEase.style.width = '100%';
-    svgEase.style.height = '100%';
-    svgEase.style.fill = 'none';
-    svgEase.style.stroke = 'white';
-    svgEase.style.position = 'absolute';
-    this.domElem.appendChild(svgEase);
+    this._svgEase = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    this._svgEase.style.width = '100%';
+    this._svgEase.style.height = '100%';
+    this._svgEase.style.fill = 'none';
+    this._svgEase.style.stroke = 'white';
+    this._svgEase.style.position = 'absolute';
+    this.domElem.appendChild(this._svgEase);
 }
 
 

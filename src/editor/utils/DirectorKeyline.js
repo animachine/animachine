@@ -13,15 +13,11 @@ function DirectorKeyline (opt) {
     this._onChangeKeyline = this._onChangeKeyline.bind(this);
     this._onKeyNeedsRemove = this._onKeyNeedsRemove.bind(this);
     this._delayedRefreshHeadKeyline = this._delayedRefreshHeadKeyline.bind(this);
-    
-    this._createDomElem();
-
-    amgui.callOnAdded(de, this._renderEase.bind(this));
 }
 
-inherits(Keyline, Keyline);
-var p = Keyline.prototype;
-module.exports = Keyline;
+inherits(DirectorKeyline, Keyline);
+var p = DirectorKeyline.prototype;
+module.exports = DirectorKeyline;
 
 
 
@@ -47,41 +43,25 @@ Object.defineProperties(p, {
 
 
 
-p.addKeyline = function (key) {
+p.addKeyline = function (keyline) {
 
-    
-    this._keys.push(key);
-    key.keyline = this;
-    de.appendChild(key.domElem);
+    if (this._keylines.indexOf(keyline) !== -1) {
+        return;
+    }
 
-    key.on('change', this._onChangeKeyline);
-    key.on('needsRemove', this._onKeyNeedsRemove);
-    
-    this._renderEase();
+    keyline.on('change', this._onChangeKeyline);
+
+    this._keylines.push(keyline);
 };
 
-p.removeKeyline = function (key) {
-
-    var idx = this._keys.indexOf(key);
-
-    if (idx === -1) {
-        return false;
-    }
-
-    this._keys.splice(idx, 1);
+p.removeKeyline = function (keyline) {
     
-    key.removeListener('change', this._onChangeKeyline);
-    key.removeListener('needsRemove', this._onKeyNeedsRemove);
+    var idx = this._keylines.indexOf(keyline);
+    if (idx === -1) return;
 
-    if (key.domElem.parentNode) {
-        key.domElem.parentNode.removeChild(key.domElem);
-    }
+    keyline.removeListener('change', this._onChangeKeyline);
 
-    key.dispose();
-
-    this._renderEase();
-
-    return true;
+    this._keylines.splice(idx, 1);
 };
 
 

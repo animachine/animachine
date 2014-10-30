@@ -13,6 +13,7 @@ function Key(opt) {
     this._value =  '';
     this._ease = 'linear';
     this._isSelected = false;
+    this._height = amgui.LINE_HEIGHT;
 
     this._onSelectDropdown = this._onSelectDropdown.bind(this);
     this._onChangeEase = this._onChangeEase.bind(this);
@@ -20,7 +21,7 @@ function Key(opt) {
     this._onDeselectAllKeys = this._onDeselectAllKeys.bind(this);
     this._onTranslateSelectedKeys = this._onTranslateSelectedKeys.bind(this);
 
-    this.domElem = this._createDomElem({
+    this._createDomElem({
         timescale: am.timeline.timescale,
         time: this.time,
         ease: this.ease,
@@ -43,7 +44,7 @@ function Key(opt) {
     });
 
     amgui.makeDraggable({
-        deTarget: de,
+        deTarget: this.domElem,
         thisArg: this,
         onDown: function (e) {
 
@@ -86,6 +87,7 @@ function Key(opt) {
 
 inherits(Key, EventEmitter);
 var p = Key.prototype;
+module.exports = Key;
 
 Object.defineProperties(p, {
 
@@ -123,8 +125,6 @@ Object.defineProperties(p, {
             if (!v || this._ease === v) return;
 
             this._ease = v;
-
-            this.domElem.setEase(v);
 
             this.emit('changeEase', this);
         },
@@ -269,9 +269,7 @@ p._createDomElem = function (opt) {
     deKey.style.borderStyle = 'solid';
     deKey.style.borderWidth = '21px 4px 0 4px';
     deKey.style.borderColor = color + ' transparent transparent transparent';
-    de.appendChild(deKey);
-
-    return de;
+    this.domElem.appendChild(deKey);
 };
 
 
@@ -290,4 +288,3 @@ p.dispose = function () {
     if (this._deMenu.parentNode) this._deMenu.parentNode.removeChild(this._deMenu); 
 };
 
-module.exports = Key;

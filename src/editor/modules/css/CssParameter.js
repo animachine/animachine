@@ -21,12 +21,12 @@ function CssParameter (opt) {
     this._onClickStepPrevKey = this._onClickStepPrevKey.bind(this);
     this._onClickStepNextKey = this._onClickStepNextKey.bind(this);
 
-    this._keyline = new Keyline();
-    this._keyline.on('change', this._onChangeKeyline);
-    this._keyline.on('keyNeedsRemove', this._onKeyNeedsRemove);
+    this.keyline = new Keyline();
+    this.keyline.on('change', this._onChangeKeyline);
+    this.keyline.on('keyNeedsRemove', this._onKeyNeedsRemove);
 
     this.deOptions = this._createParameterOptions();
-    this.deKeyline = this._keyline.domElem;
+    this.deKeyline = this.keyline.domElem;
 
     am.timeline.on('changeTime', this._onChangeTime);
 
@@ -79,7 +79,7 @@ p.getSave = function () {
         keys: [],
     };
 
-    this._keyline.forEachKey(function (key) {
+    this.keyline.forEachKey(function (key) {
 
         save.keys.push(key.getSave());
     });
@@ -101,7 +101,7 @@ p.getScriptKeys = function () {
 
     var keys = [];
 
-    this._keyline.forEachKey(function (key) {
+    this.keyline.forEachKey(function (key) {
 
         var k = {
             offset: key.time / am.timeline.length,
@@ -133,7 +133,7 @@ p.getValue = function (time) {
 
     var before, after, same;
 
-    this._keyline.forEachKey(function (key) {
+    this.keyline.forEachKey(function (key) {
 
         if (key.time === time) {
         
@@ -229,7 +229,7 @@ p.addKey = function (opt, skipHistory) {
         key = new Key(opt);
         key.value = opt.value || this.getValue(opt.time);
 
-        this._keyline.addKey(key);
+        this.keyline.addKey(key);
 
         if (!skipHistory) {
             am.history.closeChain(key);
@@ -247,7 +247,7 @@ p.addKey = function (opt, skipHistory) {
 
 p.removeKey = function (key, skipHistory) {
 
-    if (!this._keyline.removeKey(key)) {
+    if (!this.keyline.removeKey(key)) {
 
         return;
     }
@@ -264,17 +264,17 @@ p.removeKey = function (key, skipHistory) {
 
 p.getKey = function (time) {
 
-    return this._keyline.getKeyByTime(time);
+    return this.keyline.getKeyByTime(time);
 };
 
 p.getPrevKey = function (time) {
 
-    return this._keyline.getPrevKey(time);
+    return this.keyline.getPrevKey(time);
 };
 
 p.getNextKey = function (time) {
 
-    return this._keyline.getNextKey(time);
+    return this.keyline.getNextKey(time);
 };
 
 p.gotoPrevKey = function (time) {
@@ -297,7 +297,7 @@ p.gotoNextKey = function (time) {
 
 p.getKeyTimes = function () {
 
-    return this._keyline.getKeyTimes();
+    return this.keyline.getKeyTimes();
 };
 
 p.toggleKey = function () {
@@ -314,7 +314,7 @@ p.toggleKey = function () {
 
 p.isValid = function () {
 
-    return !!(this.name && this._keyline.keyCount);
+    return !!(this.name && this.keyline.keyCount);
 };
 
 

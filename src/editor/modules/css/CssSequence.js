@@ -5,7 +5,7 @@ var inherits = require('inherits');
 var amgui = require('../../amgui');
 var CssParameter = require('./CssParameter');
 var CssTransformParameter = require('./CssTransformParameter');
-var directorKeyline = require('../../utils/DirectorKeyline');
+var DirectorKeyline = require('../../utils/DirectorKeyline');
 var Transhand = require('transhand');
 var mstPlayer = require('./script.player.mst');
 var dialogSequOptions = require('./dialogSequOptions');
@@ -182,7 +182,6 @@ p.useSave = function (save) {
     }
 
     this._selectElements();
-    this._refreshHeadKeyline();
     this._refreshTgglKey();
 
     if (save.isShowingParams) {
@@ -250,7 +249,7 @@ p.addParameter = function (opt, skipHistory) {
         param.on('delete', this._onDeleteParameter);
         param.on('move', this._onMoveParameter);
 
-        this._dirKeyline.addKeyline(param.getKeyline());
+        this._dirKeyline.addKeyline(param.keyline);
 
         this._refreshParameterOrdering();
         this._moveBlankParameterDown();
@@ -599,7 +598,6 @@ p._onChangeParameter = function () {
 
     this.renderTime();
     this.focusHandler();
-    this._refreshHeadKeyline();
     this._refreshTgglKey();
 
     this.emit('change');

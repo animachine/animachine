@@ -4,7 +4,8 @@
   "description": "",
   "main": " ",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clone-transhand": "cd node_modules && rm -rf transhand && git clone https://github.com/animachine/transhand.git && npm install && cd .."
   },
   "repository": {
     "type": "git",

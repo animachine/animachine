@@ -12,6 +12,7 @@ function DirectorKeyline (opt) {
 
     this._onChangeKeyline = this._onChangeKeyline.bind(this);
     this._onKeyNeedsRemove = this._onKeyNeedsRemove.bind(this);
+    this._delayedRefreshHeadKeyline = this._delayedRefreshHeadKeyline.bind(this);
     
     this._createDomElem();
 
@@ -100,8 +101,17 @@ p._onChangeKeyline = function (key) {
 
 p._refreshHeadKeyline = function () {
 
-    var times = [], keysOnTimes = [];
+    if (!this._refreshHeadKeylineRafId) {
 
+        this._refreshHeadKeylineRafId = requestAnimationFrame(this._delayedRefreshHeadKeyline);
+    }
+}
+
+p._delayedRefreshHeadKeyline = function () {
+
+    this._refreshHeadKeylineRafId = undefined;
+
+    var times = [], keysOnTimes = [];
 
     this._keylines.forEach(function (keyline) {
 
@@ -134,8 +144,6 @@ p._refreshHeadKeyline = function () {
             color: '#063501'
         });
 
-        key.on('changeTime', this.onChangeKeyTime);
-
         key.directedKeys = [];
 
         this.addKey(key);
@@ -148,8 +156,7 @@ p._refreshHeadKeyline = function () {
 
         key.time = time;
 
-        key.directedKeys.length = 0;
-        key.directedKeys.push.apply(key.directedKeys, keysOnTimes[idx]);
+        key.setSubkeys(keysOnTimes[idx]);
 
     }, this);
 

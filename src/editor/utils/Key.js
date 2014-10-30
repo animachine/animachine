@@ -5,7 +5,7 @@ var inherits = require('inherits');
 var dialogKeyOptions = require('./dialogKeyOptions');
 var amgui = require('../amgui');
 
-function Key (opt) {
+function Key(opt) {
 
     EventEmitter.call(this);
     

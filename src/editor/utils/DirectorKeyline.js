@@ -95,7 +95,7 @@ p._delayedRefreshHeadKeyline = function () {
 
     this._keylines.forEach(function (keyline) {
 
-        keyline.forEachKey(function (key) {
+        keyline.forEachKeys(function (key) {
 
             var tidx = time.indexOf(key.time);
 

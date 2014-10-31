@@ -2,7 +2,6 @@
 
 var amgui = require('./amgui');
 var EventEmitter = require('events').EventEmitter;
-var Transhand = require('./transhand');
 var Timeline = require('./timeline');
 var Toolbar = require('./toolbar');
 var Windooman = require('./windooman');
@@ -39,17 +38,6 @@ var am = window.am = module.exports = _.extend(new EventEmitter(), {
         this.sequenceTypes[type] = Sequence;
     }
 });
-
-am.getHandler = function () {
-
-    if (handlerBuff.length) {
-
-        return handlerBuff.pop();
-    }
-    else {
-        return new Transhand();
-    }
-};
 
 am.throwHandler = function (handler) {
 

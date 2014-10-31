@@ -88,7 +88,7 @@ p.removeKey = function (key) {
     return true;
 };
 
-p.forEachKey = function (fn, thisArg) {
+p.forEachKeys = function (fn, thisArg) {
 
     this._keys.forEach(fn, thisArg);
 };
@@ -161,7 +161,7 @@ p._renderEase = function () {
 
     this._svgEase.innerHTML = '';
 
-    this.forEachKey(function (key, idx) {
+    this.forEachKeys(function (key, idx) {
 
         if (idx === this._keys.length-1) {
             return;

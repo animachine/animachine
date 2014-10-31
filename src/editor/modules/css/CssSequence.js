@@ -281,7 +281,7 @@ p.removeParameter = function (param, skipHistory) {
     param.removeListener('delete', this._onDeleteParameter);
     param.removeListener('move', this._onMoveParameter);
 
-    this._dirKeyline.removeKeyline(param.getKeyline());
+    this._dirKeyline.removeKeyline(param.keyline);
 
     $(param.deOptions).remove();
     $(param.deKeyline).remove();

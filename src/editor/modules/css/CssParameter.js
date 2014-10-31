@@ -79,7 +79,7 @@ p.getSave = function () {
         keys: [],
     };
 
-    this.keyline.forEachKey(function (key) {
+    this.keyline.forEachKeys(function (key) {
 
         save.keys.push(key.getSave());
     });
@@ -101,7 +101,7 @@ p.getScriptKeys = function () {
 
     var keys = [];
 
-    this.keyline.forEachKey(function (key) {
+    this.keyline.forEachKeys(function (key) {
 
         var k = {
             offset: key.time / am.timeline.length,
@@ -133,7 +133,7 @@ p.getValue = function (time) {
 
     var before, after, same;
 
-    this.keyline.forEachKey(function (key) {
+    this.keyline.forEachKeys(function (key) {
 
         if (key.time === time) {
         

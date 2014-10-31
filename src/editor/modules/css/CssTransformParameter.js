@@ -80,7 +80,7 @@ p.getRawValue = function (time) {
 
     var before, after, same;
 
-    this.keyline.forEachKey(function (key) {
+    this.keyline.forEachKeys(function (key) {
 
         if (key.time === time) {
         

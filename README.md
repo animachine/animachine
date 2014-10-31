@@ -1,4 +1,6 @@
-![](http://img.shields.io/badge/stability-experimental-orange.svg?style=flat-square)
+![](https://img.shields.io/badge/stability-experimental-orange.svg?style=flat-square)
+
+![](https://apilogo.com/api/v1/logo/?words=anim|achine&styles=Semibold|Light&colors=000000|000000&font=ubuntu&height=100)
 
 Animachine is an animation tool for HTML and JS projects. You can use it as a Chrome extension or a Polymer Element to create complex animations to your web page or game with the power of script driven animation and traditional animation tools.
 

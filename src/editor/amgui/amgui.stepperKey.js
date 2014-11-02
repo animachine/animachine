@@ -52,6 +52,11 @@ function createStepperKey(opt) {
         }
     }
 
+    de.setHighlight = function (on) {
+
+        de.style.color = on ? amgui.color.text : amgui.color.textInactive;
+    }
+
     return de;
 
     function onMOverKey() { isMOverKey = true; onChangeOver(); }

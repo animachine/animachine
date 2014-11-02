@@ -50,7 +50,7 @@ am.open = function (save) {
     
         return alertUnsupportedBrowsers();
     }
-
+setTimeout(function(){am.timeline.pause();}, 300);
     am._init();
 
     if (save) {

@@ -3,7 +3,7 @@
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../../amgui');
-var CssParameter = require('./CssParameter');
+var CssParam = require('./CssParam');
 var CssTransformParameter = require('./CssTransformParameter');
 var DirectorKeyline = require('../../utils/DirectorKeyline');
 var Transhand = require('transhand');
@@ -20,7 +20,7 @@ function CssSequence(opt) {
     this._name = 'unnamed';
     this._iterations = 1;
 
-    this._baseH = 21;
+    this._baseH = amgui.LINE_HEIGHT;
     this._selectedElems = []
     this._isShowingParams = false;
     this._isHidingSelectedElems = false;
@@ -236,7 +236,7 @@ p.addParameter = function (opt, skipHistory) {
         }
         else {
 
-            param = new CssParameter(opt);
+            param = new CssParam(opt);
         }
 
         if (!skipHistory) {
@@ -553,6 +553,10 @@ p._onChangeHandler = function(params, type) {
     if (type === 'transform') {
 
         Object.keys(params).forEach(function (name) {
+
+            switch (name) {
+                case 'tx' add(name); break;
+            }
 
             if (name === 'tx' || name === 'ty' || name === 'tz' ||
                 name === 'rx' || name === 'ry' || name === 'rz' ||

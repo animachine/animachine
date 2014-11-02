@@ -19,6 +19,8 @@ function createKeyValueInput(opt) {
 
         var de = document.createElement('div');
         de.style.margin = '0 1px';
+        de.style.height = amgui.LINE_HEIGHT + 'px';
+        de.style.position = 'relative';
 
         var keyOn = false;
 

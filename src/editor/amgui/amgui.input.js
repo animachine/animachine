@@ -38,5 +38,12 @@ function createInput(opt) {
         opt.parent.appendChild(inp);
     }
 
+    inp.setValue = function (v) {
+            
+        if (v === inp.value) return;
+
+        inp.value = v;
+    };
+
     return inp;
 }

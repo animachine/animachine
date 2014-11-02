@@ -4,10 +4,11 @@ var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var uncalc = require('./uncalc');
 var Key = require('../../utils/Key');
+var Options = require('../../utils/Options');
 var Keyline = require('../../utils/Keyline');
 var amgui = require('../../amgui');
 
-function CssParameter (opt) {
+function CssParam (opt) {
 
     EventEmitter.call(this);
 
@@ -25,7 +26,28 @@ function CssParameter (opt) {
     this.keyline.on('change', this._onChangeKeyline);
     this.keyline.on('keyNeedsRemove', this._onKeyNeedsRemove);
 
-    this.deOptions = this._createParameterOptions();
+    this.options = new Options({
+        contextMenuOptions: [
+            {text: 'move up', onSelect: this.emit.bind(this, 'move', this, -1)},
+            {text: 'move down', onSelect: this.emit.bind(this, 'move', this, 1)},
+            {text: 'delete', onSelect: this.emit.bind(this, 'delete', this)}
+        ],
+        text: {
+            text: this.name
+        },
+        btnKey: {
+            onClick: this._onClickTgglKey,
+            onClickPrev: this._onClickStepPrevKey,
+            onClickNext: this._onClickStepNextKey,
+        },
+        input: {
+            type: 'text',
+            onChange: this._onChangeInput,
+        },
+        indent: 2
+    });
+
+    this.deOptions = this.options.domElem;
     this.deKeyline = this.keyline.domElem;
 
     am.timeline.on('changeTime', this._onChangeTime);
@@ -35,9 +57,9 @@ function CssParameter (opt) {
     }
 }
 
-inherits(CssParameter, EventEmitter);
-var p = CssParameter.prototype;
-
+inherits(CssParam, EventEmitter);
+var p = CssParam.prototype;
+module.exports = CssParam;
 
 
 
@@ -60,7 +82,7 @@ Object.defineProperties(p, {
             if (v === this._name) return;
 
             this._name = v;
-            this._refreshInput();
+            this.options.text = this._name;
         },
         get: function () {
             return this._name
@@ -417,74 +439,25 @@ p._onClickStepNextKey = function () {
 
 p._refreshInput = function () {
 
-    this._input.setKey(this.name);
-    this._input.setValue(this.getValue());
+    this.options.input.setValue(this.getValue());
 };
 
 p._refreshTgglKey = function () {
 
     var key = this.getKey(am.timeline.currTime);
-    this._tgglKey.style.color = key ? amgui.color.text : amgui.color.textInactive;
+    this.options.btnKey.setHighlight(!!key);
 
     var time = am.timeline.currTime;
-    this._tgglKey.setSteppers(!!this.getPrevKey(time), !!this.getNextKey(time));
+    this.options.btnKey.setSteppers(!!this.getPrevKey(time), !!this.getNextKey(time));
+
 };
 
 
 
 
 
-
-
-
-
-
-
-
-p._createParameterOptions = function () {
-
-    var de = document.createElement('div');
-    de.style.display = 'flex';
-    de.style.width = '100%';
-    de.style.height = this._lineH + 'px';
-    de.style.background = 'linear-gradient(to bottom, #184F12 18%,#1B4417 96%)';
-
-    amgui.bindDropdown({
-        asContextMenu: true,
-        deTarget: de,
-        deMenu: amgui.createDropdown({
-            options: [
-                {text: 'move up', onSelect: this.emit.bind(this, 'move', this, -1)},
-                {text: 'move down', onSelect: this.emit.bind(this, 'move', this, 1)},
-                {text: 'delete', onSelect: this.emit.bind(this, 'delete', this)},
-            ]
-        })
-    });
-
-    if (!this._noBaseKeyValueInput) {
-
-        this._input = amgui.createKeyValueInput({
-            parent: de,
-            onChange: this._onChangeInput,
-            height: this._lineH
-        });
-        this._input.style.flex = 1;
-    }
-
-    this._tgglKey = amgui.createStepperKey({
-        onClick: this._onClickTgglKey,
-        parent: de,
-        onClickPrev: this._onClickStepPrevKey,
-        onClickNext: this._onClickStepNextKey,
-    });
-    this._refreshTgglKey();
-
-    return de;
-};
 
 p.dispose = function () {
 
     //TODO
 };
-
-module.exports = CssParameter;

@@ -29,8 +29,8 @@ _.extend(amgui,
     {
 
         FONT_FAMILY: '"Open Sans", sans-serif',
-        FONT_SIZE: '15px',
-        LINE_HEIGHT: 23,
+        FONT_SIZE: '12px',
+        LINE_HEIGHT: 16,
 
         deOverlayCont: undefined, //am._init() fill this
 

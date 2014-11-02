@@ -37,11 +37,10 @@ function CssTransformParameter (opt) {
 
     this._btnToggle3d = amgui.createIconBtn({
         icon: 'cube',
-        height: 21,
         parent: this.deOptions,
         onClick: this._onToggle3d,
     });
-    this.deOptions.insertBefore(this._btnToggle3d, this._btnToggleKey);
+    this.deOptions.insertBefore(this._btnToggle3d, this._tgglKey);
     
     this._showing3d = !this._showing3d;//TODO do this somehow else!
     this._showHide3d(!this._showing3d);
@@ -251,10 +250,10 @@ p._createTransformInputs = function () {
     this.deKeyline.style.height = lineH + 'px';
     this.deKeyline.style.marginBottom = (lineH * (this._lineCount-1)) + 'px';
 
-    var label = document.createElement('span');
-    label.textContent = 'transform';
-    label.style.flex = '1';
-    label.style.height = lineH + 'px';
+    var label = amgui.createLabel({
+        caption: 'transform',
+        flex: '1',
+    });
     $(deOptions).prepend(label);
 
     var row = createRow();
@@ -291,16 +290,19 @@ p._createTransformInputs = function () {
 
     function createInput(key, caption, parent, i3d) {
 
-        var label = document.createElement('span');
-        label.textContent = caption;
-        parent.appendChild(label);
+        var label = amgui.createLabel({
+            parent: parent,
+            caption: caption,
+        });
 
         var inp = document.createElement('input');
         inp._key = key;
         inp.type = 'number';
         inp.value = BASE_VALUES[key];
+        inp.style.height = lineH + 'px';
         inp.style.flex = '1';
         inp.style.fontFamily = amgui.FONT_FAMILY;
+        inp.style.fontSize = amgui.FONT_SIZE;
         inp.style.background = 'rgba(255,255,255,.12)';
         inp.style.border = 'none';
         inp.style.margin = '0 0 0 3px';

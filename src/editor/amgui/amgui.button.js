@@ -33,16 +33,22 @@ function createLinebreak(opt) {
 function createLabel(opt) {
 
     var de = amgui.createDiv();
-    de.innerHTML = opt.caption || 'label';
 
-    if ('fontSize' in opt) de.style.fontSize = opt.fontSize;
+    de.style.fontSize = opt.fontSize || amgui.FONT_SIZE;
     if ('display' in opt) de.style.display = opt.display;
     if ('flex' in opt) de.style.flex = opt.flex;
     if ('position' in opt) de.style.position = opt.position;
+
+    de.setText = function (text) {
+        de.innerHTML = text || 'label';
+    }
+
+    de.setText(opt.caption);
     
     if (opt.parent) {
         opt.parent.appendChild(de);
     }
+
 
     return de;
 }
@@ -52,7 +58,7 @@ function createBtn(opt) {
     opt.backgroundColor = opt.backgroundColor || amgui.color.bg0;
 
     var de = amgui.createDiv();
-    de.style.height = (opt.height || 21) + 'px';
+    de.style.height = (opt.height || amgui.LINE_HEIGHT) + 'px';
     de.style.padding = '0 15px';
     de.style.cursor = 'pointer';
     de.style.color = amgui.color.text;
@@ -196,7 +202,7 @@ function createToggleIconBtn(opt) {
 function createIcon(opt) {
 
     opt = opt || {};
-    opt.size = opt.size || 23;
+    opt.size = opt.size || amgui.LINE_HEIGHT;
     
     var de = amgui.createDiv();
     de.style.color = '#fff';

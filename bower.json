@@ -14,12 +14,11 @@
     "tests"
   ],
   "dependencies": {
-    "jQuery.Autosize.Input": "https://github.com/MartinF/jQuery.Autosize.Input.git",
     "jquery": "^2.1.1",
     "polymer": "~0.4.0",
     "lodash": "^2.4.1",
-    "web-animations-js": "https://github.com/web-animations/web-animations-js.git",
     "mustache": "~0.8.2",
-    "codemirror": "~4.5.0"
+    "codemirror": "~4.5.0",
+    "velocity": "~1.1.0"
   }
 }

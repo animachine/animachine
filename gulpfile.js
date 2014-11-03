@@ -33,9 +33,9 @@ gulp.task('vendor', function () {
   return gulp.src([
       paths.assets + 'js/webfont.js',
       paths.node + 'css.escape/css.escape.js',
-      paths.bower + 'web-animations-js/web-animations.js',
       paths.bower + 'lodash/dist/lodash.min.js',
       paths.bower + 'jquery/dist/jquery.js',
+      paths.bower + 'velocity/velocity.js',
       paths.bower + 'jQuery.Autosize.Input/jquery.autosize.input.js',
       paths.bower + 'jReject/js/jquery.reject.js',
       paths.bower + 'mustache/mustache.js',

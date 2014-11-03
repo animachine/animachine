@@ -550,37 +550,30 @@ p._onChangeHandler = function(params, type) {
     var time = am.timeline.currTime, 
         prop, value;
 
+    var add = function (name, value) {
+
+        prop = this.addParameter({name: name});
+
+        prop.addKey({
+            time: time,
+            value: value
+        });
+    }.bind(this);
+
     if (type === 'transform') {
 
         Object.keys(params).forEach(function (name) {
 
             switch (name) {
-                case 'tx' add(name); break;
+                case 'tx': add('translateX', params[name]); break;
+                case 'ty': add('translateY', params[name]); break;
+                case 'sx': add('scaleX', params[name]); break;
+                case 'sy': add('scaleY', params[name]); break;
+                case 'rz': add('rotateZ', params[name]); break;
+                case 'ox': add('transformOriginX', params[name]); break;
+                case 'oy': add('transformOriginY', params[name]); break;
             }
-
-            if (name === 'tx' || name === 'ty' || name === 'tz' ||
-                name === 'rx' || name === 'ry' || name === 'rz' ||
-                name === 'sx' || name === 'sy' || name === 'sz')
-            {
-                value = {};
-                value[name] = params[name];
-
-                prop = this.addParameter({name: 'transform'});
-                prop.addKey({
-                    time: time,
-                    value: value
-                });
-            }
-        }, this);
-
-        if ('ox' in params && 'oy' in params) {
-
-            prop = this.addParameter({name: 'transform-origin'});
-            prop.addKey({
-                time: time,
-                value: (params.ox*100).toFixed(2) + '% ' + (params.oy*100).toFixed(2) + '%'
-            });
-        }
+        });
     }
 
     this.renderTime(time);

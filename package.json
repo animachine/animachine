@@ -16,6 +16,7 @@
     "browserify": "^5.9.1",
     "css.escape": "^0.2.1",
     "domready": "^1.0.5",
+    "e": "0.0.4",
     "events": "^1.0.1",
     "gulp": "^3.8.6",
     "gulp-concat": "^2.3.4",

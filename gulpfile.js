@@ -34,16 +34,11 @@ gulp.task('vendor', function () {
       paths.assets + 'js/webfont.js',
       paths.node + 'css.escape/css.escape.js',
       paths.bower + 'lodash/dist/lodash.min.js',
-      paths.bower + 'jquery/dist/jquery.js',
       paths.bower + 'velocity/velocity.js',
-      paths.bower + 'jQuery.Autosize.Input/jquery.autosize.input.js',
-      paths.bower + 'jReject/js/jquery.reject.js',
+      paths.bower + 'jquery/dist/jquery.js',
       paths.bower + 'mustache/mustache.js',
       paths.bower + 'codemirror/lib/codemirror.js',
-      paths.bower + 'codemirror/mode/javascript/javascript.js',
-      // paths.bower + 'pojoviz/build/pojoviz-vendor.js',
-      // paths.bower + 'pojoviz/build/pojoviz.js',
-      // paths.bower + 'pojoviz-renderers.js',
+      paths.bower + 'codemirror/mode/javascript/javascript.js'
     ])
     .pipe(concat('vendor.js'))
     .pipe(uglify())

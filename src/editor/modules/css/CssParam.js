@@ -200,6 +200,11 @@ p.getValue = function (time) {
 
     function createCalc(av, bv, p) {
 
+        if (typeof(av) === 'number' && typeof(bv) === 'number') {
+
+            return av + (bv - av) * p;
+        }
+
         var avs = _.compact(av.split(' ')),
             bvs = _.compact(bv.split(' ')),
             avl = avs.length,

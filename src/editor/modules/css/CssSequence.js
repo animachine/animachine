@@ -350,14 +350,18 @@ p.renderTime = function (time) {
         return;
     }
 
-    var selection = _.toArray(am.deRoot.querySelectorAll(this._selectors.join(',')));
+    var selection = _.toArray(am.deRoot.querySelectorAll(this._selectors.join(','))),
+        params = {};
 
     this._parameters.forEach(function (param) {
 
-        selection.forEach(function (de) {
+        params[param.name] = param.getValue(time);
+    });
 
-            de.style[param.name] = param.getValue(time);
-        });
+    Velocity({
+        elements: selection,
+        properties: params,
+        options: {duration: 0, queue: false}
     });
 };
 

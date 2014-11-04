@@ -411,25 +411,22 @@ p.focusHandler = function (de) {
         },
         params: {}
     };
-    var transformParam = this._getParameter('transform');
-    var transformOriginParam = this._getParameter('transform-origin');
 
-    if (transformParam instanceof CssTransformParameter) {
+    var p = handOpt.params;
+    this._parameters.forEach(function (param) {
 
-        _.extend(handOpt.params, transformParam.getRawValue());
-    }
+        switch (param.name) {
 
-    if (transformOriginParam) {
-
-        var val = transformOriginParam.getValue(),
-            match = /\s*(-?[\d\.]+)%\s*(-?[\d\.]+)%/.exec(val);
-
-        if (match) {
-            handOpt.params.ox = match[1] / 100;
-            handOpt.params.oy = (match[2] || match[1]) / 100;
+            case 'translateX': p.tx = parseFloat(param.getValue()); break;
+            case 'translateY': p.ty = parseFloat(param.getValue()); break;
+            case 'scaleX': p.sx = parseFloat(param.getValue()); break;
+            case 'scaleY': p.sy = parseFloat(param.getValue()); break;
+            case 'rotateZ': p.rz = parseFloat(param.getValue()); break;
+            case 'transformOriginX': p.ox = parseFloat(param.getValue()); break;
+            case 'transformOriginY': p.oy = parseFloat(param.getValue()); break;
         }
-    }
-
+    });
+    
     this._handler.setup({
         hand: handOpt
     });

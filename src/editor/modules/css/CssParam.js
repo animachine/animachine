@@ -43,6 +43,7 @@ function CssParam (opt) {
         input: {
             type: 'text',
             onChange: this._onChangeInput,
+            units: ['px', 'em', 'rem', 'deg', '%']
         },
         indent: 2
     });
@@ -389,16 +390,10 @@ p._applyEase = function (ease, value) {
 
 p._onChangeInput = function (e) {
 
-    if ('key' in e.detail) {
-        this.name = e.detail.key;
-    }
-
-    if ('value' in e.detail) {
-        this.addKey({
-            time: am.timeline.currTime,
-            value: e.detail.value
-        });
-    }
+    this.addKey({
+        time: am.timeline.currTime,
+        value: this.options.input.value
+    });
 
     this.emit('change');
 };
@@ -444,7 +439,7 @@ p._onClickStepNextKey = function () {
 
 p._refreshInput = function () {
 
-    this.options.input.setValue(this.getValue());
+    this.options.input.value = this.getValue();
 };
 
 p._refreshTgglKey = function () {

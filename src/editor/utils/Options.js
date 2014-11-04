@@ -3,6 +3,7 @@
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../amgui');
+var UnitInput = require('./UnitInput');
 
 function Options(opt) {
 
@@ -47,10 +48,11 @@ function Options(opt) {
 
     if (opt.input) {
 
-        this.input = amgui.createInput({
+        this.input = new UnitInput({
             parent: this.domElem,
             onChange: opt.input.onChange,
             flex: '1',
+            units: opt.input.units
         });
     }
 
@@ -88,25 +90,6 @@ Object.defineProperties(p, {
 
 
 
-
-
-p.addIcon = function (opt) {
-
-
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
 p._createDomElem = function() {
 
     this.domElem = document.createElement('div');
@@ -119,4 +102,4 @@ p._createDomElem = function() {
     this._deIndent.style.display = 'inline-block';
     this._deIndent.style.width = '0px';
     this.domElem.appendChild(this._deIndent);
-}
+};

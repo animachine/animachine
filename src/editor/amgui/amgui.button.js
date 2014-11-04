@@ -34,6 +34,7 @@ function createLabel(opt) {
 
     var de = amgui.createDiv();
 
+    de.style.height = opt.height || amgui.LINE_HEIGHT + 'px';
     de.style.fontSize = opt.fontSize || amgui.FONT_SIZE;
     if ('display' in opt) de.style.display = opt.display;
     if ('flex' in opt) de.style.flex = opt.flex;

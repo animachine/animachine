@@ -25,6 +25,7 @@ function createInput(opt) {
     inp.style.color = amgui.color.text;
     inp.style.background = 'none';
     inp.style.border = 'none';
+    inp.style.padding = '0';
 
     if ('palceholder' in opt) inp.palceholder = opt.palceholder;
     if ('value' in opt) inp.value = opt.value;

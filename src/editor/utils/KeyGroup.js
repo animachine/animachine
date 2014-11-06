@@ -5,7 +5,7 @@ var inherits = require('inherits');
 var dialogKeyOptions = require('./dialogKeyOptions');
 var amgui = require('../amgui');
 
-function DirectorKey(opt) {
+function KeyGroup(opt) {
 
     opt.color = 'tomato';
 
@@ -17,9 +17,9 @@ function DirectorKey(opt) {
     this._subkeys = [];
 }
 
-inherits(DirectorKey, Key);
-var p = DirectorKey.prototype;
-module.exports = DirectorKeys;
+inherits(KeyGroup, Key);
+var p = KeyGroup.prototype;
+module.exports = KeyGroups;
 
 
 
@@ -31,12 +31,12 @@ module.exports = DirectorKeys;
 
 p.getSave = function () {
 
-    throw 'DirectorKeys are not saveable!';
+    throw 'KeyGroupss are not saveable!';
 };
 
 p.useSave = function (save) {
 
-    throw 'DirectorKeys are not loadable!';
+    throw 'KeyGroups are not loadable!';
 };
 
 p.select = function () {
@@ -45,34 +45,31 @@ p.select = function () {
 
         key.select();
     });
+
+    this._refreshSelected();
 };
 
 p.deselect = function () {
-
-    this._isSelected = false;
 
     this._subkeys.forEach(function (key) {
 
         key.deselect();
     });
+
+    this._refreshSelected();
 };
 
 p.setSubkeys = function (newSubkeys) {
 
-    this._subkeys = this._subkeys.every(function (key) {
-
-        return key._isSelected;
-    });
-
-
-
     this._subkeys.length = 0;
     this._subkeys.push.apply(this._subkeys, newSubkeys);
+
+    this._refreshSelected();
 };
 
 p.addSubkey = function () {
 
-
+    
 };
 
 p.removeSubkey = function (key) {
@@ -120,6 +117,27 @@ p._onChangeEase = function (ease) {
 
     this.ease = ease;
 };
+
+
+
+
+
+
+
+p._refreshSelected = function () {
+
+    var selected = this._subkeys.every(function (key) {
+
+        return key._selected;
+    });
+
+    if (selected !== this._selected) {
+
+        this._selected = selected;
+
+        this._refreshDomElem();
+    }
+}
 
 
 

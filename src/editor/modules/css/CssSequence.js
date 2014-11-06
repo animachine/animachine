@@ -3,9 +3,8 @@
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../../amgui');
-var CssParam = require('./CssParam');
-var CssTransformParameter = require('./CssTransformParameter');
-var DirectorKeyline = require('../../utils/DirectorKeyline');
+var paramFactory = require('./paramFactory');
+var KeylineGroup = require('../../utils/KeylineGroup');
 var Transhand = require('transhand');
 var mstPlayer = require('./script.player.mst');
 var dialogSequOptions = require('./dialogSequOptions');
@@ -50,7 +49,7 @@ function CssSequence(opt) {
     this.deOptions = document.createElement('div');
     this.deKeys = document.createElement('div');
 
-    this._dirKeyline = new DirectorKeyline();
+    this._dirKeyline = new KeylineGroup();
 
     this._deHeadOptinos = this._createHeadOptions();
     this.deKeys.appendChild(this._dirKeyline.domElem);
@@ -230,14 +229,7 @@ p.addParameter = function (opt, skipHistory) {
     }
     else {
 
-        if (opt.name === 'transform') {
-
-            param = new CssTransformParameter(opt);
-        }
-        else {
-
-            param = new CssParam(opt);
-        }
+        param = paramFactory.create(opt);
 
         if (!skipHistory) {
             am.history.save([this.removeParameter, this, param, true],
@@ -259,7 +251,6 @@ p.addParameter = function (opt, skipHistory) {
     
         return param;
     }
-    
 };
 
 p.removeParameter = function (param, skipHistory) {
@@ -416,7 +407,6 @@ p.focusHandler = function (de) {
     this._parameters.forEach(function (param) {
 
         switch (param.name) {
-
             case 'translateX': p.tx = parseFloat(param.getValue()); break;
             case 'translateY': p.ty = parseFloat(param.getValue()); break;
             case 'scaleX': p.sx = parseFloat(param.getValue()); break;
@@ -520,6 +510,7 @@ p._hideParams = function () {
     this._tgglParams.setToggle(false);
     this.emit('changeHeight', this);
 };
+
 
 
 

@@ -13,6 +13,7 @@ function CssParam (opt) {
     EventEmitter.call(this);
 
     this._lineH =  amgui.LINE_HEIGHT;
+    this._inputs = [];
 
     this._onChangeInput = this._onChangeInput.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
@@ -22,31 +23,8 @@ function CssParam (opt) {
     this._onClickStepPrevKey = this._onClickStepPrevKey.bind(this);
     this._onClickStepNextKey = this._onClickStepNextKey.bind(this);
 
-    this.keyline = new Keyline();
-    this.keyline.on('change', this._onChangeKeyline);
-    this.keyline.on('keyNeedsRemove', this._onKeyNeedsRemove);
-
-    this.options = new Options({
-        contextMenuOptions: [
-            {text: 'move up', onSelect: this.emit.bind(this, 'move', this, -1)},
-            {text: 'move down', onSelect: this.emit.bind(this, 'move', this, 1)},
-            {text: 'delete', onSelect: this.emit.bind(this, 'delete', this)}
-        ],
-        text: {
-            text: this.name
-        },
-        btnKey: {
-            onClick: this._onClickTgglKey,
-            onClickPrev: this._onClickStepPrevKey,
-            onClickNext: this._onClickStepNextKey,
-        },
-        input: {
-            type: 'text',
-            onChange: this._onChangeInput,
-            units: ['px', 'em', 'rem', 'deg', '%']
-        },
-        indent: 2
-    });
+    this._createKeyline();
+    this._createOptions();
 
     this.deOptions = this.options.domElem;
     this.deKeyline = this.keyline.domElem;
@@ -61,6 +39,7 @@ function CssParam (opt) {
 inherits(CssParam, EventEmitter);
 var p = CssParam.prototype;
 module.exports = CssParam;
+
 
 
 
@@ -263,9 +242,11 @@ p.addKey = function (opt, skipHistory) {
             am.history.closeChain(key);
             am.history.save([this.removeKey, this, opt.time, true], [this.addKey, this, opt, true], 'add key');
         }
+        
+        this.emit('addKey');
     }
 
-    this._refreshInput();
+    this._refreshInputs();
     this._refreshTgglKey();
 
     this.emit('change');
@@ -342,7 +323,29 @@ p.toggleKey = function () {
 
 p.isValid = function () {
 
-    return !!(this.name && this.keyline.keyCount);
+    return this.keyline.keyCount !== 0;
+};
+
+p.attachInput = function (input) {
+
+    this.detachinput(input);
+
+    input.on('change', this._onChangeInput);
+  
+    this._inputs.push(input);
+};
+
+p.detachInput = function (input) {
+
+    var idx = this._inputs.indexOf(input);
+
+    if (idx === -1) {
+        return;
+    }
+
+    input.removeListener('change', this._onChangeInput);
+  
+    this._inputs.splice(idx, 1);
 };
 
 
@@ -410,7 +413,7 @@ p._onKeyNeedsRemove = function (key) {
 
 p._onChangeTime = function () {
 
-    this._refreshInput();
+    this._refreshInputs();
     this._refreshTgglKey();
 };
 
@@ -437,19 +440,62 @@ p._onClickStepNextKey = function () {
 
 
 
-p._refreshInput = function () {
+p._refreshInputs = function () {
 
-    this.options.input.value = this.getValue();
+    var value = this.getValue();
+
+    this._inputs.forEach(function (input) {
+
+        input.value = value;
+    });
 };
 
 p._refreshTgglKey = function () {
 
-    var key = this.getKey(am.timeline.currTime);
+    var time = am.timeline.currTime,
+        key = this.getKey(time);
+    
     this.options.btnKey.setHighlight(!!key);
-
-    var time = am.timeline.currTime;
     this.options.btnKey.setSteppers(!!this.getPrevKey(time), !!this.getNextKey(time));
+};
 
+
+
+
+
+
+p._createOptions = function () {
+
+    this.options = new Options(_.merge({
+        contextMenuOptions: [
+            {text: 'move up', onSelect: this.emit.bind(this, 'move', this, -1)},
+            {text: 'move down', onSelect: this.emit.bind(this, 'move', this, 1)},
+            {text: 'delete', onSelect: this.emit.bind(this, 'delete', this)}
+        ],
+        text: {
+            text: this.name
+        },
+        btnKey: {
+            onClick: this._onClickTgglKey,
+            onClickPrev: this._onClickStepPrevKey,
+            onClickNext: this._onClickStepNextKey,
+        },
+        input: {
+            type: 'unit',
+            onChange: this._onChangeInput,
+            units: []
+        },
+        indent: 0
+    }, opt.options));
+
+    this.attachInput(optinos.input);
+};
+
+p._createKeyline = function () {
+
+    this.keyline = new Keyline();
+    this.keyline.on('change', this._onChangeKeyline);
+    this.keyline.on('keyNeedsRemove', this._onKeyNeedsRemove);
 };
 
 

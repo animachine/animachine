@@ -4,7 +4,7 @@ var inherits = require('inherits');
 var Keyline = require('./Keyline');
 var amgui = require('../amgui');
 
-function DirectorKeyline (opt) {
+function KeylineGroup (opt) {
 
     Keyline.call(this);
 
@@ -15,9 +15,9 @@ function DirectorKeyline (opt) {
     this._delayedRefreshHeadKeyline = this._delayedRefreshHeadKeyline.bind(this);
 }
 
-inherits(DirectorKeyline, Keyline);
-var p = DirectorKeyline.prototype;
-module.exports = DirectorKeyline;
+inherits(KeylineGroup, Keyline);
+var p = KeylineGroup.prototype;
+module.exports = KeylineGroup;
 
 
 
@@ -52,6 +52,8 @@ p.addKeyline = function (keyline) {
     keyline.on('change', this._onChangeKeyline);
 
     this._keylines.push(keyline);
+
+    this._refreshHeadKeyline();
 };
 
 p.removeKeyline = function (keyline) {
@@ -62,6 +64,8 @@ p.removeKeyline = function (keyline) {
     keyline.removeListener('change', this._onChangeKeyline);
 
     this._keylines.splice(idx, 1);
+
+    this._refreshHeadKeyline();
 };
 
 

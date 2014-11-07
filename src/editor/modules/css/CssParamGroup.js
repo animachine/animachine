@@ -1,11 +1,9 @@
 'use strict';
 
 var inherits = require('inherits');
-var uncalc = require('./uncalc');
-var Key = require('../../utils/Key');
-var Options = require('../../utils/Options');
-var Keyline = require('../../utils/KeylineGroup');
-var Keyline = require('./CssParam');
+var OptionsLine = require('../../utils/OptionsLine');
+var KeylineGroup = require('../../utils/KeylineGroup');
+var CssParam = require('./CssParam');
 var amgui = require('../../amgui');
 
 function CssParamGroup () {
@@ -21,6 +19,41 @@ module.exports = CssParamGroup;
 
 
 
+Object.defineProperties(p, {
+
+    height: {
+
+        get: function () {
+
+            var ret = this._baseH;
+
+            if (this._isShowingSubparams) {
+
+                this._params.forEach(function (param) {
+
+                    ret += param.height;
+                });
+            }
+
+            return ret;
+        }
+    },
+
+    name: {
+        set: function (v) {
+
+            if (v === this._name) return;
+
+            this._name = v;
+            this._deName.textContent = this._name;
+        },
+        get: function () {
+
+            return this._name;
+        }
+    }
+});
+
 
 
 
@@ -29,6 +62,7 @@ p.addParam = function (param) {
     this.removeParam(param);
 
     this._params.push(param);
+    this.optionsLine.addSubline(param.options.domElem);
     this.keyline.addKeyline(param.keyline);
 };
 
@@ -65,6 +99,23 @@ p.toggleKey = function () {
     });
 };
 
+p.showSubarams = function () {
+
+    if (this._isShowingSubparams) return;
+    this._isShowingSubparams = true;
+
+    this._tgglParams.setToggle(true);
+    this.emit('changeHeight', this);
+};
+
+p.hideSubparams = function () {
+
+    if (!this._isShowingSubparams) return;
+    this._isShowingSubparams = false;
+
+    this._tgglParams.setToggle(false);
+    this.emit('changeHeight', this);
+};
 
 
 
@@ -86,6 +137,15 @@ p._onChangeTime = function () {
     this._refreshTgglKey();
 };
 
+p._onClickTgglSubparams = function () {
+
+    if (this._isShowingSubparams) {
+        this.hideSubparams();
+    }
+    else {
+        this.showSubparams();
+    }
+};
 
 
 
@@ -95,9 +155,10 @@ p._onChangeTime = function () {
 
 
 
-p._createOptions = function () {
 
-    this.options = new Options(_.merge({
+p._createOptions = function (opt) {
+
+    this.options = new OptionsLine(_.merge({
         contextMenuOptions: [
             {text: 'move up', onSelect: this.emit.bind(this, 'move', this, -1)},
             {text: 'move down', onSelect: this.emit.bind(this, 'move', this, 1)},
@@ -118,7 +179,7 @@ p._createOptions = function () {
         },
         indent: 0,
         hasSubcontainer: true,
-    }, opt.options));
+    }, opt));
 
     this.attachInput(optinos.input);
 };

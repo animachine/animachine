@@ -13,6 +13,8 @@ function KeylineGroup (opt) {
     this._onChangeKeyline = this._onChangeKeyline.bind(this);
     this._onKeyNeedsRemove = this._onKeyNeedsRemove.bind(this);
     this._delayedRefreshHeadKeyline = this._delayedRefreshHeadKeyline.bind(this);
+
+    this._createSubcont();
 }
 
 inherits(KeylineGroup, Keyline);
@@ -53,6 +55,8 @@ p.addKeyline = function (keyline) {
 
     this._keylines.push(keyline);
 
+    this._deSubcont.appendChild(keyline.domElem);
+
     this._refreshHeadKeyline();
 };
 
@@ -64,6 +68,10 @@ p.removeKeyline = function (keyline) {
     keyline.removeListener('change', this._onChangeKeyline);
 
     this._keylines.splice(idx, 1);
+
+    if (keyline.domElem.parentNode === this._deSubcont) {
+        this._deSubcont.removeChild(keyline.domElem);
+    }
 
     this._refreshHeadKeyline();
 };
@@ -147,3 +155,12 @@ p._delayedRefreshHeadKeyline = function () {
     _.invoke(_.difference(oldKeys, this._headKeys), 'dispose');
 };
 
+
+
+
+p._createSubcont = function () {
+
+    this._deSubcont = document.createElement('div');
+    this._deSubcont.style.width = '100%';
+    this.domElem.appendChild(this._deSubcont);
+}

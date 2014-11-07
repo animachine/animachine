@@ -54,7 +54,7 @@ p.addKey = function (key) {
     
     this._keys.push(key);
     key.keyline = this;
-    this.domElem.appendChild(key.domElem);
+    this._deLine.appendChild(key.domElem);
 
     key.on('changeTime', this._onChangeKeyTime);
     key.on('changeEase', this._onChangeKeyEase);
@@ -244,9 +244,12 @@ p._createDomElem = function createKeyline(opt) {
 
     this.domElem = document.createElement('div');
     this.domElem.style.width = '100%';
-    this.domElem.style.height = (this._height || 21) + 'px';
-    this.domElem.style.background = this._background || 'grey';
     this.domElem.style.position = 'relative';
+
+    this._deLine = document.createElement('div');
+    this._deLine.style.width = '100%';
+    this._deLine.style.height = (this._height || 21) + 'px';
+    this._deLine.style.background = this._background || 'grey';
 
     this._svgEase = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     this._svgEase.style.width = '100%';
@@ -254,7 +257,7 @@ p._createDomElem = function createKeyline(opt) {
     this._svgEase.style.fill = 'none';
     this._svgEase.style.stroke = 'white';
     this._svgEase.style.position = 'absolute';
-    this.domElem.appendChild(this._svgEase);
+    this._deLine.appendChild(this._svgEase);
 }
 
 

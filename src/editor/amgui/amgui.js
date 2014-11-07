@@ -54,13 +54,21 @@ _.extend(amgui,
             return style;
         },
 
-        createDiv: function () {
+        createDiv: function (opt) {
 
             var de = document.createElement('div');
             de.style.webkitUserSelect = 'none';
             de.style.mozUserSelect = 'none';
             de.style.msUserSelect = 'none';
             de.style.userSelect = 'none';
+
+            if (typeof(opt) === 'object') {
+
+                if ('display' in opt) de.style.display = opt.display;
+                if ('flex' in opt) de.style.flex = opt.flex;
+                if ('position' in opt) de.style.position = opt.position;
+                if ('parent' in opt)  opt.parent.apendChild(de);
+            }
 
             return de;
         },

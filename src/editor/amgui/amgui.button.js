@@ -44,12 +44,12 @@ function createLabel(opt) {
         de.innerHTML = text || 'label';
     }
 
-    de.setText(opt.caption);
+    opt.text = opt.text || opt.caption;//TODO: change caption sets to text
+    de.setText(opt.text);
     
     if (opt.parent) {
         opt.parent.appendChild(de);
     }
-
 
     return de;
 }

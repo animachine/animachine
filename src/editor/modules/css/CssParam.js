@@ -4,7 +4,7 @@ var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var uncalc = require('./uncalc');
 var Key = require('../../utils/Key');
-var Options = require('../../utils/Options');
+var OptionsLine = require('../../utils/OptionsLine');
 var Keyline = require('../../utils/Keyline');
 var amgui = require('../../amgui');
 
@@ -23,8 +23,8 @@ function CssParam (opt) {
     this._onClickStepPrevKey = this._onClickStepPrevKey.bind(this);
     this._onClickStepNextKey = this._onClickStepNextKey.bind(this);
 
-    this._createKeyline();
-    this._createOptions();
+    this._createKeyline(opt.keyline);
+    this._createOptions(opt.OptionsLine);
 
     this.deOptions = this.options.domElem;
     this.deKeyline = this.keyline.domElem;
@@ -464,9 +464,9 @@ p._refreshTgglKey = function () {
 
 
 
-p._createOptions = function () {
+p._createOptions = function (opt) {
 
-    this.options = new Options(_.merge({
+    this.options = new OptionsLine(_.merge({
         contextMenuOptions: [
             {text: 'move up', onSelect: this.emit.bind(this, 'move', this, -1)},
             {text: 'move down', onSelect: this.emit.bind(this, 'move', this, 1)},
@@ -486,7 +486,7 @@ p._createOptions = function () {
             units: []
         },
         indent: 0
-    }, opt.options));
+    }, opt));
 
     this.attachInput(optinos.input);
 };

@@ -8,20 +8,17 @@ var KeylineGroup = require('../../utils/KeylineGroup');
 var Transhand = require('transhand');
 var mstPlayer = require('./script.player.mst');
 var dialogSequOptions = require('./dialogSequOptions');
+var CssParamGroup = require('./dialogSequOptions');
 
-function CssSequence(opt) {
+function CssTrack(opt) {
 
     EventEmitter.call(this);
 
     this._selectors = [];
-    this._parameters = [];
-    this._fill = 'forward';
+    this._endParams = [];
     this._name = 'unnamed';
-    this._iterations = 1;
 
-    this._baseH = amgui.LINE_HEIGHT;
-    this._selectedElems = []
-    this._isShowingParams = false;
+    this._selectedElems = [];
     this._isHidingSelectedElems = false;
     this._isPlaying = false;
 
@@ -30,16 +27,12 @@ function CssSequence(opt) {
     this._onMoveParameter = this._onMoveParameter.bind(this);
     this._onClickTgglKey = this._onClickTgglKey.bind(this);
     this._onClickTgglHide = this._onClickTgglHide.bind(this);
-    this._onClickTgglShowParams = this._onClickTgglShowParams.bind(this);
     this._onClickName = this._onClickName.bind(this);
-    this._onChangeBlankParameter = this._onChangeBlankParameter.bind(this);
     this._onChangeHandler = this._onChangeHandler.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
     this._onChangeParameter = this._onChangeParameter.bind(this);
     this._onChangeName = this._onChangeName.bind(this);
     this._onChangeName = this._onChangeName.bind(this);
-    this._onChangeFill = this._onChangeFill.bind(this);
-    this._onChangeIterations = this._onChangeIterations.bind(this);
     this._onChangeSelectors = this._onChangeSelectors.bind(this);
     this._onWindowResize = this._onWindowResize.bind(this);
     this._onSelectTrack = this._onSelectTrack.bind(this);
@@ -49,7 +42,7 @@ function CssSequence(opt) {
     this.deOptions = document.createElement('div');
     this.deKeys = document.createElement('div');
 
-    this._dirKeyline = new KeylineGroup();
+    this._paramGroup = new CssParamGroup();
 
     this._deHeadOptinos = this._createHeadOptions();
     this.deKeys.appendChild(this._dirKeyline.domElem);
@@ -61,15 +54,13 @@ function CssSequence(opt) {
     am.on('selectTrack', this._onSelectTrack);
     am.on('deselectTrack', this._onDeselectTrack);
 
-    this._onChangeBlankParameter();
-
     if (opt) {
         this.useSave(opt);
     }
 }
 
-inherits(CssSequence, EventEmitter);
-var p = CssSequence.prototype;
+inherits(CssTrack, EventEmitter);
+var p = CssTrack.prototype;
 
 p.type = 'css_sequ_type';
 
@@ -84,17 +75,7 @@ Object.defineProperties(p, {
 
         get: function () {
 
-            var ret = this._baseH;
-
-            if (this._isShowingParams) {
-
-                this._parameters.forEach(function (param) {
-
-                    ret += param.height;
-                });
-            }
-
-            return ret;
+            return this._paramGroup.height;
         }
     },
 
@@ -110,32 +91,6 @@ Object.defineProperties(p, {
 
             return this._name;
         }
-    },
-
-    fill: {
-        set: function (v) {
-
-            if (v === this._fill) return;
-
-            this._fill = v;
-        },
-        get: function () {
-
-            return this._fill;
-        }
-    },
-
-    iterations: {
-        set: function (v) {
-
-            if (v === this._iterations) return;
-
-            this._iterations = v;
-        },
-        get: function () {
-
-            return this._iterations;
-        }
     }
 });
 
@@ -148,14 +103,12 @@ p.getSave = function () {
 
     var save = {
         name: this.name,
-        fill: this.fill,
-        iterations: this.iterations,
         selectors: _.clone(this._selectors),
-        parameters: [],
+        endParams: [],
         isShowingParams: this._isShowingParams,
     };
 
-    this._parameters.forEach(function (param) {
+    this._endParams.forEach(function (param) {
 
         save.parameters.push(param.getSave());
     });
@@ -172,12 +125,10 @@ p.useSave = function (save) {
     this._selectors = save.selectors || [];
 
     if ('name' in save) this.name = save.name;
-    if ('fill' in save) this.fill = save.fill;
-    if ('iterations' in save) this.iterations = save.iterations;
 
-    if (save.parameters) {
+    if (save.endParams) {
 
-        save.parameters.forEach(this.addParameter, this);
+        save.endParams.forEach(this.addParam, this);
     }
 
     this._selectElements();
@@ -193,16 +144,14 @@ p.getScript = function () {
 
     var paramKeys = [], code = '', options, selectors;
 
-    this._parameters.forEach(function (param) {
+    this._endParams.forEach(function (param) {
 
         paramKeys.push(param.getScriptKeys());
     });
 
     options = {
       direction: "normal",
-      duration: am.timeline.length,
-      iterations: this.iterations,
-      fill: this.fill,
+      duration: am.timeline.length
     };
 
     selectors = this._selectors.join(',').replace('\\','\\\\');
@@ -216,7 +165,7 @@ p.getScript = function () {
     return code;
 };
 
-p.addParameter = function (opt, skipHistory) {
+p.addParam = function (opt, skipHistory) {
 
     opt = opt || {};
 
@@ -232,19 +181,17 @@ p.addParameter = function (opt, skipHistory) {
         param = paramFactory.create(opt);
 
         if (!skipHistory) {
-            am.history.save([this.removeParameter, this, param, true],
-                [this.addParameter, this, param, true], 'add parameter');
+            am.history.save([this.removeParam, this, param, true],
+                [this.addParam, this, param, true], 'add param ' + opt.name);
         }
 
-        this._parameters.push(param);
+        this._endParams.push(param);
+        this._paramGroup.addParam(param);
+
         param.on('change', this._onChangeParameter);
         param.on('delete', this._onDeleteParameter);
-        param.on('move', this._onMoveParameter);
 
         this._dirKeyline.addKeyline(param.keyline);
-
-        this._refreshParameterOrdering();
-        this._moveBlankParameterDown();
      
         this.emit('changeHeight', this);
         this.emit('change');
@@ -253,24 +200,23 @@ p.addParameter = function (opt, skipHistory) {
     }
 };
 
-p.removeParameter = function (param, skipHistory) {
+p.removeParam = function (param, skipHistory) {
 
     if (!skipHistory) {
-        am.history.save([this.addParameter, this, param, true],
-            [this.removeParameter, this, param, true], 'remove parameter');
+        am.history.save([this.addParam, this, param, true],
+            [this.removeParam, this, param, true], 'remove param ' + opt.name);
     }
 
-    var idx = this._parameters.indexOf(param);
+    var idx = this._endParams.indexOf(param);
 
     if (idx === -1) {
         return;
     }
 
-    this._parameters.splice(idx, 1);
+    this._endParams.splice(idx, 1);
 
     param.removeListener('change', this._onChangeParameter);
     param.removeListener('delete', this._onDeleteParameter);
-    param.removeListener('move', this._onMoveParameter);
 
     this._dirKeyline.removeKeyline(param.keyline);
 
@@ -278,17 +224,6 @@ p.removeParameter = function (param, skipHistory) {
     $(param.deKeyline).remove();
 
     this.emit('change');
-};
-
-p.moveParameter = function (param, way) {
-
-    var idx = this._parameters.indexOf(param);
-
-    this._parameters.splice(idx, 1);
-    idx = Math.min(this._parameters.length, Math.max(0, idx + way));
-    this._parameters.splice(idx, 0, param);
-
-    this._refreshParameterOrdering();
 };
 
 p.select = function (opt) {
@@ -344,7 +279,7 @@ p.renderTime = function (time) {
     var selection = _.toArray(am.deRoot.querySelectorAll(this._selectors.join(','))),
         params = {};
 
-    this._parameters.forEach(function (param) {
+    this._endParams.forEach(function (param) {
 
         params[param.name] = param.getValue(time);
     });
@@ -404,7 +339,7 @@ p.focusHandler = function (de) {
     };
 
     var p = handOpt.params;
-    this._parameters.forEach(function (param) {
+    this._endParams.forEach(function (param) {
 
         switch (param.name) {
             case 'translateX': p.tx = parseFloat(param.getValue()); break;
@@ -452,20 +387,6 @@ p._blurHandler = function () {
     }
 };
 
-p._moveBlankParameterDown = function () {
-
-    if (!this._blankParameter) {
-        return;
-    }
-
-    var idx = this._parameters.indexOf(this._blankParameter);
-
-    if (idx < this._parameters.length - 1) {
-
-        this.moveParameter(this._blankParameter, (this._parameters.length - 1) - idx);
-    }
-};
-
 p._hideSelectedElems = function () {
 
     if (this._isHidingSelectedElems) return;
@@ -491,24 +412,6 @@ p._showSelectedElems = function () {
 
         de.style.visibility = de._amVisibilitySave;
     });
-};
-
-p._showParams = function () {
-
-    if (this._isShowingParams) return;
-    this._isShowingParams = true;
-
-    this._tgglParams.setToggle(true);
-    this.emit('changeHeight', this);
-};
-
-p._hideParams = function () {
-
-    if (!this._isShowingParams) return;
-    this._isShowingParams = false;
-
-    this._tgglParams.setToggle(false);
-    this.emit('changeHeight', this);
 };
 
 
@@ -544,7 +447,7 @@ p._onChangeHandler = function(params, type) {
 
     var add = function (name, value) {
 
-        prop = this.addParameter({name: name});
+        prop = this.addParam({name: name});
 
         prop.addKey({
             time: time,
@@ -600,24 +503,12 @@ p._onWindowResize = function () {
 
 p._onDeleteParameter = function (param) {
 
-    this.removeParameter(param);
+    this.removeParam(param);
 };
 
 p._onMoveParameter = function (param, way) {
 
     this.moveParameter(param, way);
-};
-
-p._onChangeBlankParameter = function () {
-
-    if (this._blankParameter) {
-
-        this._blankParameter.removeListener('change', this._onChangeBlankParameter);
-        this._blankParameter = undefined;
-    }
-
-    this._blankParameter = this.addParameter();
-    this._blankParameter.on('change', this._onChangeBlankParameter);
 };
 
 p._onClickTgglKey = function () {
@@ -626,7 +517,7 @@ p._onClickTgglKey = function () {
         allHaveKey = this._isAllParamsHaveKey(time),
         flag = am.history.startFlag('toggle keys');
 
-    this._parameters.forEach(function (param) {
+    this._endParams.forEach(function (param) {
 
         if (param.isValid()) {
 
@@ -644,16 +535,6 @@ p._onClickTgglKey = function () {
     am.history.endFlag(flag);
 };
 
-p._onClickTgglShowParams = function () {
-
-    if (this._isShowingParams) {
-        this._hideParams();
-    }
-    else {
-        this._showParams();
-    }
-};
-
 p._onClickTgglHide = function () {
 
     if (this._isHidingSelectedElems) {
@@ -669,11 +550,7 @@ p._onClickName = function () {
     dialogSequOptions.show({
         name: this._name,
         selectors: this._selectors,
-        fill: this.fill,
-        iterations: this.iterations,
         onChangeName: this._onChangeName,
-        onChangeFill: this._onChangeFill,
-        onChangeIterations: this._onChangeIterations,
         onChangeSelectors: this._onChangeSelectors
     });
 };
@@ -681,16 +558,6 @@ p._onClickName = function () {
 p._onChangeName = function (name) {
 
     this.name = name;
-};
-
-p._onChangeFill = function (fill) {
-
-    this.fill = fill;
-};
-
-p._onChangeIterations = function (itarations) {
-
-    this.iterations = itarations;
 };
 
 p._onChangeSelectors = function (selectors) {
@@ -720,7 +587,7 @@ p._onChangeSelectors = function (selectors) {
 
 p._isAllParamsHaveKey = function (time) {
 
-    return this._parameters.every(function (param) {
+    return this._endParams.every(function (param) {
 
         return param.getKey(time) || !param.isValid();
     });
@@ -728,7 +595,7 @@ p._isAllParamsHaveKey = function (time) {
 
 p._getParameter = function (name) {
 
-    return this._parameters.find(function(param) {
+    return this._endParams.find(function(param) {
 
         return param.name === name;
     });
@@ -737,15 +604,6 @@ p._getParameter = function (name) {
 p._refreshTgglKey = function () {
 
     this._tgglKey.setToggle( this._isAllParamsHaveKey(am.timeline.currTime));
-};
-
-p._refreshParameterOrdering = function () {
-
-    this._parameters.forEach(function (param) {
-
-        this.deOptions.appendChild(param.deOptions);
-        this.deKeys.appendChild(param.deKeyline);
-    }, this);
 };
 
 
@@ -759,6 +617,11 @@ p._refreshParameterOrdering = function () {
 
 
 p._createHeadOptions = function (){
+
+    this.options = new OptionsLine({
+
+        tgglChildren: true
+    });
 
     var de = document.createElement('div');
     de.style.position = 'relative';
@@ -861,7 +724,7 @@ p.dispose = function () {
     //TODO
 };
 
-module.exports = CssSequence;
+module.exports = CssTrack;
 
 
 

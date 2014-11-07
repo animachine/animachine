@@ -1,6 +1,6 @@
 'use strict';
 
-var CssSequence = require('./CssSequence');
+var CssTrack = require('./CssTrack');
 var ParamsTab = require('./paramsTab/ParamsTab');
 var qsgen = require('../../qsgen');
 
@@ -10,7 +10,7 @@ exports.init = function () {
 
     paramsTab = new ParamsTab();
 
-    am.registerSequenceType(CssSequence, CssSequence.prototype.type);
+    am.registerSequenceType(CssTrack, CssTrack.prototype.type);
 
     am.on('selectDomElement', onSelectDomElement);
 
@@ -27,7 +27,7 @@ exports.init = function () {
             var selector = qsgen(am.selectedDomElem);
             console.log('selector:', selector);
 
-            var sequ = new CssSequence({
+            var sequ = new CssTrack({
                 selectors: [selector],
                 name: selector
             });
@@ -43,7 +43,7 @@ function onSelectDomElement(de) {
 
     am.timeline.sequences.forEach(function (sequ) {
 
-        if (sequ instanceof CssSequence) {
+        if (sequ instanceof CssTrack) {
 
             if (sequ.isOwnedDomElem(de)) {
 

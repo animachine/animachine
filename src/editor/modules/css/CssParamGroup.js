@@ -1,14 +1,14 @@
 'use strict';
 
 var inherits = require('inherits');
-var OptionsLine = require('../../utils/OptionsLine');
-var KeylineGroup = require('../../utils/KeylineGroup');
+var OptionLine = require('../../utils/OptionLine');
+var KeyLineGroup = require('../../utils/KeyLineGroup');
 var CssParam = require('./CssParam');
 var amgui = require('../../amgui');
 
 function CssParamGroup () {
 
-    CsParam.call(this);
+    CssParam.call(this);
 
     this._params = [];
 }
@@ -38,7 +38,6 @@ Object.defineProperties(p, {
             return ret;
         }
     },
-
     name: {
         set: function (v) {
 
@@ -62,8 +61,8 @@ p.addParam = function (param) {
     this.removeParam(param);
 
     this._params.push(param);
-    this.optionsLine.addSubline(param.options.domElem);
-    this.keyline.addKeyline(param.keyline);
+    this.optionLine.addSubline(param.optionLine.domElem);
+    this.keyLine.addKeyline(param.keyLine);
 };
 
 p.removeParam = function (param) {
@@ -75,7 +74,7 @@ p.removeParam = function (param) {
     }
 
     this._params.splice(idx, 1);
-    this.keyline.removeKeyline(param.keyline);
+    this.keyLine.removeKeyline(param.keyLine);
 };
 
 p.toggleKey = function () {
@@ -158,36 +157,29 @@ p._onClickTgglSubparams = function () {
 
 p._createOptions = function (opt) {
 
-    this.options = new OptionsLine(_.merge({
+    this.optionLine = new OptionLine(_.merge({
         contextMenuOptions: [
             {text: 'move up', onSelect: this.emit.bind(this, 'move', this, -1)},
             {text: 'move down', onSelect: this.emit.bind(this, 'move', this, 1)},
             {text: 'delete', onSelect: this.emit.bind(this, 'delete', this)}
         ],
-        text: {
-            text: this.name
+        title: {
+            text: this.name,
         },
         btnKey: {
             onClick: this._onClickTgglKey,
             onClickPrev: this._onClickStepPrevKey,
             onClickNext: this._onClickStepNextKey,
         },
-        input: {
-            type: 'unit',
-            onChange: this._onChangeInput,
-            units: []
-        },
         indent: 0,
         hasSubcontainer: true,
     }, opt));
-
-    this.attachInput(optinos.input);
 };
 
 p._createKeyline = function () {
 
-    this.keyline = new KeylineGroup();
-    this.keyline.on('keyNeedsRemove', this._onKeyNeedsRemove);
+    this.keyLine = new KeyLineGroup();
+    this.keyLine.on('keyNeedsRemove', this._onKeyNeedsRemove);
 };
 
 

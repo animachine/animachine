@@ -4,11 +4,12 @@ var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../../amgui');
 var paramFactory = require('./paramFactory');
-var KeylineGroup = require('../../utils/KeylineGroup');
 var Transhand = require('transhand');
+var KeyLineGroup = require('../../utils/KeyLineGroup');
+var OptionLine = require('../../utils/OptionLine');
+var CssParamGroup = require('./CssParamGroup');
+var dialogTrackOptions = require('./dialogTrackOptions');
 var mstPlayer = require('./script.player.mst');
-var dialogSequOptions = require('./dialogSequOptions');
-var CssParamGroup = require('./dialogSequOptions');
 
 function CssTrack(opt) {
 
@@ -39,18 +40,14 @@ function CssTrack(opt) {
     this._onDeselectTrack = this._onDeselectTrack.bind(this);
     this._animPlay = this._animPlay.bind(this);
 
-    this.deOptions = document.createElement('div');
-    this.deKeys = document.createElement('div');
-
     this._paramGroup = new CssParamGroup();
+    this.deOptionLine = this._paramGroup.optionLine.domElem;
+    this.deKeyLine = this._paramGroup.keyLine.domElem;
 
-    this._deHeadOptinos = this._createHeadOptions();
-    this.deKeys.appendChild(this._dirKeyline.domElem);
+    this.deOptionLine.addEventListener('click', this._onSelectClick);
+    this.deKeyLine.addEventListener('click', this._onSelectClick);
 
     am.timeline.on('changeTime', this._onChangeTime);
-    this.deOptions.addEventListener('click', this._onSelectClick);
-    this.deKeys.addEventListener('click', this._onSelectClick);
-
     am.on('selectTrack', this._onSelectTrack);
     am.on('deselectTrack', this._onDeselectTrack);
 
@@ -62,7 +59,7 @@ function CssTrack(opt) {
 inherits(CssTrack, EventEmitter);
 var p = CssTrack.prototype;
 
-p.type = 'css_sequ_type';
+p.type = 'css_track_type';
 
 
 
@@ -85,7 +82,7 @@ Object.defineProperties(p, {
             if (v === this._name) return;
 
             this._name = v;
-            this._deName.textContent = this._name;
+            this._paramGroup.optionLine.title = this._name;
         },
         get: function () {
 
@@ -132,7 +129,6 @@ p.useSave = function (save) {
     }
 
     this._selectElements();
-    this._refreshTgglKey();
 
     if (save.isShowingParams) {
 
@@ -142,14 +138,14 @@ p.useSave = function (save) {
 
 p.getScript = function () {
 
-    var paramKeys = [], code = '', options, selectors;
+    var paramKeys = [], code = '', optionLine, selectors;
 
     this._endParams.forEach(function (param) {
 
         paramKeys.push(param.getScriptKeys());
     });
 
-    options = {
+    optionLine = {
       direction: "normal",
       duration: am.timeline.length
     };
@@ -158,7 +154,7 @@ p.getScript = function () {
 
     code = Mustache.render(mstPlayer, {
         paramKeys: JSON.stringify(paramKeys),
-        options: JSON.stringify(options),
+        optionLine: JSON.stringify(optionLine),
         selectors: selectors
     });
 
@@ -191,7 +187,7 @@ p.addParam = function (opt, skipHistory) {
         param.on('change', this._onChangeParameter);
         param.on('delete', this._onDeleteParameter);
 
-        this._dirKeyline.addKeyline(param.keyline);
+        this._dirKeyline.addKeyline(param.keyLine);
      
         this.emit('changeHeight', this);
         this.emit('change');
@@ -218,9 +214,9 @@ p.removeParam = function (param, skipHistory) {
     param.removeListener('change', this._onChangeParameter);
     param.removeListener('delete', this._onDeleteParameter);
 
-    this._dirKeyline.removeKeyline(param.keyline);
+    this._dirKeyline.removeKeyline(param.keyLine);
 
-    $(param.deOptions).remove();
+    $(param.deOptionLine).remove();
     $(param.deKeyline).remove();
 
     this.emit('change');
@@ -248,7 +244,7 @@ p.select = function (opt) {
         this.focusHandler(opt.focusElem || this._selectedElems[0]);
     }
 
-    this.deHighlight.style.opacity = 1;
+    this._paramGroup.highlight = true;
 
     this.emit('select', this);
 };
@@ -260,7 +256,7 @@ p.deselect = function () {
 
     this._blurHandler();
 
-    this.deHighlight.style.opacity = 0;
+    this._paramGroup.highlight = false;
 
     window.removeEventListener('resize', this._onWindowResize);
 
@@ -287,7 +283,7 @@ p.renderTime = function (time) {
     Velocity({
         elements: selection,
         properties: params,
-        options: {duration: 0, queue: false}
+        optionLine: {duration: 0, queue: false}
     });
 };
 
@@ -547,7 +543,7 @@ p._onClickTgglHide = function () {
 
 p._onClickName = function () {
 
-    dialogSequOptions.show({
+    dialogTrackOptions.show({
         name: this._name,
         selectors: this._selectors,
         onChangeName: this._onChangeName,
@@ -601,10 +597,6 @@ p._getParameter = function (name) {
     });
 };
 
-p._refreshTgglKey = function () {
-
-    this._tgglKey.setToggle( this._isAllParamsHaveKey(am.timeline.currTime));
-};
 
 
 
@@ -616,87 +608,6 @@ p._refreshTgglKey = function () {
 
 
 
-p._createHeadOptions = function (){
-
-    this.options = new OptionsLine({
-
-        tgglChildren: true
-    });
-
-    var de = document.createElement('div');
-    de.style.position = 'relative';
-    de.style.width = '100%';
-    de.style.display = 'flex';
-    de.style.height = this._baseH + 'px';
-    de.style.background = 'linear-gradient(to bottom, #063501 18%,#064100 96%)';
-    this.deOptions.appendChild(de);
-
-    this.deHighlight = document.createElement('div');
-    this.deHighlight.style.display = 'inline-block';
-    this.deHighlight.style.width = '2px';
-    this.deHighlight.style.height = this._baseH + 'px';
-    this.deHighlight.style.background = 'gold';
-    this.deHighlight.style.opacity = 0;
-    de.appendChild(this.deHighlight);
-
-    this._tgglParams = amgui.createToggleIconBtn({
-        iconOn: 'angle-down',
-        iconOff: 'angle-right',
-        height: this._baseH,
-        onClick: this._onClickTgglShowParams,
-        parent: de
-    });
-
-    this._deName = amgui.createLabel({caption: this._name, parent: de});
-    this._deName.style.height = this._baseH  + 'px';
-    this._deName.style.cursor = 'pointer';
-    this._deName.addEventListener('click', this._onClickName);
-
-    var deNameIcon = amgui.createIcon({
-        icon: 'cog',
-        parent: de
-    });
-    deNameIcon.style.display = 'none';
-    this._deName.addEventListener('mouseenter', function () {deNameIcon.style.display = 'inline-block';});
-    this._deName.addEventListener('mouseleave', function () {deNameIcon.style.display = 'none';});
-
-    var space = document.createElement('div');
-    space.style.display = 'inline-block';
-    space.style.flex = '1';
-    space.style.pointerEvents = 'none';
-    de.appendChild(space);
-
-    this._tgglHide = amgui.createToggleIconBtn({
-        iconOn: 'eye-off', 
-        iconOff: 'eye', 
-        height: this._baseH,
-        defaultToggle: false,
-        onClick: this._onClickTgglHide,
-        changeColor: true,
-        parent: de
-    });
-
-    this._tgglKey = amgui.createStepperKey({
-        height: this._baseH,
-        onClick: this._onClickTgglKey,
-        parent: de
-    });
-    this._refreshTgglKey();
-
-    amgui.bindDropdown({
-        asContextMenu: true,
-        deTarget: de,
-        deMenu: amgui.createDropdown({
-            options: [
-                {text: 'move up', onSelect: this.emit.bind(this, 'move', this, -1)},
-                {text: 'move down', onSelect: this.emit.bind(this, 'move', this, 1)},
-                {text: 'delete', onSelect: this.emit.bind(this, 'delete', this)},
-            ]
-        })
-    });
-
-    return de;
-};
 
 p.isOwnedDomElem = function (de) {
 

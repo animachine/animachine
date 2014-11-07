@@ -28,14 +28,14 @@ var isInited = false, handlerBuff = [];
 
 var am = window.am = module.exports = _.extend(new EventEmitter(), {
 
-    sequenceTypes: {},
+    trackTypes: {},
 
     selectedDomElem: undefined,
     selectedTrack: undefined,
 
-    registerSequenceType: function (Sequence, type) {
+    registerTrackType: function (Track, type) {
 
-        this.sequenceTypes[type] = Sequence;
+        this.trackTypes[type] = Track;
     }
 });
 
@@ -338,7 +338,7 @@ function onSelectWithDomPicker(de) {
 
 function createAmRoot() {
 
-    $('body').css('opacity', .23)
+    // $('body').css('opacity', .23)
         // .mouseenter(function () {$('body').css('opacity', 1)})
         // .mouseleave(function () {$('body').css('opacity', .23)});
     
@@ -401,7 +401,7 @@ function createMenu() {
     amgui.bindDropdown({
         deTarget: iconMenu,
         deMenu: amgui.createDropdown({
-            options: [
+            optionLine: [
                 {text: 'new', onSelect: onSelectNew},
                 {text: 'save', onSelect: onSelectSave},
                 {text: 'saveAs', onSelect: onSelectSave},

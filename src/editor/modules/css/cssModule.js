@@ -10,7 +10,7 @@ exports.init = function () {
 
     paramsTab = new ParamsTab();
 
-    am.registerSequenceType(CssTrack, CssTrack.prototype.type);
+    am.registerTrackType(CssTrack, CssTrack.prototype.type);
 
     am.on('selectDomElement', onSelectDomElement);
 
@@ -27,32 +27,32 @@ exports.init = function () {
             var selector = qsgen(am.selectedDomElem);
             console.log('selector:', selector);
 
-            var sequ = new CssTrack({
+            var track = new CssTrack({
                 selectors: [selector],
                 name: selector
             });
 
-            am.timeline.addSequence(sequ);
+            am.timeline.addTrack(track);
 
-            am.selectTrack(sequ);
+            am.selectTrack(track);
         }
     })
 };
 
 function onSelectDomElement(de) {
 
-    am.timeline.sequences.forEach(function (sequ) {
+    am.timeline.tracks.forEach(function (track) {
 
-        if (sequ instanceof CssTrack) {
+        if (track instanceof CssTrack) {
 
-            if (sequ.isOwnedDomElem(de)) {
+            if (track.isOwnedDomElem(de)) {
 
-                am.selectTrack(sequ);
-                sequ.focusHandler(de);
+                am.selectTrack(track);
+                track.focusHandler(de);
                 am.domPicker.hide();
             }
             else {
-                if (am.selectedTrack === sequ) {
+                if (am.selectedTrack === track) {
 
                     am.deselectTrack();
                 } 

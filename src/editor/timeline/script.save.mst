@@ -6,7 +6,7 @@
     var SAVEJSON = '{{{saveJson}}}';
     {{/saveJson}}
 
-    var sequPlayerGens = [{{{sequPlayerGens}}}];
+    var trackPlayerGens = [{{{trackPlayerGens}}}];
 
     root.am = root.am || {};
     root.am.pageScripts = root.am.pageScripts || {};
@@ -15,11 +15,11 @@
         
         createPlayer: function (opt) {
 
-            var sequencePlayers = [];
+            var trackPlayers = [];
 
-            sequPlayerGens.forEach(function (create) {
+            trackPlayerGens.forEach(function (create) {
 
-                sequencePlayers.push(create(opt))   ;
+                trackPlayers.push(create(opt))   ;
             });
 
             return {
@@ -30,9 +30,9 @@
 
             function callPlayers(fnName, arg1) {
 
-                sequencePlayers.forEach(function (sequencePlayer) {
+                trackPlayers.forEach(function (trackPlayer) {
 
-                    sequencePlayer[fnName].call(null, arg1);
+                    trackPlayer[fnName].call(null, arg1);
                 });
             }
         },

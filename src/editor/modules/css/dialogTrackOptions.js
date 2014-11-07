@@ -4,7 +4,7 @@ var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../../amgui');
 
-function DialogSequOptions () {
+function DialogTrackOptions () {
 
     EventEmitter.call(this);
 
@@ -17,8 +17,8 @@ function DialogSequOptions () {
     this._onChangeIterations = this._onChangeIterations.bind(this); 
 }
 
-inherits(DialogSequOptions, EventEmitter);
-var p = DialogSequOptions.prototype;
+inherits(DialogTrackOptions, EventEmitter);
+var p = DialogTrackOptions.prototype;
 
 
 
@@ -122,7 +122,7 @@ p._createDialog = function () {
     this._createContent();
     
     this.domElem = amgui.createDialog({
-        title: 'Sequence',
+        title: 'Track',
         content: this._deContent,
         parent: am.deDialogCont,
         buttons: ['ok'],
@@ -202,7 +202,7 @@ p._createContent = function () {
         display: 'inline-block',
         onClick: function () {am.dialogs.featureDoesntExist.show();},
         parent: this._deContent,
-        tooltip: 'select from options'
+        tooltip: 'select from optionLine'
     });
 
     amgui.createLinebreak({
@@ -220,7 +220,7 @@ p._createContent = function () {
     amgui.bindDropdown({
         deTarget: this._deFill,
         deMenu: amgui.createDropdown({
-            options: ['none', 'forwards', 'backwards', 'both'],
+            optionLine: ['none', 'forwards', 'backwards', 'both'],
             onSelect: this._onSelectFill,
         }),
         menuParent: this._deContent,
@@ -313,4 +313,4 @@ p._removeSelector = function (selector) {
     selector.domElem.parentNode.removeChild(selector.domElem);
 };
 
-module.exports = new DialogSequOptions();
+module.exports = new DialogTrackOptions();

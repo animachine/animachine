@@ -1,4 +1,4 @@
-'use strict';
+    'use strict';
 
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
@@ -6,9 +6,9 @@ var amgui = require('../../amgui');
 var IntervalScript = require('./IntervalScript');
 var MomentScript = require('./MomentScript');
 var mstPlayer = require('./script.player.mst');
-var dialogSequOptions = require('./dialogSequOptions');
+var dialogTrackOptions = require('./dialogTrackOptions');
 
-function JsSequence(opt) {
+function JsTrack(opt) {
 
     EventEmitter.call(this);
 
@@ -49,10 +49,10 @@ function JsSequence(opt) {
     }
 }
 
-inherits(JsSequence, EventEmitter);
-var p = JsSequence.prototype;
+inherits(JsTrack, EventEmitter);
+var p = JsTrack.prototype;
 
-p.type = 'js_sequ_type';
+p.type = 'js_track_type';
 
 
 
@@ -490,7 +490,7 @@ p._onClickAddIntervalScript = function () {
 
 p._onClickName = function () {
 
-    dialogSequOptions.show({
+    dialogTrackOptions.show({
         name: this._name,
         onChangeName: this._onChangeName,
     });
@@ -615,7 +615,7 @@ p._createHeadOptions = function (){
         asContextMenu: true,
         deTarget: de,
         deMenu: amgui.createDropdown({
-            options: [
+            optionLine: [
                 {text: 'move up', onSelect: this.emit.bind(this, 'move', this, -1)},
                 {text: 'move down', onSelect: this.emit.bind(this, 'move', this, 1)},
                 {text: 'delete', onSelect: this.emit.bind(this, 'delete', this)},
@@ -638,7 +638,7 @@ p.dispose = function () {
     //TODO
 };
 
-module.exports = JsSequence;
+module.exports = JsTrack;
 
 
 

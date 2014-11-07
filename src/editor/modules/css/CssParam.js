@@ -4,11 +4,13 @@ var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var uncalc = require('./uncalc');
 var Key = require('../../utils/Key');
-var OptionsLine = require('../../utils/OptionsLine');
-var Keyline = require('../../utils/Keyline');
+var OptionLine = require('../../utils/OptionLine');
+var KeyLine = require('../../utils/KeyLine');
 var amgui = require('../../amgui');
 
 function CssParam (opt) {
+
+    opt = opt || {};
 
     EventEmitter.call(this);
 
@@ -17,17 +19,17 @@ function CssParam (opt) {
 
     this._onChangeInput = this._onChangeInput.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
-    this._onChangeKeyline = this._onChangeKeyline.bind(this);
+    this._onChangeKeyLine = this._onChangeKeyLine.bind(this);
     this._onKeyNeedsRemove = this._onKeyNeedsRemove.bind(this);
     this._onClickTgglKey = this._onClickTgglKey.bind(this);
     this._onClickStepPrevKey = this._onClickStepPrevKey.bind(this);
     this._onClickStepNextKey = this._onClickStepNextKey.bind(this);
 
-    this._createKeyline(opt.keyline);
-    this._createOptions(opt.OptionsLine);
+    this._createKeyline(opt.keyLine);
+    this._createOptions(opt.optionLine);
 
-    this.deOptions = this.options.domElem;
-    this.deKeyline = this.keyline.domElem;
+    this.deOptionLine = this.optionLine.domElem;
+    this.deKeyLine = this.keyLine.domElem;
 
     am.timeline.on('changeTime', this._onChangeTime);
 
@@ -62,7 +64,7 @@ Object.defineProperties(p, {
             if (v === this._name) return;
 
             this._name = v;
-            this.options.text = this._name;
+            this.optionLine.text = this._name;
         },
         get: function () {
             return this._name
@@ -81,7 +83,7 @@ p.getSave = function () {
         keys: [],
     };
 
-    this.keyline.forEachKeys(function (key) {
+    this.keyLine.forEachKeys(function (key) {
 
         save.keys.push(key.getSave());
     });
@@ -103,7 +105,7 @@ p.getScriptKeys = function () {
 
     var keys = [];
 
-    this.keyline.forEachKeys(function (key) {
+    this.keyLine.forEachKeys(function (key) {
 
         var k = {
             offset: key.time / am.timeline.length,
@@ -135,7 +137,7 @@ p.getValue = function (time) {
 
     var before, after, same;
 
-    this.keyline.forEachKeys(function (key) {
+    this.keyLine.forEachKeys(function (key) {
 
         if (key.time === time) {
         
@@ -236,7 +238,7 @@ p.addKey = function (opt, skipHistory) {
         key = new Key(opt);
         key.value = opt.value || this.getValue(opt.time);
 
-        this.keyline.addKey(key);
+        this.keyLine.addKey(key);
 
         if (!skipHistory) {
             am.history.closeChain(key);
@@ -256,7 +258,7 @@ p.addKey = function (opt, skipHistory) {
 
 p.removeKey = function (key, skipHistory) {
 
-    if (!this.keyline.removeKey(key)) {
+    if (!this.keyLine.removeKey(key)) {
 
         return;
     }
@@ -273,17 +275,17 @@ p.removeKey = function (key, skipHistory) {
 
 p.getKey = function (time) {
 
-    return this.keyline.getKeyByTime(time);
+    return this.keyLine.getKeyByTime(time);
 };
 
 p.getPrevKey = function (time) {
 
-    return this.keyline.getPrevKey(time);
+    return this.keyLine.getPrevKey(time);
 };
 
 p.getNextKey = function (time) {
 
-    return this.keyline.getNextKey(time);
+    return this.keyLine.getNextKey(time);
 };
 
 p.gotoPrevKey = function (time) {
@@ -306,7 +308,7 @@ p.gotoNextKey = function (time) {
 
 p.getKeyTimes = function () {
 
-    return this.keyline.getKeyTimes();
+    return this.keyLine.getKeyTimes();
 };
 
 p.toggleKey = function () {
@@ -323,7 +325,7 @@ p.toggleKey = function () {
 
 p.isValid = function () {
 
-    return this.keyline.keyCount !== 0;
+    return this.keyLine.keyCount !== 0;
 };
 
 p.attachInput = function (input) {
@@ -395,13 +397,13 @@ p._onChangeInput = function (e) {
 
     this.addKey({
         time: am.timeline.currTime,
-        value: this.options.input.value
+        value: this.optionLine.input.value
     });
 
     this.emit('change');
 };
 
-p._onChangeKeyline = function () {
+p._onChangeKeyLine = function () {
 
     this.emit('change');
 };
@@ -455,8 +457,8 @@ p._refreshTgglKey = function () {
     var time = am.timeline.currTime,
         key = this.getKey(time);
     
-    this.options.btnKey.setHighlight(!!key);
-    this.options.btnKey.setSteppers(!!this.getPrevKey(time), !!this.getNextKey(time));
+    this.optionLine.buttons.key.setHighlight(!!key);
+    this.optionLine.buttons.key.setSteppers(!!this.getPrevKey(time), !!this.getNextKey(time));
 };
 
 
@@ -466,7 +468,7 @@ p._refreshTgglKey = function () {
 
 p._createOptions = function (opt) {
 
-    this.options = new OptionsLine(_.merge({
+    this.optionLine = new OptionLine(_.merge({
         contextMenuOptions: [
             {text: 'move up', onSelect: this.emit.bind(this, 'move', this, -1)},
             {text: 'move down', onSelect: this.emit.bind(this, 'move', this, 1)},
@@ -483,19 +485,20 @@ p._createOptions = function (opt) {
         input: {
             type: 'unit',
             onChange: this._onChangeInput,
-            units: []
+            units: [],
+            name: input
         },
         indent: 0
     }, opt));
 
-    this.attachInput(optinos.input);
+    this.attachInput(optinons.inputs.input);
 };
 
 p._createKeyline = function () {
 
-    this.keyline = new Keyline();
-    this.keyline.on('change', this._onChangeKeyline);
-    this.keyline.on('keyNeedsRemove', this._onKeyNeedsRemove);
+    this.keyLine = new KeyLine();
+    this.keyLine.on('change', this._onChangeKeyLine);
+    this.keyLine.on('keyNeedsRemove', this._onKeyNeedsRemove);
 };
 
 

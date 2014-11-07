@@ -5,9 +5,12 @@ var inherits = require('inherits');
 var amgui = require('../amgui');
 var UnitInput = require('./UnitInput');
 
-function OptionsLine(opt) {
+function OptionLine(opt) {
 
     EventEmitter.call(this);
+
+    this.inputs = {};
+    this.buttons = {};
 
     this._createDomElem();
     this._createHighlight();
@@ -23,7 +26,7 @@ function OptionsLine(opt) {
             asContextMenu: true,
             deTarget: this._deHeadCont,
             deMenu: amgui.createDropdown({
-                options: opt.contextMenuOptions
+                optionLine: opt.contextMenuOptions
             })
         });
     }
@@ -107,9 +110,9 @@ function OptionsLine(opt) {
     }
 }
 
-inherits(OptionsLine, EventEmitter);
-var p = OptionsLine.prototype;
-module.exports = OptionsLine;
+inherits(OptionLine, EventEmitter);
+var p = OptionLine.prototype;
+module.exports = OptionLine;
 
 
 
@@ -117,9 +120,9 @@ module.exports = OptionsLine;
 
 Object.defineProperties(p, {
 
-    text: {
+    title: {
         set: function (v) {
-            this._deText.setText(v);
+            this._deTitle.setText(v);
         },
     },
     highlight: {
@@ -153,7 +156,7 @@ p.addButton = function (opt) {
 
     if (opt.name) {
 
-        this.buttons[opt.name] = deBtn;
+        this.buttons[opt.name] = opt.domElem;
     }
 };
 

@@ -4,7 +4,7 @@ var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../amgui');
 
-function Keyline (opt) {
+function KeyLine (opt) {
 
     EventEmitter.call(this);
 
@@ -21,9 +21,9 @@ function Keyline (opt) {
     amgui.callOnAdded(this.domElem, this._renderEase.bind(this));
 }
 
-inherits(Keyline, EventEmitter);
-var p = Keyline.prototype;
-module.exports = Keyline;
+inherits(KeyLine, EventEmitter);
+var p = KeyLine.prototype;
+module.exports = KeyLine;
 
 
 
@@ -53,7 +53,7 @@ p.addKey = function (key) {
 
     
     this._keys.push(key);
-    key.keyline = this;
+    key.keyLine = this;
     this._deLine.appendChild(key.domElem);
 
     key.on('changeTime', this._onChangeKeyTime);

@@ -26,7 +26,7 @@ function MomentScript(opt) {
 
 
     this._deMenu = amgui.createDropdown({
-        options: ['script', 'delete']
+        optionLine: ['script', 'delete']
     });
     this._deMenu.addEventListener('select', this._onSelectDropdown);
 

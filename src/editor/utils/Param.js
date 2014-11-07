@@ -3,15 +3,15 @@
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../amgui');
-var Keyline = require('./Keyline');
-var Options = require('./Options');
+var KeyLine = require('./KeyLine');
+var OptionLine = require('./OptionLine');
 
 function Param(opt) {
 
     EventEmitter.call(this);
 
-    this.keyline = new Keyline();
-    this.options = new Options();
+    this.keyLine = new KeyLine();
+    this.optionLine = new OptionLine();
 }
 
 inherits(Param, EventEmitter);

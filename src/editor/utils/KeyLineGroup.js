@@ -1,25 +1,25 @@
 'use strict';
 
 var inherits = require('inherits');
-var Keyline = require('./Keyline');
+var KeyLine = require('./KeyLine');
 var amgui = require('../amgui');
 
-function KeylineGroup (opt) {
+function KeyLineGroup (opt) {
 
-    Keyline.call(this);
+    KeyLine.call(this);
 
-    this._keylines = [];
+    this._keyLines = [];
 
-    this._onChangeKeyline = this._onChangeKeyline.bind(this);
+    this._onChangeKeyLine = this._onChangeKeyLine.bind(this);
     this._onKeyNeedsRemove = this._onKeyNeedsRemove.bind(this);
     this._delayedRefreshHeadKeyline = this._delayedRefreshHeadKeyline.bind(this);
 
     this._createSubcont();
 }
 
-inherits(KeylineGroup, Keyline);
-var p = KeylineGroup.prototype;
-module.exports = KeylineGroup;
+inherits(KeyLineGroup, KeyLine);
+var p = KeyLineGroup.prototype;
+module.exports = KeyLineGroup;
 
 
 
@@ -45,32 +45,32 @@ Object.defineProperties(p, {
 
 
 
-p.addKeyline = function (keyline) {
+p.addKeyline = function (keyLine) {
 
-    if (this._keylines.indexOf(keyline) !== -1) {
+    if (this._keyLines.indexOf(keyLine) !== -1) {
         return;
     }
 
-    keyline.on('change', this._onChangeKeyline);
+    keyLine.on('change', this._onChangeKeyLine);
 
-    this._keylines.push(keyline);
+    this._keyLines.push(keyLine);
 
-    this._deSubcont.appendChild(keyline.domElem);
+    this._deSubcont.appendChild(keyLine.domElem);
 
     this._refreshHeadKeyline();
 };
 
-p.removeKeyline = function (keyline) {
+p.removeKeyline = function (keyLine) {
     
-    var idx = this._keylines.indexOf(keyline);
+    var idx = this._keyLines.indexOf(keyLine);
     if (idx === -1) return;
 
-    keyline.removeListener('change', this._onChangeKeyline);
+    keyLine.removeListener('change', this._onChangeKeyLine);
 
-    this._keylines.splice(idx, 1);
+    this._keyLines.splice(idx, 1);
 
-    if (keyline.domElem.parentNode === this._deSubcont) {
-        this._deSubcont.removeChild(keyline.domElem);
+    if (keyLine.domElem.parentNode === this._deSubcont) {
+        this._deSubcont.removeChild(keyLine.domElem);
     }
 
     this._refreshHeadKeyline();
@@ -86,7 +86,7 @@ p.removeKeyline = function (keyline) {
 
 
 
-p._onChangeKeyline = function (key) {
+p._onChangeKeyLine = function (key) {
 
     this._refreshHeadKeyline();
 };
@@ -105,9 +105,9 @@ p._delayedRefreshHeadKeyline = function () {
 
     var times = [], keysOnTimes = [];
 
-    this._keylines.forEach(function (keyline) {
+    this._keyLines.forEach(function (keyLine) {
 
-        keyline.forEachKeys(function (key) {
+        keyLine.forEachKeys(function (key) {
 
             var tidx = time.indexOf(key.time);
 

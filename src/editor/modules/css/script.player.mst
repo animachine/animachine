@@ -5,13 +5,13 @@ function () {
         isInited = false,
         animations = [],
         paramKeys = {{{paramKeys}}},
-        options = {{{options}}},
+        optionLine = {{{optionLine}}},
         elems = document.querySelectorAll('{{{selectors}}}');
 
     for (var i = 0; i < elems.length; ++i) {
         for (var j = 0; j < paramKeys.length; ++j) {
 
-            animations.push(new Animation(elems[i], paramKeys[j], options));
+            animations.push(new Animation(elems[i], paramKeys[j], optionLine));
         }
     }
 

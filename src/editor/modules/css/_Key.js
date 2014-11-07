@@ -27,7 +27,7 @@ function Key (opt) {
     });
 
     this._deMenu = amgui.createDropdown({
-        options: ['ease', 'delete']
+        optionLine: ['ease', 'delete']
     });
     this._deMenu.addEventListener('select', this._onSelectDropdown);
 

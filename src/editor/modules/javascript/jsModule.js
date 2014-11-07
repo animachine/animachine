@@ -1,8 +1,8 @@
 'use strict';
 
-var JsSequence = require('./JsSequence');
+var JsTrack = require('./JsTrack');
 
 exports.init = function () {
 
-    am.registerSequenceType(JsSequence, JsSequence.prototype.type);
+    am.registerTrackType(JsTrack, JsTrack.prototype.type);
 };

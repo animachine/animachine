@@ -1,10 +1,10 @@
-'use strict';
+    'use strict';
 
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../../amgui');
 
-function DialogSequOptions () {
+function DialogTrackOptions () {
 
     EventEmitter.call(this);
 
@@ -15,8 +15,8 @@ function DialogSequOptions () {
     this._onChangeName = this._onChangeName.bind(this);
 }
 
-inherits(DialogSequOptions, EventEmitter);
-var p = DialogSequOptions.prototype;
+inherits(DialogTrackOptions, EventEmitter);
+var p = DialogTrackOptions.prototype;
 
 
 
@@ -67,7 +67,7 @@ p._createDialog = function () {
     this._createContent();
     
     this.domElem = amgui.createDialog({
-        title: 'Sequence',
+        title: 'Track',
         content: this._deContent,
         parent: am.deDialogCont,
         buttons: ['ok'],
@@ -114,4 +114,4 @@ p._createContent = function () {
     this._deContent.appendChild(this._inpName);
 };
 
-module.exports = new DialogSequOptions();
+module.exports = new DialogTrackOptions();

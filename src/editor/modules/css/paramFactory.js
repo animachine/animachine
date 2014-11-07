@@ -24,11 +24,11 @@ module.exports = {
     create: function (opt) {
 
         var inputOpt = {
-                options: {
+                optionLine: {
                     input: {}
                 }
             },
-            input = inputOpt.options.input;
+            input = inputOpt.optionLine.input;
 
 
         switch (opt.name) {

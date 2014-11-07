@@ -15,17 +15,17 @@ function Timeline(opt) {
 
     this._headerH = 23;
 
-    this._onSelectSequence = this._onSelectSequence.bind(this);
-    this._onChangeSequence = this._onChangeSequence.bind(this);
-    this._onDeleteSequence = this._onDeleteSequence.bind(this);
-    this._onMoveSequence = this._onMoveSequence.bind(this);
+    this._onSelectTrack = this._onSelectTrack.bind(this);
+    this._onChangeTrack = this._onChangeTrack.bind(this);
+    this._onDeleteTrack = this._onDeleteTrack.bind(this);
+    this._onMoveTrack = this._onMoveTrack.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
     this._onChangeTape = this._onChangeTape.bind(this);
     this._onWindowResize = this._onWindowResize.bind(this);
-    this._onSelectNewSequ = this._onSelectNewSequ.bind(this);
+    this._onSelectNewTrack = this._onSelectNewTrack.bind(this);
     this._onTogglePlayPause = this._onTogglePlayPause.bind(this);
     this._onTimebarSeek = this._onTimebarSeek.bind(this);
-    this._onChangeSequenceHeight = this._onChangeSequenceHeight.bind(this);
+    this._onChangeTrackHeight = this._onChangeTrackHeight.bind(this);
     this._onStartEditCurrTime = this._onStartEditCurrTime.bind(this);
     this._onFinishEditCurrTime = this._onFinishEditCurrTime.bind(this);
     this._onChangeInpCurrTime = this._onChangeInpCurrTime.bind(this);
@@ -44,8 +44,8 @@ function Timeline(opt) {
     this._refreshTimebarWidth();
     this._refreshDeCurrTime();
 
-    this._sequences = [];
-    this._mapSequenceDatas = new WeakMap();
+    this._tracks = [];
+    this._mapTrackDatas = new WeakMap();
 
     this._timebar.on('changeTime', this.emit.bind(this, 'changeTime'));
     this._timebar.on('changeTape', this.emit.bind(this, 'changeTape'));
@@ -86,9 +86,9 @@ Object.defineProperties(p, {
             return this._timebar.timescale;
         }
     },
-    'sequences': {
+    'tracks': {
         get: function () {
-            return this._sequences;
+            return this._tracks;
         }
     },
     'length': {
@@ -106,14 +106,14 @@ p.getSave = function () {
             timescale: this._timebar.timescale,
             length: this._timebar.length,
         },
-        sequences: []
+        tracks: []
     };
 
-    this._sequences.forEach(function (sequ) {
+    this._tracks.forEach(function (track) {
 
-        save.sequences.push({
-            type: sequ.type,
-            data: sequ.getSave()
+        save.tracks.push({
+            type: track.type,
+            data: track.getSave()
         });
     });
 
@@ -134,22 +134,22 @@ p.useSave = function (save) {
 
     save = _.extend({
         timebar: {},
-        sequences: []
+        tracks: []
     }, save);
 
     this._timebar.currTime = save.timebar.currTime;
     this._timebar.timescale = save.timebar.timescale;
     this._timebar.length = save.timebar.length;
 
-    save.sequences.forEach(function (sequData) {
+    save.tracks.forEach(function (trackData) {
 
-        var SequClass = am.sequenceTypes[sequData.type],
-            sequ = new SequClass(sequData.data);
+        var TrackClass = am.trackTypes[trackData.type],
+            track = new TrackClass(trackData.data);
 
-        this.addSequence(sequ);
+        this.addTrack(track);
     }, this);
 
-    _.invoke(this._sequences, 'renderTime', this.currTime);
+    _.invoke(this._tracks, 'renderTime', this.currTime);
 
     this._refreshMagnetPoints();
 
@@ -162,15 +162,15 @@ p.getScript = function (opt) {
 
     var script, playerScripts = [];
 
-    this._sequences.forEach(function (sequ) {
+    this._tracks.forEach(function (track) {
 
-        playerScripts.push(sequ.getScript());
+        playerScripts.push(track.getScript());
     });
 
     script = Mustache.render(mstSaveScript, {
         name: 'amsave',
         saveJson: opt.includeSave && this.getSave(),
-        sequPlayerGens: playerScripts.join(',\n'),
+        trackPlayerGens: playerScripts.join(',\n'),
         autoPlay: opt.autoPlay
     });
 
@@ -222,41 +222,41 @@ p.getScript = function (opt) {
 
 p.clear = function () {
     
-    while(this._sequences.length) {
+    while(this._tracks.length) {
 
-        this.removeSequence(this._sequences[0]);
+        this.removeTrack(this._tracks[0]);
     }
 };
 
-p.addSequence = function (sequ, skipHistory) {
+p.addTrack = function (track, skipHistory) {
 
     if (!skipHistory) {
         am.history.save(
-            [this.removeSequence, this, sequ, true],
-            [this.addSequence, this, sequ, true],
+            [this.removeTrack, this, track, true],
+            [this.addTrack, this, track, true],
             'add track');
     }
     
-    this._sequences.push(sequ);
+    this._tracks.push(track);
 
-    this._mapSequenceDatas.set(sequ, {
-        deContOpt: createCont(sequ.deOptions, this._deOptionsCont),
-        deContKf: createCont(sequ.deKeys, this._deKeylineCont),
+    this._mapTrackDatas.set(track, {
+        deContOpt: createCont(track.deOptionLine, this._deOptionLineCont),
+        deContKf: createCont(track.deKeyLine, this._deKeyLineCont),
     });
 
-    this._onChangeSequenceHeight(sequ);
+    this._onChangeTrackHeight(track);
 
-    sequ.on('select', this._onSelectSequence);
-    sequ.on('change', this._onChangeSequence);
-    sequ.on('delete', this._onDeleteSequence);
-    sequ.on('move', this._onMoveSequence);
-    sequ.on('changeHeight', this._onChangeSequenceHeight);
+    track.on('select', this._onSelectTrack);
+    track.on('change', this._onChangeTrack);
+    track.on('delete', this._onDeleteTrack);
+    track.on('move', this._onMoveTrack);
+    track.on('changeHeight', this._onChangeTrackHeight);
 
     function createCont(content, parent) {
 
         var de = document.createElement('div');
         de.style.width = '100%';
-        de.style.height = sequ.height + 'px';
+        de.style.height = track.height + 'px';
         de.style.overflow = 'hidden';
         de.style.transform = 'height 0.12 easeOut';
         de.appendChild(content);
@@ -266,46 +266,46 @@ p.addSequence = function (sequ, skipHistory) {
     }
 };
 
-p.removeSequence = function (sequ, skipHistory) {
+p.removeTrack = function (track, skipHistory) {
 
     if (!skipHistory) {
         am.history.save(
-            [this.addSequence, this, sequ, true],
-            [this.removeSequence, this, sequ, true],
+            [this.addTrack, this, track, true],
+            [this.removeTrack, this, track, true],
             'remove track');
     }
 
-    var idx = this._sequences.indexOf(sequ);
+    var idx = this._tracks.indexOf(track);
 
     if (idx === -1) {
         return;
     }
 
-    this._sequences.splice(idx, 1);
+    this._tracks.splice(idx, 1);
 
-    var sequData = this._mapSequenceDatas.get(sequ);
-    $(sequData.deContOpt).remove();
-    $(sequData.deContKf).remove();
-    this._mapSequenceDatas.delete(sequ);
+    var trackData = this._mapTrackDatas.get(track);
+    $(trackData.deContOpt).remove();
+    $(trackData.deContKf).remove();
+    this._mapTrackDatas.delete(track);
 
-    sequ.removeListener('select', this._onSelectSequence);
-    sequ.removeListener('change', this._onChangeSequence);
-    sequ.removeListener('delete', this._onDeleteSequence);
-    sequ.removeListener('move', this._onMoveSequence);
-    sequ.removeListener('changeHeight', this._onChangeSequenceHeight);
+    track.removeListener('select', this._onSelectTrack);
+    track.removeListener('change', this._onChangeTrack);
+    track.removeListener('delete', this._onDeleteTrack);
+    track.removeListener('move', this._onMoveTrack);
+    track.removeListener('changeHeight', this._onChangeTrackHeight);
 
-    sequ.dispose();
+    track.dispose();
 };
 
-p.moveSequence = function (sequ, way) {
+p.moveTrack = function (track, way) {
 
-    var idx = this._sequences.indexOf(sequ);
+    var idx = this._tracks.indexOf(track);
 
-    this._sequences.splice(idx, 1);
-    idx = Math.min(this._sequences.length, Math.max(0, idx + way));
-    this._sequences.splice(idx, 0, sequ);
+    this._tracks.splice(idx, 1);
+    idx = Math.min(this._tracks.length, Math.max(0, idx + way));
+    this._tracks.splice(idx, 0, track);
 
-    this._refreshSequenceOrdering();
+    this._refreshTrackOrdering();
 };
 
 p.play = function () {
@@ -315,7 +315,7 @@ p.play = function () {
 
     this._btnTogglePlay.setToggle(true);
 
-    _.invoke(this._sequences, 'play', this.currTime);
+    _.invoke(this._tracks, 'play', this.currTime);
 
     this._playStartTimeStamp = performance.now();
     this._playStartCurrTime = this.currTime;
@@ -329,7 +329,7 @@ p.pause = function () {
 
     this._btnTogglePlay.setToggle(false);
 
-    _.invoke(this._sequences, 'pause');
+    _.invoke(this._tracks, 'pause');
 
     window.cancelAnimationFrame(this._animPlayRafid);
 };
@@ -359,32 +359,32 @@ p._onTimebarSeek = function () {
     this.pause();
 };
 
-p._onSelectSequence = function(sequ) {
+p._onSelectTrack = function(track) {
 
-    if (this._currSequence === sequ) 
+    if (this._currTrack === track) 
         return;
 
-    if (this._currSequence) {
+    if (this._currTrack) {
         
-        this._currSequence.deselect(); 
+        this._currTrack.deselect(); 
     }
 
-    this._currSequence = sequ;
+    this._currTrack = track;
 };
 
-p._onChangeSequence = function() {
+p._onChangeTrack = function() {
 
     this._refreshMagnetPoints();
 };
 
-p._onDeleteSequence = function (sequ) {
+p._onDeleteTrack = function (track) {
 
-    this.removeSequence(sequ);
+    this.removeTrack(track);
 };
 
-p._onMoveSequence = function (sequ, way) {
+p._onMoveTrack = function (track, way) {
 
-    this.moveSequence(sequ, way);
+    this.moveTrack(track, way);
 };
 
 p._onChangeTime = function () {
@@ -398,19 +398,19 @@ p._onChangeTape = function () {
 
     var left = (this._timebar.start * this.timescale);
 
-    this._deKeylineCont.style.left = left + 'px';
-    this._deKeylineCont.style.width = 'calc(100% + ' + (-left) + 'px)';
+    this._deKeyLineCont.style.left = left + 'px';
+    this._deKeyLineCont.style.width = 'calc(100% + ' + (-left) + 'px)';
 
     this._refreshDePointer();
 };
 
-p._onChangeSequenceHeight = function (sequ) {
+p._onChangeTrackHeight = function (track) {
 
-    var h = sequ.height,
-        sequData = this._mapSequenceDatas.get(sequ);
+    var h = track.height,
+        trackData = this._mapTrackDatas.get(track);
 
-    sequData.deContOpt.style.height = h + 'px';
-    sequData.deContKf.style.height = h + 'px';
+    trackData.deContOpt.style.height = h + 'px';
+    trackData.deContKf.style.height = h + 'px';
 };
 
 p._onWindowResize = function () {
@@ -429,23 +429,23 @@ p._onTogglePlayPause = function () {
     }
 };
 
-p._onSelectNewSequ = function (e) {
+p._onSelectNewTrack = function (e) {
 
-    var addSequ = function (type) {
+    var addTrack = function (type) {
 
-        var SequClass = am.sequenceTypes[type];
+        var TrackClassf = am.trackTypes[type];
 
-        this.addSequence(new SequClass());
+        this.addTrack(new TrackClass());
     }.bind(this);
 
     switch (e.detail.selection) {
 
         case 'css':
-            addSequ('css_sequ_type');
+            addTrack('css_track_type');
             break;
 
         case 'js':
-            addSequ('js_sequ_type');
+            addTrack('js_track_type');
             break;
 
         default:
@@ -482,14 +482,14 @@ p._onChangeInpCurrTime = function () {
 
 
 
-p._refreshSequenceOrdering = function () {
+p._refreshTrackOrdering = function () {
 
-    this._sequences.forEach(function (sequ) {
+    this._tracks.forEach(function (track) {
 
-        var sequData = this._mapSequenceDatas.get(sequ);
+        var trackData = this._mapTrackDatas.get(track);
 
-        this._deOptionsCont.appendChild(sequData.deContOpt);
-        this._deKeylineCont.appendChild(sequData.deContKf);
+        this._deOptionLineCont.appendChild(trackData.deContOpt);
+        this._deKeyLineCont.appendChild(trackData.deContKf);
     }, this);
 };
 
@@ -497,11 +497,11 @@ p._refreshMagnetPoints = function () {
 
     var magnetPoints = [];
 
-    this._sequences.forEach(function (sequ) {
+    this._tracks.forEach(function (track) {
 
-        if (typeof sequ.getMagnetPoints === 'function') {
+        if (typeof track.getMagnetPoints === 'function') {
 
-            magnetPoints = magnetPoints.concat(sequ.getMagnetPoints());
+            magnetPoints = magnetPoints.concat(track.getMagnetPoints());
         }
     });
 
@@ -585,48 +585,48 @@ p._createBase = function () {
     this._timebar.domElem.style.height = '23px';
     this._deRight.appendChild(this._timebar.domElem);
 
-    //keeps the scroll bar and the scroll container(_deKeylineCont2)
-    this._deKeylineCont3 = document.createElement('div');
-    this._deKeylineCont3.style.position = 'relative';
-    this._deKeylineCont3.style.display = 'flex';
-    this._deKeylineCont3.style.flex = '1';
-    this._deKeylineCont3.style.height = '100%';
-    this._deKeylineCont3.style.width = '100%';
-    this._deKeylineCont3.style.overflow = 'hidden';
-    this._deRight.appendChild(this._deKeylineCont3);
+    //keeps the scroll bar and the scroll container(_deKeyLineCont2)
+    this._deKeyLineCont3 = document.createElement('div');
+    this._deKeyLineCont3.style.position = 'relative';
+    this._deKeyLineCont3.style.display = 'flex';
+    this._deKeyLineCont3.style.flex = '1';
+    this._deKeyLineCont3.style.height = '100%';
+    this._deKeyLineCont3.style.width = '100%';
+    this._deKeyLineCont3.style.overflow = 'hidden';
+    this._deRight.appendChild(this._deKeyLineCont3);
 
-    this._deOptionsCont2 = document.createElement('div');
-    this._deOptionsCont2.style.position = 'relative';
-    this._deOptionsCont2.style.flex = '1';
-    this._deOptionsCont2.style.width = '100%';
-    this._deOptionsCont2.style.height = '100%';
-    this._deOptionsCont2.style.overflow = 'hidden';
-    this._deLeft.appendChild(this._deOptionsCont2);
+    this._deOptionLineCont2 = document.createElement('div');
+    this._deOptionLineCont2.style.position = 'relative';
+    this._deOptionLineCont2.style.flex = '1';
+    this._deOptionLineCont2.style.width = '100%';
+    this._deOptionLineCont2.style.height = '100%';
+    this._deOptionLineCont2.style.overflow = 'hidden';
+    this._deLeft.appendChild(this._deOptionLineCont2);
 
-    this._deKeylineCont2 = document.createElement('div');
-    this._deKeylineCont2.style.position = 'relative';
-    this._deKeylineCont2.style.flex = '1';
-    this._deKeylineCont3.appendChild(this._deKeylineCont2);
+    this._deKeyLineCont2 = document.createElement('div');
+    this._deKeyLineCont2.style.position = 'relative';
+    this._deKeyLineCont2.style.flex = '1';
+    this._deKeyLineCont3.appendChild(this._deKeyLineCont2);
 
     //this container is moving with the timeline
-    this._deKeylineCont = document.createElement('div');
-    this._deKeylineCont.style.position = 'relative';
-    this._deKeylineCont.style.width = '100%';
-    this._deKeylineCont2.appendChild(this._deKeylineCont);
+    this._deKeyLineCont = document.createElement('div');
+    this._deKeyLineCont.style.position = 'relative';
+    this._deKeyLineCont.style.width = '100%';
+    this._deKeyLineCont2.appendChild(this._deKeyLineCont);
 
-    this._deOptionsCont = document.createElement('div');
-    this._deOptionsCont.style.position = 'relative';
-    this._deOptionsCont2.appendChild(this._deOptionsCont);
+    this._deOptionLineCont = document.createElement('div');
+    this._deOptionLineCont.style.position = 'relative';
+    this._deOptionLineCont2.appendChild(this._deOptionLineCont);
 
     this._deRange = amgui.createRange({
         height: 'auto',
-        parent: this._deKeylineCont3,
+        parent: this._deKeyLineCont3,
         vertical: true
     });
 
     amgui.makeScrollable({
-        deCont: [this._deOptionsCont2, this._deKeylineCont3],
-        deTarget: [this._deOptionsCont, this._deKeylineCont],
+        deCont: [this._deOptionLineCont2, this._deKeyLineCont3],
+        deTarget: [this._deOptionLineCont, this._deKeyLineCont],
         deRange: this._deRange
     });
 
@@ -643,18 +643,18 @@ p._createSettingsHead = function () {
     this._deSettingsHead.style.height = this._headerH + 'px';
     this._deLeft.appendChild(this._deSettingsHead);
 
-    this._btnNewSequ = amgui.createIconBtn({
-        tooltip: 'add new sequence',
+    this._btnNewTrack = amgui.createIconBtn({
+        tooltip: 'add new track',
         icon: 'plus-squared',
         parent: this._deSettingsHead,
         display: 'inline-block',
     });
 
     amgui.bindDropdown({    
-        deTarget: this._btnNewSequ,
+        deTarget: this._btnNewTrack,
         deMenu: amgui.createDropdown({
-            options: ['css', 'js', 'attribute', 'media', 'timeline', 'three.js', 'pixi.js'],
-            onSelect: this._onSelectNewSequ
+            optionLine: ['css', 'js', 'attribute', 'media', 'timeline', 'three.js', 'pixi.js'],
+            onSelect: this._onSelectNewTrack
         })
     });
 

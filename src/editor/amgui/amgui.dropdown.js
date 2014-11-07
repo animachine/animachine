@@ -63,9 +63,9 @@ function createDropdown(opt) {
         }
     }
 
-    if (opt.options) {
+    if (opt.optionLine) {
 
-        opt.options.forEach(function (optItem) {
+        opt.optionLine.forEach(function (optItem) {
 
            de.addItem(optItem);
         });

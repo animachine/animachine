@@ -125,8 +125,8 @@ p._createBase = function () {
     addInput('font-weight', 'Font');
     addInput('font-style', 'Font');
     addInput('font-variant', 'Font');
-    addInput('text-transform', 'Font', {options: ['uppercase', 'lovercase', 'capitalise', 'none']});
-    addInput('text-decoration', 'Font', {options: ['underline', 'overline', 'line-trough', 'none']});
+    addInput('text-transform', 'Font', {optionLine: ['uppercase', 'lovercase', 'capitalise', 'none']});
+    addInput('text-decoration', 'Font', {optionLine: ['underline', 'overline', 'line-trough', 'none']});
     addInput('color', 'Font', {type: 'color'});
 
     function addDrawer(name) {

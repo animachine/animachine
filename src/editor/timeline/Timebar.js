@@ -363,6 +363,7 @@ p._createBase = function () {
     this.domElem = document.createElement('div');
     this.domElem.style.backgroundColor = amgui.color.bg0;
     this.domElem.style.position = 'relative';
+    amgui.createSeparator({parent: this.domElem});
 
     this._canvasTape = document.createElement('canvas');
     this._ctxTape = this._canvasTape.getContext('2d');

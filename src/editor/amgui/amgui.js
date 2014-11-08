@@ -39,7 +39,7 @@ _.extend(amgui,
             bg1: '#222',
             bg2: '#444',
             bg3: '#666',
-            text: '#efe',
+            text: '#eee',
             textInactive: 'rgba(255,255,255,.23)',
             overlay: 'rgba(0,0,0,.785)',
             bgHover: 'rgba(255,255,255,0.12)',
@@ -71,6 +71,15 @@ _.extend(amgui,
             }
 
             return de;
+        },
+
+        createSeparator: function (opt) {
+
+            var de = amgui.createDiv(opt);
+            de.style.width = '100%';
+            de.style.bottom = '0px';
+            de.style.position = 'absolute';
+            de.style.borderBottom = 'solid 1px #121212';
         },
     }
 );

@@ -11,13 +11,15 @@ function OptionLine(opt) {
 
     this.inputs = {};
     this.buttons = {};
+    this._indent = 0;
+    this._lineH = amgui.LINE_HEIGHT;
 
     this._createDomElem();
     this._createHighlight();
 
     if (opt.indent) {
 
-        this._deIndent.style.width = opt.indent * 6 + 'px';
+        this.indent = opt.indent;
     }
 
     if (opt.contextMenuOptions) {
@@ -33,7 +35,7 @@ function OptionLine(opt) {
 
     if (opt.tgglChildren) {
 
-        this.tgglChildren = amgui.createToggleIconBtn({
+        this.buttons.tgglChildren = amgui.createToggleIconBtn({
             iconOn: 'angle-down',
             iconOff: 'angle-right',
             onClick: opt.tgglChildren.onClick,
@@ -54,7 +56,7 @@ function OptionLine(opt) {
 
             var deNameIcon = amgui.createIcon({
                 icon: 'cog',
-                parent: de
+                parent: de,
             });
             deNameIcon.style.display = 'none';
             this._deName.addEventListener('mouseenter', function () {deNameIcon.style.display = 'inline-block';});
@@ -73,14 +75,9 @@ function OptionLine(opt) {
         display: 'inline-block'
     });
 
-    if (opt.input) {
-
-        this.addInput(opt.input);
-    }
-
     if (opt.inputs) {
 
-        this.inputs.map(this.addInput, this);
+        opt.inputs.map(this.addInput, this);
     }
 
     if (opt.btnDiverge) {
@@ -90,7 +87,7 @@ function OptionLine(opt) {
                 iconOn: 'flow-split',
                 iconOff: 'flow-merge',
                 onClick: opt.btnDiverge.onClick,
-                parent: this._deHeadCont,
+                parent: this._btnCont,
             }),
             name: 'diverge',
         });
@@ -103,7 +100,7 @@ function OptionLine(opt) {
                 onClick: opt.btnKey.onClick,
                 onClickPrev: opt.btnKey.onClickPrev,
                 onClickNext: opt.btnKey.onClickNext,
-                parent: this._deHeadCont,
+                parent: this._btnCont,
             }),
             name: 'key',
         });
@@ -130,6 +127,19 @@ Object.defineProperties(p, {
             this._deHighlight.style.opacity = v ? 1 : 0;
         },
     },
+    indent: {
+        set: function (v) {
+
+            v = parseInt(v);
+            if (v === this._indent) return;
+
+            this._indent = v;
+            this._deIndent.style.width = this._indent * 6 + 'px';
+        },
+        get: function (v) {
+            return this._indent;
+        },
+    },
 });
 
 
@@ -142,8 +152,8 @@ p.addInput = function (opt) {
     }
     else if (opt.domElem) {}//...
 
-    this.input = new UnitInput({
-        parent: this._deHeadCont,
+    this.inputs[opt.name] = new UnitInput({
+        parent: this._inputCont,
         onChange: opt.onChange,
         flex: '1',
         units: opt.units
@@ -160,6 +170,11 @@ p.addButton = function (opt) {
     }
 };
 
+p.addSubline = function (de) {
+
+    this._deSubcont.appendChild(de);
+}
+
 
 
 
@@ -173,21 +188,26 @@ p._createDomElem = function() {
 
     this.domElem = document.createElement('div');
     this.domElem.style.width = '100%';
-    this.domElem.style.background = 'linear-gradient(to bottom, #184F12 18%,#1B4417 96%)';
+    this.domElem.style.borderBottom = 'solid 1px #121212';
+    this.domElem.style.boxSizing = 'border-box';
+    this.domElem.style.overflow = 'hidden';
 
     this._deHeadCont = document.createElement('div');
+    this._deHeadCont.style.position = 'relative';
+    this._deHeadCont.style.display = 'flex';
     this._deHeadCont.style.width = '100%';
     this._deHeadCont.style.height = this._lineH + 'px';
     this.domElem.appendChild(this._deHeadCont);
+    amgui.createSeparator({parent: this._deHeadCont});
 
     this._deIndent = document.createElement('div');
     this._deIndent.style.display = 'inline-block';
     this._deIndent.style.width = '0px';
     this._deHeadCont.appendChild(this._deIndent);
 
-    this.deSubcont = document.createElement('div');
-    this.deSubcont.style.width = '100%';
-    this.domElem.appendChild(this.deSubcont);
+    this._deSubcont = document.createElement('div');
+    this._deSubcont.style.width = '100%';
+    this.domElem.appendChild(this._deSubcont);
 };
 
 p._createHighlight = function () {
@@ -195,7 +215,7 @@ p._createHighlight = function () {
     this._deHighlight = document.createElement('div');
     this._deHighlight.style.display = 'inline-block';
     this._deHighlight.style.width = '2px';
-    this._deHighlight.style.height = this._baseH + 'px';
+    this._deHighlight.style.height = this._lineH + 'px';
     this._deHighlight.style.background = 'gold';
     this._deHighlight.style.opacity = 0;
     this._deHeadCont.appendChild(this._deHighlight);

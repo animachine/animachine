@@ -64,7 +64,7 @@ Object.defineProperties(p, {
             if (v === this._name) return;
 
             this._name = v;
-            this.optionLine.text = this._name;
+            this.optionLine.title = v;
         },
         get: function () {
             return this._name
@@ -182,10 +182,21 @@ p.getValue = function (time) {
 
     function createCalc(av, bv, p) {
 
-        if (typeof(av) === 'number' && typeof(bv) === 'number') {
+        if (!isNaN(av) && !isNaN(bv)) {
 
-            return av + (bv - av) * p;
+            return parseFloat(bv) + ((av - bv) * p);
         }
+
+        var aUnit = getUnit(av);
+        var bUnit = getUnit(bv);
+        
+        if (aUnit === bUnit) {
+
+            av = parseFloat(av);
+            bv = parseFloat(bv);
+            
+            return (bv + ((av - bv) * p)) + aUnit;
+        };
 
         var avs = _.compact(av.split(' ')),
             bvs = _.compact(bv.split(' ')),
@@ -215,11 +226,18 @@ p.getValue = function (time) {
 
             return 'calc(' + b + ' + (' + a + ' - ' + b + ')*' + p + ')';
         }
+
+        function getUnit(v) {
+
+            var m = /([a-z]+)$/.exec(v);
+
+            return m && m[1];
+        }
     }
 };
 
 p.addKey = function (opt, skipHistory) {
-    
+    console.log(this.name, JSON.stringify(opt));
     var key = this.getKey(opt.time);
 
     if (key) {
@@ -236,7 +254,7 @@ p.addKey = function (opt, skipHistory) {
     else {
 
         key = new Key(opt);
-        key.value = opt.value || this.getValue(opt.time);
+        key.value = 'value' in opt ? opt.value : this.getValue(opt.time);
 
         this.keyLine.addKey(key);
 
@@ -330,7 +348,7 @@ p.isValid = function () {
 
 p.attachInput = function (input) {
 
-    this.detachinput(input);
+    this.detachInput(input);
 
     input.on('change', this._onChangeInput);
   
@@ -393,11 +411,15 @@ p._applyEase = function (ease, value) {
 
 
 
-p._onChangeInput = function (e) {
+p._onChangeInput = function (value) {
 
+    if (String(value) === String(this.getValue())) {
+        return;
+    }
+ console.log('nm', value, this.getValue())
     this.addKey({
         time: am.timeline.currTime,
-        value: this.optionLine.input.value
+        value: value
     });
 
     this.emit('change');
@@ -474,7 +496,7 @@ p._createOptions = function (opt) {
             {text: 'move down', onSelect: this.emit.bind(this, 'move', this, 1)},
             {text: 'delete', onSelect: this.emit.bind(this, 'delete', this)}
         ],
-        text: {
+        title: {
             text: this.name
         },
         btnKey: {
@@ -482,16 +504,16 @@ p._createOptions = function (opt) {
             onClickPrev: this._onClickStepPrevKey,
             onClickNext: this._onClickStepNextKey,
         },
-        input: {
+        inputs: [{
             type: 'unit',
             onChange: this._onChangeInput,
             units: [],
-            name: input
-        },
+            name: 'input'
+        }],
         indent: 0
     }, opt));
 
-    this.attachInput(optinons.inputs.input);
+    this.attachInput(this.optionLine.inputs.input);
 };
 
 p._createKeyline = function () {

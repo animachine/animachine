@@ -50,7 +50,6 @@ Object.defineProperties(p, {
 
 
 p.addKey = function (key) {
-
     
     this._keys.push(key);
     key.keyLine = this;
@@ -61,6 +60,7 @@ p.addKey = function (key) {
     key.on('needsRemove', this._onKeyNeedsRemove);
     
     this._renderEase();
+    this.emit('change');
 };
 
 p.removeKey = function (key) {
@@ -84,6 +84,7 @@ p.removeKey = function (key) {
     key.dispose();
 
     this._renderEase();
+    this.emit('change');
 
     return true;
 };
@@ -167,43 +168,49 @@ p._renderEase = function () {
             return;
         }
 
-        var ease = key.ease;
-
-        if (amgui.EASE2BEZIER.hasOwnProperty(ease)) {
-            ease = amgui.EASE2BEZIER[ease];
-        }
-
-        var rx = /cubic-bezier\(\s*([\d\.]+)\s*,\s*([\d\.-]+)\s*,\s*([\d\.]+)\s*,\s*([\d\.-]+)\s*\)/,
-            m = rx.exec(ease),
-            x = key.domElem.offsetLeft,
+        var x = key.domElem.offsetLeft,
             w = this._keys[idx+1].domElem.offsetLeft - x,
-            h = this._height,
-            path = document.createElementNS('http://www.w3.org/2000/svg', 'path'),
-            d = '';
+            path = this._renderEasePath(key.ease, x, w);
 
-        if (m) {
-            d += 'M' + x + ',' + h + ' ';
-            d += 'C' + (x + w*m[1]) + ',' + (h - h*m[2]) + ' ';
-            d += (x + w*m[3]) + ',' + (h - h*m[4]) + ' ';
-            d += (x + w) + ',' + 0;
-        }
-        else {
-            return;
-            //TODO steps()
-            // d += 'M' + x + ',' + h + ' ';
-            // d += 'L' + (x + w) + ',0';
-        }
-
-        path.setAttribute('d', d);
         this._svgEase.appendChild(path);
     }, this);
 };
+
+p._renderEasePath = function (ease, x, w, color) {
+
+    if (amgui.EASE2BEZIER.hasOwnProperty(ease)) {
+        ease = amgui.EASE2BEZIER[ease];
+    }
+
+    var rx = /cubic-bezier\(\s*([\d\.]+)\s*,\s*([\d\.-]+)\s*,\s*([\d\.]+)\s*,\s*([\d\.-]+)\s*\)/,
+        m = rx.exec(ease),
+        h = this._height,
+        path = document.createElementNS('http://www.w3.org/2000/svg', 'path'),
+        d = '';
+
+    if (m) {
+        d += 'M' + x + ',' + h + ' ';
+        d += 'C' + (x + w*m[1]) + ',' + (h - h*m[2]) + ' ';
+        d += (x + w*m[3]) + ',' + (h - h*m[4]) + ' ';
+        d += (x + w) + ',' + 0;
+    }
+    else {
+        return;
+        //TODO steps()
+        // d += 'M' + x + ',' + h + ' ';
+        // d += 'L' + (x + w) + ',0';
+    }
+    path.style.stroke = color;
+    path.setAttribute('d', d);
+
+    return path;
+}
 
 p._sortKeys = function () {
 
     this._keys.sort(function (a, b) {
         
-        return a.offsetLeft - b.offsetLeft;
+        return a.time - b.time;
     });
 };
 
@@ -245,11 +252,16 @@ p._createDomElem = function createKeyline(opt) {
     this.domElem = document.createElement('div');
     this.domElem.style.width = '100%';
     this.domElem.style.position = 'relative';
+    this.domElem.setAttribute('debug-keyline', 1);
+    this.domElem.style.overflow = 'hidden';
 
     this._deLine = document.createElement('div');
+    this._deLine.style.position = 'relative';
     this._deLine.style.width = '100%';
-    this._deLine.style.height = (this._height || 21) + 'px';
-    this._deLine.style.background = this._background || 'grey';
+    this._deLine.style.height = this._height + 'px';
+    // this._deLine.style.background = this._background || 'grey';
+    this.domElem.appendChild(this._deLine);
+    amgui.createSeparator({parent: this._deLine});
 
     this._svgEase = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     this._svgEase.style.width = '100%';

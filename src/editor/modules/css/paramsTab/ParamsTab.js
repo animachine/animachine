@@ -75,7 +75,7 @@ p._refresh = function () {
 
     this._inputs.forEach(function (input) {
 
-        var param = this._currTrack._getParameter(input.name);
+        var param = this._currTrack._getParam(input.name);
 
         if (param) {
             input.setParam(param);

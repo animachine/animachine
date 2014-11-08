@@ -29,6 +29,7 @@ function CssTrack(opt) {
     this._onClickTgglKey = this._onClickTgglKey.bind(this);
     this._onClickTgglHide = this._onClickTgglHide.bind(this);
     this._onClickName = this._onClickName.bind(this);
+    this._onChangeHeight = this._onChangeHeight.bind(this);
     this._onChangeHandler = this._onChangeHandler.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
     this._onChangeParameter = this._onChangeParameter.bind(this);
@@ -40,13 +41,15 @@ function CssTrack(opt) {
     this._onDeselectTrack = this._onDeselectTrack.bind(this);
     this._animPlay = this._animPlay.bind(this);
 
-    this._paramGroup = new CssParamGroup();
+    this._paramGroup = new CssParamGroup({});
+
     this.deOptionLine = this._paramGroup.optionLine.domElem;
     this.deKeyLine = this._paramGroup.keyLine.domElem;
 
     this.deOptionLine.addEventListener('click', this._onSelectClick);
     this.deKeyLine.addEventListener('click', this._onSelectClick);
 
+    this._paramGroup.on('changeHeight', this._onChangeHeight);
     am.timeline.on('changeTime', this._onChangeTime);
     am.on('selectTrack', this._onSelectTrack);
     am.on('deselectTrack', this._onDeselectTrack);
@@ -165,7 +168,7 @@ p.addParam = function (opt, skipHistory) {
 
     opt = opt || {};
 
-    var param = this._getParameter(opt.name);
+    var param = this._getParam(opt.name);
     
 
     if (param) {
@@ -187,9 +190,8 @@ p.addParam = function (opt, skipHistory) {
         param.on('change', this._onChangeParameter);
         param.on('delete', this._onDeleteParameter);
 
-        this._dirKeyline.addKeyline(param.keyLine);
+        this._paramGroup.addParam(param);
      
-        this.emit('changeHeight', this);
         this.emit('change');
     
         return param;
@@ -214,7 +216,7 @@ p.removeParam = function (param, skipHistory) {
     param.removeListener('change', this._onChangeParameter);
     param.removeListener('delete', this._onDeleteParameter);
 
-    this._dirKeyline.removeKeyline(param.keyLine);
+    this._paramGroup.removeParam(param);
 
     $(param.deOptionLine).remove();
     $(param.deKeyline).remove();
@@ -280,11 +282,14 @@ p.renderTime = function (time) {
         params[param.name] = param.getValue(time);
     });
 
-    Velocity({
-        elements: selection,
-        properties: params,
-        optionLine: {duration: 0, queue: false}
-    });
+    if (selection.length && this._endParams.length) {
+
+        Velocity({
+            elements: selection,
+            properties: params,
+            options: {duration: 0, queue: false}
+        });
+    }
 };
 
 p.play = function () {
@@ -303,7 +308,7 @@ p.pause = function () {
 
 p.getMagnetPoints = function () {
 
-    return this._dirKeyline.getKeyTimes();
+    return this._paramGroup.keyLine.getKeyTimes();
 };
 
 p.focusHandler = function (de) {
@@ -456,13 +461,13 @@ p._onChangeHandler = function(params, type) {
         Object.keys(params).forEach(function (name) {
 
             switch (name) {
-                case 'tx': add('translateX', params[name]); break;
-                case 'ty': add('translateY', params[name]); break;
+                case 'tx': add('translateX', params[name] + 'px'); break;
+                case 'ty': add('translateY', params[name] + 'px'); break;
                 case 'sx': add('scaleX', params[name]); break;
                 case 'sy': add('scaleY', params[name]); break;
-                case 'rz': add('rotateZ', params[name]); break;
-                case 'ox': add('transformOriginX', params[name]); break;
-                case 'oy': add('transformOriginY', params[name]); break;
+                case 'rz': add('rotateZ', params[name] + 'rad'); break;
+                case 'ox': add('transformOriginX', params[name] + '%'); break;
+                case 'oy': add('transformOriginY', params[name] + '%'); break;
             }
         });
     }
@@ -479,14 +484,12 @@ p._onChangeTime = function (time) {
 
     this.renderTime(time);
     this.focusHandler();
-    this._refreshTgglKey();
 };
 
 p._onChangeParameter = function () {
 
     this.renderTime();
     this.focusHandler();
-    this._refreshTgglKey();
 
     this.emit('change');
 };
@@ -525,8 +528,6 @@ p._onClickTgglKey = function () {
             }
         }
     });
-
-    this._refreshTgglKey();
 
     am.history.endFlag(flag);
 };
@@ -571,6 +572,11 @@ p._onChangeSelectors = function (selectors) {
     this.focusHandler(this._currHandledDe || this._selectedElems[0]);
 };
 
+p._onChangeHeight = function (selectors) {
+
+    this.emit('changeHeight', this);
+};
+
 
 
 
@@ -589,7 +595,7 @@ p._isAllParamsHaveKey = function (time) {
     });
 };
 
-p._getParameter = function (name) {
+p._getParam = function (name) {
 
     return this._endParams.find(function(param) {
 

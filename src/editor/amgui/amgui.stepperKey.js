@@ -34,6 +34,7 @@ function createStepperKey(opt) {
     });
     de.style.position = 'relative';
     de.style.overflow = '';
+    
     de.addEventListener('mouseenter', onMOverKey);
     de.addEventListener('mouseleave', onMOutKey);
 

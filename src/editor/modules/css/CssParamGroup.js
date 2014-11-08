@@ -6,9 +6,12 @@ var KeyLineGroup = require('../../utils/KeyLineGroup');
 var CssParam = require('./CssParam');
 var amgui = require('../../amgui');
 
-function CssParamGroup () {
+function CssParamGroup (opt) {
 
-    CssParam.call(this);
+    this._onChangeSubparamHeight = this._onChangeSubparamHeight.bind(this);
+    this._onClickTgglChildren = this._onClickTgglChildren.bind(this);
+
+    CssParam.call(this, opt);
 
     this._params = [];
 }
@@ -25,7 +28,7 @@ Object.defineProperties(p, {
 
         get: function () {
 
-            var ret = this._baseH;
+            var ret = this._lineH;
 
             if (this._isShowingSubparams) {
 
@@ -36,19 +39,6 @@ Object.defineProperties(p, {
             }
 
             return ret;
-        }
-    },
-    name: {
-        set: function (v) {
-
-            if (v === this._name) return;
-
-            this._name = v;
-            this._deName.textContent = this._name;
-        },
-        get: function () {
-
-            return this._name;
         }
     }
 });
@@ -62,7 +52,12 @@ p.addParam = function (param) {
 
     this._params.push(param);
     this.optionLine.addSubline(param.optionLine.domElem);
-    this.keyLine.addKeyline(param.keyLine);
+    this.keyLine.addKeyLine(param.keyLine);
+    
+    param.optionLine.indent = this.optionLine.indent + 1;
+    param.on('changeHeight', this._onChangeSubparamHeight);
+
+    this.emit('changeHeight');
 };
 
 p.removeParam = function (param) {
@@ -73,8 +68,12 @@ p.removeParam = function (param) {
         return;
     }
 
+    param.removeListener('changeHeight', this._onChangeSubparamHeight);
+
     this._params.splice(idx, 1);
     this.keyLine.removeKeyline(param.keyLine);
+
+    this.emit('changeHeight');
 };
 
 p.toggleKey = function () {
@@ -98,13 +97,14 @@ p.toggleKey = function () {
     });
 };
 
-p.showSubarams = function () {
+p.showSubparams = function () {
 
     if (this._isShowingSubparams) return;
     this._isShowingSubparams = true;
 
-    this._tgglParams.setToggle(true);
+    this.optionLine.buttons.tgglChildren.setToggle(true);
     this.emit('changeHeight', this);
+    this._refreshHeights();
 };
 
 p.hideSubparams = function () {
@@ -112,8 +112,9 @@ p.hideSubparams = function () {
     if (!this._isShowingSubparams) return;
     this._isShowingSubparams = false;
 
-    this._tgglParams.setToggle(false);
+    this.optionLine.buttons.tgglChildren.setToggle(false);
     this.emit('changeHeight', this);
+    this._refreshHeights();
 };
 
 
@@ -136,7 +137,7 @@ p._onChangeTime = function () {
     this._refreshTgglKey();
 };
 
-p._onClickTgglSubparams = function () {
+p._onClickTgglChildren = function () {
 
     if (this._isShowingSubparams) {
         this.hideSubparams();
@@ -146,8 +147,23 @@ p._onClickTgglSubparams = function () {
     }
 };
 
+p._onChangeSubparamHeight = function () {
+
+    this.emit('changeHeight', this);
+    this._refreshHeights();
+};
 
 
+
+
+
+
+
+p._refreshHeights = function () {
+
+    this.keyLine.domElem.height = this.height + 'px';
+    this.optionLine.domElem.height = this.height + 'px';
+}
 
 
 
@@ -158,6 +174,9 @@ p._onClickTgglSubparams = function () {
 p._createOptions = function (opt) {
 
     this.optionLine = new OptionLine(_.merge({
+        tgglChildren: {
+            onClick: this._onClickTgglChildren,
+        },
         contextMenuOptions: [
             {text: 'move up', onSelect: this.emit.bind(this, 'move', this, -1)},
             {text: 'move down', onSelect: this.emit.bind(this, 'move', this, 1)},

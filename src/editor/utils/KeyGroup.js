@@ -7,6 +7,8 @@ var amgui = require('../amgui');
 
 function KeyGroup(opt) {
 
+    opt = opt || {};
+
     opt.color = 'tomato';
 
     Key.call(this, opt);
@@ -19,7 +21,7 @@ function KeyGroup(opt) {
 
 inherits(KeyGroup, Key);
 var p = KeyGroup.prototype;
-module.exports = KeyGroups;
+module.exports = KeyGroup;
 
 
 
@@ -29,15 +31,6 @@ module.exports = KeyGroups;
 
 
 
-p.getSave = function () {
-
-    throw 'KeyGroupss are not saveable!';
-};
-
-p.useSave = function (save) {
-
-    throw 'KeyGroups are not loadable!';
-};
 
 p.select = function () {
 
@@ -65,11 +58,6 @@ p.setSubkeys = function (newSubkeys) {
     this._subkeys.push.apply(this._subkeys, newSubkeys);
 
     this._refreshSelected();
-};
-
-p.addSubkey = function () {
-
-    
 };
 
 p.removeSubkey = function (key) {

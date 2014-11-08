@@ -2,6 +2,7 @@
 
 var inherits = require('inherits');
 var KeyLine = require('./KeyLine');
+var KeyGroup = require('./KeyGroup');
 var amgui = require('../amgui');
 
 function KeyLineGroup (opt) {
@@ -45,7 +46,7 @@ Object.defineProperties(p, {
 
 
 
-p.addKeyline = function (keyLine) {
+p.addKeyLine = function (keyLine) {
 
     if (this._keyLines.indexOf(keyLine) !== -1) {
         return;
@@ -109,13 +110,13 @@ p._delayedRefreshHeadKeyline = function () {
 
         keyLine.forEachKeys(function (key) {
 
-            var tidx = time.indexOf(key.time);
+            var tidx = times.indexOf(key.time);
 
             if (tidx === -1) {
 
                 times.push(key.time);
                 keysOnTimes.push([]);
-                tidx = time.length - 1;
+                tidx = times.length - 1;
             }
 
             keysOnTimes[tidx].push(key);
@@ -123,36 +124,26 @@ p._delayedRefreshHeadKeyline = function () {
     });
 
 
-    while (times.length < this.keys.length) {
+    while (times.length < this._keys.length) {
 
         this.removeKey(this._keys.pop());
     }
 
-    while (times.length > this.keys.length) {
+    while (times.length > this._keys.length) {
 
-        key = new Key({
-            deKeyline: this._deHeadKeyline,
-            ease: 'none',
-            color: '#063501'
-        });
-
-        key.directedKeys = [];
-
-        this.addKey(key);
+        this.addKey(new KeyGroup({}));
     }
 
 
     times.forEach(function (time, idx) {
 
-        var key = this._keys.idx;
+        var key = this._keys[idx];
 
         key.time = time;
 
         key.setSubkeys(keysOnTimes[idx]);
 
     }, this);
-
-    _.invoke(_.difference(oldKeys, this._headKeys), 'dispose');
 };
 
 

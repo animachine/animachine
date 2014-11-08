@@ -537,7 +537,7 @@ p._refreshDeCurrTime = function () {
         sec = ('00' + sec).substr(-2);
     }
     if (sec) {
-        str += sec + ':';
+        str += sec + '.';
         ms = ('000' + ms).substr(-3);
     }
     str += ms;
@@ -638,10 +638,12 @@ p._createSettingsHead = function () {
 
     this._deSettingsHead = document.createElement('div');
     this._deSettingsHead.style.backgroundColor = 'darkgreey';
+    this._deSettingsHead.style.position = 'relative';
     this._deSettingsHead.style.display = 'flex';
     this._deSettingsHead.style.width = '100%';
     this._deSettingsHead.style.height = this._headerH + 'px';
     this._deLeft.appendChild(this._deSettingsHead);
+    amgui.createSeparator({parent: this._deSettingsHead});
 
     this._btnNewTrack = amgui.createIconBtn({
         tooltip: 'add new track',

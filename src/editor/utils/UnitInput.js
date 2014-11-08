@@ -11,7 +11,7 @@ function UnitInput(opt) {
     this._units = [];
     this._unit = '';
 
-    this._rxAmount = /^\s*([\+-]?\d*\.\d+)/;
+    this._rxAmount = /^\s*([\+-]?\d*\.?\d*)/;
     this._rxUnit;
 
     this._onChangeInput = this._onChangeInput.bind(this);
@@ -43,7 +43,7 @@ Object.defineProperties(p, {
             this._amount = v;
             this._input.value = v;
 
-            this.emit('change');
+            this.emit('change', this.value);
         },
         get: function () {
             
@@ -62,11 +62,13 @@ Object.defineProperties(p, {
 
             return  this._unit;
 
-            this.emit('change');
+            this.emit('change', this.value);
         }
     },
     value: {
         set: function (v) {
+
+            v += '';
 
             var mAmount = this._rxAmount.exec(v),
                 mUnit = this._rxUnit.exec(v);
@@ -120,8 +122,11 @@ p._createBase = function () {
         onChange: this._onChangeInput,
         flex: 1, 
     });
+    this._input.style.textAlign =  'right';
+    this._input.style.paddingRight =  '2px';
 
     this._deUnit = amgui.createLabel({
         parent: this.domElem,
+        text: ''
     });
 };

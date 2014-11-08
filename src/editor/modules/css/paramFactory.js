@@ -24,23 +24,29 @@ module.exports = {
     create: function (opt) {
 
         var inputOpt = {
+                name: opt.name,
                 optionLine: {
-                    input: {}
+                    inputs: [{}]
                 }
             },
-            input = inputOpt.optionLine.input;
+            input = inputOpt.optionLine.inputs[0];
 
 
         switch (opt.name) {
 
-            // case 'transformX':
-            // case 'transformY': 
-            //     input.units = ['px']; 
-            //     break;
+            case 'translateX':
+            case 'translateY': 
+                input.units = ['px']; 
+                break;
 
-            // case 'rotateZ': 
-            //     input.units = ['rad']; 
-            //     break;
+            case 'rotateZ': 
+                input.units = ['rad']; 
+                break;
+
+            case 'transformOriginX':
+            case 'transformOriginY': 
+                input.units = ['px']; 
+                break;
 
             case 'borderColor':
             case 'backgroundColor': 

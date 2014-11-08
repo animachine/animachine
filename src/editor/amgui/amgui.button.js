@@ -36,12 +36,12 @@ function createLabel(opt) {
 
     de.style.height = opt.height || amgui.LINE_HEIGHT + 'px';
     de.style.fontSize = opt.fontSize || amgui.FONT_SIZE;
-    if ('display' in opt) de.style.display = opt.display;
+    de.style.display = opt.display || 'inline-block';
     if ('flex' in opt) de.style.flex = opt.flex;
     if ('position' in opt) de.style.position = opt.position;
 
     de.setText = function (text) {
-        de.innerHTML = text || 'label';
+        de.innerHTML = text || '';
     }
 
     opt.text = opt.text || opt.caption;//TODO: change caption sets to text
@@ -97,15 +97,13 @@ function createIconBtn(opt) {
     var isFixedHighlight = false;
 
     var de = amgui.createIcon({
-        size: opt.height, 
+        size: opt.size, 
         icon: opt.icon,
         parent: opt.parent,
         tooltip: opt.tooltip,
         display: opt.display,
-    });
-    de.style.width = (opt.width || 21) + 'px';
+    })
     de.style.cursor = 'pointer';
-    de.style.color = 'white';
     de.style.overflow = 'hidden';
 
     de.addEventListener('mouseenter', onMOver);
@@ -206,7 +204,7 @@ function createIcon(opt) {
     opt.size = opt.size || amgui.LINE_HEIGHT;
     
     var de = amgui.createDiv();
-    de.style.color = '#fff';
+    de.style.color = amgui.color.text;
     de.style.width = opt.size + 'px';
     de.style.height = opt.size + 'px';
     de.style.lineHeight = opt.size + 'px';

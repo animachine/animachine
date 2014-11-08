@@ -72,7 +72,7 @@ function Key(opt) {
         onMove: function (md, mx) {
 
             var diff = mx - md.mx,
-                diffTime = (diff / timescale) - md.dragged;
+                diffTime = (diff / am.timeline.timescale) - md.dragged;
                 
             md.dragged += diffTime;
 
@@ -225,7 +225,7 @@ p._onDeselectAllKeys = function () {
 
 p._onTranslateSelectedKeys = function (offset) {
 
-    if (this.selected) {
+    if (this._isSelected) {
 
         this.time += offset;
     }
@@ -262,6 +262,8 @@ p._createDomElem = function (opt) {
     this.domElem = document.createElement('div');
     this.domElem.style.position = 'absolute';
     this.domElem.style.transform = 'translateX(-4px)';
+    this.domElem.setAttribute('debug-key', '');
+
 
     var deKey = document.createElement('div');
     deKey.style.width = '0';

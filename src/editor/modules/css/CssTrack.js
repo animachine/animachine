@@ -348,8 +348,8 @@ p.focusHandler = function (de) {
             case 'scaleX': p.sx = parseFloat(param.getValue()); break;
             case 'scaleY': p.sy = parseFloat(param.getValue()); break;
             case 'rotateZ': p.rz = parseFloat(param.getValue()) / 180 * Math.PI; break;
-            case 'transformOriginX': p.ox = parseFloat(param.getValue()); break;
-            case 'transformOriginY': p.oy = parseFloat(param.getValue()); break;
+            case 'transformOriginX': p.ox = parseFloat(param.getValue()) / 100; break;
+            case 'transformOriginY': p.oy = parseFloat(param.getValue()) / 100; break;
         }
     });
     
@@ -466,8 +466,8 @@ p._onChangeHandler = function(params, type) {
                 case 'sx': add('scaleX', params[name]); break;
                 case 'sy': add('scaleY', params[name]); break;
                 case 'rz': add('rotateZ', (params[name] / Math.PI * 180) + 'deg'); break;
-                case 'ox': add('transformOriginX', params[name] + '%'); break;
-                case 'oy': add('transformOriginY', params[name] + '%'); break;
+                case 'ox': add('transformOriginX', (params[name] * 100) + '%'); break;
+                case 'oy': add('transformOriginY', (params[name] * 100) + '%'); break;
             }
         });
     }

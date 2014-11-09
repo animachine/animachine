@@ -54,7 +54,8 @@ module.exports = {
 
             case 'transformOriginX':
             case 'transformOriginY': 
-                input.units = ['px']; 
+                input.units = ['%']; 
+                input.precision = 2;
                 break;
 
             case 'borderColor':

@@ -237,7 +237,7 @@ p.getValue = function (time) {
 };
 
 p.addKey = function (opt, skipHistory) {
-    console.log(this.name, JSON.stringify(opt));
+    
     var key = this.getKey(opt.time);
 
     if (key) {

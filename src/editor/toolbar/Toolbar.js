@@ -8,13 +8,13 @@ function Toolbar() {
 
     EventEmitter.call(this);
 
-    this._height = 32;
+    this._height = 24;
     this._icons = [];
     this._separators = {};
 
     this.domElem = document.createElement('div');
     this.domElem.style.position = 'fixed';
-    this.domElem.style.backgroundColor = 'darkslategrey';
+    this.domElem.style.backgroundColor = amgui.color.bg0;
     this.domElem.style.pointerEvents = 'auto';
     this.domElem.style.height = this._height + 'px';
 
@@ -33,9 +33,7 @@ module.exports = Toolbar;
 p.addIcon = function (opt) {
 
     var deIcon = opt.deIcon || amgui.createIconBtn({
-        width: 32,
-        height: 32,
-        fontSize: '32px',
+        size: this._height,
         icon: opt.icon,
         onClick: opt.onClick
     });

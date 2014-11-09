@@ -251,9 +251,7 @@ function addToggleGui() {
     });
 
     var btnFull = amgui.createIconBtn({
-        width: 32,
-        height: 32,
-        fontSize: '32px',
+        size: 24,
         icon: 'resize-full',
         tooltip: 'show editor',
         onClick: function () {
@@ -451,7 +449,7 @@ function getBaseWorkspace() {
         direction: 'column',
         children: [{
                 type: 'panel',
-                size: 32,
+                size: 24,
                 scaleMode: 'fix',
                 noHead: true,
                 tabs: [{name: 'tools'}],

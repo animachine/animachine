@@ -96,13 +96,7 @@ function createIconBtn(opt) {
 
     var isFixedHighlight = false;
 
-    var de = amgui.createIcon({
-        size: opt.size, 
-        icon: opt.icon,
-        parent: opt.parent,
-        tooltip: opt.tooltip,
-        display: opt.display,
-    })
+    var de = amgui.createIcon(opt);
     de.style.cursor = 'pointer';
     de.style.overflow = 'hidden';
 
@@ -201,12 +195,12 @@ function createToggleIconBtn(opt) {
 function createIcon(opt) {
 
     opt = opt || {};
-    opt.size = opt.size || amgui.LINE_HEIGHT;
+    opt.size = opt.size || opt.height || amgui.LINE_HEIGHT;
     
     var de = amgui.createDiv();
     de.style.color = amgui.color.text;
-    de.style.width = opt.size + 'px';
-    de.style.height = opt.size + 'px';
+    de.style.width = (opt.width || opt.size) + 'px';
+    de.style.height = (opt.height || opt.size) + 'px';
     de.style.lineHeight = opt.size + 'px';
     de.style.textAlign = 'center';
     de.style.fontFamily = 'amgui';

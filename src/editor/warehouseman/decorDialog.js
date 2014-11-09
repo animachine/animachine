@@ -343,7 +343,7 @@ function decorDialog(whm) {
 
     function createStorageSelector() {
 
-        var btnSize = 52, buttons = [];
+        var btnSize = 33, buttons = [];
 
         deStorageSelector = document.createElement('div');
         deStorageSelector.style.display = 'inline-block';

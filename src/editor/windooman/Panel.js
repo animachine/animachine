@@ -162,10 +162,10 @@ p._createTabBase = function () {
 
     this._deTabHead = document.createElement('div');
     this._deTabHead.style.width = '100%';
-    this._deTabHead.style.height = '23px';
+    this._deTabHead.style.height = amgui.LINE_HEIGHT + 'px';
     this._deTabHead.style.display = 'flex';
     this._deTabHead.style.alignItems = 'stretch';
-    this._deTabHead.style.background = amgui.color.bg1;
+    this._deTabHead.style.background = amgui.color.bg0;
     this._deTabHead.style.pointerEvents = 'auto';
     this._deTabHead.setAttribute('data-debug', 'tabhead')
     this._deTabBase.appendChild(this._deTabHead);

@@ -152,12 +152,11 @@ p.addInput = function (opt) {
     }
     else if (opt.domElem) {}//...
 
-    this.inputs[opt.name] = new UnitInput({
+    this.inputs[opt.name] = new UnitInput(_.assign({
         parent: this._inputCont,
         onChange: opt.onChange,
         flex: '1',
-        units: opt.units
-    });
+    }, opt));
 };
 
 p.addButton = function (opt) {

@@ -40,7 +40,16 @@ module.exports = {
                 break;
 
             case 'rotateZ': 
-                input.units = ['rad']; 
+                input.units = ['deg', 'rad']; 
+                input.precision = 1;
+                input.conterters = {
+                    deg2rad: function (deg) {
+                        return deg / 180 * Math.PI;
+                    },
+                    rad2deg: function (rad) {
+                        return rad / Math.PI * 180;
+                    },
+                }
                 break;
 
             case 'transformOriginX':

@@ -20,7 +20,10 @@ function UnitInput(opt) {
 
     this._amount = opt.amount || 0;
     this._unit = this._units[0];
+    this._precison = opt.precision || 0;
     this.units = opt.units || [];
+
+    this.converters = opt.converters;
 
     if ('flex' in opt) this.domElem.style.flex = opt.flex;
     if ('parent' in opt) opt.parent.appendChild(this.domElem);

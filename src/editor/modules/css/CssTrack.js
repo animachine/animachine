@@ -347,7 +347,7 @@ p.focusHandler = function (de) {
             case 'translateY': p.ty = parseFloat(param.getValue()); break;
             case 'scaleX': p.sx = parseFloat(param.getValue()); break;
             case 'scaleY': p.sy = parseFloat(param.getValue()); break;
-            case 'rotateZ': p.rz = parseFloat(param.getValue()); break;
+            case 'rotateZ': p.rz = parseFloat(param.getValue()) / 180 * Math.PI; break;
             case 'transformOriginX': p.ox = parseFloat(param.getValue()); break;
             case 'transformOriginY': p.oy = parseFloat(param.getValue()); break;
         }
@@ -465,7 +465,7 @@ p._onChangeHandler = function(params, type) {
                 case 'ty': add('translateY', params[name] + 'px'); break;
                 case 'sx': add('scaleX', params[name]); break;
                 case 'sy': add('scaleY', params[name]); break;
-                case 'rz': add('rotateZ', params[name] + 'rad'); break;
+                case 'rz': add('rotateZ', (params[name] / Math.PI * 180) + 'deg'); break;
                 case 'ox': add('transformOriginX', params[name] + '%'); break;
                 case 'oy': add('transformOriginY', params[name] + '%'); break;
             }

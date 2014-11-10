@@ -185,12 +185,27 @@ p.addParam = function (opt, skipHistory) {
         }
 
         this._endParams.push(param);
-        this._paramGroup.addParam(param);
 
         param.on('change', this._onChangeParameter);
         param.on('delete', this._onDeleteParameter);
 
-        this._paramGroup.addParam(param);
+        var groupName = paramFactory.hasInitGroup(opt.name);
+
+        if (groupName) {
+
+            var group = this._paramGroup.getParam(groupName);
+
+            if (!group) {
+
+                group = paramFactory.createGroup({name: 'groupName'});
+                this._paramGroup.addParam(group);
+            }
+
+            group.addParam(param);
+        }
+        else {
+            this._paramGroup.addParam(param);
+        }
      
         this.emit('change');
     

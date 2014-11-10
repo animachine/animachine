@@ -80,6 +80,22 @@ module.exports = {
         }
 
         return new CssParam(inputOpt);
+    },
+
+    createGroup: function () {
+
+        return new CssParamGroup();
+    },
+
+    hasInitGroup = function (paramName) {
+
+        for (var groupName in groups) {
+
+            if (groups[groupName].indexOf(paramName)) {
+
+                return groupName;
+            }
+        }
     }
 };
 

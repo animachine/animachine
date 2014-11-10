@@ -76,6 +76,19 @@ p.removeParam = function (param) {
     this.emit('changeHeight');
 };
 
+p.groupParams = function (params, group) {//??
+
+    group = group || new CssParamGroup();
+
+    this.addParam(group);
+
+    params.forEach(function (param) {
+
+        this.removeParam(param);
+        group.addParam(param);
+    });
+};
+
 p.toggleKey = function () {
 
     var time = am.timeline.currTime,

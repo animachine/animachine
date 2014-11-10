@@ -58,3 +58,12 @@
 .icon-expand:before { content: '\e836'; } /* '' */
 .icon-collapse:before { content: '\e837'; } /* '' */
 .icon-pencil:before { content: '\e838'; } /* '' */
+.icon-cursor:before { content: '\e839'; } /* '' */
+.icon-resize-horizontal:before { content: '\e83a'; } /* '' */
+.icon-move:before { content: '\e83b'; } /* '' */
+.icon-resize-vertical:before { content: '\e83c'; } /* '' */
+.icon-flow-split:before { content: '\e83d'; } /* '' */
+.icon-flow-merge:before { content: '\e83e'; } /* '' */
+.icon-vector:before { content: '\e83f'; } /* '' */
+.icon-vector-pencil:before { content: '\e840'; } /* '' */
+.icon-target:before { content: '\e841'; } /* '' */

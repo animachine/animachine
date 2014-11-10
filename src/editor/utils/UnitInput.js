@@ -27,7 +27,7 @@ function UnitInput(opt) {
 
     if ('flex' in opt) this.domElem.style.flex = opt.flex;
     if ('parent' in opt) opt.parent.appendChild(this.domElem);
-    if ('onChange' in opt) this.on('change', opt.onChange);
+    if (opt.onChange) this.on('change', opt.onChange);
 }
 
 inherits(UnitInput, EventEmitter);

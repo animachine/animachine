@@ -18,6 +18,6 @@
     "lodash": "^2.4.1",
     "mustache": "^0.8.2",
     "codemirror": "^4.5.0",
-    "velocity": "^1.1.0"
+    "gsap": "^1.14.2"
   }
 }

@@ -1,6 +1,7 @@
 'use strict';
 
 var CssParam = require('./CssParam');
+var CssParamGroup = require('./CssParamGroup');
 
 var ALLOWED_PARAMS = ["opacity", "width", "height", "minWidth", "minHeight", "maxWidth", "maxHeight", 
  "paddingTop", "paddingRight", "paddingBottom", "paddingLeft", "top", "right", "bottom", "left",
@@ -97,18 +98,18 @@ module.exports = {
         return paramGropup;
     },
 
-    getGroupName = function (paramName) {
+    getGroupName: function (paramName) {
 
         for (var paramGroupName in groups) {
 
-            if (groups[paramGroupName].indexOf(paramName)) {
+            if (groups[paramGroupName].indexOf(paramName) !== -1) {
 
                 return paramGroupName;
             }
         }
     },
 
-    getGroupMembers = function (paramGroupName) {
+    getGroupMembers: function (paramGroupName) {
 
         return groups[paramGroupName];
     },
@@ -120,11 +121,11 @@ var groups = {
 
     padding: ['paddingTop',  'paddingRight',  'paddingBottom',  'paddingLeft'],
     margin: ['marginTop',  'marginRight',  'marginBottom',  'marginLeft'],
-    border: {
-        width: ['bordergTopWidth',  'borderightWidth',  'borderBottomWidth',  'borderLeftWidth'],
-        radius: ['borderTopLeftRadius', 'borderTopRightRadius', 'borderBottomLeftRadius', 'borderBottomRightRadius'],
-        color: ['borderColorRed','borderColorGreen','borderColorBlue','borderColorAlpha'],
-    },
+    // border: {
+    //     width: ['bordergTopWidth',  'borderightWidth',  'borderBottomWidth',  'borderLeftWidth'],
+    //     radius: ['borderTopLeftRadius', 'borderTopRightRadius', 'borderBottomLeftRadius', 'borderBottomRightRadius'],
+    //     color: ['borderColorRed','borderColorGreen','borderColorBlue','borderColorAlpha'],
+    // },
     backgroundPosition: ['backgroundPositionX', 'backgroundPositionY'],
     textShadow: ['textShadowX', 'textShadowY', 'textShadowBlur'],
     translate: ['x', 'y'],

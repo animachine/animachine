@@ -86,17 +86,12 @@ p.removeParam = function (param) {
     this.emit('changeHeight');
 };
 
-p.groupParams = function (params, group) {//??
+p.getParam = function (paramName) {
 
-    group = group || new CssParamGroup();
+    return this._params.find(function (param) {
 
-    this.addParam(group);
-
-    params.forEach(function (param) {
-
-        this.removeParam(param);
-        group.addParam(param);
-    });
+        return param.name === paramName
+    })
 };
 
 p.toggleKey = function (time) {

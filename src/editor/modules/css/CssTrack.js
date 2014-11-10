@@ -304,7 +304,7 @@ p.renderTime = function (time) {
 
     if (selection.length && this._endParams.length) {
 
-        TweenLite.set({selection, params});
+        TweenLite.set({selection: params});
     }
 };
 

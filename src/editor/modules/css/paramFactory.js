@@ -34,8 +34,8 @@ module.exports = {
 
         switch (opt.name) {
 
-            case 'translateX':
-            case 'translateY': 
+            case 'x':
+            case 'y': 
                 input.units = ['px']; 
                 break;
 
@@ -82,21 +82,36 @@ module.exports = {
         return new CssParam(inputOpt);
     },
 
-    createGroup: function () {
+    createGroup: function (opt) {
 
-        return new CssParamGroup();
+        opt = opt || {};
+
+        var paramGropup = new CssParamGroup({optionLine: {btnMerge: true}});
+
+        if (opt.name === 'translate') {
+
+            paramGropup.optionLine.addInput({name: 'x'});
+            paramGropup.optionLine.addInput({name: 'y'});
+        }
+
+        return paramGropup;
     },
 
-    hasInitGroup = function (paramName) {
+    getGroupName = function (paramName) {
 
-        for (var groupName in groups) {
+        for (var paramGroupName in groups) {
 
-            if (groups[groupName].indexOf(paramName)) {
+            if (groups[paramGroupName].indexOf(paramName)) {
 
-                return groupName;
+                return paramGroupName;
             }
         }
-    }
+    },
+
+    getGroupMembers = function (paramGroupName) {
+
+        return groups[paramGroupName];
+    },
 };
 
 
@@ -112,7 +127,7 @@ var groups = {
     },
     backgroundPosition: ['backgroundPositionX', 'backgroundPositionY'],
     textShadow: ['textShadowX', 'textShadowY', 'textShadowBlur'],
-    translate: ['translateX', 'translateY', 'translateZ'],
+    translate: ['x', 'y'],
     scale: ['scaleX', 'scaleY', 'scaleZ'],
     rotate: ['rotateX', 'rotateY', 'rotateZ'],
     skeew: ['skeewX', 'skeewY'],

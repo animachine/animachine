@@ -189,19 +189,24 @@ p.addParam = function (opt, skipHistory) {
         param.on('change', this._onChangeParameter);
         param.on('delete', this._onDeleteParameter);
 
-        var groupName = paramFactory.hasInitGroup(opt.name);
+        var paramGroupName = paramFactory.getGroupName(opt.name);
 
-        if (groupName) {
+        if (paramGroupName) {
 
-            var group = this._paramGroup.getParam(groupName);
+            var paramGroup = this._paramGroup.getParam(paramGroupName);
 
-            if (!group) {
+            if (!paramGroup) {
 
-                group = paramFactory.createGroup({name: 'groupName'});
-                this._paramGroup.addParam(group);
+                paramGroup = paramFactory.createGroup({name: paramGroupName});
+                this._paramGroup.addParam(paramGroup);
             }
 
-            group.addParam(param);
+            paramGroup.addParam(param);
+
+            paramFactory.getGroupMembers(paramGroupName).forEach(function (memberParamName) {
+
+                this.addParam(memberParamName);
+            }, this);
         }
         else {
             this._paramGroup.addParam(param);
@@ -299,11 +304,7 @@ p.renderTime = function (time) {
 
     if (selection.length && this._endParams.length) {
 
-        Velocity({
-            elements: selection,
-            properties: params,
-            options: {duration: 0, queue: false}
-        });
+        TweenLite.set({selection, params});
     }
 };
 
@@ -358,8 +359,8 @@ p.focusHandler = function (de) {
     this._endParams.forEach(function (param) {
 
         switch (param.name) {
-            case 'translateX': p.tx = parseFloat(param.getValue()); break;
-            case 'translateY': p.ty = parseFloat(param.getValue()); break;
+            case 'x': p.tx = parseFloat(param.getValue()); break;
+            case 'y': p.ty = parseFloat(param.getValue()); break;
             case 'scaleX': p.sx = parseFloat(param.getValue()); break;
             case 'scaleY': p.sy = parseFloat(param.getValue()); break;
             case 'rotateZ': p.rz = parseFloat(param.getValue()) / 180 * Math.PI; break;
@@ -476,8 +477,8 @@ p._onChangeHandler = function(params, type) {
         Object.keys(params).forEach(function (name) {
 
             switch (name) {
-                case 'tx': add('translateX', params[name] + 'px'); break;
-                case 'ty': add('translateY', params[name] + 'px'); break;
+                case 'tx': add('x', params[name] + 'px'); break;
+                case 'ty': add('y', params[name] + 'px'); break;
                 case 'sx': add('scaleX', params[name]); break;
                 case 'sy': add('scaleY', params[name]); break;
                 case 'rz': add('rotateZ', (params[name] / Math.PI * 180) + 'deg'); break;

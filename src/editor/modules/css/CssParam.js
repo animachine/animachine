@@ -416,7 +416,7 @@ p._onChangeInput = function (value) {
     if (String(value) === String(this.getValue())) {
         return;
     }
- console.log('nm', value, this.getValue())
+    
     this.addKey({
         time: am.timeline.currTime,
         value: value

@@ -9,11 +9,14 @@ var amgui = require('../../amgui');
 function CssParamGroup (opt) {
 
     this._onChangeSubparamHeight = this._onChangeSubparamHeight.bind(this);
+    this._onAddKeySubparam = this._onAddKeySubparam.bind(this);
     this._onClickTgglChildren = this._onClickTgglChildren.bind(this);
 
     CssParam.call(this, opt);
 
     this._params = [];
+
+    this._merged = opt.merged || false;
 }
 
 inherits(CssParamGroup, CssParam);
@@ -56,6 +59,12 @@ p.addParam = function (param) {
     
     param.optionLine.indent = this.optionLine.indent + 1;
     param.on('changeHeight', this._onChangeSubparamHeight);
+    param.on('addKey', this._onAddKeySubparam);
+    
+    if (param.name in this.optionLine.inputs) {
+
+        param.attachInput(this.optionLine.inputs[param.name]);
+    }
 
     this.emit('changeHeight');
 };
@@ -69,6 +78,7 @@ p.removeParam = function (param) {
     }
 
     param.removeListener('changeHeight', this._onChangeSubparamHeight);
+    param.removeListener('addKey', this._onAddKeySubparam);
 
     this._params.splice(idx, 1);
     this.keyLine.removeKeyline(param.keyLine);
@@ -89,23 +99,43 @@ p.groupParams = function (params, group) {//??
     });
 };
 
-p.toggleKey = function () {
+p.toggleKey = function (time) {
 
-    var time = am.timeline.currTime,
-        haveKey = this._params.some(function (param) {
+    time = time || am.timeline.currTime;
+
+    var hasKey = this._params.some(function (param) {
 
         return param.getKey(time);
     });
 
+    if (hasKey) {
+
+        this.removeKeyAll(time);
+    }
+    else {
+        this.addKeyAll(time);
+    }
+};
+
+p.addKeyAll = function (time) {
+
+    time = time || am.timeline.currTime;
+
     this._params.forEach(function (param) {
 
-        if (haveKey) {
+        param.addKey({time: time});
+    });
+};
 
-            var key = param.getKey(time);
-            if (key) param.removeKey(key);
-        }
-        else {
-            param.addKey({time: time});
+p.removeKeyAll = function (time) {
+
+    time = time || am.timeline.currTime;
+
+    this._params.forEach(function (param) {
+
+        var key = param.getKey(time);
+        if (key) {
+            param.removeKey(key);
         }
     });
 };
@@ -164,6 +194,11 @@ p._onChangeSubparamHeight = function () {
 
     this.emit('changeHeight', this);
     this._refreshHeights();
+};
+
+p._onAddKeySubparam = function () {
+
+    this.addKeyAll();
 };
 
 

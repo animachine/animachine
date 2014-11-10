@@ -80,7 +80,7 @@ function OptionLine(opt) {
         opt.inputs.map(this.addInput, this);
     }
 
-    if (opt.btnDiverge) {
+    if (opt.btnMerge) {
 
         this.addButton({
             domElem: amgui.createToggleIconBtn({
@@ -89,7 +89,7 @@ function OptionLine(opt) {
                 onClick: opt.btnDiverge.onClick,
                 parent: this._btnCont,
             }),
-            name: 'diverge',
+            name: 'merge',
         });
     }
 
@@ -147,16 +147,16 @@ Object.defineProperties(p, {
 
 p.addInput = function (opt) {
 
-    if (!opt) {
-        return;
-    }
-    else if (opt.domElem) {}//...
-
-    this.inputs[opt.name] = new UnitInput(_.assign({
+    var input = new UnitInput(_.assign({
         parent: this._inputCont,
         onChange: opt.onChange,
         flex: '1',
     }, opt));
+
+    if (opt.name) {
+
+        this.inputs[opt.name] = input;
+    }
 };
 
 p.addButton = function (opt) {
@@ -172,7 +172,7 @@ p.addButton = function (opt) {
 p.addSubline = function (de) {
 
     this._deSubcont.appendChild(de);
-}
+};
 
 
 

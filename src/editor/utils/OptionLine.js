@@ -4,6 +4,8 @@ var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../amgui');
 var UnitInput = require('./UnitInput');
+var UnitInput = require('./StringInput');
+var UnitInput = require('./SelectInput');
 
 function OptionLine(opt) {
 
@@ -28,7 +30,7 @@ function OptionLine(opt) {
             asContextMenu: true,
             deTarget: this._deHeadCont,
             deMenu: amgui.createDropdown({
-                optionLine: opt.contextMenuOptions
+                options: opt.contextMenuOptions
             })
         });
     }
@@ -46,7 +48,7 @@ function OptionLine(opt) {
     if (opt.title) {
 
         this._deTitle = amgui.createLabel({
-            text: this._name, 
+            text: typeof opt.title === 'string' ? opt.title : (opt.title.text || ''), 
             parent: this._deHeadCont
         });
 
@@ -147,11 +149,28 @@ Object.defineProperties(p, {
 
 p.addInput = function (opt) {
 
-    var input = new UnitInput(_.assign({
+    var input;
+
+    opt = _.assign({
         parent: this._inputCont,
         onChange: opt.onChange,
         flex: '1',
-    }, opt));
+    }, opt);
+
+    switch (opt.type) {
+
+        case 'unit':
+            input = new UnitInput(opt);
+            break;
+
+        case 'Select':
+            input = new SelectInput(opt);
+            break;
+
+        case 'string'
+        default:
+            input = new StringInput(opt);
+    }
 
     if (opt.name) {
 
@@ -174,6 +193,15 @@ p.addSubline = function (de) {
     this._deSubcont.appendChild(de);
 };
 
+p.showSubline = function () {
+
+    this._deSubcont.style.visibility = '';
+};
+
+p.hideSubline = function () {
+
+    this._deSubcont.style.visibility = 'hidden';
+};
 
 
 

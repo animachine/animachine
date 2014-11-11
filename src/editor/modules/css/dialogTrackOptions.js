@@ -202,7 +202,7 @@ p._createContent = function () {
         display: 'inline-block',
         onClick: function () {am.dialogs.featureDoesntExist.show();},
         parent: this._deContent,
-        tooltip: 'select from optionLine'
+        tooltip: 'select from options'
     });
 
     amgui.createLinebreak({
@@ -220,7 +220,7 @@ p._createContent = function () {
     amgui.bindDropdown({
         deTarget: this._deFill,
         deMenu: amgui.createDropdown({
-            optionLine: ['none', 'forwards', 'backwards', 'both'],
+            options: ['none', 'forwards', 'backwards', 'both'],
             onSelect: this._onSelectFill,
         }),
         menuParent: this._deContent,

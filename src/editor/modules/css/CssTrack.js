@@ -168,7 +168,7 @@ p.addParam = function (opt, skipHistory) {
 
     opt = opt || {};
 
-    var param = this._getParam(opt.name);
+    var param = this.getParam(opt.name);
     
 
     if (param) {
@@ -611,7 +611,7 @@ p._isAllParamsHaveKey = function (time) {
     });
 };
 
-p._getParam = function (name) {
+p.getParam = function (name) {
 
     return this._endParams.find(function(param) {
 

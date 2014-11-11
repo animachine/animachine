@@ -399,7 +399,7 @@ function createMenu() {
     amgui.bindDropdown({
         deTarget: iconMenu,
         deMenu: amgui.createDropdown({
-            optionLine: [
+            options: [
                 {text: 'new', onSelect: onSelectNew},
                 {text: 'save', onSelect: onSelectSave},
                 {text: 'saveAs', onSelect: onSelectSave},

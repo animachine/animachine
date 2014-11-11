@@ -288,7 +288,7 @@ p._createDomElem = function () {
         asContextMenu: true,
         deTarget: de,
         deMenu: amgui.createDropdown({
-            optionLine: [
+            options: [
                 {text: 'split here'},
                 {text: 'remove'}
             ]

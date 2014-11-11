@@ -257,7 +257,7 @@ p._createBoundsLine = function () {
         asContextMenu: true,
         deTarget: de,
         deMenu: amgui.createDropdown({
-            optionLine: [
+            options: [
                 {text: 'add interval', onSelect: this.onSelectAddInterval}
             ]
         })
@@ -297,7 +297,7 @@ p._createParameterOptions = function () {
     // amgui.bindDropdown({
     //     deTarget: this._btnEdit,
     //     deMenu: amgui.createDropdown({
-    //         optionLine: [
+    //         options: [
     //             {text: 'merge'},
     //             {text: 'split'},
     //             {text: 'end here'},
@@ -315,7 +315,7 @@ p._createParameterOptions = function () {
         asContextMenu: true,
         deTarget: de,
         deMenu: amgui.createDropdown({
-            optionLine: [
+            options: [
                 {text: 'move up', onSelect: this.emit.bind(this, 'move', this, -1)},
                 {text: 'move down', onSelect: this.emit.bind(this, 'move', this, 1)},
                 {text: 'delete', onSelect: this.emit.bind(this, 'delete', this)},

@@ -74,10 +74,6 @@
   background: #7e7;
 }
 
-.CodeMirror.cm-keymap-fat-cursor div.CodeMirror-cursors {
-  z-index: 1;
-}
-
 .cm-animate-fat-cursor {
   width: auto;
   border: 0;
@@ -134,7 +130,6 @@
 
 .cm-tab {
   display: inline-block;
-  text-decoration: inherit;
 }
 
 .CodeMirror-ruler {
@@ -369,8 +364,6 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
 
 .CodeMirror-lines {
   cursor: text;
-  min-height: 1px;
-  /* prevents collapsing before first draw */
 }
 
 .CodeMirror pre {
@@ -440,7 +433,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
 div.CodeMirror-cursors {
   visibility: hidden;
   position: relative;
-  z-index: 3;
+  z-index: 1;
 }
 
 .CodeMirror-focused div.CodeMirror-cursors {
@@ -482,12 +475,6 @@ div.CodeMirror-cursors {
   .CodeMirror div.CodeMirror-cursors {
     visibility: hidden;
   }
-}
-
-/* Help users use markselection to safely style text background */
-
-span.CodeMirror-selectedtext {
-  background: none;
 }
 /**
  * Pastel On Dark theme ported from ACE editor

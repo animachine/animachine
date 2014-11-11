@@ -655,7 +655,7 @@ p._createSettingsHead = function () {
     amgui.bindDropdown({    
         deTarget: this._btnNewTrack,
         deMenu: amgui.createDropdown({
-            optionLine: ['css', 'js', 'attribute', 'media', 'timeline', 'three.js', 'pixi.js'],
+            options: ['css', 'js', 'attribute', 'media', 'timeline', 'three.js', 'pixi.js'],
             onSelect: this._onSelectNewTrack
         })
     });

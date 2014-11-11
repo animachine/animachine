@@ -105,7 +105,7 @@ p._createContent = function () {
     amgui.bindDropdown({
         deTarget: this._btnSelectEase,
         deMenu: amgui.createDropdown({
-            optionLine: ['linear', 'ease', 'ease-in', 'ease-out', 'ease-in-out', 'steps(1)', 'cubic-bezier(0,0,1,1)'],
+            options: ['linear', 'ease', 'ease-in', 'ease-out', 'ease-in-out', 'steps(1)', 'cubic-bezier(0,0,1,1)'],
             onSelect: this._onSelectEase,
         }),
         menuParent: this._deContent

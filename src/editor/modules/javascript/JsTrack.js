@@ -615,7 +615,7 @@ p._createHeadOptions = function (){
         asContextMenu: true,
         deTarget: de,
         deMenu: amgui.createDropdown({
-            optionLine: [
+            options: [
                 {text: 'move up', onSelect: this.emit.bind(this, 'move', this, -1)},
                 {text: 'move down', onSelect: this.emit.bind(this, 'move', this, 1)},
                 {text: 'delete', onSelect: this.emit.bind(this, 'delete', this)},

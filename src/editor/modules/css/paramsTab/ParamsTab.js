@@ -2,16 +2,14 @@
 
 var amgui = require('../../../amgui');
 var Input = require('./Input');
+var Input = require('../../../utils/OptionLine');
 
 function ParamsTab() {
 
-    this._drawers = [];
-    this._inputs = [];
+    this._paramOptionLines = [];
 
-    this._onSelectTrack = this._onSelectTrack.bind(this);  
-    this._onDeselectTrack = this._onDeselectTrack.bind(this);  
-    this._onChangeTrack = this._onChangeTrack.bind(this);  
-    this._onInputCreate = this._onInputCreate.bind(this);
+    this._onSelectTrack = this._onSelectTrack.bind(this);
+    this._onDeselectTrack = this._onDeselectTrack.bind(this);
 
     this._createBase();
 
@@ -21,31 +19,17 @@ function ParamsTab() {
 
 var p = ParamsTab.prototype;
 
-p._listenToTrack = function (track) {
-
-    this._unlisten();
-
-    this._currTrack = track;
-
-    this._currTrack.on('change', this._onChangeTrack);
-
-    this._refresh();
-};
-
-p._unlisten = function (track) {
-
-    if (!this._currTrack) return;
-
-    this._currTrack.removeListener('change', this._onChangeTrack);
-};
-
 
 
 
 
 p._onSelectTrack = function () {
 
-    this._listenToTrack(am.selectedTrack);
+    this._unlisten();
+
+    this._currTrack = track;
+
+    this._listen();
 };
 
 p._onDeselectTrack = function () {
@@ -53,35 +37,37 @@ p._onDeselectTrack = function () {
     this._unlisten();
 };
 
-p._onChangeTrack = function () {
-
-    this._refresh();
-};
-
-p._onInputCreate = function (input) {
-
-    if (this._currTrack) {
-        this._currTrack.addParameter({name: input.name})
-    }
-};
 
 
 
 
 
 
+p._unlisten = function () {
 
-p._refresh = function () {
+    if (!this._currTrack) return;
 
-    this._inputs.forEach(function (input) {
-
-        var param = this._currTrack._getParam(input.name);
+    this._paramOptionLines.forEach(function (optionLine) {
+        
+        var param = this._currTrack.getParam(optionLine.title);
 
         if (param) {
-            input.setParam(param);
+            
+            param.detachInput(optionLine.inputs.input);
+            optionLine.inputs.input.reset();
         }
-        else {
-            input.removeParam();
+    });
+};
+
+p._listen = function () {
+
+    this._paramOptionLines.forEach(function (optionLine) {
+
+        var param = this._currTrack.getParam(optionLine.title);
+
+        if (param) {
+
+            optionLine.inputs.input.value = param.getValue();
         }
     }, this);
 };
@@ -113,46 +99,175 @@ p._createBase = function () {
 
     var drawers = {};
 
-    addDrawer('Text');
-    addDrawer('Font');
-    addDrawer('Border');
-    addDrawer('Background');
-    addDrawer('Transform');
-    addDrawer('Layout');
+    var boderStyleOptions = 'none,hidden,dotted,dashed,solid,double,groove,ridge,inset,outset,initial,inherit'.split(',');
 
-    addInput('font-family', 'Font');
-    addInput('font-size', 'Font');
-    addInput('font-weight', 'Font');
-    addInput('font-style', 'Font');
-    addInput('font-variant', 'Font');
-    addInput('text-transform', 'Font', {optionLine: ['uppercase', 'lovercase', 'capitalise', 'none']});
-    addInput('text-decoration', 'Font', {optionLine: ['underline', 'overline', 'line-trough', 'none']});
-    addInput('color', 'Font', {type: 'color'});
+    var paramTree = [
 
-    function addDrawer(name) {
+        {
+            title: 'Font',
+            children: [
+                {title: 'font-family', input: 'string'},
+                {title: 'font-size', input: 'string'},
+                {title: 'font-weight', input: 'string'},
+                {title: 'font-style', input: 'string'},
+                {title: 'font-variant', input: 'string'},
+                {title: 'text-transform', input: 'string'},
+                {title: 'text-decoration', input: 'string'}
+                {title: 'color', input: 'color'}
+            ],
+        },
+        {title: 'Border', children: [
+            {title: 'Color', children: [
+                {title: 'borderTopColor', input: 'color'},
+                {title: 'borderRightColor', input: 'color'},
+                {title: 'borderBottomColor', input: 'color'},
+                {title: 'borderLeftColor', input: 'color'},
+            ]},
+            {title: 'Width', children: [
+                {title: 'borderTopWidth', input: {type: 'unit', units: ['px']}},
+                {title: 'borderRightWidth', input: {type: 'unit', units: ['px']}},
+                {title: 'borderBottomWidth', input: {type: 'unit', units: ['px']}},
+                {title: 'borderLeftWidth', input: {type: 'unit', units: ['px']}},
+            ]},
+            {title: 'Style', children: [
+                {title: 'borderTopStyle', input: {type: 'select', options: boderStyleOptions}},
+                {title: 'borderRightStyle', input: {type: 'select', options: boderStyleOptions}},
+                {title: 'borderBottomStyle', input: {type: 'select', options: boderStyleOptions}},
+                {title: 'borderLeftStyle', input: {type: 'select', options: boderStyleOptions}},
+            ]},
+        ]},
+        {title: 'Background', children: []},
+        {title: 'Transform', children: []},
+        {title: 'Layout', children: []},
+    ];
+    var build = function (nodeList, parent, indent) {
 
-        var drawer = drawers[name] = amgui.createDrawer({
-            text: name,
-            parent: that._scrollCont
-        });
+        nodeList.forEach(function (node) {
+
+            var optionLine;
+
+            if (node.children) {
+
+                optionLine = this._createGroup(node);
+
+                build(node.children, optionLine, indent + 1);
+            }
+            else {
+                
+                optionLine = this._createParam(node);
+            }
+
+            if (parent.addSubline) {
+
+                parent.addSubline(optionLine.domElem);
+            }
+            else {
+                
+                parent.appendChild(optionLine.domElem);
+            }
+
+            optionLine.indent = indent;
+
+        }, this);
+
+    }.bind(this);
+
+    build(paramTree, this._scrollCont, 0);
+
+    // addDrawer('Text');
+    // addDrawer('Font');
+    // addDrawer('Border');
+    // addDrawer('Background');
+    // addDrawer('Transform');
+    // addDrawer('Layout');
+
+    // addInput('font-family', 'Font');
+    // addInput('font-size', 'Font');
+    // addInput('font-weight', 'Font');
+    // addInput('font-style', 'Font');
+    // addInput('font-variant', 'Font');
+    // addInput('text-transform', 'Font', {optionLine: ['uppercase', 'lovercase', 'capitalise', 'none']});
+    // addInput('text-decoration', 'Font', {optionLine: ['underline', 'overline', 'line-trough', 'none']});
+    // addInput('color', 'Font', {type: 'color'});
+
+    // function addDrawer(name) {
+
+    //     var drawer = drawers[name] = amgui.createDrawer({
+    //         text: name,
+    //         parent: that._scrollCont
+    //     });
+    // }
+
+    // function addInput(name, drawerName) {
+
+    //     var input;
+
+    //     switch (name) {
+
+    //         default:
+    //             input = new Input({name: name});
+    //     }
+
+    //     input.on('create', that._onInputCreate);
+    //     drawers[drawerName].deContent.appendChild(input.domElem);
+
+    //     that._inputs.push(input);
+    // }
+};
+
+this._createGroup = function (opt) {
+
+    var = isChildrenVisible = true;
+
+    inpOpt = {
+        title: opt.title,
+        tgglChildren: {
+            onClick: toggleChildren,
+        },
+        inputs: []
+    };
+
+    if (typeof(opt.input) === 'strnig') {
+
+        inpOpt.inputs.push({type: opt.inputs});
+    }
+    else if (typeof(opt.input) === 'object'){
+
+        inpOpt.inputs.push(opt.inputs);
     }
 
-    function addInput(name, drawerName) {
+    var optionLine = new OptionLine(inpOpt);
 
-        var input;
+    function toggleChildren() {
 
-        switch (name) {
+        isChildrenVisible = !!isChildrenVisible;
 
-            default:
-                input = new Input({name: name});
+        if (isChildrenVisible) {
+
+            optionLine.showSubline();
         }
-
-        input.on('create', that._onInputCreate);
-        drawers[drawerName].deContent.appendChild(input.domElem);
-
-        that._inputs.push(input);
+        else {
+            optionLine.hideSubline();
+        }
     }
-}
+
+    toggleChildren();
+
+    return optionLine;
+};
+
+this._createParam = function (opt) {
+
+    if (opt.input = )
+
+    var optionLine = new OptionLine(_.assign({
+        btnKey: true,
+    }, opt);
+
+    this._paramOptionLines.push(optinosLine);
+
+    return optionLine;
+};
 
 
 module.exports = ParamsTab;

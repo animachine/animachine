@@ -63,9 +63,9 @@ function createDropdown(opt) {
         }
     }
 
-    if (opt.optionLine) {
+    if (opt.options) {
 
-        opt.optionLine.forEach(function (optItem) {
+        opt.options.forEach(function (optItem) {
 
            de.addItem(optItem);
         });
@@ -122,7 +122,7 @@ function bindDropdown(opt) {
         setTimeout(function () {
             window.addEventListener('click', close);
             window.addEventListener('contextmenu', close);
-        })
+        });
     }
 
     function close(e) {

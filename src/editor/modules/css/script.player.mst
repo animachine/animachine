@@ -4,47 +4,24 @@ function () {
         animation,
         isInited = false,
         animations = [],
-        paramKeys = {{{paramKeys}}},
+        timelines = {{{timelines}}},
         optionLine = {{{optionLine}}},
-        elems = document.querySelectorAll('{{{selectors}}}');
+        animTargets = {{{animTargets}}};
 
-    for (var i = 0; i < elems.length; ++i) {
-        for (var j = 0; j < paramKeys.length; ++j) {
+    var tl = TimelineLite();
 
-            animations.push(new Animation(elems[i], paramKeys[j], optionLine));
-        }
-    }
+
+    timelines.forEach(function (timeline) {
+
+        var prevTime = 0;
+        
+        timeline.forEach(function (key, idx) {
+
+            tl.to(animTargets, (key.time - prevTime) / 1000, key, idx === 0 ? 0 : undefined);
+        });
+    });
 
     animation = new AnimationGroup(animations);
 
-    return {
-
-        play: function () {
-
-            if (!isInited) {
-
-                player = document.timeline.play(animation);
-                isInited = true;
-            }
-            else {
-                player.play();
-            }
-        },
-        pause: function () {
-
-            if (!player) {
-                return;
-            }
-
-            player.pause();
-        },
-        seek: function (time) {
-
-            if (!player) {
-                return;
-            }
-
-            player.currentTime = time;
-        }
-    };
+    return tl;
 }

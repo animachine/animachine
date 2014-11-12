@@ -22,6 +22,7 @@ function UnitInput(opt) {
     this._unit = this._units[0];
     this._precison = opt.precision || 0;
     this.units = opt.units || [];
+    this._defaultValue = opt.defaultValue || 0;
 
     this.converters = opt.converters;
 
@@ -78,6 +79,18 @@ Object.defineProperties(p, {
         }
     }
 });
+
+
+
+
+
+
+p.reset = function () {
+
+    this.value = this._defaultValue;
+};
+
+
 
 
 

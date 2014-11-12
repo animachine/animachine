@@ -13,6 +13,7 @@ function StringInput(opt) {
     this._createBase();
 
     this._value = opt.value || '';
+    this._defaultValue = opt.defaultValue || '';
 
     if ('flex' in opt) this.domElem.style.flex = opt.flex;
     if ('parent' in opt) opt.parent.appendChild(this.domElem);
@@ -47,6 +48,13 @@ Object.defineProperties(p, {
 
 
 
+
+
+
+p.reset = function () {
+
+    this.value = this._defaultValue;
+};
 
 
 

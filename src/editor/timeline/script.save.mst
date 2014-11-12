@@ -68,4 +68,34 @@
         });
     }
     {{/autoPlay}}
+
+
+
+
+    function CubicBezierEase (c0x, c0y, c1x, c1y) {
+
+        var p = [];
+
+        return new Ease(function (t) {
+
+            p.length = 0;
+            p.push(0, 0, c0x, c0y, c1x, c1y, 1, 1);
+            
+            count(0);
+            count(2);
+            count(4);
+            count(0);
+            count(2);
+            count(0);
+
+            return p[1];
+            
+            function count(i) {
+
+                p[i+0] = p[i+0] + (p[i+2] - p[i+0]) * t;
+                p[i+1] = p[i+1] + (p[i+3] - p[i+1]) * t;
+            }
+        });
+    }
+    
 }(this));

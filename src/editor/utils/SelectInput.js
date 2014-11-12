@@ -14,6 +14,7 @@ function SelectInput(opt) {
 
     this._options = opt.options || [];
     this.value = opt.value || this._options[0] || '';
+    this._defaultValue = opt.defaultValue || this._options[0] || '';
 
     if ('flex' in opt) this.domElem.style.flex = opt.flex;
     if ('parent' in opt) opt.parent.appendChild(this.domElem);
@@ -45,6 +46,16 @@ Object.defineProperties(p, {
         }
     },
 });
+
+
+
+
+
+
+p.reset = function () {
+
+    this.value = this._defaultValue;
+};
 
 
 

@@ -141,16 +141,43 @@ p.useSave = function (save) {
 
 p.getScript = function () {
 
-    var paramKeys = [], code = '', optionLine, selectors;
+    var timelines = [], code = '', optionLine, selectors;
 
     this._endParams.forEach(function (param) {
 
-        paramKeys.push(param.getScriptKeys());
+        timelines.push(param.getScriptKeys());
     });
 
+    //merge timelines if it's possible
+    for (var i in timelines; i < timelines.length, ++i) {
+        for (var j in timelines; j < timelines.length, ++j) {
+
+            if (i !== j && timelines[i].length === timelines[j].length) {
+
+                var match = timelines[i].evety(function (key, idx) {
+
+                    return key.time === timelines[j][idx].time;
+                });
+
+                if (match) {
+
+                    timelines[i].forEach(function (key, idx) {
+
+                        _.assign(key, timelines[j][idx]);
+
+                        timelines.splice(j, idx);
+                        if (--j < i) {
+                            --i;
+                        }
+                    }
+                }
+            } 
+        }
+    }
+
     optionLine = {
-      direction: "normal",
-      duration: am.timeline.length
+        direction: "normal",
+        duration: am.timeline.length
     };
 
     selectors = this._selectors.join(',').replace('\\','\\\\');

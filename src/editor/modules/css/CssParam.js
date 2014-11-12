@@ -115,7 +115,7 @@ p.getScriptKeys = function () {
         
         if (key.ease && key.ease !== 'linear') {
 
-           k.easing = key.ease; 
+           k.easing = key.ease;
         }
 
         keys.push(k);
@@ -397,11 +397,6 @@ p._applyEase = function (ease, value) {
     return p[1];
 
 
-    function count(i) {
-
-        p[i+0] = p[i+0] + (p[i+2] - p[i+0]) * value;
-        p[i+1] = p[i+1] + (p[i+3] - p[i+1]) * value;
-    }
 };
 
 

@@ -88,8 +88,8 @@ p._createBase = function () {
         deTarget: this._deValue,
         onSelect: this._onSelect,
         deMenu: amgui.createDropdown({
-            options: this._options
-        });
+            options: this._options,
+        })
     });
 };
 

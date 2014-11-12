@@ -4,8 +4,8 @@ var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../amgui');
 var UnitInput = require('./UnitInput');
-var UnitInput = require('./StringInput');
-var UnitInput = require('./SelectInput');
+var StringInput = require('./StringInput');
+var SelectInput = require('./SelectInput');
 
 function OptionLine(opt) {
 
@@ -18,11 +18,6 @@ function OptionLine(opt) {
 
     this._createDomElem();
     this._createHighlight();
-
-    if (opt.indent) {
-
-        this.indent = opt.indent;
-    }
 
     if (opt.contextMenuOptions) {
 
@@ -43,6 +38,13 @@ function OptionLine(opt) {
             onClick: opt.tgglChildren.onClick,
             parent: this._deHeadCont
         });
+    }
+
+    this._createIndent();
+
+    if (opt.indent) {
+
+        this.indent = opt.indent;
     }
 
     if (opt.title) {
@@ -152,7 +154,6 @@ p.addInput = function (opt) {
     var input;
 
     opt = _.assign({
-        parent: this._inputCont,
         onChange: opt.onChange,
         flex: '1',
     }, opt);
@@ -167,7 +168,7 @@ p.addInput = function (opt) {
             input = new SelectInput(opt);
             break;
 
-        case 'string'
+        case 'string':
         default:
             input = new StringInput(opt);
     }
@@ -176,6 +177,8 @@ p.addInput = function (opt) {
 
         this.inputs[opt.name] = input;
     }
+
+    this._inputCont.appendChild(input.domElem);
 };
 
 p.addButton = function (opt) {
@@ -227,11 +230,6 @@ p._createDomElem = function() {
     this.domElem.appendChild(this._deHeadCont);
     amgui.createSeparator({parent: this._deHeadCont});
 
-    this._deIndent = document.createElement('div');
-    this._deIndent.style.display = 'inline-block';
-    this._deIndent.style.width = '0px';
-    this._deHeadCont.appendChild(this._deIndent);
-
     this._deSubcont = document.createElement('div');
     this._deSubcont.style.width = '100%';
     this.domElem.appendChild(this._deSubcont);
@@ -246,4 +244,12 @@ p._createHighlight = function () {
     this._deHighlight.style.background = 'gold';
     this._deHighlight.style.opacity = 0;
     this._deHeadCont.appendChild(this._deHighlight);
+};
+
+p._createIndent = function () {
+
+    this._deIndent = document.createElement('div');
+    this._deIndent.style.display = 'inline-block';
+    this._deIndent.style.width = '0px';
+    this._deHeadCont.appendChild(this._deIndent);
 };

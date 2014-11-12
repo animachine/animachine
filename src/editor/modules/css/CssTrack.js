@@ -149,8 +149,8 @@ p.getScript = function () {
     });
 
     //merge timelines if it's possible
-    for (var i in timelines; i < timelines.length, ++i) {
-        for (var j in timelines; j < timelines.length, ++j) {
+    for (var i = 0; i < timelines.length; ++i) {
+        for (var j = 0; j < timelines.length; ++j) {
 
             if (i !== j && timelines[i].length === timelines[j].length) {
 
@@ -169,7 +169,7 @@ p.getScript = function () {
                         if (--j < i) {
                             --i;
                         }
-                    }
+                    });
                 }
             } 
         }

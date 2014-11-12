@@ -2,7 +2,7 @@
 
 var amgui = require('../../../amgui');
 var Input = require('./Input');
-var Input = require('../../../utils/OptionLine');
+var OptionLine = require('../../../utils/OptionLine');
 
 function ParamsTab() {
 
@@ -112,8 +112,8 @@ p._createBase = function () {
                 {title: 'font-style', input: 'string'},
                 {title: 'font-variant', input: 'string'},
                 {title: 'text-transform', input: 'string'},
-                {title: 'text-decoration', input: 'string'}
-                {title: 'color', input: 'color'}
+                {title: 'text-decoration', input: 'string'},
+                {title: 'color', input: 'color'},
             ],
         },
         {title: 'Border', children: [
@@ -215,26 +215,16 @@ p._createBase = function () {
     // }
 };
 
-this._createGroup = function (opt) {
+p._createGroup = function (opt) {
 
-    var = isChildrenVisible = true;
+    var isChildrenVisible = true;
 
-    inpOpt = {
+    var inpOpt = {
         title: opt.title,
         tgglChildren: {
             onClick: toggleChildren,
-        },
-        inputs: []
+        }
     };
-
-    if (typeof(opt.input) === 'strnig') {
-
-        inpOpt.inputs.push({type: opt.inputs});
-    }
-    else if (typeof(opt.input) === 'object'){
-
-        inpOpt.inputs.push(opt.inputs);
-    }
 
     var optionLine = new OptionLine(inpOpt);
 
@@ -256,15 +246,26 @@ this._createGroup = function (opt) {
     return optionLine;
 };
 
-this._createParam = function (opt) {
+p._createParam = function (opt) {
 
-    if (opt.input = )
-
-    var optionLine = new OptionLine(_.assign({
+    var inpOpt = {
         btnKey: true,
-    }, opt);
+        title: opt.title,
+        inputs: []
+    };
 
-    this._paramOptionLines.push(optinosLine);
+    if (typeof(opt.input) === 'strnig') {
+
+        inpOpt.inputs.push({type: opt.input});
+    }
+    else if (typeof(opt.input) === 'object'){
+
+        inpOpt.inputs.push(opt.input);
+    }
+
+    var optionLine = new OptionLine(inpOpt);
+
+    this._paramOptionLines.push(optionLine);
 
     return optionLine;
 };

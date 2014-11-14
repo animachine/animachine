@@ -43,7 +43,10 @@ Object.defineProperties(p, {
 
 
 
-
+p.addKey = function (key) {
+    if(!(key instanceof KeyGroup)) debugger;
+    KeyLine.prototype.addKey.call(this, key)
+}
 
 
 p.addKeyLine = function (keyLine) {

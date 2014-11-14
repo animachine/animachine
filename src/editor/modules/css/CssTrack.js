@@ -41,7 +41,20 @@ function CssTrack(opt) {
     this._onDeselectTrack = this._onDeselectTrack.bind(this);
     this._animPlay = this._animPlay.bind(this);
 
-    this._paramGroup = new CssParamGroup({});
+    this._paramGroup = new CssParamGroup({
+        optionLine: {
+            tgglMerge: false,
+        }
+    });
+
+    this._paramGroup.optionLine.addButton({
+        domElem: amgui.createToggleIconBtn({
+            icon: 'cube',
+            changeColor: true,
+        }),
+        name: 'tggl3d',
+        addAt: 0,
+    });
 
     this.deOptionLine = this._paramGroup.optionLine.domElem;
     this.deKeyLine = this._paramGroup.keyLine.domElem;
@@ -232,7 +245,7 @@ p.addParam = function (opt, skipHistory) {
 
             paramFactory.getGroupMembers(paramGroupName).forEach(function (memberParamName) {
 
-                this.addParam(memberParamName);
+                this.addParam({name: memberParamName});
             }, this);
         }
         else {
@@ -331,7 +344,28 @@ p.renderTime = function (time) {
 
     if (selection.length && this._endParams.length) {
 
-        TweenLite.set({selection: params});
+        handleTransformOrigin();
+
+        TweenLite.set(selection, params);
+    }
+
+    function handleTransformOrigin() {
+
+        var tox = params.transformOriginX,
+            toy = params.transformOriginY,
+            toz = params.transformOriginZ,
+            to = '';
+
+        to += (tox || '50%') + ' ';
+        to += (toy || '50%') + ' ';
+        to += toz || '0px';
+
+        params.transformOrigin = to;
+
+        delete params.transformOriginX;
+        delete params.transformOriginY;
+        delete params.transformOriginZ;
+
     }
 };
 
@@ -390,7 +424,7 @@ p.focusHandler = function (de) {
             case 'y': p.ty = parseFloat(param.getValue()); break;
             case 'scaleX': p.sx = parseFloat(param.getValue()); break;
             case 'scaleY': p.sy = parseFloat(param.getValue()); break;
-            case 'rotateZ': p.rz = parseFloat(param.getValue()) / 180 * Math.PI; break;
+            case 'rotationZ': p.rz = parseFloat(param.getValue()) / 180 * Math.PI; break;
             case 'transformOriginX': p.ox = parseFloat(param.getValue()) / 100; break;
             case 'transformOriginY': p.oy = parseFloat(param.getValue()) / 100; break;
         }
@@ -508,7 +542,7 @@ p._onChangeHandler = function(params, type) {
                 case 'ty': add('y', params[name] + 'px'); break;
                 case 'sx': add('scaleX', params[name]); break;
                 case 'sy': add('scaleY', params[name]); break;
-                case 'rz': add('rotateZ', (params[name] / Math.PI * 180) + 'deg'); break;
+                case 'rz': add('rotationZ', (params[name] / Math.PI * 180) + 'deg'); break;
                 case 'ox': add('transformOriginX', (params[name] * 100) + '%'); break;
                 case 'oy': add('transformOriginY', (params[name] * 100) + '%'); break;
             }

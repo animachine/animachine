@@ -11,12 +11,15 @@ function CssParamGroup (opt) {
     this._onChangeSubparamHeight = this._onChangeSubparamHeight.bind(this);
     this._onAddKeySubparam = this._onAddKeySubparam.bind(this);
     this._onClickTgglChildren = this._onClickTgglChildren.bind(this);
+    this._onClickTgglMerge = this._onClickTgglMerge.bind(this);
 
     CssParam.call(this, opt);
 
     this._params = [];
 
     this._merged = opt.merged || false;
+
+    this._refreshHeights();
 }
 
 inherits(CssParamGroup, CssParam);
@@ -42,6 +45,22 @@ Object.defineProperties(p, {
             }
 
             return ret;
+        }
+    },
+    merged: {
+
+        set: function (v) {
+
+            v = !!v;
+            if (v === this._merged) return;
+
+            this._merged = v;
+
+            this.optionLine.buttons.tgglMerge.setToggle(this.merged);
+        },
+        get: function () {
+
+            return this._merged;
         }
     }
 });
@@ -118,7 +137,13 @@ p.addKeyAll = function (time) {
 
     this._params.forEach(function (param) {
 
-        param.addKey({time: time});
+        if (param instanceof CssParamGroup) {
+
+            param.addKeyAll();
+        }
+        else {
+            param.addKey({time: time});
+        }
     });
 };
 
@@ -185,6 +210,11 @@ p._onClickTgglChildren = function () {
     }
 };
 
+p._onClickTgglMerge = function () {
+
+    this.merged = !this.merged;
+};
+
 p._onChangeSubparamHeight = function () {
 
     this.emit('changeHeight', this);
@@ -193,7 +223,10 @@ p._onChangeSubparamHeight = function () {
 
 p._onAddKeySubparam = function () {
 
-    this.addKeyAll();
+    if (this._merged) {
+    
+        this.addKeyAll();
+    }
 };
 
 
@@ -204,8 +237,9 @@ p._onAddKeySubparam = function () {
 
 p._refreshHeights = function () {
 
-    this.keyLine.domElem.height = this.height + 'px';
-    this.optionLine.domElem.height = this.height + 'px';
+    var h = this.height;
+    this.keyLine.domElem.style.height = h + 'px';
+    this.optionLine.domElem.style.height = h + 'px';
 }
 
 
@@ -225,6 +259,9 @@ p._createOptions = function (opt) {
             {text: 'move down', onSelect: this.emit.bind(this, 'move', this, 1)},
             {text: 'delete', onSelect: this.emit.bind(this, 'delete', this)}
         ],
+        tgglMerge: {
+            onClick: this._onClickTgglMerge,
+        },
         title: {
             text: this.name,
         },

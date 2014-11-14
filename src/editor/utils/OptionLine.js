@@ -30,14 +30,18 @@ function OptionLine(opt) {
         });
     }
 
-    if (opt.tgglChildren) {
 
+    if (opt.tgglChildren) {
+     
         this.buttons.tgglChildren = amgui.createToggleIconBtn({
             iconOn: 'angle-down',
             iconOff: 'angle-right',
             onClick: opt.tgglChildren.onClick,
             parent: this._deHeadCont
         });
+    }
+    else {
+        this._deHighlight.style.marginRight = '16px';
     }
 
     this._createIndent();
@@ -51,7 +55,7 @@ function OptionLine(opt) {
 
         this._deTitle = amgui.createLabel({
             text: typeof opt.title === 'string' ? opt.title : (opt.title.text || ''), 
-            parent: this._deHeadCont
+            parent: this._deHeadCont,
         });
 
         if (opt.title.onClick) {
@@ -70,7 +74,7 @@ function OptionLine(opt) {
 
     this._inputCont = amgui.createDiv({
         parent: this._deHeadCont,
-        display: 'inline-block',
+        display: 'flex',
         flex: '1',
     });
 
@@ -84,16 +88,15 @@ function OptionLine(opt) {
         opt.inputs.map(this.addInput, this);
     }
 
-    if (opt.btnMerge) {
+    if (opt.tgglMerge) {
 
         this.addButton({
             domElem: amgui.createToggleIconBtn({
                 iconOn: 'flow-split',
                 iconOff: 'flow-merge',
-                onClick: opt.btnMerge.onClick,
-                parent: this._btnCont,
+                onClick: opt.tgglMerge.onClick,
             }),
-            name: 'merge',
+            name: 'tgglMerge',
         });
     }
 
@@ -104,7 +107,6 @@ function OptionLine(opt) {
                 onClick: opt.btnKey.onClick,
                 onClickPrev: opt.btnKey.onClickPrev,
                 onClickNext: opt.btnKey.onClickNext,
-                parent: this._btnCont,
             }),
             name: 'key',
         });
@@ -164,7 +166,7 @@ p.addInput = function (opt) {
             input = new UnitInput(opt);
             break;
 
-        case 'Select':
+        case 'select':
             input = new SelectInput(opt);
             break;
 
@@ -184,6 +186,8 @@ p.addInput = function (opt) {
 p.addButton = function (opt) {
 
     this._btnCont.appendChild(opt.domElem);
+
+    opt.domElem.style.display = 'inline-block';
 
     if (opt.name) {
 
@@ -218,8 +222,6 @@ p._createDomElem = function() {
 
     this.domElem = document.createElement('div');
     this.domElem.style.width = '100%';
-    this.domElem.style.borderBottom = 'solid 1px #121212';
-    this.domElem.style.boxSizing = 'border-box';
     this.domElem.style.overflow = 'hidden';
 
     this._deHeadCont = document.createElement('div');

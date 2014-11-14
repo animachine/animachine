@@ -23,7 +23,7 @@ var p = ParamsTab.prototype;
 
 
 
-p._onSelectTrack = function () {
+p._onSelectTrack = function (track) {
 
     this._unlisten();
 

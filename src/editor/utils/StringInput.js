@@ -37,7 +37,7 @@ Object.defineProperties(p, {
 
             this._refreshInput();
 
-            this.emit('change');
+            this.emit('change', this._value);
         },
         get: function () {
 

@@ -38,7 +38,7 @@ Object.defineProperties(p, {
 
             this._deValue.setText(v);
 
-            this.emit('change');
+            this.emit('change', this._value);
         },
         get: function () {
 

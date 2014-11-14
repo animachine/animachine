@@ -24,22 +24,32 @@ module.exports = {
 
     create: function (opt) {
 
-        var inputOpt = {
+        var paramOpt = {
                 name: opt.name,
                 optionLine: {
                     inputs: [{}]
                 }
             },
-            input = inputOpt.optionLine.inputs[0];
+            input = paramOpt.optionLine.inputs[0];
 
 
         switch (opt.name) {
 
             case 'x':
             case 'y': 
+            case 'z': 
                 input.units = ['px']; 
                 break;
 
+            case 'scaleX':
+            case 'scaleY': 
+            case 'scaleZ': 
+                paramOpt.defaultValue = 1; 
+                input.precision = 2;
+                break;
+
+            case 'rotateX': 
+            case 'rotateY': 
             case 'rotateZ': 
                 input.units = ['deg', 'rad']; 
                 input.precision = 1;
@@ -58,6 +68,10 @@ module.exports = {
                 input.units = ['%']; 
                 input.precision = 2;
                 break;
+
+            case 'transformOriginZ': 
+                input.units = ['px'];
+                break; 
 
             case 'borderColor':
             case 'backgroundColor': 
@@ -80,19 +94,21 @@ module.exports = {
                 break;
         }
 
-        return new CssParam(inputOpt);
+        return new CssParam(paramOpt);
     },
 
     createGroup: function (opt) {
 
         opt = opt || {};
 
-        var paramGropup = new CssParamGroup({optionLine: {btnMerge: true}});
+        var paramGropup = new CssParamGroup({
+            name: opt.name,
+        });
 
         if (opt.name === 'translate') {
 
-            paramGropup.optionLine.addInput({name: 'x'});
-            paramGropup.optionLine.addInput({name: 'y'});
+            paramGropup.optionLine.addInput({name: 'x', type: 'unit', units: ['px']});
+            paramGropup.optionLine.addInput({name: 'y', type: 'unit', units: ['px']});
         }
 
         return paramGropup;
@@ -129,7 +145,7 @@ var groups = {
     backgroundPosition: ['backgroundPositionX', 'backgroundPositionY'],
     textShadow: ['textShadowX', 'textShadowY', 'textShadowBlur'],
     translate: ['x', 'y'],
-    scale: ['scaleX', 'scaleY', 'scaleZ'],
+    scale: ['scaleX', 'scaleY'/*, 'scaleZ'*/],
     rotate: ['rotateX', 'rotateY', 'rotateZ'],
     skeew: ['skeewX', 'skeewY'],
     perspectiveOrigin: ['perspectiveOriginX', 'perspectiveOriginY'],

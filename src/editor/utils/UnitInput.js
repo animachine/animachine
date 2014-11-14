@@ -39,7 +39,7 @@ Object.defineProperties(p, {
 
     value: {
         set: function (v) {
-
+            
             v += '';
 
             var mAmount = this._rxAmount.exec(v),

@@ -16,6 +16,7 @@ function CssParam (opt) {
 
     this._lineH =  amgui.LINE_HEIGHT;
     this._inputs = [];
+    this._defaultValue = opt.defaultValue || 0;
 
     this._onChangeInput = this._onChangeInput.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
@@ -135,7 +136,7 @@ p.getValue = function (time) {
         time = am.timeline.currTime;
     }
 
-    var before, after, same;
+    var ret, before, after, same;
 
     this.keyLine.forEachKeys(function (key) {
 
@@ -157,7 +158,7 @@ p.getValue = function (time) {
 
     if (same) {
 
-        return same.value;
+        ret = same.value;
     }
     else {
 
@@ -168,17 +169,23 @@ p.getValue = function (time) {
 
             p = this._applyEase(before.ease, p);
 
-            return createCalc(av, bv, p);
+            ret = createCalc(av, bv, p);
         }
         else if (before) {
             
-            return before.value;
+            ret = before.value;
         }
         else if (after) {
             
-            return after.value;
+            ret = after.value;
         }
     }
+    
+    return ret === undefined ? this._defaultValue : ret;
+
+
+
+
 
     function createCalc(av, bv, p) {
 
@@ -463,10 +470,13 @@ p._refreshInputs = function () {
 
     var value = this.getValue();
 
-    this._inputs.forEach(function (input) {
+    if (value !== undefined) {
+        
+        this._inputs.forEach(function (input) {
 
-        input.value = value;
-    });
+            input.value = value;
+        });
+    }
 };
 
 p._refreshTgglKey = function () {

@@ -73,7 +73,11 @@ module.exports = {
                 input.units = ['px'];
                 break; 
 
-            case 'borderColor':
+            case 'color':
+            case 'borderColorTop':
+            case 'borderColorRight':
+            case 'borderColorBottom':
+            case 'borderColorLeft':
             case 'backgroundColor': 
                 input.type = 'color'; 
                 break;

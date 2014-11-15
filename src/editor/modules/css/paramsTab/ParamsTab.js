@@ -146,6 +146,16 @@ p._createBase = function () {
 
             var optionLine;
 
+            if (node.input) {
+
+                if (typeof(node.input) === 'string') {
+                    node.input = {type: node.input};
+                }
+
+                node.inputs = [node.input];
+                delete node.input;
+            }
+
             if (node.children) {
 
                 optionLine = this._createGroup(node);
@@ -156,6 +166,7 @@ p._createBase = function () {
                 
                 optionLine = this._createParam(node);
             }
+
 
             if (parent.addSubline) {
 
@@ -222,15 +233,17 @@ p._createGroup = function (opt) {
     var inpOpt = {
         title: opt.title,
         tgglChildren: {
-            onClick: toggleChildren,
+            onClick: onToggleChildren,
         }
     };
 
     var optionLine = new OptionLine(inpOpt);
 
-    function toggleChildren() {
+    function onToggleChildren() {
 
-        isChildrenVisible = !!isChildrenVisible;
+        isChildrenVisible = !isChildrenVisible;
+
+        optionLine.buttons.tgglChildren.setToggle(isChildrenVisible);
 
         if (isChildrenVisible) {
 
@@ -241,7 +254,7 @@ p._createGroup = function (opt) {
         }
     }
 
-    toggleChildren();
+    onToggleChildren();
 
     return optionLine;
 };
@@ -251,17 +264,8 @@ p._createParam = function (opt) {
     var inpOpt = {
         btnKey: true,
         title: opt.title,
-        inputs: []
+        inputs: opt.inputs,
     };
-
-    if (typeof(opt.input) === 'strnig') {
-
-        inpOpt.inputs.push({type: opt.input});
-    }
-    else if (typeof(opt.input) === 'object'){
-
-        inpOpt.inputs.push(opt.input);
-    }
 
     var optionLine = new OptionLine(inpOpt);
 

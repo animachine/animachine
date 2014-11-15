@@ -6,6 +6,7 @@ var amgui = require('../amgui');
 var UnitInput = require('./UnitInput');
 var StringInput = require('./StringInput');
 var SelectInput = require('./SelectInput');
+var ColorInput = require('./ColorInput');
 
 function OptionLine(opt) {
 
@@ -170,6 +171,10 @@ p.addInput = function (opt) {
             input = new SelectInput(opt);
             break;
 
+        case 'color':
+            input = new ColorInput(opt);
+            break;
+
         case 'string':
         default:
             input = new StringInput(opt);
@@ -202,12 +207,12 @@ p.addSubline = function (de) {
 
 p.showSubline = function () {
 
-    this._deSubcont.style.visibility = '';
+    this._deSubcont.style.display = '';
 };
 
 p.hideSubline = function () {
 
-    this._deSubcont.style.visibility = 'hidden';
+    this._deSubcont.style.display = 'none';
 };
 
 

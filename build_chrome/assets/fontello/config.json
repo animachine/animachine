@@ -139,6 +139,12 @@
       "src": "fontawesome"
     },
     {
+      "uid": "598a5f2bcf3521d1615de8e1881ccd17",
+      "css": "clock",
+      "code": 59458,
+      "src": "fontawesome"
+    },
+    {
       "uid": "e594fc6e5870b4ab7e49f52571d52577",
       "css": "resize-full",
       "code": 59437,
@@ -389,6 +395,12 @@
       "css": "cursor",
       "code": 59449,
       "src": "iconic"
+    },
+    {
+      "uid": "14e9aa28bf2a3531274f85194e733b71",
+      "css": "color-adjust",
+      "code": 59459,
+      "src": "mfglabs"
     },
     {
       "uid": "33afa0f624ce5dae73f62a3f21a67f83",

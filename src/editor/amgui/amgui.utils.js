@@ -73,8 +73,10 @@ function callOnAdded(de, cb, thisArg) {
     }
 
 
-
-    var setI = setInterval(function () {
+    
+    var setI = setInterval(checkLoop, 234);
+    
+    function checkLoop() {
 
         if (check(de)) {
 
@@ -83,8 +85,8 @@ function callOnAdded(de, cb, thisArg) {
             cb.call(thisArg);
         }
         
-    }, 234);
-    
+    }
+
     function check (node) {
 
         while (node.parentNode) {

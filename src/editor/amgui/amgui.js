@@ -68,6 +68,8 @@ _.extend(amgui,
                 if ('flex' in opt) de.style.flex = opt.flex;
                 if ('position' in opt) de.style.position = opt.position;
                 if ('parent' in opt)  opt.parent.appendChild(de);
+                if ('width' in opt)  de.style.width = opt.width;
+                if ('height' in opt)  de.style.height = opt.height;
             }
 
             return de;

@@ -38,10 +38,13 @@ gulp.task('vendor', function () {
       paths.bower + 'jquery/dist/jquery.js',
       paths.bower + 'mustache/mustache.js',
       paths.bower + 'codemirror/lib/codemirror.js',
-      paths.bower + 'codemirror/mode/javascript/javascript.js'
+      paths.bower + 'codemirror/mode/javascript/javascript.js',
+      paths.bower + 'colorPicker/colors.js',
+      paths.bower + 'colorPicker/colorPicker.data.js',
+      paths.bower + 'colorPicker/colorPicker.js',
     ])
     .pipe(concat('vendor.js'))
-    .pipe(uglify())
+    // .pipe(uglify())
     .pipe(gulp.dest('./build'))
     .pipe(size());
 });

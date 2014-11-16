@@ -27,7 +27,7 @@ module.exports = {
         var paramOpt = {
                 name: opt.name,
                 optionLine: {
-                    inputs: [{}]
+                    inputs: [{name: 'input'}]
                 }
             },
             input = paramOpt.optionLine.inputs[0];
@@ -37,7 +37,7 @@ module.exports = {
 
             case 'x':
             case 'y': 
-            case 'z': 
+            case 'z':
                 input.units = ['px']; 
                 break;
 
@@ -93,9 +93,15 @@ module.exports = {
                 break;
 
             case 'opacity':
+                input.type = 'unit';
+                input.precision = 2;
                 input.min = 0;
                 input.max = 1;
                 break;
+        }
+
+        if (input.units) {
+            input.type = 'unit';
         }
 
         return new CssParam(paramOpt);

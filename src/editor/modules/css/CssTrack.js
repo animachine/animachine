@@ -251,7 +251,8 @@ p.addParam = function (opt, skipHistory) {
         else {
             this._paramGroup.addParam(param);
         }
-     
+        console.log('addParam', opt)
+        this.emit('addParam');
         this.emit('change');
     
         return param;

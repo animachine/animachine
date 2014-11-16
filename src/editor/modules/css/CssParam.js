@@ -495,7 +495,7 @@ p._refreshTgglKey = function () {
 
 p._createOptions = function (opt) {
 
-    this.optionLine = new OptionLine(_.merge({
+    this.optionLine = new OptionLine(_.assign({
         contextMenuOptions: [
             {text: 'move up', onSelect: this.emit.bind(this, 'move', this, -1)},
             {text: 'move down', onSelect: this.emit.bind(this, 'move', this, 1)},
@@ -511,14 +511,16 @@ p._createOptions = function (opt) {
         },
         inputs: [{
             type: 'unit',
-            onChange: this._onChangeInput,
             units: [],
             name: 'input'
         }],
         indent: 0
     }, opt));
 
-    this.attachInput(this.optionLine.inputs.input);
+    if (this.optionLine.inputs.input){
+        
+        this.attachInput(this.optionLine.inputs.input);
+    }
 };
 
 p._createKeyline = function () {

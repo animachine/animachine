@@ -86,6 +86,7 @@ p.addParam = function (param) {
     }
 
     this.emit('changeHeight');
+    this._refreshHeights();
 };
 
 p.removeParam = function (param) {
@@ -103,6 +104,7 @@ p.removeParam = function (param) {
     this.keyLine.removeKeyline(param.keyLine);
 
     this.emit('changeHeight');
+    this._refreshHeights();
 };
 
 p.getParam = function (paramName) {

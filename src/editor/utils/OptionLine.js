@@ -193,6 +193,7 @@ p.addButton = function (opt) {
     this._btnCont.appendChild(opt.domElem);
 
     opt.domElem.style.display = 'inline-block';
+    opt.domElem.style.verticalAlign = 'top';
 
     if (opt.name) {
 

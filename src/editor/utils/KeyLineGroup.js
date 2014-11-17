@@ -80,6 +80,24 @@ p.removeKeyline = function (keyLine) {
     this._refreshHeadKeyline();
 };
 
+p.getEases = function () {
+
+    var eases = [];
+
+    this._keyLines.forEach(function (keyLine) {
+
+        keyLine.getEases().forEach(function (ease) {
+
+            if (!_.find(eases, ease)) {
+
+                eases.push(ease);
+            };
+        })
+    });
+
+    return eases;
+}
+
 
 
 
@@ -93,7 +111,14 @@ p.removeKeyline = function (keyLine) {
 p._onChangeKeyLine = function (key) {
 
     this._refreshHeadKeyline();
+
+    this.emit('change');
 };
+
+
+
+
+
 
 p._refreshHeadKeyline = function () {
 
@@ -111,7 +136,7 @@ p._delayedRefreshHeadKeyline = function () {
 
     this._keyLines.forEach(function (keyLine) {
 
-        keyLine.forEachKeys(function (key) {
+        keyLine.forEachKeys(function (key, idx) {
 
             var tidx = times.indexOf(key.time);
 
@@ -123,8 +148,8 @@ p._delayedRefreshHeadKeyline = function () {
             }
 
             keysOnTimes[tidx].push(key);
-        })
-    });
+        }, this);
+    }, this);
 
 
     while (times.length < this._keys.length) {
@@ -146,6 +171,33 @@ p._delayedRefreshHeadKeyline = function () {
 
         key.setSubkeys(keysOnTimes[idx]);
 
+    }, this);
+
+
+    this._svgEase.innerHTML = '';
+
+    this.getEases().forEach(function (ease) {
+
+        this._renderEasePath(ease.ease, ease.x, ease.w);
+    }, this);
+};
+
+p._renderEase = function () {
+
+    this._sortKeys();
+
+    this._svgEase.innerHTML = '';
+
+    this.forEachKeys(function (key, idx) {
+
+        if (idx === this._keys.length-1) {
+            return;
+        }
+
+        var x = key.domElem.offsetLeft,
+            w = this._keys[idx+1].domElem.offsetLeft - x;
+        
+        this._renderEasePath(key.ease, x, w);
     }, this);
 };
 

@@ -144,7 +144,26 @@ p.getKeyTimes = function () {
     return times;
 };
 
+p.getEases = function () {
 
+    var eases = [];
+
+    this._keys.forEach(function (key, idx) {
+
+        if (idx !== this._keys.length-1) {
+
+            var ease = {
+                x: key.domElem.offsetLeft,
+                ease: key.ease,
+            }
+            ease.w = this._keys[idx+1].domElem.offsetLeft - ease.x;
+
+            eases.push(ease);
+        }
+    }, this);
+
+    return eases;
+}
 
 
 
@@ -169,10 +188,9 @@ p._renderEase = function () {
         }
 
         var x = key.domElem.offsetLeft,
-            w = this._keys[idx+1].domElem.offsetLeft - x,
-            path = this._renderEasePath(key.ease, x, w);
-
-        this._svgEase.appendChild(path);
+            w = this._keys[idx+1].domElem.offsetLeft - x;
+    
+        this._renderEasePath(key.ease, x, w);
     }, this);
 };
 
@@ -203,7 +221,7 @@ p._renderEasePath = function (ease, x, w, color) {
     path.style.stroke = color;
     path.setAttribute('d', d);
 
-    return path;
+    this._svgEase.appendChild(path);
 }
 
 p._sortKeys = function () {

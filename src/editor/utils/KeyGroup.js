@@ -79,10 +79,6 @@ p.removeSubkey = function (key) {
 
 
 
-p._onChangeEase = function (ease) {
-
-    this.ease = ease;
-};
 
 p._onSelectDropdown = function (e) {
     
@@ -103,7 +99,10 @@ p._onSelectDropdown = function (e) {
 
 p._onChangeEase = function (ease) {
 
-    this.ease = ease;
+    this._subkeys.forEach(function (key) {
+
+        key.ease = ease;
+    });
 };
 
 

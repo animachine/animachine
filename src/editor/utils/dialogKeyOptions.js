@@ -46,6 +46,11 @@ p.show = function (opt) {
 
     this.ease = opt.ease;
 
+    if ('onChangeEase' in opt) {
+
+        this.on('changeEase', opt.onChangeEase);
+    }
+
     this.domElem.showModal();
 };
 

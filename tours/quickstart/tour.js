@@ -226,7 +226,7 @@ function getWs() {
                             children: [
                                 {
                                     type: 'panel',
-                                    size: 32,
+                                    size: 24,
                                     scaleMode: 'fix',
                                     noHead: true,
                                     tabs: [{name: 'tools'}],

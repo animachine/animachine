@@ -21,7 +21,7 @@ Object.defineProperties(p, {
 
     size: {
         set: function (v) {
-
+if (v == 32) debugger;
             if (typeof(v) !== 'number' || this._size === v) return;
 
             this._size = v;

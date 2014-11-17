@@ -9,14 +9,12 @@ function KeyGroup(opt) {
 
     opt = opt || {};
 
-    opt.color = 'tomato';
+    this._subkeys = [];
 
     Key.call(this, opt);
 
     am.timeline.removeListener('deselectAllKeys', this._onDeselectAllKeys);
     am.timeline.removeListener('translateSelectedKeys', this._onTranslateSelectedKeys);
-
-    this._subkeys = [];
 }
 
 inherits(KeyGroup, Key);
@@ -24,6 +22,20 @@ var p = KeyGroup.prototype;
 module.exports = KeyGroup;
 
 
+
+
+Object.defineProperties(p, {
+
+    ease: {
+        set: function (ease) {
+
+            this._subkeys.forEach(function (key) {
+
+                key.ease = ease;
+            });
+        }
+    }
+})
 
 
 
@@ -99,10 +111,7 @@ p._onSelectDropdown = function (e) {
 
 p._onChangeEase = function (ease) {
 
-    this._subkeys.forEach(function (key) {
-
-        key.ease = ease;
-    });
+    this.ease = ease;
 };
 
 

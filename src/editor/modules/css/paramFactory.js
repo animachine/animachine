@@ -26,6 +26,7 @@ module.exports = {
 
         var paramOpt = {
                 name: opt.name,
+                keys: opt.keys,
                 optionLine: {
                     inputs: [{name: 'input'}]
                 }

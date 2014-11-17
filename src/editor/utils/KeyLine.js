@@ -285,7 +285,7 @@ p._createDomElem = function createKeyline(opt) {
     this._svgEase.style.width = '100%';
     this._svgEase.style.height = '100%';
     this._svgEase.style.fill = 'none';
-    this._svgEase.style.stroke = 'white';
+    this._svgEase.style.stroke = '#444';
     this._svgEase.style.position = 'absolute';
     this._deLine.appendChild(this._svgEase);
 }

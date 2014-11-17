@@ -123,7 +123,7 @@ p.getSave = function () {
 
     this._endParams.forEach(function (param) {
 
-        save.parameters.push(param.getSave());
+        save.endParams.push(param.getSave());
     });
 
     return save;
@@ -213,10 +213,12 @@ p.addParam = function (opt, skipHistory) {
 
     if (param) {
 
-        return param;
+        if (opt.keys) {
+
+            opt.keys.forEach(param.addKey, param);
+        }
     }
     else {
-
         param = paramFactory.create(opt);
 
         if (!skipHistory) {
@@ -251,12 +253,13 @@ p.addParam = function (opt, skipHistory) {
         else {
             this._paramGroup.addParam(param);
         }
-        console.log('addParam', opt)
+
         this.emit('addParam');
         this.emit('change');
-    
-        return param;
     }
+
+    console.log('addParam', opt)
+    return param;
 };
 
 p.removeParam = function (param, skipHistory) {

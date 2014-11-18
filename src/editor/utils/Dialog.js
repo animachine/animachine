@@ -2,7 +2,7 @@
 
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
-var amgui = require('../../amgui');
+var amgui = require('../amgui');
 
 function Dialog () {
 

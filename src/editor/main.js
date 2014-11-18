@@ -7,7 +7,7 @@ var Toolbar = require('./toolbar');
 var Windooman = require('./windooman');
 var HistoryTab = require('./historyTab');
 var Warehouseman = require('./warehouseman');
-var Windooman = require('./shortcuts');
+var shortcuts = require('./shortcuts');
 var Chronicler = require('./chronicler');
 var DomPicker = require('./dom-picker');
 var Tour = require('./tour');
@@ -97,7 +97,12 @@ am._init = function () {
     am.deGuiCont.appendChild(am.workspace.domElem);
 
     am.deRoot = document.body;
+    
     am.history = new Chronicler();
+    shortcuts.on('undo', am.history.undo.bind(am.history));
+    shortcuts.on('redo', am.history.redo.bind(am.history));
+    shortcuts.on('groupElements', function(){console.log('groupElements')});
+    
     am.historyTab = new HistoryTab();
     am.toolbar = new Toolbar();
     am.timeline = new Timeline();

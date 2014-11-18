@@ -42,6 +42,8 @@ gulp.task('vendor', function () {
       paths.bower + 'colorPicker/colors.js',
       paths.bower + 'colorPicker/colorPicker.data.js',
       paths.bower + 'colorPicker/colorPicker.js',
+      paths.bower + 'mousetrap/mousetrap.min.js',
+      paths.bower + 'mousetrap/plugins/record/mousetrap-record.js',
     ])
     .pipe(concat('vendor.js'))
     // .pipe(uglify())

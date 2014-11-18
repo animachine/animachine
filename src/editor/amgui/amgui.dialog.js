@@ -101,22 +101,19 @@ function createDialog(opt) {
 
     de.addButton = function (caption, handler) {
 
-        function (caption) {
+        var btn = amgui.createBtn({caption: caption});
+        btn.style.display = 'inline-block';
+        btn.style.fontWeight = 'bold';
+        btn.style.fontSize = '18px';
+        btn.style.background = 'none';
+        buttonsCont.appendChild(btn);
 
-            var btn = amgui.createBtn({caption: caption});
-            btn.style.display = 'inline-block';
-            btn.style.fontWeight = 'bold';
-            btn.style.fontSize = '18px';
-            btn.style.background = 'none';
-            buttonsCont.appendChild(btn);
+        btn.addEventListener('click', function () {
+            
+            if (handler) handler;
 
-            btn.addEventListener('click', function () {
-                
-                if (handler) handler;
-
-                de.dispatchEvent(new Event('click_' + caption.toLowerCase()));
-            });
-        }
+            de.dispatchEvent(new Event('click_' + caption.toLowerCase()));
+        });
     }
 
     de.setTitle(opt.title);

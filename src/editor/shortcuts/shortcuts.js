@@ -1,7 +1,7 @@
 var EventEmitter = require('events').EventEmitter;
 
 var shortcuts = new EventEmitter();
-ctrlule.exports = shortcuts;
+module.exports = shortcuts;
 
 var map = {
     'copy': ['ctrl+c'],
@@ -10,9 +10,9 @@ var map = {
     'duplicate': ['ctrl+d'],
     'keyboardShortcuts': ['ctrl+k'],
     'paste': ['ctrl+v'],
-    'redo': ['ctrl+z'],
+    'redo': ['ctrl+shift+z'],
     'selectAll': ['ctrl+c'],
-    'undo': ['ctrl+c'],
+    'undo': ['ctrl+z'],
     'save': ['ctrl+s'],
     'save': ['ctrl+shift+s'],
     'play/pause': ['space'],
@@ -26,15 +26,18 @@ shortcuts.readMap = function (map) {
     Object.keys(map).forEach(function (key) {
 
         map[key].forEach(function (stroke) {
-
-            Mousetrap.bind(stroke, this.emit.bind(this, key));
+            // Mousetrap.bind(stroke, this.emit.bind(this, key));
+            Mousetrap.bind(stroke, function () {
+                console.log(key, stroke);
+                this.emit(key);
+            }.bind(this));
         }, this);
     }, this);
 };
 
 shortcuts.readMap(map);
 
-shortcuts.getShortcut function (key) {
+shortcuts.getShortcut = function (key) {
 
     return map[key].join(', ');
 }

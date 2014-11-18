@@ -20571,3 +20571,202 @@ CodeMirror.defineMIME("application/typescript", { name: "javascript", typescript
 	};
 
 })(window);
+/* mousetrap v1.4.6 craig.is/killing/mice */
+(function(J,r,f){function s(a,b,d){a.addEventListener?a.addEventListener(b,d,!1):a.attachEvent("on"+b,d)}function A(a){if("keypress"==a.type){var b=String.fromCharCode(a.which);a.shiftKey||(b=b.toLowerCase());return b}return h[a.which]?h[a.which]:B[a.which]?B[a.which]:String.fromCharCode(a.which).toLowerCase()}function t(a){a=a||{};var b=!1,d;for(d in n)a[d]?b=!0:n[d]=0;b||(u=!1)}function C(a,b,d,c,e,v){var g,k,f=[],h=d.type;if(!l[a])return[];"keyup"==h&&w(a)&&(b=[a]);for(g=0;g<l[a].length;++g)if(k=
+l[a][g],!(!c&&k.seq&&n[k.seq]!=k.level||h!=k.action||("keypress"!=h||d.metaKey||d.ctrlKey)&&b.sort().join(",")!==k.modifiers.sort().join(","))){var m=c&&k.seq==c&&k.level==v;(!c&&k.combo==e||m)&&l[a].splice(g,1);f.push(k)}return f}function K(a){var b=[];a.shiftKey&&b.push("shift");a.altKey&&b.push("alt");a.ctrlKey&&b.push("ctrl");a.metaKey&&b.push("meta");return b}function x(a,b,d,c){m.stopCallback(b,b.target||b.srcElement,d,c)||!1!==a(b,d)||(b.preventDefault?b.preventDefault():b.returnValue=!1,b.stopPropagation?
+b.stopPropagation():b.cancelBubble=!0)}function y(a){"number"!==typeof a.which&&(a.which=a.keyCode);var b=A(a);b&&("keyup"==a.type&&z===b?z=!1:m.handleKey(b,K(a),a))}function w(a){return"shift"==a||"ctrl"==a||"alt"==a||"meta"==a}function L(a,b,d,c){function e(b){return function(){u=b;++n[a];clearTimeout(D);D=setTimeout(t,1E3)}}function v(b){x(d,b,a);"keyup"!==c&&(z=A(b));setTimeout(t,10)}for(var g=n[a]=0;g<b.length;++g){var f=g+1===b.length?v:e(c||E(b[g+1]).action);F(b[g],f,c,a,g)}}function E(a,b){var d,
+c,e,f=[];d="+"===a?["+"]:a.split("+");for(e=0;e<d.length;++e)c=d[e],G[c]&&(c=G[c]),b&&"keypress"!=b&&H[c]&&(c=H[c],f.push("shift")),w(c)&&f.push(c);d=c;e=b;if(!e){if(!p){p={};for(var g in h)95<g&&112>g||h.hasOwnProperty(g)&&(p[h[g]]=g)}e=p[d]?"keydown":"keypress"}"keypress"==e&&f.length&&(e="keydown");return{key:c,modifiers:f,action:e}}function F(a,b,d,c,e){q[a+":"+d]=b;a=a.replace(/\s+/g," ");var f=a.split(" ");1<f.length?L(a,f,b,d):(d=E(a,d),l[d.key]=l[d.key]||[],C(d.key,d.modifiers,{type:d.action},
+c,a,e),l[d.key][c?"unshift":"push"]({callback:b,modifiers:d.modifiers,action:d.action,seq:c,level:e,combo:a}))}var h={8:"backspace",9:"tab",13:"enter",16:"shift",17:"ctrl",18:"alt",20:"capslock",27:"esc",32:"space",33:"pageup",34:"pagedown",35:"end",36:"home",37:"left",38:"up",39:"right",40:"down",45:"ins",46:"del",91:"meta",93:"meta",224:"meta"},B={106:"*",107:"+",109:"-",110:".",111:"/",186:";",187:"=",188:",",189:"-",190:".",191:"/",192:"`",219:"[",220:"\\",221:"]",222:"'"},H={"~":"`","!":"1",
+"@":"2","#":"3",$:"4","%":"5","^":"6","&":"7","*":"8","(":"9",")":"0",_:"-","+":"=",":":";",'"':"'","<":",",">":".","?":"/","|":"\\"},G={option:"alt",command:"meta","return":"enter",escape:"esc",mod:/Mac|iPod|iPhone|iPad/.test(navigator.platform)?"meta":"ctrl"},p,l={},q={},n={},D,z=!1,I=!1,u=!1;for(f=1;20>f;++f)h[111+f]="f"+f;for(f=0;9>=f;++f)h[f+96]=f;s(r,"keypress",y);s(r,"keydown",y);s(r,"keyup",y);var m={bind:function(a,b,d){a=a instanceof Array?a:[a];for(var c=0;c<a.length;++c)F(a[c],b,d);return this},
+unbind:function(a,b){return m.bind(a,function(){},b)},trigger:function(a,b){if(q[a+":"+b])q[a+":"+b]({},a);return this},reset:function(){l={};q={};return this},stopCallback:function(a,b){return-1<(" "+b.className+" ").indexOf(" mousetrap ")?!1:"INPUT"==b.tagName||"SELECT"==b.tagName||"TEXTAREA"==b.tagName||b.isContentEditable},handleKey:function(a,b,d){var c=C(a,b,d),e;b={};var f=0,g=!1;for(e=0;e<c.length;++e)c[e].seq&&(f=Math.max(f,c[e].level));for(e=0;e<c.length;++e)c[e].seq?c[e].level==f&&(g=!0,
+b[c[e].seq]=1,x(c[e].callback,d,c[e].combo,c[e].seq)):g||x(c[e].callback,d,c[e].combo);c="keypress"==d.type&&I;d.type!=u||w(a)||c||t(b);I=g&&"keydown"==d.type}};J.Mousetrap=m;"function"===typeof define&&define.amd&&define(m)})(window,document);
+
+/**
+ * This extension allows you to record a sequence using Mousetrap.
+ *
+ * @author Dan Tao <daniel.tao@gmail.com>
+ */
+(function(Mousetrap) {
+    /**
+     * the sequence currently being recorded
+     *
+     * @type {Array}
+     */
+    var _recordedSequence = [],
+
+        /**
+         * a callback to invoke after recording a sequence
+         *
+         * @type {Function|null}
+         */
+        _recordedSequenceCallback = null,
+
+        /**
+         * a list of all of the keys currently held down
+         *
+         * @type {Array}
+         */
+        _currentRecordedKeys = [],
+
+        /**
+         * temporary state where we remember if we've already captured a
+         * character key in the current combo
+         *
+         * @type {boolean}
+         */
+        _recordedCharacterKey = false,
+
+        /**
+         * a handle for the timer of the current recording
+         *
+         * @type {null|number}
+         */
+        _recordTimer = null,
+
+        /**
+         * the original handleKey method to override when Mousetrap.record() is
+         * called
+         *
+         * @type {Function}
+         */
+        _origHandleKey = Mousetrap.handleKey;
+
+    /**
+     * handles a character key event
+     *
+     * @param {string} character
+     * @param {Array} modifiers
+     * @param {Event} e
+     * @returns void
+     */
+    function _handleKey(character, modifiers, e) {
+        // remember this character if we're currently recording a sequence
+        if (e.type == 'keydown') {
+            if (character.length === 1 && _recordedCharacterKey) {
+                _recordCurrentCombo();
+            }
+
+            for (i = 0; i < modifiers.length; ++i) {
+                _recordKey(modifiers[i]);
+            }
+            _recordKey(character);
+
+        // once a key is released, all keys that were held down at the time
+        // count as a keypress
+        } else if (e.type == 'keyup' && _currentRecordedKeys.length > 0) {
+            _recordCurrentCombo();
+        }
+    }
+
+    /**
+     * marks a character key as held down while recording a sequence
+     *
+     * @param {string} key
+     * @returns void
+     */
+    function _recordKey(key) {
+        var i;
+
+        // one-off implementation of Array.indexOf, since IE6-9 don't support it
+        for (i = 0; i < _currentRecordedKeys.length; ++i) {
+            if (_currentRecordedKeys[i] === key) {
+                return;
+            }
+        }
+
+        _currentRecordedKeys.push(key);
+
+        if (key.length === 1) {
+            _recordedCharacterKey = true;
+        }
+    }
+
+    /**
+     * marks whatever key combination that's been recorded so far as finished
+     * and gets ready for the next combo
+     *
+     * @returns void
+     */
+    function _recordCurrentCombo() {
+        _recordedSequence.push(_currentRecordedKeys);
+        _currentRecordedKeys = [];
+        _recordedCharacterKey = false;
+        _restartRecordTimer();
+    }
+
+    /**
+     * ensures each combo in a sequence is in a predictable order and formats
+     * key combos to be '+'-delimited
+     *
+     * modifies the sequence in-place
+     *
+     * @param {Array} sequence
+     * @returns void
+     */
+    function _normalizeSequence(sequence) {
+        var i;
+
+        for (i = 0; i < sequence.length; ++i) {
+            sequence[i].sort(function(x, y) {
+                // modifier keys always come first, in alphabetical order
+                if (x.length > 1 && y.length === 1) {
+                    return -1;
+                } else if (x.length === 1 && y.length > 1) {
+                    return 1;
+                }
+
+                // character keys come next (list should contain no duplicates,
+                // so no need for equality check)
+                return x > y ? 1 : -1;
+            });
+
+            sequence[i] = sequence[i].join('+');
+        }
+    }
+
+    /**
+     * finishes the current recording, passes the recorded sequence to the stored
+     * callback, and sets Mousetrap.handleKey back to its original function
+     *
+     * @returns void
+     */
+    function _finishRecording() {
+        if (_recordedSequenceCallback) {
+            _normalizeSequence(_recordedSequence);
+            _recordedSequenceCallback(_recordedSequence);
+        }
+
+        // reset all recorded state
+        _recordedSequence = [];
+        _recordedSequenceCallback = null;
+        _currentRecordedKeys = [];
+
+        Mousetrap.handleKey = _origHandleKey;
+    }
+
+    /**
+     * called to set a 1 second timeout on the current recording
+     *
+     * this is so after each key press in the sequence the recording will wait for
+     * 1 more second before executing the callback
+     *
+     * @returns void
+     */
+    function _restartRecordTimer() {
+        clearTimeout(_recordTimer);
+        _recordTimer = setTimeout(_finishRecording, 1000);
+    }
+
+    /**
+     * records the next sequence and passes it to a callback once it's
+     * completed
+     *
+     * @param {Function} callback
+     * @returns void
+     */
+    Mousetrap.record = function(callback) {
+        Mousetrap.handleKey = _handleKey;
+        _recordedSequenceCallback = callback;
+    };
+
+})(Mousetrap);

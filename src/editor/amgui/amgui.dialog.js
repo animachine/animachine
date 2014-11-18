@@ -96,7 +96,12 @@ function createDialog(opt) {
 
         buttonsCont.innerHTML = '';
 
-        buttons.forEach(function (caption) {
+        buttons.forEach(de.addButton);
+    };
+
+    de.addButton = function (caption, handler) {
+
+        function (caption) {
 
             var btn = amgui.createBtn({caption: caption});
             btn.style.display = 'inline-block';
@@ -106,10 +111,13 @@ function createDialog(opt) {
             buttonsCont.appendChild(btn);
 
             btn.addEventListener('click', function () {
+                
+                if (handler) handler;
+
                 de.dispatchEvent(new Event('click_' + caption.toLowerCase()));
             });
-        });
-    };
+        }
+    }
 
     de.setTitle(opt.title);
     de.setContent(opt.content);

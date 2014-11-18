@@ -7,6 +7,7 @@ var Toolbar = require('./toolbar');
 var Windooman = require('./windooman');
 var HistoryTab = require('./historyTab');
 var Warehouseman = require('./warehouseman');
+var Windooman = require('./shortcuts');
 var Chronicler = require('./chronicler');
 var DomPicker = require('./dom-picker');
 var Tour = require('./tour');

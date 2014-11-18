@@ -8,9 +8,6 @@ function DialogFeatureDoesntExits () {
 
     EventEmitter.call(this);
 
-    this._name = '';
-    this._selectors = [];
-
     this._onClickOk = this._onClickOk.bind(this); 
 }
 

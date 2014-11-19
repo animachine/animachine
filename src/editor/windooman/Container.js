@@ -139,12 +139,14 @@ p._refreshHandlers = function () {
             deHandler.style.top = '0px';
             deHandler.style.width = thickness + 'px';
             deHandler.style.height = '100%';
+            deHandler.style.cursor = 'ew-resize';
         }
         else {
             deHandler.style.left = '0px';
             deHandler.style.top = (ncBr.top - br.top - thickness/2) + 'px';
             deHandler.style.width = '100%';
             deHandler.style.height = thickness + 'px';
+            deHandler.style.cursor = 'ns-resize';
         }
     }
 

@@ -114,7 +114,7 @@ Object.defineProperties(p, {
     currTime: {
         set: function (v) {
 
-            v = Math.max(8, parseInt(v));
+            v = Math.max(0, parseInt(v));
 
             if (!Number.isFinite(v) || this._currTime === v) return;
 
@@ -345,7 +345,7 @@ p._refreshPointer = function () {
 
     var pos = ((this.start + this.currTime) / this.visibleTime) * this.width;
 
-    this._dePointer.style.left = pos + 'px';
+    this._dePointer.style.transform = 'translate(' + pos + 'px)';
 };
 
 

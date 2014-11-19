@@ -518,7 +518,8 @@ p._refreshTimebarWidth = function () {
 p._refreshDePointer = function () {
 
     var left = (this._timebar.start + this.currTime) * this.timescale;
-    this._dePointerLine.style.left = left + 'px';
+    this._dePointerLine.style.transform = 'translateX(' + left + 'px)';
+    this._dePointerLine.style.visibility = left < 0 ? 'hidden' : '';
 };
 
 p._refreshDeCurrTime = function () {

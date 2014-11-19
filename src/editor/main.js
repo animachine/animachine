@@ -10,6 +10,7 @@ var Warehouseman = require('./warehouseman');
 var shortcuts = require('./shortcuts');
 var Chronicler = require('./chronicler');
 var DomPicker = require('./dom-picker');
+var i18n = require('./i18n');
 var Tour = require('./tour');
 var Mouse = require('./mouse');
 var dialogFeatureDoesntExits = require('./commonDialogs/dialogFeatureDoesntExits');
@@ -68,6 +69,8 @@ setTimeout(function(){am.timeline.pause();}, 300);
 am._init = function () {
 
     if (isInited) return;
+
+    am.i18n = i18n;
     
     am.dialogs = {
         featureDoesntExist: dialogFeatureDoesntExits,

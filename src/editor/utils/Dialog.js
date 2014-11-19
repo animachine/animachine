@@ -11,11 +11,6 @@ function Dialog () {
     this.title = 'Dialog';
     this._name = '';
     this._setupProperties = [];
-
-    this._onClickOk = this._onClickOk.bind(this); 
-    this._onChangeName = this._onChangeName.bind(this); 
-    this._onSelectFill = this._onSelectFill.bind(this); 
-    this._onChangeIterations = this._onChangeIterations.bind(this); 
 }
 
 inherits(Dialog, EventEmitter);

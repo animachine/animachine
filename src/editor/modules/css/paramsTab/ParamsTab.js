@@ -68,6 +68,8 @@ p._unlisten = function () {
 
     if (!this._currTrack) return;
 
+    this._showHideNoTrackMsg(true);
+
     this._currTrack.removeListener('addParam', this._onTrackAddParam);
 
     this._forEachInput(function (input, paramName) {
@@ -83,8 +85,10 @@ p._unlisten = function () {
 };
 
 p._listen = function () {
-console.log('_listen')
+
     this._currTrack.on('addParam', this._onTrackAddParam);
+    
+    this._showHideNoTrackMsg(false);
 
     this._forEachInput(function (input, paramName) {
 
@@ -98,6 +102,12 @@ console.log('_listen')
     }, this);
 };
 
+p._showHideNoTrackMsg = function (show) {
+
+    this._deMsgNoTrack.style.display = show ? 'inline-block' : 'none';
+    this._deScrollCont.style.display = show ? 'none' : '';
+}
+
 p._forEachInput = function (fn, thisArg) {
 
     this._paramOptionLines.forEach(function (optionLine) {
@@ -107,8 +117,7 @@ p._forEachInput = function (fn, thisArg) {
             fn.call(thisArg, optionLine.inputs[paramName], paramName);
         });
     }, this);
-}
-
+};
 
 
 
@@ -125,13 +134,21 @@ p._createBase = function () {
     this.domElem.style.height = '100%';
     this.domElem.style.background = amgui.color.bg0;
 
-    this._scrollCont = document.createElement('div');
-    this._scrollCont.style.width = '100%';
-    this.domElem.appendChild(this._scrollCont);
+    this._deMsgNoTrack = amgui.createLabel({
+        parent: this.domElem,
+        color: amgui.color.textInactive,
+        text: am.i18n.cssModule.noTrackSelected,
+    });
+
+    this._deScrollCont = amgui.createDiv({
+        display: 'none',
+        width: '100%',
+        parent: this.domElem,
+    });
 
     amgui.makeScrollable({
         deCont: this.domElem,
-        deTarget: this._scrollCont
+        deTarget: this._deScrollCont
     });
 
     var boderStyleOptions = 'none,hidden,dotted,dashed,solid,double,groove,ridge,inset,outset,initial,inherit'.split(',');
@@ -276,7 +293,7 @@ p._createBase = function () {
 
     }.bind(this);
 
-    build(paramTree, this._scrollCont, 0);
+    build(paramTree, this._deScrollCont, 0);
 };
 
 module.exports = ParamsTab;

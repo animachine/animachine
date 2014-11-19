@@ -32,13 +32,14 @@ function createLinebreak(opt) {
 
 function createLabel(opt) {
 
-    var de = amgui.createDiv();
+    var de = amgui.createDiv(opt);
 
     de.style.height = opt.height || amgui.LINE_HEIGHT + 'px';
     de.style.fontSize = opt.fontSize || amgui.FONT_SIZE;
     de.style.display = opt.display || 'inline-block';
     if ('flex' in opt) de.style.flex = opt.flex;
     if ('position' in opt) de.style.position = opt.position;
+    if ('color' in opt) de.style.color = opt.color;
 
     de.setText = function (text) {
         de.innerHTML = text || '';

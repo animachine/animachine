@@ -184,21 +184,7 @@ p._delayedRefreshHeadKeyline = function () {
 
 p._renderEase = function () {
 
-    this._sortKeys();
-
-    this._svgEase.innerHTML = '';
-
-    this.forEachKeys(function (key, idx) {
-
-        if (idx === this._keys.length-1) {
-            return;
-        }
-
-        var x = key.domElem.offsetLeft,
-            w = this._keys[idx+1].domElem.offsetLeft - x;
-        
-        this._renderEasePath(key.ease, x, w);
-    }, this);
+    
 };
 
 

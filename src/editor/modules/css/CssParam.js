@@ -167,7 +167,7 @@ p.getValue = function (time) {
             var p = (time - before.time) / (after.time - before.time), 
                 av = uncalc(after.value), bv = uncalc(before.value);
 
-            p = this._applyEase(before.ease, p);
+            p = before.ease.getRatio(p);
 
             ret = createCalc(av, bv, p);
         }

@@ -4,12 +4,13 @@ var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../amgui');
 
-function Dialog () {
+function Dialog (opt) {
 
     EventEmitter.call(this);
 
-    this.title = 'Dialog';
-    this._name = '';
+    opt = opt || {};
+
+    this.title = opt.title || 'Dialog';
     this._setupProperties = [];
 }
 
@@ -20,7 +21,6 @@ module.exports = Dialog;
 
 
 Object.defineProperties(p, {
-
 });
 
 p.show = function (opt) {

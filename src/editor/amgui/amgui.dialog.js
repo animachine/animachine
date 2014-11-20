@@ -96,7 +96,15 @@ function createDialog(opt) {
 
         buttonsCont.innerHTML = '';
 
-        buttons.forEach(de.addButton);
+        buttons.forEach(function (btnData) {
+            
+            if (typeof(btnData) === 'string') {
+                de.addButton(btnData);
+            }
+            else {
+                de.addButton(btnData.text, btnData.onClick);
+            }
+        });
     };
 
     de.addButton = function (caption, handler) {

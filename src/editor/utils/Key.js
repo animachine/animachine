@@ -4,6 +4,7 @@ var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var dialogKeyOptions = require('./dialogKeyOptions');
 var amgui = require('../amgui');
+var Ease = require('./Ease');
 
 function Key(opt) {
 
@@ -11,7 +12,7 @@ function Key(opt) {
     
     this._time =  0;
     this._value =  '';
-    this._ease = 'linear';
+    this.ease = new Ease();
     this._isSelected = false;
     this._height = amgui.LINE_HEIGHT;
 
@@ -21,12 +22,7 @@ function Key(opt) {
     this._onDeselectAllKeys = this._onDeselectAllKeys.bind(this);
     this._onTranslateSelectedKeys = this._onTranslateSelectedKeys.bind(this);
 
-    this._createDomElem({
-        timescale: am.timeline.timescale,
-        time: this.time,
-        ease: this.ease,
-        color: opt.color
-    });
+    this._createDomElem();
 
     this._deMenu = amgui.createDropdown({
         options: ['ease', 'delete']
@@ -118,20 +114,6 @@ Object.defineProperties(p, {
 
             return this._value;
         }
-    },
-    ease: {
-        set: function (v) {
-
-            if (!v || this._ease === v) return;
-
-            this._ease = v;
-
-            this.emit('changeEase', this);
-        },
-        get: function () {
-
-            return this._ease;
-        }
     }
 });
 
@@ -148,15 +130,15 @@ p.getSave = function () {
     return {
         value: this.value,
         time: this.time,
-        ease: this.ease
+        ease: this.ease.getSave(),
     };
 };
 
 p.useSave = function (save) {
 
-    this.value = save.value;
-    this.time = save.time;
-    this.ease = save.ease;
+    if ('value' in save) this.value = save.value;
+    if ('time' in save) this.time = save.time;
+    if ('ease' in save) this.ease.useSave(save.ease);
 };
 
 p.select = function () {
@@ -253,9 +235,7 @@ p._refreshDomElem = function () {
 
 
 
-p._createDomElem = function (opt) {
-
-    opt = opt || {};
+p._createDomElem = function () {
 
     var color = this.color || '#7700ff';
 

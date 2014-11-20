@@ -4,6 +4,7 @@ var Key = require('./Key');
 var inherits = require('inherits');
 var dialogKeyOptions = require('./dialogKeyOptions');
 var amgui = require('../amgui');
+var Ease = require('./Ease');
 
 function KeyGroup(opt) {
 
@@ -31,7 +32,7 @@ Object.defineProperties(p, {
 
             this._subkeys.forEach(function (key) {
 
-                key.ease = ease;
+                key.ease.useSave(ease);
             });
         }
     }
@@ -99,7 +100,7 @@ p._onSelectDropdown = function (e) {
     if (selection === 'ease') {
 
         dialogKeyOptions.show({
-            ease: this.ease,
+            ease: new Ease(),
             onChangeEase: this._onChangeEase,
         });
     }

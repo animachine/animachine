@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bezier-easing": "^0.4.4",
     "browserify": "^5.9.1",
     "css.escape": "^0.2.1",
     "domready": "^1.0.5",

@@ -10,11 +10,11 @@ module.exports = function (_amgui) {
         createBezierEditor: createBezierEditor,
 
         EASE2BEZIER: {
-            'ease': 'cubic-bezier(.25,.1,.25,1)',
-            'linear': 'cubic-bezier(0,0,1,1)',
-            'ease-in': 'cubic-bezier(.42,0,1,1)',
-            'ease-out': 'cubic-bezier(0,0,.58,1)',
-            'ease-in-out': 'cubic-bezier(.42,0,.58,1)',
+            'ease': [.25, .1, .25, 1],
+            'linear': [0, 0, 1, 1],
+            'ease-in': [.42, 0, 1, 1],
+            'ease-out': [0,0 , .58, 1],
+            'ease-in-out': [.42, 0, .58, 1],
         },
     };
 };
@@ -46,43 +46,15 @@ function createBezierEditor(opt) {
 
     de.getValue = function () {
 
-        return 'cubic-bezier('+p0.x+','+p0.y+','+p1.x+','+p1.y+')';
+        return [p0.x, p0.y, p1.x, p1.y];
     };
 
-    de.setValue = function (points) {
+    de.setPoints = function (points) {
 
-        if (amgui.EASE2BEZIER.hasOwnProperty(points)) {
-
-            points = amgui.EASE2BEZIER[points];
-        }
-
-        if (typeof(points) === 'string') {
-
-            var rx = /cubic-bezier\(\s*([\d\.]+)\s*,\s*([\d\.-]+)\s*,\s*([\d\.]+)\s*,\s*([\d\.-]+)\s*\)/,
-                m = rx.exec(points);
-
-            if (m) {
-                points = {
-                    cp0x: m[1],
-                    cp0y: m[2],
-                    cp1x: m[3],
-                    cp1y: m[4],
-                };
-            }
-            else {
-                points = {
-                    cp0x: 0.3,
-                    cp0y: 0.3,
-                    cp1x: 0.7,
-                    cp1y: 0.7,
-                };
-            }
-        }
-
-        p0.x = points.cp0x;
-        p0.y = points.cp0y;
-        p1.x = points.cp1x;
-        p1.y = points.cp1y;
+        p0.x = points[0];
+        p0.y = points[1];
+        p1.x = points[2];
+        p1.y = points[3];
         
         render();
     };
@@ -191,7 +163,7 @@ function createBezierEditor(opt) {
 
                 render();
               
-                de.dispatchEvent(new CustomEvent('change', {detail: {value: de.getValue()}}));
+                de.dispatchEvent(new CustomEvent('change', {detail: {points: de.getValue()}}));
             },
             onUp: function () {
 

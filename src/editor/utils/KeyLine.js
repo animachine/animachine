@@ -196,28 +196,16 @@ p._renderEase = function () {
 
 p._renderEasePath = function (ease, x, w, color) {
 
-    if (amgui.EASE2BEZIER.hasOwnProperty(ease)) {
-        ease = amgui.EASE2BEZIER[ease];
-    }
-
-    var rx = /cubic-bezier\(\s*([\d\.]+)\s*,\s*([\d\.-]+)\s*,\s*([\d\.]+)\s*,\s*([\d\.-]+)\s*\)/,
-        m = rx.exec(ease),
+    var p = ease.points,
         h = this._height,
         path = document.createElementNS('http://www.w3.org/2000/svg', 'path'),
         d = '';
 
-    if (m) {
-        d += 'M' + x + ',' + h + ' ';
-        d += 'C' + (x + w*m[1]) + ',' + (h - h*m[2]) + ' ';
-        d += (x + w*m[3]) + ',' + (h - h*m[4]) + ' ';
-        d += (x + w) + ',' + 0;
-    }
-    else {
-        return;
-        //TODO steps()
-        // d += 'M' + x + ',' + h + ' ';
-        // d += 'L' + (x + w) + ',0';
-    }
+    d += 'M' + x + ',' + h + ' ';
+    d += 'C' + (x + w*p[0]) + ',' + (h - h*p[1]) + ' ';
+    d += (x + w*p[2]) + ',' + (h - h*p[3]) + ' ';
+    d += (x + w) + ',' + 0;
+
     path.style.stroke = color;
     path.setAttribute('d', d);
 

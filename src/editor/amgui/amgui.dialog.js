@@ -118,7 +118,7 @@ function createDialog(opt) {
 
         btn.addEventListener('click', function () {
             
-            if (handler) handler;
+            if (handler) handler();
 
             de.dispatchEvent(new Event('click_' + caption.toLowerCase()));
         });

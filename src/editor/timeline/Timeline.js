@@ -7,6 +7,7 @@ var amgui = require('../amgui');
 var mineSave = require('./mineSave');
 var UglifyJS = require('uglify-js');
 var mstSaveScript = require('./script.save.mst');
+var InlineEaseEditor = require('./inlineEaseEditor');
 
 function Timeline(opt) {
 
@@ -40,6 +41,9 @@ function Timeline(opt) {
     this._createBase();
     this._createPointerLine();
 
+
+    this.inlineEaseEditor = new InlineEaseEditor();
+    this.domElem.appendChild(this.inlineEaseEditor.domElem);
 
     this._refreshTimebarWidth();
     this._refreshDeCurrTime();

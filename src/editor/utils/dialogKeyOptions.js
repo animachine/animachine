@@ -4,9 +4,12 @@ var inherits = require('inherits');
 var amgui = require('../amgui');
 var Dialog = require('./Dialog');
 
-var dialog  = new Dialog({
+var currEase, beizerEditor,
+    dialog  = new Dialog({
     title: 'Key',
 });
+
+createContent();    
 
 
 
@@ -19,24 +22,13 @@ dialog.show = function (opt) {
 
     if (!('ease' in opt)) throw('opt.ease must be set');
 
-    this._ease = opt.ease;
-    this._beizerEditor.setPoints(this._ease.points);
+    currEase = opt.ease;
+    beizerEditor.setPoints(currEase.points);
 };
 
-
-
-dialog._createContent = function () {
+function createContent() {
 
     dialog.addButton('ok', 'hide');
-
-    this._deContent = document.createElement('div');
-    this._deContent.style.width = '330px';
-    this._deContent.style.padding = '30px 12px';
-
-    // this._deLabelEase = document.createElement('span');
-    // this._deLabelEase.textContent = 'ease: ';
-    // this._deContent.appendChild(this._deLabelEase);
-
     // this._inpEase = document.createElement('input');
     // this._inpEase.type = 'text';
     // this._inpEase.value = 'linear';
@@ -65,11 +57,11 @@ dialog._createContent = function () {
     //     menuParent: this._deContent
     // });
 
-    this._beizerEditor = amgui.createBezierEditor({
+    beizerEditor = amgui.createBezierEditor({
         // width: 330,
         // height: 330,
-        parent: this._deContent,
-        onChange: this._onChangeBezier
+        parent: dialog.deContent,
+        onChange:   onChangeBezier
     });
 };
 
@@ -85,7 +77,7 @@ dialog._createContent = function () {
 
 function onChangeBezier(e) {
 
-    this._ease.points = e.detail.points;
+    currEase.points = e.detail.points;
 };
 
 module.exports = dialog;

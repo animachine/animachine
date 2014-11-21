@@ -12,6 +12,8 @@ function Dialog (opt) {
 
     this.title = opt.title || 'Dialog';
     this._setupProperties = [];
+
+    this._createDialog();
 }
 
 inherits(Dialog, EventEmitter);
@@ -27,7 +29,7 @@ p.show = function (opt) {
 
     opt = opt || {};
 
-    this._createDialog();
+    am.deDialogCont.appendChild(this.domElem);
 
     this._setupProperties.forEach(function (propData) {
 
@@ -108,7 +110,7 @@ p.addButton = function (name, handler) {
         handler = this.hide.bind(this);
     }
 
-    this.domElem.addButton(name, handler)
+    this.domElem.addButton(name, handler);
 }
 
 p._createDialog = function () {
@@ -116,30 +118,34 @@ p._createDialog = function () {
     if (this._isDialogCreated) return;
     this._isDialogCreated = true;
 
-    this._createContent();
+    this.deContent = document.createElement('div');
+    this.deContent.style.width = '330px';
+    this.deContent.style.padding = '30px 12px';
+    this.deContent.setAttribute('deContent',1 );
+
     
     this.domElem = amgui.createDialog({
         title: this.title,
-        content: this._deContent,
-        parent: am.deDialogCont,
-        buttons: ['ok'],
+        content: this.deContent,
+        // parent: am.deDialogCont,
+        buttons: [],
     });
 
     this.domElem.addEventListener('click_ok', this._onClickOk);
 };
 
-p._createContent = function () {
+// p._createContent = function () {
 
-    this._deContent = document.createElement('div');
-    this._deContent.style.width = '330px';
-    this._deContent.style.padding = '30px 12px';
+//     this._deContent = document.createElement('div');
+//     this._deContent.style.width = '330px';
+//     this._deContent.style.padding = '30px 12px';
 
-    amgui.createLabel({
-        caption: 'Dialog content',
-        fontSize: '18px',
-        display: 'block',
-        parent: this._deContent
-    });
-};
+//     amgui.createLabel({
+//         caption: 'Dialog content',
+//         fontSize: '18px',
+//         display: 'block',
+//         parent: this._deContent
+//     });
+// };
 
 

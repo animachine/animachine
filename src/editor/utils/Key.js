@@ -33,6 +33,10 @@ function Key(opt) {
     am.timeline.on('deselectAllKeys', this._onDeselectAllKeys);
     am.timeline.on('translateSelectedKeys', this._onTranslateSelectedKeys);
 
+    if (this.ease) {
+        this.ease.on('change', this._onChangeEase);
+    }
+
     amgui.bindDropdown({
         deTarget: this.domElem,
         deMenu: this._deMenu,
@@ -181,7 +185,6 @@ p._onSelectDropdown = function (e) {
 
         dialogKeyOptions.show({
             ease: this.ease,
-            onChangeEase: this._onChangeEase,
         });
     }
     else if (selection === 'delete') {
@@ -192,7 +195,7 @@ p._onSelectDropdown = function (e) {
 
 p._onChangeEase = function (ease) {
 
-    this.ease = ease;
+    this.emit('changeEase');
 };
 
 p._onChangeTape = function () {

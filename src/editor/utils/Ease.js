@@ -27,9 +27,7 @@ Object.defineProperties(p, {
     type: {
         set: function (v) {
 
-            if (this._type === v) return;
-
-            this._type = parseInt(v);
+            //currently the only supproted type is bezier
         },
         get: function () {
 
@@ -50,6 +48,8 @@ Object.defineProperties(p, {
             p.length = 0;
             p.push.apply(this._points, v);
             this._easer = new BezierEasing(p[0], p[1], p[2], p[3]);
+
+            this.emit('change');
         },
         get: function () {
 

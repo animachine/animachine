@@ -15,6 +15,7 @@ function KeyLine (opt) {
     this._onChangeKeyTime = this._onChangeKeyTime.bind(this);
     this._onChangeKeyEase = this._onChangeKeyEase.bind(this);
     this._onKeyNeedsRemove = this._onKeyNeedsRemove.bind(this);
+    this._onDblClick = this._onDblClick.bind(this);
     
     this._createDomElem();
 
@@ -242,6 +243,22 @@ p._onKeyNeedsRemove = function (key) {
     this.emit('keyNeedsRemove', key);
 };
 
+p._onDblClick = function (e) {
+
+    var time = am.timeline.screenXToTime(e.screenX);
+
+    var prevKey = this.getPrevKey(time);
+    var nextKey = this.getNextKey(time);
+
+    if (prevKey && nextKey) {
+
+        am.timeline.inlineEaseEditor.show({
+            key: prevKey,
+            nextKey: nextKey
+        });
+    }
+};
+
 
 
 
@@ -260,6 +277,8 @@ p._createDomElem = function createKeyline(opt) {
     this.domElem.style.position = 'relative';
     this.domElem.setAttribute('debug-keyline', 1);
     this.domElem.style.overflow = 'hidden';
+
+    this.domElem.addEventListener('dblclick', this._onDblClick);
 
     this._deLine = document.createElement('div');
     this._deLine.style.position = 'relative';

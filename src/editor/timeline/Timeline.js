@@ -7,7 +7,7 @@ var amgui = require('../amgui');
 var mineSave = require('./mineSave');
 var UglifyJS = require('uglify-js');
 var mstSaveScript = require('./script.save.mst');
-var InlineEaseEditor = require('./inlineEaseEditor');
+var InlineEaseEditor = require('./InlineEaseEditor');
 
 function Timeline(opt) {
 

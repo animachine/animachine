@@ -12,6 +12,7 @@ function InlineEaseEditor(opt) {
     this._onClickWindow = this._onClickWindow.bind(this);
 
     this._height = amgui.LINE_HEIGHT;
+    this._color = '#00BFFF';
     
     this._points = [0, 0, 1, 1];
 
@@ -64,10 +65,6 @@ p.hide = function () {
 
 p._render = function() {
 
-    var ctx = this._ctx,
-        w = this._width,
-        h = this._height;
-
     var brKey = this._key.domElem.getBoundingClientRect(),
         brNextKey = this._nextKey.domElem.getBoundingClientRect(),
         brParent = this.domElem.parentNode.getBoundingClientRect(),
@@ -77,13 +74,17 @@ p._render = function() {
         h = this._height,
         d = '';
 
-    this.domElem.style.left = (brKey.left - brParent.left) + 'px';
-    this.domElem.style.top = (brParent.bottom - brKey.bottom) + 'px';
+    this._width = w;
 
-    d += 'M' + x + ',' + h + ' ';
-    d += 'C' + (x + w*p[0]) + ',' + (h - h*p[1]) + ' ';
-    d += (x + w*p[2]) + ',' + (h - h*p[3]) + ' ';
-    d += (x + w) + ',' + 0;
+    this.domElem.style.left = (brKey.left + (brKey.width/2) - brParent.left) + 'px';
+    this.domElem.style.top = (brKey.top  - brParent.top + h) + 'px';
+
+    d += 'M' + (x + w*p[0]) + ',' + (h*p[1]) + ' ';
+    d += 'L' + x + ',' + 0 + ' ';
+    d += 'C' + (x + w*p[0]) + ',' + (h*p[1]) + ' ';
+    d += (x + w*p[2]) + ',' + (h*p[3]) + ' ';
+    d += (x + w) + ',' + h + ' ';
+    d += 'L' + (x + w*p[2]) + ',' + (h*p[3]);
     
     this._path.setAttribute('d', d);
   
@@ -122,14 +123,21 @@ p._onClickWindow = function () {
 p._createBase = function () {
 
     this.domElem = document.createElement('div');
-    this.domElem.style.position = 'relative';
+    this.domElem.style.position = 'absolute';
     this.domElem.style.transform = 'scaleY(-1)';
+    this.domElem.style.pointerEvents = 'none';
 
     this._svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    // this._svg.style.background = 'red';
+    this._svg.style.position = 'absolute';
+    this._svg.style.top = '0px';
+    this._svg.style.left = '0px';
+    this._svg.style.overflow = 'visible';
     this.domElem.appendChild(this._svg);
 
     this._path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    this._path.style.stroke = '#00BFFF';
+    this._path.style.stroke = this._color;
+    this._path.style.fill = 'none';
     this._svg.appendChild(this._path);
   
     this._deCp0 = this._createCp(0);
@@ -148,40 +156,32 @@ p._createCp = function(pointIdx) {
     deCp.style.height = r*2 + 'px';
     deCp.style.transform = 'translate(-'+r+'px,-'+r+'px)';
     deCp.style.borderRadius = r + 'px';
-    deCp.style.background = 'rgba(256, 256, 256, 1)';
+    deCp.style.background = this._color;
+    deCp.style.pointerEvents = 'auto';
     this.domElem.appendChild(deCp);
+
+    deCp.addEventListener('click', function (e) {
+        e.stopPropagation();//prevent calling _onClickWindow();
+    });
   
     amgui.makeDraggable({
         deTarget: deCp,
-        onDown: function () {
-
-            deCp.style.cursor = 'grabbing';
-
-            var md = {};
-            md.minY = minY();
-            md.fullY = maxY() - md.minY;    
-            return md;
-        },
+        thisArg: this,
         onMove: function (md, mx, my) {
 
-            var br = de.getBoundingClientRect();
+            var br = this.domElem.getBoundingClientRect();
 
             this._setPoint(pointIdx,
-                Math.max(0, Math.min(1, (mx - br.left) / w)),
-                (((br.bottom - my) / h) * md.fullY) - md.minY
-            );
-        },
-        onUp: function () {
-
-            deCp.style.cursor = 'grab';
+                Math.max(0, Math.min(1, (mx - br.left) / this._width)),
+                (br.top - my) / this._height);
         }
     });
   
     deCp.refreshPosition = function () {
         
-        deCp.style.left =  + 'px';
-        deCp.style.top =  + 'px';
-    };
+        deCp.style.left = (this._points[pointIdx] * this._width) + 'px';
+        deCp.style.top = (this._points[pointIdx+1] * this._height) + 'px';
+    }.bind(this);
     deCp.refreshPosition();
   
     return deCp;

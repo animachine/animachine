@@ -77,9 +77,7 @@ am._init = function () {
     };
 
     am.workspace = new Windooman();
-    am.workspace.loadWorkspaces({
-        base: getBaseWorkspace()
-    });
+    am.workspace.loadWorkspace('base', getBaseWorkspace());
     am.workspace.load('base');
 
     am.mouse = new Mouse();
@@ -453,39 +451,37 @@ function getBaseWorkspace() {
     return {
         type: 'container',
         direction: 'column',
-        children: [{
-                type: 'panel',
-                size: 24,
-                scaleMode: 'fix',
-                noHead: true,
-                tabs: [{name: 'tools'}],
-            },{
+        children: [
+            {
                 type: 'container',
                 direction: 'row',
-                size: 10,
+                size: 2.7,
                 scaleMode: 'flex',
-                children: [{                    
-                    type: 'panel',
-                    size: 3,
-                    scaleMode: 'flex',
-                    tabs: [
-                        {name: 'Css Style'},
-                        {name: 'Dom Tree'},
-                        {name: 'History'},
-                    ]
-                }, {                    
-                    type: 'panel',
-                    empty: true,
-                    size: 12,
-                    scaleMode: 'flex'
-                }]
-            }, {
+                children: [
+                    {                    
+                        type: 'panel',
+                        size: 1,
+                        scaleMode: 'flex',
+                        tabs: [
+                            {name: 'Css Style'},
+                            {name: 'Dom Tree'},
+                            {name: 'History'},
+                        ]
+                    }, {                    
+                        type: 'panel',
+                        empty: true,
+                        size: 2.7,
+                        scaleMode: 'flex',
+                    }
+                ]
+            },{
                 type: 'panel',
-                size: 4,
+                size: 1,
                 scaleMode: 'flex',
                 noHead: true,
                 tabs: [{name: 'timeline'}],
-            }]
+            }
+        ]
     };
 }
 

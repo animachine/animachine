@@ -1,8 +1,7 @@
 $(function () {
 
     am.open();
-    am.workspace.loadWorkspaces(getWs());
-    am.workspace.load('tour');
+    setupWorkspace();
 
     var deCookiejar = document.querySelector('#cookie')
 
@@ -205,49 +204,15 @@ function getStep4Content() {
     + '<p>You can find more tours <a href="">here</a></p>';
 }
 
-function getWs() {
+function setupWorkspace() {
 
-    return {
-        tour: {
-            type: 'container',
-            direction: 'column',
-            children: [
-                {
-                    type: 'container',
-                    direction: 'row',
-                    size: 2.7,
-                    scaleMode: 'flex',
-                    children: [
-                        {                    
-                            type: 'panel',
-                            size: 1,
-                            scaleMode: 'flex',
-                            tabs: [
-                                {name: 'Css Style'},
-                                {name: 'Dom Tree'},
-                                {name: 'History'},
-                            ]
-                        }, {                    
-                            type: 'panel',
-                            empty: true,
-                            size: 2.7,
-                            scaleMode: 'flex',
-                        }, {                    
-                            type: 'panel',
-                            noHead: true,
-                            size: 1,
-                            scaleMode: 'flex',
-                            tabs: [{name: 'tour'}]
-                        }
-                    ]
-                },{
-                    type: 'panel',
-                    size: 1,
-                    scaleMode: 'flex',
-                    noHead: true,
-                    tabs: [{name: 'timeline'}],
-                }
-            ]
-        }
-    };
+    var ws = am.workspace.getWorkspace('base');
+    ws.children[0].children.push({                    
+        type: 'panel',
+        noHead: true,
+        size: 1,
+        scaleMode: 'flex',
+        tabs: [{name: 'tour'}]
+    });
+    am.workspace.load('tour', ws);
 }

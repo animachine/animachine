@@ -13,15 +13,21 @@ function Windooman() {
 
 var p = Windooman.prototype;
 
-p.loadWorkspaces = function (workspaces) {
+p.loadWorkspace = function (name, workspace) {
 
-    Object.keys(workspaces).forEach(function (name) {
-
-        this._workspaces[name] = workspaces[name];
-    }, this);
+    this._workspaces[name] = workspace;
 };
 
-p.load = function (name) {
+p.getWorkspace = function (name) {
+
+    return _.cloneDeep(this._workspaces[name]);
+}
+
+p.load = function (name, workspace) {
+
+    if (workspace) {
+        this.loadWorkspace(name, workspace);
+    }
 
     var map = this._workspaces[name];
 

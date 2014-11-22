@@ -3,7 +3,6 @@
 var amgui = require('./amgui');
 var EventEmitter = require('events').EventEmitter;
 var Timeline = require('./timeline');
-var Toolbar = require('./toolbar');
 var Windooman = require('./windooman');
 var HistoryTab = require('./historyTab');
 var Warehouseman = require('./warehouseman');
@@ -107,30 +106,28 @@ am._init = function () {
     shortcuts.on('groupElements', function(){console.log('groupElements')});
     
     am.historyTab = new HistoryTab();
-    am.toolbar = new Toolbar();
     am.timeline = new Timeline();
     am.domPicker = new DomPicker();
 
-    am.workspace.fillTab('tools', am.toolbar.domElem);
     am.workspace.fillTab('History', am.historyTab.domElem);
 
     am.deHandlerCont.appendChild(am.domPicker.domElem);
     am.domPicker.on('pick', onSelectWithDomPicker);
 
-    am.toolbar.addIcon({
+    am.timeline.toolbar.addIcon({
         tooltip: 'undo',
         icon: 'ccw',
         onClick: am.history.undo.bind(am.history)
     });
 
-    am.toolbar.addIcon({
+    am.timeline.toolbar.addIcon({
         tooltip: 'redo',
         icon: 'cw',
         onClick: am.history.redo.bind(am.history)
     });
 
 
-    am.toolbar.addIcon({
+    am.timeline.toolbar.addIcon({
         tooltip: 'feedback',
         icon: 'megaphone',
         separator: 'rest',
@@ -242,7 +239,7 @@ am.isPickableDomElem = function (deTest) {
 
 function addToggleGui() {
 
-    am.toolbar.addIcon({
+    am.timeline.toolbar.addIcon({
         tooltip: 'show/hide editor',
         icon: 'resize-small',
         separator: 'first',
@@ -399,7 +396,7 @@ function createAmLayer() {
 
 function createMenu() {
     
-    var iconMenu = am.toolbar.addIcon({
+    var iconMenu = am.timeline.toolbar.addIcon({
         tooltip: 'file',
         icon: 'menu',
         separator: 'global',

@@ -218,40 +218,20 @@ function getWs() {
                     size: 2.7,
                     scaleMode: 'flex',
                     children: [
-                        {
-                            type: 'container',
-                            direction: 'column',
-                            size: 3,
+                        {                    
+                            type: 'panel',
+                            size: 1,
                             scaleMode: 'flex',
-                            children: [
-                                {
-                                    type: 'panel',
-                                    size: 24,
-                                    scaleMode: 'fix',
-                                    noHead: true,
-                                    tabs: [{name: 'tools'}],
-                                },{
-                                    type: 'container',
-                                    direction: 'row',
-                                    children: [
-                                        {                    
-                                            type: 'panel',
-                                            size: 1,
-                                            scaleMode: 'flex',
-                                            tabs: [
-                                                {name: 'Css Style'},
-                                                {name: 'Dom Tree'},
-                                                {name: 'History'},
-                                            ]
-                                        }, {                    
-                                            type: 'panel',
-                                            empty: true,
-                                            size: 2.7,
-                                            scaleMode: 'flex'
-                                        }
-                                    ]
-                                }
+                            tabs: [
+                                {name: 'Css Style'},
+                                {name: 'Dom Tree'},
+                                {name: 'History'},
                             ]
+                        }, {                    
+                            type: 'panel',
+                            empty: true,
+                            size: 2.7,
+                            scaleMode: 'flex',
                         }, {                    
                             type: 'panel',
                             noHead: true,

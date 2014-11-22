@@ -8,6 +8,7 @@ var mineSave = require('./mineSave');
 var UglifyJS = require('uglify-js');
 var mstSaveScript = require('./script.save.mst');
 var InlineEaseEditor = require('./InlineEaseEditor');
+var Toolbar = require('../toolbar');
 
 function Timeline(opt) {
 
@@ -37,10 +38,14 @@ function Timeline(opt) {
         timescale: 0.12,
         length: 6000
     });
+
+    this.toolbar = new Toolbar({
+        height: this._headerH,
+        bgColor: 'none',
+    });
     
     this._createBase();
     this._createPointerLine();
-
 
     this.inlineEaseEditor = new InlineEaseEditor();
     this.domElem.appendChild(this.inlineEaseEditor.domElem);
@@ -349,7 +354,6 @@ p.screenXToTime = function (screenX) {
 
 
 
-
 p._animPlay = function () {
 
     this._animPlayRafid = window.requestAnimationFrame(this._animPlay);
@@ -650,12 +654,16 @@ p._createSettingsHead = function () {
     this._deLeft.appendChild(this._deSettingsHead);
     amgui.createSeparator({parent: this._deSettingsHead});
 
+    this._deSettingsHead.appendChild(this.toolbar.domElem);
+
     this._btnNewTrack = amgui.createIconBtn({
         tooltip: 'add new track',
         icon: 'plus-squared',
-        parent: this._deSettingsHead,
+        size: this._headerH,
+        // parent: this._deSettingsHead,
         display: 'inline-block',
     });
+    this.toolbar.addIcon({deIcon: this._btnNewTrack});
 
     amgui.bindDropdown({    
         deTarget: this._btnNewTrack,
@@ -670,10 +678,12 @@ p._createSettingsHead = function () {
         tooltip: 'play/pause preview',
         iconOn: 'pause', 
         iconOff: 'play',
-        parent: this._deSettingsHead,
+        size: this._headerH,
+        // parent: this._deSettingsHead,
         display: 'inline-block',
         onClick: this._onTogglePlayPause
     });
+    this.toolbar.addIcon({deIcon: this._btnTogglePlay});
 
     this._deCurrTime = amgui.createLabel({
         caption: '',

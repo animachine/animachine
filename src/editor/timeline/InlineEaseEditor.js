@@ -17,6 +17,7 @@ function InlineEaseEditor(opt) {
     this._points = [0, 0, 1, 1];
 
     this._createBase();
+    this.hide();
 }
 
 inherits(InlineEaseEditor, EventEmitter);

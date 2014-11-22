@@ -4,17 +4,19 @@ var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../amgui');
 
-function Toolbar() {
+function Toolbar(opt) {
 
     EventEmitter.call(this);
 
-    this._height = 24;
+    opt = opt || {};
+
+    this._height = opt.height || 24;
     this._icons = [];
     this._separators = {};
 
     this.domElem = document.createElement('div');
     this.domElem.style.position = 'fixed';
-    this.domElem.style.backgroundColor = amgui.color.bg0;
+    this.domElem.style.backgroundColor = opt.bgColor || amgui.color.bg0;
     this.domElem.style.pointerEvents = 'auto';
     this.domElem.style.height = this._height + 'px';
 

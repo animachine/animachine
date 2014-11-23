@@ -25,9 +25,9 @@ function Key(opt) {
     this._createDomElem();
 
     this._deMenu = amgui.createDropdown({
-        options: ['ease', 'delete']
+        options: ['ease', 'delete'],
+        onSelect: this._onSelectDropdown,
     });
-    this._deMenu.addEventListener('select', this._onSelectDropdown);
 
     am.timeline.on('changeTape', this._onChangeTape);
     am.timeline.on('deselectAllKeys', this._onDeselectAllKeys);
@@ -93,6 +93,8 @@ Object.defineProperties(p, {
 
     time: {
         set: function (v) {
+
+            v = Math.max(0, v);
 
             if (!Number.isFinite(v) || this._time === v) return;
 
@@ -165,6 +167,11 @@ p.deselect = function () {
     this._refreshDomElem();
 
     this.emit('deselect');
+};
+
+p.remove = function () {
+
+    this.emit('needsRemove', this);
 }
 
 
@@ -189,7 +196,7 @@ p._onSelectDropdown = function (e) {
     }
     else if (selection === 'delete') {
 
-        this.emit('delete', this);
+        this.emit('needsRemove', this);
     }
 };
 
@@ -243,17 +250,18 @@ p._createDomElem = function () {
     var color = this.color || '#7700ff';
 
     this.domElem = document.createElement('div');
+    this.domElem.style.width = '8px';
     this.domElem.style.position = 'absolute';
     this.domElem.style.transform = 'translateX(-4px)';
     this.domElem.setAttribute('debug-key', '');
 
 
     var deKey = document.createElement('div');
-    deKey.style.width = '0';
-    deKey.style.height = '0';
-    deKey.style.borderStyle = 'solid';
-    deKey.style.borderWidth = '21px 4px 0 4px';
-    deKey.style.borderColor = color + ' transparent transparent transparent';
+    deKey.style.width = '0px';
+    deKey.style.marginLeft = '3px';
+    deKey.style.height = amgui.LINE_HEIGHT + 'px';
+    deKey.style.borderLeft = '1px solid ' + color;
+    deKey.style.transform = 'translateX(0.5px)';
     this.domElem.appendChild(deKey);
 };
 

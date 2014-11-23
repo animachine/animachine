@@ -15,11 +15,14 @@ function KeyLine (opt) {
     this._onChangeKeyTime = this._onChangeKeyTime.bind(this);
     this._onChangeKeyEase = this._onChangeKeyEase.bind(this);
     this._onKeyNeedsRemove = this._onKeyNeedsRemove.bind(this);
+    this._onChangeTimescale = this._onChangeTimescale.bind(this);
     this._onDblClick = this._onDblClick.bind(this);
     
     this._createDomElem();
 
     amgui.callOnAdded(this.domElem, this._renderEase.bind(this));
+
+    am.timeline.on('changeTimescale', this._onChangeTimescale);
 }
 
 inherits(KeyLine, EventEmitter);
@@ -164,7 +167,7 @@ p.getEases = function () {
     }, this);
 
     return eases;
-}
+};
 
 
 
@@ -235,12 +238,18 @@ p._onChangeKeyEase = function (key) {
 
 p._onChangeKeyTime = function (key) {
 
+    this._renderEase();
     this.emit('change');
+};
+
+p._onChangeTimescale = function (key) {
+
+    this._renderEase();
 };
 
 p._onKeyNeedsRemove = function (key) {
 
-    this.emit('keyNeedsRemove', key);
+    this.removeKey(key);
 };
 
 p._onDblClick = function (e) {

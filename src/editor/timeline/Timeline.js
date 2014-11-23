@@ -58,6 +58,7 @@ function Timeline(opt) {
 
     this._timebar.on('changeTime', this.emit.bind(this, 'changeTime'));
     this._timebar.on('changeTape', this.emit.bind(this, 'changeTape'));
+    this._timebar.on('changeTimescale', this.emit.bind(this, 'changeTimescale'));
     this._timebar.on('changeTime', this._onChangeTime);
     this._timebar.on('changeTape', this._onChangeTape);
     this._timebar.on('seek', this._onTimebarSeek);

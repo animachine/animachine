@@ -36,7 +36,7 @@ Object.defineProperties(p, {
             });
         }
     }
-})
+});
 
 
 
@@ -82,6 +82,13 @@ p.removeSubkey = function (key) {
     this._subkeys.splice(idx, 1);
 };
 
+p.remove = function () {
+
+    this._subkeys.forEach(function (key) {
+
+        key.remove();
+    });
+};
 
 
 
@@ -106,7 +113,7 @@ p._onSelectDropdown = function (e) {
     }
     else if (selection === 'delete') {
 
-        this.emit('delete', this);
+        this.remove();
     }
 };
 

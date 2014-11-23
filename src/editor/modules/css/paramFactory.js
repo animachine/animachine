@@ -160,7 +160,7 @@ var groups = {
     rotate: ['rotateX', 'rotateY', 'rotateZ'],
     skeew: ['skeewX', 'skeewY'],
     perspectiveOrigin: ['perspectiveOriginX', 'perspectiveOriginY'],
-    transformOrigin: ['transformOriginX', 'transformOriginY', 'transformOriginZ'],
+    transformOrigin: ['transformOriginX', 'transformOriginY'],
     boxShadow: ['boxShadowX', 'boxShadowY', 'boxShadowBlur'],
     clip: ['clipTop',  'clipRight',  'clipBottom',  'clipLeft'],
 };

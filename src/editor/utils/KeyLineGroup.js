@@ -44,7 +44,9 @@ Object.defineProperties(p, {
 
 
 p.addKey = function (key) {
-    if(!(key instanceof KeyGroup)) debugger;
+
+    if(!(key instanceof KeyGroup)) throw Error;
+
     KeyLine.prototype.addKey.call(this, key)
 }
 
@@ -92,7 +94,7 @@ p.getEases = function () {
 
                 eases.push(ease);
             };
-        })
+        });
     });
 
     return eases;
@@ -113,6 +115,11 @@ p._onChangeKeyLine = function (key) {
     this._refreshHeadKeyline();
 
     this.emit('change');
+};
+
+p._onChangeTimescale = function (key) {
+
+    this._renderEase();
 };
 
 
@@ -154,7 +161,7 @@ p._delayedRefreshHeadKeyline = function () {
 
     while (times.length < this._keys.length) {
 
-        this.removeKey(this._keys.pop());
+        this.removeKey(this._keys[this._keys.length-1]);
     }
 
     while (times.length > this._keys.length) {
@@ -173,18 +180,17 @@ p._delayedRefreshHeadKeyline = function () {
 
     }, this);
 
+    this._renderEase();
+};
 
+p._renderEase = function () {
+    
     this._svgEase.innerHTML = '';
 
     this.getEases().forEach(function (ease) {
 
         this._renderEasePath(ease.ease, ease.x, ease.w);
     }, this);
-};
-
-p._renderEase = function () {
-
-    
 };
 
 

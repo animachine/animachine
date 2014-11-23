@@ -11,11 +11,14 @@ function ParamsTab() {
     this._onSelectTrack = this._onSelectTrack.bind(this);
     this._onDeselectTrack = this._onDeselectTrack.bind(this);
     this._onTrackAddParam = this._onTrackAddParam.bind(this);
+    this._onChangeTime = this._onChangeTime.bind(this);
+    this._onChangeParam = this._onChangeParam.bind(this);
 
     this._createBase();
 
     am.on('selectTrack', this._onSelectTrack);
     am.on('deselectTrack', this._onDeselectTrack);
+    am.timeline.on('changeTime', this._onChangeTime);
 }
 
 var p = ParamsTab.prototype;
@@ -54,10 +57,19 @@ p._onInputChange = function (paramName, value) {
 }
 
 p._onTrackAddParam = function () {
-console.log('_onTrackAddParam')
 
     this._listen();
-}
+};
+
+p._onChangeTime = function () {
+
+    this._refreshKeyButtons();
+};
+
+p._onChangeParam = function () {
+
+    this._refreshKeyButtons();
+};
 
 
 
@@ -78,6 +90,7 @@ p._unlisten = function () {
 
         if (param) {
 
+            param.removeListener('change', this._onChangeParam);
             param.detachInput(input);
             input.reset();
         }
@@ -98,6 +111,7 @@ p._listen = function () {
 
             input.value = param.getValue();
             param.attachInput(input);
+            param.on('change', this._onChangeParam);
         }
     }, this);
 };
@@ -117,6 +131,26 @@ p._forEachInput = function (fn, thisArg) {
             fn.call(thisArg, optionLine.inputs[paramName], paramName);
         });
     }, this);
+};
+
+
+
+
+
+
+
+
+
+
+p._refreshKeyButtons = function () {
+
+    if (this._currTrack) {
+
+        this._paramOptionLines.forEach(function (optionLine) {
+
+            optionLine.refreshKey();
+        });
+    }
 };
 
 
@@ -231,10 +265,19 @@ p._createBase = function () {
 
             if (node.inputs) {
 
-                node.btnKey = true;
+                node.btnKey = {
+                    onClick: function () {
+
+                        if (this._currTrack) {
+
+                            var param = this._currTrack.addParam({
+                                name: node.title,
+                            });
+                            param.toggleKey();
+                        }
+                    }.bind(this),
+                };
             }
-
-
 
             if (node.children) {
 
@@ -254,6 +297,33 @@ p._createBase = function () {
 
                 optionLine.inputs[inputName].on('change', changeHandler)
             }, this);
+
+
+            //add param button
+            var paramNames = collectParamNames(node);
+
+            optionLine.refreshKey = function () {
+
+                if (!optionLine.buttons.key) return;
+
+                var hasKey = false;
+
+                if (this._currTrack) {
+
+                    paramNames.forEach(function (paramName) {
+
+                        var time = am.timeline.currTime,
+                            param = this._currTrack.getParam(paramName);
+
+                        if (param && param.getKey(time)) {
+
+                            hasKey = true;
+                        }
+                    }, this);
+                }
+
+                optionLine.buttons.key.setHighlight(!!hasKey);
+            }.bind(this);
 
 
             //append to parent
@@ -294,6 +364,21 @@ p._createBase = function () {
     }.bind(this);
 
     build(paramTree, this._deScrollCont, 0);
+
+    function collectParamNames(node) {
+
+        var ret = [];
+
+        if (node.children) {
+
+            ret = ret.concat(node.children.forEach(collectParamNames))                
+        }
+        else {
+            ret.push(node.title);
+        }
+
+        return ret;
+    }
 };
 
 module.exports = ParamsTab;

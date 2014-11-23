@@ -288,6 +288,7 @@ p.removeKey = function (key, skipHistory) {
         return;
     }
 
+    
     if (!skipHistory) {
         am.history.save([this.addKey, this, key, true],
             [this.removeKey, this, key, true], 'remove key');
@@ -472,14 +473,13 @@ p._onClickStepNextKey = function () {
 
 p._refreshInputs = function () {
 
-    var value = this.getValue();
-
-    if (value !== undefined) {
+    if (this.getValue() !== undefined) {
         
         this._inputs.forEach(function (input) {
 
-            input.value = value;
-        });
+            //get the value again, because it can change over the iteration
+            input.value = this.getValue();
+        }, this);
     }
 };
 

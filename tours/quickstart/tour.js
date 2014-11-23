@@ -145,7 +145,7 @@ function getStep0Content() {
 
     return '<img src="http://zippy.gfycat.com/ImpureSplendidHyracotherium.gif" style="width:100%;">'
     + '<p>Hi! We\'ve made a quick tour to show how to use Animachine Beta.</p>'
-    + '<p>If you wanna be quick, you can just watch the gif animations and do what you see, but you\'ll find the detailed version below them if it\'s needed.</p>'
+    + '<p>If you want to be quick, you can just watch the gif animations and do what you see, but you\'ll always find the detailed instructions under here.</p>'
     + '<p>Click on the <span class="icon-angle-right"></span> for the first step.</p>';
 }
 

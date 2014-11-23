@@ -8,9 +8,6 @@ function UnitInput(opt) {
 
     EventEmitter.call(this);
 
-    this._units = [];
-    this._unit = '';
-
     this._rxAmount = /^\s*([\+-]?\d*\.?\d*)/;
     this._rxUnit;
 
@@ -18,11 +15,13 @@ function UnitInput(opt) {
 
     this._createBase();
 
-    this._amount = opt.amount || 0;
-    this._unit = this._units[0];
-    this._precison = opt.precision || 0;
     this.units = opt.units || [];
+    this._amount = undefined;
+    this._unit = undefined;
+    this._precison = opt.precision || 0;
     this._defaultValue = opt.defaultValue || 0;
+
+    this._setValueParts(opt.amount || 0, this._units[0]);
 
     this.converters = opt.converters;
 
@@ -96,6 +95,9 @@ p.reset = function () {
 
 
 p._setValueParts = function (amount, unit) {
+
+    amount = parseFloat(amount) || 0;
+    unit = String(unit) || '';
 
     if (this._amount === amount && this._unit === unit) return;
     

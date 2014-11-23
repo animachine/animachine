@@ -93,8 +93,8 @@ function OptionLine(opt) {
 
         this.addButton({
             domElem: amgui.createToggleIconBtn({
-                iconOn: 'flow-split',
-                iconOff: 'flow-merge',
+                iconOn: 'link',
+                iconOff: 'unlink',
                 onClick: opt.tgglMerge.onClick,
             }),
             name: 'tgglMerge',

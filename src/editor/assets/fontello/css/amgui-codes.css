@@ -69,3 +69,5 @@
 .icon-target:before { content: '\e841'; } /* '' */
 .icon-clock:before { content: '\e842'; } /* '' */
 .icon-color-adjust:before { content: '\e843'; } /* '' */
+.icon-link:before { content: '\e844'; } /* '' */
+.icon-unlink:before { content: '\e845'; } /* '' */

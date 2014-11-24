@@ -62,8 +62,8 @@
 .icon-resize-horizontal:before { content: '\e83a'; } /* '' */
 .icon-move:before { content: '\e83b'; } /* '' */
 .icon-resize-vertical:before { content: '\e83c'; } /* '' */
-.icon-flow-split:before { content: '\e83d'; } /* '' */
-.icon-flow-merge:before { content: '\e83e'; } /* '' */
+.icon-google:before { content: '\e83d'; } /* '' */
+.icon-check:before { content: '\e83e'; } /* '' */
 .icon-vector:before { content: '\e83f'; } /* '' */
 .icon-vector-pencil:before { content: '\e840'; } /* '' */
 .icon-target:before { content: '\e841'; } /* '' */
@@ -71,3 +71,6 @@
 .icon-color-adjust:before { content: '\e843'; } /* '' */
 .icon-link:before { content: '\e844'; } /* '' */
 .icon-unlink:before { content: '\e845'; } /* '' */
+.icon-check-empty:before { content: '\e846'; } /* '' */
+.icon-toggle-on:before { content: '\e847'; } /* '' */
+.icon-toggle-off:before { content: '\e848'; } /* '' */

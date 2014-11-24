@@ -77,7 +77,7 @@ function createBreadcrumbs(opt) {
 
         crumbs.some(function (crumb) {
 
-            if (crumb.domElem === deChrumb) {
+            if (crumb.domElem === deCrumb) {
 
                 ret = deChrumb;
             }

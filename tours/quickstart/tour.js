@@ -33,7 +33,7 @@ $(function () {
                         tour.removePointer(this._cookiePointer);
                     }
 
-                    if (!tour.isChecked(1) && am.timeline.sequences.length) {
+                    if (!tour.isChecked(1) && am.timeline._tracks.length) {
 
                         tour.checkIn(1);
                     }
@@ -49,8 +49,8 @@ $(function () {
 
                     if (!tour.isChecked(0)) {
 
-                        am.timeline.sequences.forEach(function (sequ) {
-                            sequ._parameters.forEach(function (param) {
+                        am.timeline._tracks.forEach(function (track) {
+                            track._params.forEach(function (param) {
                                 if (param.name === 'transform') {
                                     tour.checkIn(0);
                                 }
@@ -73,8 +73,8 @@ $(function () {
                     }
                     if (!tour.isChecked(1)) {
 
-                        am.timeline.sequences.forEach(function (sequ) {
-                            sequ._parameters.forEach(function (param) {
+                        am.timeline._tracks.forEach(function (track) {
+                            track._params.forEach(function (param) {
                                 if (param._keys.length > 1) {
                                     tour.checkIn(1);
                                 }

@@ -419,7 +419,7 @@ function createMenu() {
     
     var iconMenu = am.timeline.toolbar.addIcon({
         tooltip: 'file',
-        icon: 'menu',
+        icon: 'floppy',
         separator: 'global',
     });
 

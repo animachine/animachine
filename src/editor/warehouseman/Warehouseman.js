@@ -22,7 +22,7 @@ function Warehouseeman(opt) {
     // this.addStorage(new Copy());
     this.addStorage({icon: 'hdd', tooltip: 'local file system'});
     this.addStorage({icon: 'git', tooltip: 'Git'});
-    this.addStorage({icon: 'evernote', tooltip: 'Evernote'});
+    this.addStorage({icon: 'google', tooltip: 'Google Drive'});
     this.addStorage({icon: 'dropbox', tooltip: 'Dropbox'});
     this.addStorage({icon: 'history', tooltip: 'auto save'});
 

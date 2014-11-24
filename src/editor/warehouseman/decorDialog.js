@@ -11,6 +11,25 @@ function decorDialog(whm) {
 
 
 
+    function init() {
+
+        if (isInited) {
+            return;
+        }
+        isInited = true;
+
+        createDialog();
+        createStorageSelector();
+        createBreadcrumbs();
+        createBtnNewFolder();
+        createBtnSettings();
+        createNameInput();
+        createDirectory();
+        createOptions();
+
+        whm.on('changeCurrStorage', onChangeCurrStorage);
+    }
+
     whm.showSaveDialog = function(opt) {
 
         init();
@@ -87,25 +106,6 @@ function decorDialog(whm) {
 
             de.style.display = show ? 'block' || de.baseDisplay : 'hidden';
         }
-    }
-
-    function init () {
-
-        if (isInited) {
-            return;
-        }
-        isInited = true;
-
-        createDialog();
-        createStorageSelector();
-        createBreadcrumbs();
-        createBtnNewFolder();
-        createBtnSettings();
-        createNameInput();
-        createDirectory();
-        createOptions();
-
-        whm.on('changeCurrStorage', onChangeCurrStorage);
     }
 
     function onSave() {
@@ -475,20 +475,11 @@ function decorDialog(whm) {
 
         function createCheckbox(name, checked) {
 
-            var de = document.createElement('div');
-            deOptions.appendChild(de);
-
-            var cb = document.createElement('input');
-            cb.type = 'checkbox';
-            cb.checked = checked;
-            de.appendChild(cb);
-            
-            var label = document.createElement('label');
-            label.style.color = amgui.color.text;
-            label.textContent = name;
-            de.appendChild(label);
-
-            return cb;
+            return amgui.createCheckbox({
+                text: name,
+                checked: checked,
+                parent: deOptions,
+            });
         }
     }
 }

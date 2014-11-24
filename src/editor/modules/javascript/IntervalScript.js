@@ -307,7 +307,7 @@ p._createParameterOptions = function () {
     //         ]
     //     }),
     //     onSelect: function () {
-    //         am.dialogs.featureDoesntExist.show();
+    //         am.dialogs.WIP.show();
     //     }
     // });
 

@@ -458,7 +458,7 @@ p._onSelectNewTrack = function (e) {
             break;
 
         default:
-            am.dialogs.featureDoesntExist.show();
+            am.dialogs.WIP.show();
             
     }
 };

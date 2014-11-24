@@ -52,6 +52,9 @@ function CssTrack(opt) {
         domElem: amgui.createToggleIconBtn({
             icon: 'cube',
             changeColor: true,
+            onClick: function () {
+                am.dialogs.WIP.show();
+            }
         }),
         name: 'tggl3d',
         addAt: 0,

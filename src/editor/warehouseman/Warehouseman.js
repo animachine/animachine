@@ -52,7 +52,7 @@ p.selectStorage = function (storage) {
 
     if (storage.features.placeholder) {
 
-        am.dialogs.featureDoesntExist.show();
+        am.dialogs.WIP.show();
     }
 
     this.emit('changeCurrStorage');

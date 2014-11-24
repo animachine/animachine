@@ -12,7 +12,7 @@ var DomPicker = require('./dom-picker');
 var i18n = require('./i18n');
 var Tour = require('./tour');
 var Mouse = require('./mouse');
-var dialogFeatureDoesntExits = require('./commonDialogs/dialogFeatureDoesntExits');
+var dialogWIP = require('./commonDialogs/dialogWIP');
 var dialogFeedback = require('./commonDialogs/dialogFeedback');
 var modules = {
     css: require('./modules/css'),
@@ -72,7 +72,7 @@ am._init = function () {
     am.i18n = i18n;
     
     am.dialogs = {
-        featureDoesntExist: dialogFeatureDoesntExits,
+        WIP: dialogWIP,
         feedback: dialogFeedback,
     };
 

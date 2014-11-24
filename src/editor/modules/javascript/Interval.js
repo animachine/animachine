@@ -300,7 +300,7 @@ p._createDomElem = function () {
                 this._remove();
             }
             else {
-                am.dialogs.featureDoesntExist.show();
+                am.dialogs.WIP.show();
             }
         }
     });

@@ -156,6 +156,11 @@ function createToggleIconBtn(opt) {
         de.addEventListener('toggle', opt.onToggle);
     }
 
+    if ('onClick' in opt) {
+
+        de.addEventListener('click', opt.onClick);
+    }
+
     de.setToggle = function (on) {
 
         on = !!on;

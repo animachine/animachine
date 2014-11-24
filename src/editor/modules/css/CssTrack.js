@@ -37,6 +37,7 @@ function CssTrack(opt) {
     this._onChangeName = this._onChangeName.bind(this);
     this._onChangeSelectors = this._onChangeSelectors.bind(this);
     this._onWindowResize = this._onWindowResize.bind(this);
+    this._onWindowScroll = this._onWindowScroll.bind(this);
     this._onSelectTrack = this._onSelectTrack.bind(this);
     this._onDeselectTrack = this._onDeselectTrack.bind(this);
     this._animPlay = this._animPlay.bind(this);
@@ -301,6 +302,7 @@ p.select = function (opt) {
 
     this._handler.on('change', this._onChangeHandler);
     window.addEventListener('resize', this._onWindowResize);
+    window.addEventListener('scroll', this._onWindowScroll);
 
     this._selectElements();
 
@@ -324,6 +326,7 @@ p.deselect = function () {
     this._paramGroup.highlight = false;
 
     window.removeEventListener('resize', this._onWindowResize);
+    window.removeEventListener('scroll', this._onWindowScroll);
 
     if (this._handler) {
 
@@ -576,6 +579,11 @@ p._onChangeParameter = function () {
 
 
 p._onWindowResize = function () {
+
+    this.focusHandler();
+};
+
+p._onWindowScroll = function () {
 
     this.focusHandler();
 };

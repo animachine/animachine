@@ -3,22 +3,22 @@
 var CssParam = require('./CssParam');
 var CssParamGroup = require('./CssParamGroup');
 
-var ALLOWED_PARAMS = ["opacity", "width", "height", "minWidth", "minHeight", "maxWidth", "maxHeight", 
- "paddingTop", "paddingRight", "paddingBottom", "paddingLeft", "top", "right", "bottom", "left",
- "marginTop", "marginRight", "marginBottom", "marginLeft", "borderTopWidth", "borderRightWidth", 
- "borderBottomWidth", "borderLeftWidth", "borderRadius", "outlineWidth", "fontSize", "lineHeight", 
- "letterSpacing", "wordSpacing", "color", "colorRed", "colorGreen", "colorBlue", "colorAlpha", 
- "backgroundColor", "backgroundColorRed", "backgroundColorGreen", "backgroundColorBlue", 
- "backgroundColorAlpha", "borderColor", "borderColorRed", "borderColorGreen", "borderColorBlue", 
- "borderColorAlpha", "outlineColor", "outlineColorRed", "outlineColorGreen", "outlineColorBlue", 
- "outlineColorAlpha", "backgroundPositionX", "backgroundPositionY", "textShadowX", "textShadowY", 
- "textShadowBlur", "boxShadowX", "boxShadowY", "boxShadowBlur", "boxShadowSpread", "translateX", 
- "translateY", "translateZ", "scale", "scaleX", "scaleY", "scaleZ", "rotateX", "rotateY", "rotateZ", 
- "skewX", "skewY", "transformPerspective", "perspective", "perspectiveOriginX", "perspectiveOriginY", 
- "transformOriginX", "transformOriginY", "transformOriginZ", "clipTop", "clipRight", "clipBottom", 
- "clipLeft", "blur"];
+// var ALLOWED_PARAMS = ["opacity", "width", "height", "minWidth", "minHeight", "maxWidth", "maxHeight", 
+//  "paddingTop", "paddingRight", "paddingBottom", "paddingLeft", "top", "right", "bottom", "left",
+//  "marginTop", "marginRight", "marginBottom", "marginLeft", "borderTopWidth", "borderRightWidth", 
+//  "borderBottomWidth", "borderLeftWidth", "borderRadius", "outlineWidth", "fontSize", "lineHeight", 
+//  "letterSpacing", "wordSpacing", "color", "colorRed", "colorGreen", "colorBlue", "colorAlpha", 
+//  "backgroundColor", "backgroundColorRed", "backgroundColorGreen", "backgroundColorBlue", 
+//  "backgroundColorAlpha", "borderColor", "borderColorRed", "borderColorGreen", "borderColorBlue", 
+//  "borderColorAlpha", "outlineColor", "outlineColorRed", "outlineColorGreen", "outlineColorBlue", 
+//  "outlineColorAlpha", "backgroundPositionX", "backgroundPositionY", "textShadowX", "textShadowY", 
+//  "textShadowBlur", "boxShadowX", "boxShadowY", "boxShadowBlur", "boxShadowSpread", "translateX", 
+//  "translateY", "translateZ", "scale", "scaleX", "scaleY", "scaleZ", "rotateX", "rotateY", "rotateZ", 
+//  "skewX", "skewY", "transformPerspective", "perspective", "perspectiveOriginX", "perspectiveOriginY", 
+//  "transformOriginX", "transformOriginY", "transformOriginZ", "clipTop", "clipRight", "clipBottom", 
+//  "clipLeft", "blur"];
 
-var LENGTH_UNITS = 'px,em,ex,ch,rem,vh,vw,vmin,vmax,mm,cm,in,pt,pc'.split(',');
+// var LENGTH_UNITS = 'px,em,ex,ch,rem,vh,vw,vmin,vmax,mm,cm,in,pt,pc'.split(',');
     
 module.exports = {
 
@@ -45,7 +45,10 @@ module.exports = {
             case 'scaleX':
             case 'scaleY': 
             case 'scaleZ': 
+                // input.units = ['']; 
+                input.type = 'unit';
                 paramOpt.defaultValue = 1; 
+                input.dragSpeed = 0.01; 
                 input.precision = 2;
                 break;
 

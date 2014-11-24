@@ -29,8 +29,8 @@ function makeDraggable(opt) {
             return;
         }
 
-        e.stopPropagation();
-        e.preventDefault();
+        // e.stopPropagation();
+        // e.preventDefault();
 
         isDrag = true;
 

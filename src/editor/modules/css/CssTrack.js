@@ -258,7 +258,6 @@ p.addParam = function (opt, skipHistory) {
         this.emit('change');
     }
 
-    console.log('addParam', opt)
     return param;
 };
 

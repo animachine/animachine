@@ -15,11 +15,12 @@ function UnitInput(opt) {
 
     this._createBase();
 
-    this.units = opt.units || [];
+    this.units = opt.units || [''];
     this._amount = undefined;
     this._unit = undefined;
     this._precison = opt.precision || 0;
     this._defaultValue = opt.defaultValue || 0;
+    this._dragSpeed = opt.dragSpeed || 1;
 
     this._setValueParts(opt.amount || 0, this._units[0]);
 
@@ -169,6 +170,24 @@ p._createBase = function () {
     });
     this._inpAmount.style.textAlign =  'right';
     this._inpAmount.style.paddingRight =  '2px';
+    this._inpAmount.style.cursor =  'ew-resize';
+
+    amgui.makeDraggable({
+        deTarget: this._inpAmount,
+        thisArg: this,
+        onDown: function () {
+
+            return {
+                amount: this._amount,
+            }
+        },
+        onMove: function (md, mx) {
+
+            var dx = mx - md.mx;
+
+            this._setValueParts(md.amount + this._dragSpeed * dx);
+        }
+    });
 
     this._deUnit = amgui.createLabel({
         parent: this.domElem,

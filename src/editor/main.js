@@ -101,7 +101,6 @@ am._init = function () {
     am.history = new Chronicler();
     shortcuts.on('undo', am.history.undo.bind(am.history));
     shortcuts.on('redo', am.history.redo.bind(am.history));
-    shortcuts.on('groupElements', function(){console.log('groupElements')});
     
     am.historyTab = new HistoryTab();
     am.timeline = new Timeline();
@@ -237,33 +236,57 @@ am.isPickableDomElem = function (deTest) {
 
 function addToggleGui() {
 
+    var isHidden = false;   
+
     am.timeline.toolbar.addIcon({
         tooltip: 'show/hide editor',
         icon: 'resize-small',
         separator: 'first',
-        onClick: function () {
-
-            am.deGuiCont.style.display = 'none';
-            
-            document.body.appendChild(btnFull);
-
-            var zIndex = getMaxZIndex();
-            if (zIndex) {
-                btnFull.style.zIndex = zIndex + 1000;
-            }
-        }
+        onClick: hide,
     });
 
     var btnFull = amgui.createIconBtn({
         size: 24,
         icon: 'resize-full',
         tooltip: 'show editor',
-        onClick: function () {
-            
-            am.deGuiCont.style.display = 'block';
-            btnFull.parentElement.removeChild(btnFull);
-        }
+        onClick: show,
     });
+
+    shortcuts.on('show/hidePanels', toggle);
+
+    function toggle() {
+
+        if (isHidden) {
+            show();
+        }
+        else {
+            hide();
+        }
+    }
+
+    function hide() {
+
+        if (isHidden) return;
+        isHidden = true;
+
+        am.deGuiCont.style.display = 'none';
+        
+        document.body.appendChild(btnFull);
+
+        var zIndex = getMaxZIndex();
+        if (zIndex) {
+            btnFull.style.zIndex = zIndex + 1000;
+        }
+    }
+
+    function show() {
+
+        if (!isHidden) return;
+        isHidden = false;
+            
+        am.deGuiCont.style.display = 'block';
+        btnFull.parentElement.removeChild(btnFull);
+    }
 
     btnFull.style.top = '0px';
     btnFull.style.left = '0px';

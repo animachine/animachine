@@ -18,6 +18,7 @@ var map = {
     'save': ['ctrl+shift+s'],
     'play/pause': ['space'],
     'groupElements': ['ctrl+g'],
+    'show/hidePanels': ['tab'],
 };
 
 shortcuts.readMap = function (map) {

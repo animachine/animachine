@@ -59,8 +59,6 @@ function createBtn(opt) {
 
     opt.backgroundColor = opt.backgroundColor || amgui.color.bg0;
 
-    var _text = 'button';
-
     var de = amgui.createDiv();
     de.style.height = (opt.height || amgui.LINE_HEIGHT) + 'px';
     de.style.padding = '0 15px';
@@ -73,12 +71,11 @@ function createBtn(opt) {
         text: {
             set: function (v) {
 
-                var _text = v;
                 de.textContent = v;
             },
             get: function () {
 
-                return _text;
+                return de.textContent;
             }
         } 
     });

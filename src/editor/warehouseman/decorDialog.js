@@ -1,11 +1,11 @@
 'use strict';
 
 var amgui = require('../amgui');
-var Dilaog = require('../utils/Dialog');
+var Dialog = require('../utils/Dialog');
 
 function decorDialog(whm) {
 
-    var dialog, deRoot, deLeft, deHead, deBreadcrumbs, inpName, 
+    var dialog, deLeft, deHead, deBreadcrumbs, inpName, 
         deStorageSelector, deDirectory, btnNewFolder, isInited, deOptions,
         openOptions = {}, mode;
 
@@ -19,9 +19,9 @@ function decorDialog(whm) {
         isInited = true;
 
         dialog = new Dialog();
-        dialog.addProperty({name: 'selectedName'});
-        dialog.addProperty({name: 'selectedData'});
-        dialog.addProperty({name: 'selectedPath'});
+        dialog.addProperty({name: 'selectedName', startValue: ''});
+        dialog.addProperty({name: 'selectedData', startValue: ''});
+        dialog.addProperty({name: 'selectedPath', startValue: ''});
 
         createDialog();
         createStorageSelector();
@@ -53,8 +53,8 @@ function decorDialog(whm) {
         dialog.hideButton('open');
 
         deStorageSelector.refresh();
-        refresh();
-        dialog.showModal();
+        setupModules();
+        dialog.show();
     };
 
     whm.showOpenDialog = function(opt) {
@@ -74,8 +74,8 @@ function decorDialog(whm) {
         dialog.hideButton('save');
 
         deStorageSelector.refresh();
-        refresh();
-        dialog.showModal();
+        setupModules();
+        dialog.show();
     };
 
     whm.setSaveOtions = function (opt) {
@@ -94,9 +94,7 @@ function decorDialog(whm) {
             whm._currStorage.features[name];
     }
 
-    function refresh() {
-
-        deDirectory.refresh();
+    function setupModules() {
 
         showHide(deDirectory, feature('browse'));
         showHide(deBreadcrumbs, feature('browse'));
@@ -115,7 +113,7 @@ function decorDialog(whm) {
 
         whm.save(name, save, dialog.selectedPath);
 
-        onClose();
+        dialog.hide();
     }
 
     function onOpen() {
@@ -127,12 +125,7 @@ function decorDialog(whm) {
             openOptions.onOpen(save);
         }
 
-        onClose();
-    }
-
-    function onClose() {
-
-        dialog.close();
+        dialog.hide();
     }
 
 
@@ -155,17 +148,17 @@ function decorDialog(whm) {
         deLeft.style.flex = '1';
         deLeft.style.display = 'flex';
         deLeft.style.flexDirection = 'column';
-        deRoot.appendChild(dialog.deContent);
+        dialog.deContent.appendChild(deLeft);
 
         deHead = document.createElement('div');
         deHead.style.width = '100%';
         deHead.style.height = '21px';
         deHead.style.display = 'flex';
-        deLeft.appendChild(dialog.deContent);
+        deLeft.appendChild(deHead);
 
         dialog.addButton('save', onSave);
         dialog.addButton('open', onOpen);
-        dialog.addButton('close', onClose);
+        dialog.addButton('close', 'hide');
     }
 
 
@@ -301,7 +294,7 @@ function decorDialog(whm) {
 
         function onClick(e) {
             
-            dialog.selectedName = this._value;
+            dialog.selectedName = this.name;
 
             if (e.type === 'dblclick') {
 
@@ -376,7 +369,7 @@ function decorDialog(whm) {
         deStorageSelector.style.display = 'inline-block';
         deStorageSelector.style.width = btnSize + 'px';
         deStorageSelector.style.height = '100%';
-        deRoot.insertBefore(deStorageSelector, deLeft);
+        dialog.deContent.insertBefore(deStorageSelector, deLeft);
 
         deStorageSelector.addEventListener('click', function (e) {
 
@@ -471,7 +464,7 @@ function decorDialog(whm) {
         deOptions.style.display = 'none';
         deOptions.style.width = '138px';
         deOptions.style.height = '100%';
-        deRoot.appendChild(deOptions);
+        dialog.deContent.appendChild(deOptions);
 
         var checkSave = createCheckbox('include save', true);
         var checkMinify = createCheckbox('minify');

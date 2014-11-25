@@ -110,7 +110,10 @@ function createDialog(opt) {
 
     de.addButton = function (text, handler) {
 
-        var btn = amgui.createBtn({text: text});
+        var btn = amgui.createBtn({
+            text: text,
+            height: '100%',
+        });
         btn.style.display = 'inline-block';
         btn.style.fontWeight = 'bold';
         btn.style.fontSize = '18px';
@@ -127,9 +130,9 @@ function createDialog(opt) {
         });
     };
 
-    de.hideButton = function () {
+    de.hideButton = function (text) {
 
-        this.buttons.forEach(function (btn) {
+        buttons.forEach(function (btn) {
 
             if (btn.text === text) {
 
@@ -138,9 +141,9 @@ function createDialog(opt) {
         });
     };
 
-    de.showButton = function () {
+    de.showButton = function (text) {
 
-        this.buttons.forEach(function (btn) {
+        buttons.forEach(function (btn) {
 
             if (btn.text === text) {
 

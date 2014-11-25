@@ -82,10 +82,10 @@ p.hide = function () {
     this._setupProperties.forEach(function (propData) {
 
         this.removeAllListeners(propData.evtName);
-    });
+    }, this);
 };
 
-p.addPoperty = function (opt) {
+p.addProperty = function (opt) {
 
     var value = opt.startValue, 
         name = opt.name,
@@ -102,7 +102,7 @@ p.addPoperty = function (opt) {
 
             if (v === value) return;
 
-            v = value;
+            value = v;
             refreshInput();
 
             this.emit(evtName, value);
@@ -149,7 +149,7 @@ p.hideButton = function (text) {
 
 p.showButton = function (text) {
 
-    this.domElem.hideButton(text);
+    this.domElem.showButton(text);
 };
 
 

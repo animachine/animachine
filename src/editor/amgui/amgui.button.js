@@ -59,6 +59,8 @@ function createBtn(opt) {
 
     opt.backgroundColor = opt.backgroundColor || amgui.color.bg0;
 
+    var _text = 'button';
+
     var de = amgui.createDiv();
     de.style.height = (opt.height || amgui.LINE_HEIGHT) + 'px';
     de.style.padding = '0 15px';
@@ -66,12 +68,22 @@ function createBtn(opt) {
     de.style.color = amgui.color.text;
     de.style.backgroundColor = opt.backgroundColor;
 
-    de.setCaption = function (caption) {
+    Object.defineProperties(de, {
 
-        de.textContent = caption;
-    };
+        text: {
+            set: function (v) {
+
+                var _text = v;
+                de.textContent = v;
+            },
+            get: function () {
+
+                return _text;
+            }
+        } 
+    });
     
-    de.setCaption(opt.caption || 'button');
+    de.text = opt.text || opt.caption || 'button';
 
     de.addEventListener('mouseenter', onMOver);
     de.addEventListener('mouseleave', onMOut);
@@ -139,8 +151,8 @@ function createToggleIconBtn(opt) {
 
     opt.iconOn = opt.iconOn || opt.icon;
     opt.iconOff = opt.iconOff || opt.icon;
-    opt.color = opt.color || amgui.color.text;
-    opt.colorInactive = opt.colorInactive || amgui.color.textInactive;
+    opt.onColor = opt.onColor || opt.color || amgui.color.text;
+    opt.offColor = opt.offColor || opt.color || amgui.color.textInactive;
 
     var isOn = opt.defaultToggle || false;
     var de = amgui.createIconBtn(opt);
@@ -191,7 +203,7 @@ function createToggleIconBtn(opt) {
         de.setIcon(isOn ? opt.iconOn : opt.iconOff);
 
         if (opt.changeColor) {
-            de.style.color = isOn ? opt.color : opt.colorInactive;
+            de.style.color = isOn ? opt.onColor : opt.offColor;
         }
     }
 

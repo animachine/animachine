@@ -32,6 +32,15 @@ function Warehouseeman(opt) {
 inherits(Warehouseeman, EventEmitter);
 var p = Warehouseeman.prototype;
 
+Object.defineProperties(p, {
+
+    selectedStorageType: {
+        get: function () {
+            return this._currStorage && this._currStorage.type;
+        }
+    }
+})
+
 p.addStorage = function (storage) {
 
     storage.features = storage.features || {
@@ -55,7 +64,7 @@ p.selectStorage = function (storage) {
         am.dialogs.WIP.show();
     }
 
-    this.emit('changeCurrStorage');
+    this.emit('changeSelectedStorage');
 };
 
 p.save = function (name, data, path) {

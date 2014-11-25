@@ -21,7 +21,7 @@ $(function () {
                     if (!tour.isChecked(0)) {
 
                         this._cookiePointer = tour.addPointer({
-                            deTarget: deCookiejar
+                            deTarget: deCookiejar,
                         });
                     }
                 },
@@ -91,19 +91,27 @@ $(function () {
                 },
                 runningLoop: function (tour) {
 
-                    if (!tour.isChecked(0) && isSavePanelOpened) {
+                    if (!tour.isChecked(0) && am.storage.dialog.isOpened) {
 
                         tour.checkIn(0);
                     }
-                    if (!tour.isChecked(1) && isWebStorageSelected) {
+                    if (!tour.isChecked(1) && am.storage.selectedStorageType === 'webstorage') {
 
                         tour.checkIn(1);
                     }
-                    if (!tour.isChecked(2) && isSaved) {
+                    if (!tour.isChecked(2) && isSaved()) {
 
                         tour.checkIn(2);
 
                         window.localStorage.amQuickTourSavedFlag = true;
+                    }
+
+                    function isSaved() {
+
+                        return Object.keys(localStorage).some(function (key) {
+                        
+                            return key.indexOf('_webstorageman/') === 0;
+                        });
                     }
                 }
             },

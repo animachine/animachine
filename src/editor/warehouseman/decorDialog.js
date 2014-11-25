@@ -1,12 +1,12 @@
 'use strict';
 
 var amgui = require('../amgui');
+var Dilaog = require('../utils/Dialog');
 
 function decorDialog(whm) {
 
     var dialog, deRoot, deLeft, deHead, deBreadcrumbs, inpName, 
         deStorageSelector, deDirectory, btnNewFolder, isInited, deOptions,
-        selectedPath = '', selectedName = '', selectedData = '',
         openOptions = {}, mode;
 
 
@@ -18,6 +18,11 @@ function decorDialog(whm) {
         }
         isInited = true;
 
+        dialog = new Dialog();
+        dialog.addProperty({name: 'selectedName'});
+        dialog.addProperty({name: 'selectedData'});
+        dialog.addProperty({name: 'selectedPath'});
+
         createDialog();
         createStorageSelector();
         createBreadcrumbs();
@@ -27,7 +32,7 @@ function decorDialog(whm) {
         createDirectory();
         createOptions();
 
-        whm.on('changeCurrStorage', onChangeCurrStorage);
+        whm.dialog = dialog;
     }
 
     whm.showSaveDialog = function(opt) {
@@ -37,14 +42,16 @@ function decorDialog(whm) {
         openOptions = opt;
         mode = 'save';
 
-        selectedName = opt.name || '';
-        selectedData = opt.data || '';
-        selectedPath = opt.path || '';
+        dialog.selectedName = opt.name || '';
+        dialog.selectedData = opt.data || '';
+        dialog.selectedPath = opt.path || '';
 
         inpName.style.display = 'block';
 
-        dialog.setTitle('Save');
-        dialog.setButtons(['save', 'close']);
+        dialog.title = 'Save';
+        dialog.showButton('save');
+        dialog.hideButton('open');
+
         deStorageSelector.refresh();
         refresh();
         dialog.showModal();
@@ -57,13 +64,15 @@ function decorDialog(whm) {
         openOptions = opt;
         mode = 'open';
 
-        selectedName = opt.name || '';
-        selectedPath = opt.path || '';
+        dialog.selectedName = opt.name || '';
+        dialog.selectedPath = opt.path || '';
 
         inpName.style.display = 'none';
 
-        dialog.setTitle('Open');
-        dialog.setButtons(['open', 'close']);
+        dialog.title = 'Open';
+        dialog.showButton('open');
+        dialog.hideButton('save');
+
         deStorageSelector.refresh();
         refresh();
         dialog.showModal();
@@ -85,18 +94,9 @@ function decorDialog(whm) {
             whm._currStorage.features[name];
     }
 
-
-    function onChangeCurrStorage() {
-
-        refresh();
-    }
-
     function refresh() {
 
-        deBreadcrumbs.refresh();
         deDirectory.refresh();
-        deStorageSelector.refreshSelection();
-        inpName.refresh();
 
         showHide(deDirectory, feature('browse'));
         showHide(deBreadcrumbs, feature('browse'));
@@ -111,16 +111,16 @@ function decorDialog(whm) {
     function onSave() {
 
         var save = openOptions.getSave(),
-            name = selectedName || 'anim.am.js';
+            name = dialog.selectedName || 'anim.am.js';
 
-        whm.save(name, save, selectedPath);
+        whm.save(name, save, dialog.selectedPath);
 
         onClose();
     }
 
     function onOpen() {
 
-        var save = whm.load(selectedName, selectedPath);
+        var save = whm.load(dialog.selectedName, dialog.selectedPath);
 
         if (openOptions.onOpen) {
 
@@ -145,33 +145,27 @@ function decorDialog(whm) {
 
     function createDialog () {
 
-        deRoot = document.createElement('div');
-        deRoot.style.width = '700px';
-        deRoot.style.height = '400px';
-        deRoot.style.display = 'flex';
-        deRoot.style.color = 'white';
+        dialog.deContent.style.width = '700px';
+        dialog.deContent.style.height = '400px';
+        dialog.deContent.style.display = 'flex';
+        dialog.deContent.style.color = 'white';
 
         deLeft = document.createElement('div');
         deLeft.style.height = '100%';
         deLeft.style.flex = '1';
         deLeft.style.display = 'flex';
         deLeft.style.flexDirection = 'column';
-        deRoot.appendChild(deLeft);
+        deRoot.appendChild(dialog.deContent);
 
         deHead = document.createElement('div');
         deHead.style.width = '100%';
         deHead.style.height = '21px';
         deHead.style.display = 'flex';
-        deLeft.appendChild(deHead);
+        deLeft.appendChild(dialog.deContent);
 
-        dialog = amgui.createDialog({
-            content: deRoot,
-            parent: am.deDialogCont
-        });
-
-        dialog.addEventListener('click_save', onSave);
-        dialog.addEventListener('click_open', onOpen);
-        dialog.addEventListener('click_close', onClose);
+        dialog.addButton('save', onSave);
+        dialog.addButton('open', onOpen);
+        dialog.addButton('close', onClose);
     }
 
 
@@ -188,9 +182,11 @@ function decorDialog(whm) {
             whm.cd(e.detail.selection.value);
         });
 
-        deBreadcrumbs.refresh = function () {
+        dialog.on('changeSelectedPath', refresh);
 
-            var names = selectedPath.split('/').filter(Boolean),
+        function refresh () {
+
+            var names = dialog.selectedPath.split('/').filter(Boolean),
                 value = '',
                 crumbs = [];
             
@@ -254,16 +250,16 @@ function decorDialog(whm) {
 
         inpName.addEventListener('change', function () {
 
-            selectedName = inpName.value;
+            dialog.selectedName = inpName.value;
         });
 
-        inpName.refresh = function () {
+        dialog.on('changeSelectedName', function () {
 
-            if (inpName.value !== selectedName) {
+            if (inpName.value !== dialog.selectedName) {
 
-                inpName.value = selectedName;
+                inpName.value = dialog.selectedName;
             }
-        };
+        });
     }
 
 
@@ -276,9 +272,20 @@ function decorDialog(whm) {
         deDirectory.style.flex = '1';
         deLeft.appendChild(deDirectory);
 
-        deDirectory.refresh = function () {
+        var deItems = [], overItem, currItem;
 
-            deDirectory.innerHTML = '';
+        dialog.on('changeSelectedPath', refresh);
+        whm.on('changeSelectedStorage', refresh);
+        dialog.on('changeSelectedName', function () {
+
+            currItem = _.find(deItems, {name: dialog.selectedName});
+        });
+
+        function refresh() {
+
+            while (deItems.length) {
+                $(deItems.pop()).remove();
+            }
 
             if (!feature('browse')) {
                 return;
@@ -290,17 +297,56 @@ function decorDialog(whm) {
 
                 createItem(item.name, item.type);
             });
-        };
+        }
+
+        function onClick(e) {
+            
+            dialog.selectedName = this._value;
+
+            if (e.type === 'dblclick') {
+
+                onOpen(dialog.selectedPath, dialog.selectedName);
+            }
+        }
+
+        function refreshSelection() {
+
+            deItems.forEach(function (deItem) {
+
+                if (deItem === overItem || deItem === currItem) {
+
+                    deItem.style.background = amgui.color.bgHover;
+                }
+                else {
+                    deItem.style.background = 'none';
+                }
+            });
+        }
+
+        function onMOver() {
+            
+            overItem = this;
+            refreshSelection();            
+        }
+
+        function onMOut() {
+
+            if (overItem === this) {
+
+                overItem = undefined;
+                refreshSelection();
+            }
+        }
   
         function createItem(name, type) {
 
             var deItem = document.createElement('div');
-            deItem._value = name;
+            deItem.name = name;
             
             amgui.createIcon({
                 icon: type === 'folder' ? 'folder-empty' : 'doc',
                 parent: deItem,
-                display: 'inline-block'
+                display: 'inline-block',
             });
 
             var deName = document.createElement('span');
@@ -314,27 +360,8 @@ function decorDialog(whm) {
             deItem.addEventListener('mouseover', onMOver);
             deItem.addEventListener('mouseout', onMOut);
 
+            deItems.push(deItem);
             return deItem;
-        }
-
-        function onClick(e) {
-            
-            selectedName = this._value;
-
-            if (e.type === 'dblclick') {
-
-                onOpen(selectedPath, selectedName);
-            }
-        }
-
-        function onMOver() {
-            
-            this.style.background = amgui.color.bgHover;
-        }
-
-        function onMOut() {
-
-            this.style.background = 'none';
         }
     }
 
@@ -361,6 +388,8 @@ function decorDialog(whm) {
             }
         });
 
+        whm.on('changeSelectedStorage', refreshSelection);
+
         function removeButtons() {
 
             buttons.forEach(function (btn) {
@@ -384,11 +413,9 @@ function decorDialog(whm) {
                     createItem(storage);
                 }
             });
-
-            deStorageSelector.refreshSelection();
         };
 
-        deStorageSelector.refreshSelection = function () {
+        function refreshSelection() {
 
             buttons.forEach(function (btn) {
 

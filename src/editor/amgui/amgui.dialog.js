@@ -15,8 +15,8 @@ module.exports = function (_amgui) {
 
 function createDialog(opt) {
 
-    var de, deTitle, deTitleText, deTitleIcon, titleEnd,
-        contentCont, buttonsCont, buttonsEnd;
+    var de, deTitle, deTitleText, deTitleIcon, deTitleEnd,
+        deContentCont, deButtonsCont, deButtonsEnd, buttons = [];
 
     de = document.createElement('dialog');
     (opt.parent || document.body).appendChild(de);
@@ -50,27 +50,27 @@ function createDialog(opt) {
         });
     }
 
-    titleEnd = document.createElement('div');
-    titleEnd.style.display = 'inline-block';
-    titleEnd.style.width = '0';
-    titleEnd.style.height = '0';
-    titleEnd.style.verticalAlign = 'bottom';
-    titleEnd.style.borderStyle = 'solid';
-    titleEnd.style.borderWidth = '34px 0 0 8px';
-    titleEnd.style.borderColor = 'transparent transparent transparent ' + amgui.color.overlay;
-    de.appendChild(titleEnd);
+    deTitleEnd = document.createElement('div');
+    deTitleEnd.style.display = 'inline-block';
+    deTitleEnd.style.width = '0';
+    deTitleEnd.style.height = '0';
+    deTitleEnd.style.verticalAlign = 'bottom';
+    deTitleEnd.style.borderStyle = 'solid';
+    deTitleEnd.style.borderWidth = '34px 0 0 8px';
+    deTitleEnd.style.borderColor = 'transparent transparent transparent ' + amgui.color.overlay;
+    de.appendChild(deTitleEnd);
 
     
 
-    contentCont = document.createElement('div');
-    contentCont.style.background = amgui.color.overlay;
-    de.appendChild(contentCont);
+    deContentCont = document.createElement('div');
+    deContentCont.style.background = amgui.color.overlay;
+    de.appendChild(deContentCont);
 
-    buttonsCont = document.createElement('div');
-    buttonsCont.style.background = amgui.color.overlay;
-    buttonsCont.style.display = 'inline-block';
-    buttonsCont.style.float = 'right';
-    de.appendChild(buttonsCont);
+    deButtonsCont = document.createElement('div');
+    deButtonsCont.style.background = amgui.color.overlay;
+    deButtonsCont.style.display = 'inline-block';
+    deButtonsCont.style.float = 'right';
+    de.appendChild(deButtonsCont);
 
 
     de.setTitle = function (title) {
@@ -84,8 +84,8 @@ function createDialog(opt) {
             return;
         }
 
-        contentCont.innerHTML = '';
-        contentCont.appendChild(content);
+        deContentCont.innerHTML = '';
+        deContentCont.appendChild(content);
     };
 
     de.setButtons = function (buttons) {
@@ -94,7 +94,8 @@ function createDialog(opt) {
             return;
         }
 
-        buttonsCont.innerHTML = '';
+        buttons.length = [];
+        deButtonsCont.innerHTML = '';
 
         buttons.forEach(function (btnData) {
             
@@ -107,37 +108,61 @@ function createDialog(opt) {
         });
     };
 
-    de.addButton = function (caption, handler) {
+    de.addButton = function (text, handler) {
 
-        var btn = amgui.createBtn({caption: caption});
+        var btn = amgui.createBtn({text: text});
         btn.style.display = 'inline-block';
         btn.style.fontWeight = 'bold';
         btn.style.fontSize = '18px';
         btn.style.background = 'none';
-        buttonsCont.appendChild(btn);
+        deButtonsCont.appendChild(btn);
+
+        buttons.push(btn);
 
         btn.addEventListener('click', function () {
             
             if (handler) handler();
 
-            de.dispatchEvent(new Event('click_' + caption.toLowerCase()));
+            de.dispatchEvent(new Event('click_' + text.toLowerCase()));
         });
-    }
+    };
+
+    de.hideButton = function () {
+
+        this.buttons.forEach(function (btn) {
+
+            if (btn.text === text) {
+
+                btn.style.display = 'none';
+            }
+        });
+    };
+
+    de.showButton = function () {
+
+        this.buttons.forEach(function (btn) {
+
+            if (btn.text === text) {
+
+                btn.style.display = 'inline-block';
+            }
+        });
+    };
 
     de.setTitle(opt.title);
     de.setContent(opt.content);
     de.setButtons(opt.buttons);
 
-    buttonsEnd = document.createElement('div');
-    buttonsEnd.style.display = 'inline-block';
-    buttonsEnd.style.float = 'right';
-    buttonsEnd.style.width = '0';
-    buttonsEnd.style.height = '0';
-    buttonsEnd.style.verticalAlign = 'top';
-    buttonsEnd.style.borderStyle = 'solid';
-    buttonsEnd.style.borderWidth = '0 6px 21px 0';
-    buttonsEnd.style.borderColor = 'transparent '+amgui.color.overlay+' transparent transparent';
-    de.appendChild(buttonsEnd);
+    deButtonsEnd = document.createElement('div');
+    deButtonsEnd.style.display = 'inline-block';
+    deButtonsEnd.style.float = 'right';
+    deButtonsEnd.style.width = '0';
+    deButtonsEnd.style.height = '0';
+    deButtonsEnd.style.verticalAlign = 'top';
+    deButtonsEnd.style.borderStyle = 'solid';
+    deButtonsEnd.style.borderWidth = '0 6px 21px 0';
+    deButtonsEnd.style.borderColor = 'transparent '+amgui.color.overlay+' transparent transparent';
+    de.appendChild(deButtonsEnd);
 
     return de;
 }

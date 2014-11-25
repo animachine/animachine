@@ -296,7 +296,9 @@ p._createCheckbox = function () {
     var de = amgui.createToggleIconBtn({
         parent: this._deCheckboxCont,
         iconOn: 'circle',
-        iconOff: 'circle-thin'
+        iconOff: 'circle-thin',
+        changeColor: true,
+        colorOn: 'lime',
     });
 
     de.style.pointerEvents = 'none';

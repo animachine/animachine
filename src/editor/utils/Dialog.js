@@ -10,22 +10,45 @@ function Dialog (opt) {
 
     opt = opt || {};
 
-    this.title = opt.title || 'Dialog';
     this._setupProperties = [];
 
     this._createDialog();
+    
+    this.title = opt.title || 'Dialog';
 }
 
 inherits(Dialog, EventEmitter);
 var p = Dialog.prototype;
 module.exports = Dialog;
 
-
-
 Object.defineProperties(p, {
+
+    title: {
+        set: function (v) {
+
+            if (!v || this._title === v) return;
+
+            this._title = v;
+            this.domElem.setTitle(this._title);
+        },
+        get: function () {
+
+            return this._title;
+        },
+    },
+    isOpened: {
+        get: function () {
+
+            return this._isOpened;
+        }
+    }
 });
 
+
 p.show = function (opt) {
+
+    if (this._isOpened) return;
+    this._isOpened = true;
 
     opt = opt || {};
 
@@ -50,6 +73,9 @@ p.show = function (opt) {
 };
 
 p.hide = function () {
+    
+    if (!this._isOpened) return;
+    this._isOpened = false;
 
     this.domElem.close();
 
@@ -65,7 +91,10 @@ p.addPoperty = function (opt) {
         name = opt.name,
         evtName = opt.evtName || 'change' + name.charAt(0).toUpperCase() + name.slice(1);
 
-    this._setupParamNames.push(name);
+    this._setupProperties.push({
+        name: name,
+        evtName: evtName,
+    });
 
     Object.defineProperty(this, name, {
 
@@ -101,17 +130,29 @@ p.addPoperty = function (opt) {
             deInput.value = value;
         }
     }
-}
+};
 
-p.addButton = function (name, handler) {
+p.addButton = function (text, handler) {
 
     if (handler === 'hide') {
 
         handler = this.hide.bind(this);
     }
 
-    this.domElem.addButton(name, handler);
-}
+    this.domElem.addButton(text, handler);
+};
+
+p.hideButton = function (text) {
+
+    this.domElem.hideButton(text);
+};
+
+p.showButton = function (text) {
+
+    this.domElem.hideButton(text);
+};
+
+
 
 p._createDialog = function () {
 
@@ -121,7 +162,7 @@ p._createDialog = function () {
     this.deContent = document.createElement('div');
     this.deContent.style.width = '330px';
     this.deContent.style.padding = '30px 12px';
-    this.deContent.setAttribute('deContent',1 );
+    this.deContent.setAttribute('deContent', 1);
 
     
     this.domElem = amgui.createDialog({

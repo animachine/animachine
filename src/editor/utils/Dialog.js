@@ -173,20 +173,17 @@ p._createDialog = function () {
     });
 
     this.domElem.addEventListener('click_ok', this._onClickOk);
+
+    this.domElem.addEventListener('click', function (e) {
+    
+        var rect = this.domElem.getBoundingClientRect();
+    
+        if (rect.left > e.x || rect.bottom < e.x ||
+            rect.top > e.y || rect.right < e.y) 
+        {
+            this.hide();
+        }
+    }.bind(this));
 };
-
-// p._createContent = function () {
-
-//     this._deContent = document.createElement('div');
-//     this._deContent.style.width = '330px';
-//     this._deContent.style.padding = '30px 12px';
-
-//     amgui.createLabel({
-//         caption: 'Dialog content',
-//         fontSize: '18px',
-//         display: 'block',
-//         parent: this._deContent
-//     });
-// };
 
 

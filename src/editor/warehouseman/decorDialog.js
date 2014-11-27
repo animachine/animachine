@@ -42,7 +42,7 @@ function decorDialog(whm) {
         openOptions = opt;
         mode = 'save';
 
-        dialog.selectedName = opt.name || '';
+        dialog.selectedName = opt.name || 'anim.am.js';
         dialog.selectedData = opt.data || '';
         dialog.selectedPath = opt.path || '';
 
@@ -223,7 +223,10 @@ function decorDialog(whm) {
         btnNewFolder = amgui.createIconBtn({
             parent: deHead,
             icon: 'folder-add',
-            width: 21
+            width: 21,
+            onClick: function () {
+                am.dialogs.WIP.show();
+            }
         });
     }
 

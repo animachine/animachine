@@ -1,4 +1,5 @@
 $(function () {
+    'use strict';
 
     am.open();
     setupWorkspace();
@@ -15,7 +16,10 @@ $(function () {
             {
                 title: 'Make a track!',
                 content: getStep1Content(),
-                checklistLength: 2,
+                checklist: [
+                    'select the cookiejar',
+                    'create a track',
+                ],
                 onReady: function (tour) {
 
                     if (!tour.isChecked(0)) {
@@ -42,7 +46,9 @@ $(function () {
             {
                 title: 'Transform it!',
                 content: getStep2Content(),
-                checklistLength: 1,
+                checklist: [
+                    'make some transforms',
+                ],
                 onReady: function (tour) {
                 },
                 runningLoop: function (tour) {
@@ -51,7 +57,7 @@ $(function () {
 
                         am.timeline._tracks.forEach(function (track) {
                             track._params.forEach(function (param) {
-                                if (param.name === 'transform') {
+                                if (['x','y','scaleX','scaleY','rotateZ'].indexOf(param.name) !== -1) {
                                     tour.checkIn(0);
                                 }
                             });
@@ -62,7 +68,10 @@ $(function () {
             {
                 title: 'Animate it!',
                 content: getStep3Content(),
-                checklistLength: 2,
+                checklist: [
+                    'move the timeline pointer',
+                    'create a new key',
+                ],
                 onReady: function (tour) {
                 },
                 runningLoop: function (tour) {
@@ -85,8 +94,12 @@ $(function () {
             },
             {
                 title: 'Save it!',
-                content: getStep3Content(),
-                checklistLength: 3,
+                content: getStep4Content(),
+                checklist: [
+                    'open the "Save" dialog',
+                    'select the web storage',
+                    'save it!',
+                ],
                 onReady: function (tour) {
                 },
                 runningLoop: function (tour) {
@@ -117,21 +130,20 @@ $(function () {
             },
             {
                 title: 'Load it!',
-                content: getStep4Content(),
-                checklistLength: 3,
+                content: getStep5Content(),
+                checklist: [
+                    'open the "Open" dialog',
+                    'save it!',
+                ],
                 onReady: function (tour) {
                 },
                 runningLoop: function (tour) {
 
-                    if (!tour.isChecked(0) && isSavePanelOpened) {
+                    if (!tour.isChecked(0) && am.storage.dialog.isOpened) {
 
                         tour.checkIn(0);
                     }
-                    if (!tour.isChecked(1) && isWebStorageSelected) {
-
-                        tour.checkIn(1);
-                    }
-                    if (!tour.isChecked(2) && isAnimLoaded) {
+                    if (!tour.isChecked(2) && 'isAnimLoaded') {
 
                         tour.checkIn(2);
 
@@ -148,6 +160,7 @@ $(function () {
     }
 
 });
+
 
 function getStep0Content() {
 
@@ -188,7 +201,7 @@ function getStep4Content() {
     + '<p>Now your animation is saved in your browser. You can refresh the browser and continue with the last step.</p>';
 }
 
-function getStep4Content() {
+function getStep5Content() {
 
     return '<img src="http://zippy.gfycat.com/ImpureSplendidHyracotherium.gif" style="width:100%;">'
     + '<p>To open you animation:</p>'
@@ -200,7 +213,7 @@ function getStep4Content() {
     + '<p>You can find more tours <a href="">here</a></p>';
 }
 
-function getStep4Content() {
+function getStep6Content() {
 
     return '<img src="http://zippy.gfycat.com/ImpureSplendidHyracotherium.gif" style="width:100%;">'
     + '<p>Thanks for</p>'

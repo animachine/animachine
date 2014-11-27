@@ -1,262 +1,166 @@
 'use strict';
 
-var EventEmitter = require('events').EventEmitter;
-var inherits = require('inherits');
 var amgui = require('../../amgui');
+var Dialog = require('../../utils/Dialog');
+var UnitInput = require('../../utils/UnitInput');
+var StringInput = require('../../utils/StringInput');
 
-function DialogTrackOptions () {
+var deSelectorCont,
+    dialog = new Dialog({
+        title: 'Track',
+    }); 
+module.exports = dialog;
 
-    EventEmitter.call(this);
-
-    this._name = '';
-    this._selectors = [];
-
-    this._onClickOk = this._onClickOk.bind(this); 
-    this._onChangeName = this._onChangeName.bind(this); 
-    this._onSelectFill = this._onSelectFill.bind(this); 
-    this._onChangeIterations = this._onChangeIterations.bind(this); 
-}
-
-inherits(DialogTrackOptions, EventEmitter);
-var p = DialogTrackOptions.prototype;
+createContent();
+dialog.addButton('ok', 'hide');
 
 
 
-Object.defineProperties(p, {
+dialog.addProperty({name: 'repeat', startValue: 0});
+dialog.addProperty({name: 'repeatDelay', startValue: 0});
+dialog.addProperty({name: 'yoyo', startValue: false});
+dialog.addProperty({name: 'keyStretch', startValue: 1});
+dialog.addProperty({
+    name: 'selectors', 
+    startValue: [],
+    set: function (v) {
 
-    name: {
-        set: function (v) {
-
-            if (this._name === v) {
-                return;
-            }
-
-            this._name = v;
-            this._inpName.value = v;
-            this.emit('changeName', v);
-        },
-        get: function () {
-            return this._name;
-        }
+        selectors.slice().map(this._removeSelector, this);
+        v.map(addSelector, this);
+        this.emit('changeSelectors', this.selectors);
     },
-
-    selectors: {
-        set: function (v) {
-
-            this._selectors.slice().map(this._removeSelector, this);
-            v.map(this._addSelector, this);
-            this.emit('changeSelectors', this.selectors);
-        },
-        get: function () {
-            return _.pluck(this._selectors, 'value'); 
-        }
-    },
-
-    fill: {
-        set: function (v) {
-
-            if (this._fill === v) {
-                return;
-            }
-
-            this._fill = v;
-            this._deFill.textContent = v;
-            this.emit('changeFill', v);
-        },
-        get: function () {
-            return this._fill;
-        }
-    },
-
-    iterations: {
-        set: function (v) {
-
-            if (this._iterations === v) {
-                return;
-            }
-
-            this._iterations = v;
-            this._inpIterations.value = v;
-            this.emit('changeIterations', v);
-        },
-        get: function () {
-            return this._iterations;
-        }
-    },
+    get: function () {
+        return _.pluck(selectors, 'value'); 
+    }
 });
 
-p.show = function (opt) {
 
-    opt = opt || {};
-
-    this._createDialog();
-
-    if ('name' in opt) this.name = opt.name;
-    if ('fill' in opt) this.fill = opt.fill;
-    if ('iterations' in opt) this.iterations = opt.iterations;
-    if ('selectors' in opt) this.selectors = opt.selectors;
-
-    if ('onChangeName' in opt) this.on('changeName', opt.onChangeName);
-    if ('onChangeFill' in opt) this.on('changeFill', opt.onChangeFill);
-    if ('onChangeIterations' in opt) this.on('changeIterations', opt.onChangeIterations);
-    if ('onChangeSelectors' in opt) this.on('changeSelectors', opt.onChangeSelectors);
-
-    this.domElem.showModal();
-};
-
-p.hide = function () {
-
-    this.domElem.close();
-
-    this.removeAllListeners('changeName');
-    this.removeAllListeners('changeFill');
-    this.removeAllListeners('changeIterations');
-    this.removeAllListeners('changeSelectors');
-};
-
-p._createDialog = function () {
-
-    if (this._isDialogCreated) return;
-    this._isDialogCreated = true;
-
-    this._createContent();
-    
-    this.domElem = amgui.createDialog({
-        title: 'Track',
-        content: this._deContent,
-        parent: am.deDialogCont,
-        buttons: ['ok'],
-    });
-
-    this.domElem.addEventListener('click_ok', this._onClickOk);
-};
-
-p._onClickOk = function () {
-
-    this.hide();
-};
-
-p._onChangeName = function () {
-
-    this.name = this._inpName.value;
-};
-
-p._onSelectFill = function (e) {
-
-    this.fill = e.detail.selection;
-};
-
-p._onChangeIterations = function () {
-
-    this.iterations = parseInt(this._inpIterations.value);
-};
-
-
-p._createContent = function () {
-
-    this._deContent = document.createElement('div');
-    this._deContent.style.width = '330px';
-    this._deContent.style.padding = '30px 12px';
+function createContent() {
 
     amgui.createLabel({
         caption: 'Name: ',
         fontSize: '18px',
-        // display: 'block',
-        parent: this._deContent
+        parent: dialog.deContent
     });
 
-    this._inpName = document.createElement('input');
-    this._inpName.type = 'text';
-    this._inpName.value = this.name;
-    this._inpName.style.display = 'inline-block';
-    this._inpName.style.width = '245px';
-    this._inpName.style.fontSize = '14px';
-    this._inpName.style.fontFamily = amgui.FONT_FAMILY;
-    this._inpName.style.background = 'none';
-    this._inpName.style.border = 'none';
-    this._inpName.style.marginBottom = '12px';
-    this._inpName.style.color = amgui.color.text;
-    this._inpName.addEventListener('change', this._onChangeName);
-    this._deContent.appendChild(this._inpName);
+    var inpTitle = new StringInput({
+        parent: dialog.deContent,
+    });
+    inpTitle.domElem.style.width = '245px';
+    inpTitle.domElem.style.fontSize = '14px';
+    inpTitle.domElem.style.fontFamily = amgui.FONT_FAMILY;
+    inpTitle.domElem.style.background = 'none';
+    inpTitle.domElem.style.border = 'none';
+    inpTitle.domElem.style.marginBottom = '12px';
+    inpTitle.domElem.style.color = amgui.color.text;
+    inpTitle.on('change', function (v) {
+        dialog.title = v;
+    });
+    dialog.on('changeTitle', function () {
+        inpTitle.value = dialog.title;
+    });
 
     amgui.createLabel({
         caption: 'Selectors',
         fontSize: '18px',
         display: 'block',
-        parent: this._deContent
+        parent: dialog.deContent
     });
 
-    this._deSelectorCont = document.createElement('div');
-    this._deSelectorCont.style.width = '100%';
-    this._deContent.appendChild(this._deSelectorCont);
+    deSelectorCont = amgui.createDiv({
+        width: '100%',
+        parent: dialog.deContent,
+    });
 
     amgui.createIconBtn({
-        icon: 'plus',
+        icon: 'hash',
         display: 'inline-block',
-        onClick: this._addSelector.bind(this, ''),
-        parent: this._deContent
+        onClick: addSelector.bind(null, ''),
+        parent: dialog.deContent
     });
 
     amgui.createIconBtn({
         icon: 'code',
         display: 'inline-block',
         onClick: function () {am.dialogs.WIP.show();},
-        parent: this._deContent,
+        parent: dialog.deContent,
         tooltip: 'select from options'
     });
 
     amgui.createLinebreak({
-        parent:this._deContent
+        parent: dialog.deContent,
     });
 
     amgui.createLabel({
-        caption: 'Fill mode: ',
+        caption: 'repeat:',
         fontSize: '18px',
-        parent: this._deContent
+        parent: dialog.deContent
     });
-    this._deFill = amgui.createLabel({
-        parent: this._deContent
+    var inpRepeat = new UnitInput({
+        min: -1,
+        units: ['x'],
+        onChange: function (v) {
+            dialog.repeat = v;
+        }
     });
-    amgui.bindDropdown({
-        deTarget: this._deFill,
-        deMenu: amgui.createDropdown({
-            options: ['none', 'forwards', 'backwards', 'both'],
-            onSelect: this._onSelectFill,
-        }),
-        menuParent: this._deContent,
+    dialog.on('changeRepeat', function () {
+        inpRepeat.value = dialog.repeat;
     });
 
-    amgui.createLinebreak({
-        parent: this._deContent
-    });
 
     amgui.createLabel({
+        caption: 'repeat delay:',
         fontSize: '18px',
-        caption: 'Iterations: ',
-        parent: this._deContent
+        parent: dialog.deContent
+    });
+    var inpRepeatDelay = new UnitInput({
+        precision: 2,
+        min: 0,
+        units: ['x'],
+        onChange: function (v) {
+            dialog.repeatDelay = v;
+        }
+    });
+    dialog.on('changeRepeatDelay', function () {
+        inpRepeatDelay.value = dialog.repeatDelay;
     });
 
-    this._inpIterations = document.createElement('input');
-    this._inpIterations.type = 'number';
-    this._inpIterations.step = 1;
-    this._inpIterations.min = 0;
-    this._inpIterations.max = 999999999999;
-    this._inpIterations.style.fontSize = '14px';
-    this._inpIterations.style.fontFamily = amgui.FONT_FAMILY;
-    this._inpIterations.style.background = 'none';
-    this._inpIterations.style.border = 'none';
-    this._inpIterations.style.marginBottom = '12px';
-    this._inpIterations.style.color = amgui.color.text;
-    this._inpIterations.addEventListener('change', this._onChangeIterations);
-    this._deContent.appendChild(this._inpIterations);
-};
 
-p._addSelector = function(value) {
+    amgui.createLabel({
+        caption: 'key stretch:',
+        fontSize: '18px',
+        parent: dialog.deContent,
+    });
+    var inpKeyStretch = new UnitInput({
+        precision: 2,
+        min: 0,
+        units: ['x'],
+        onChange: function (v) {
+            dialog.keyStretch = v;
+        }
+    });
+    dialog.on('changeKeyStretch', function () {
+        inpKeyStretch.value = dialog.keyStretch;
+    });
+
+    var cbYoyo = amgui.createChackbox({
+        text: 'yoyo',
+        onChange: function (e) {
+            dialog.yoyo = e.detail.checked;
+        },
+        parent: dialog.deContent,
+    });
+    dialog.on('changeYoyo', function () {
+        cbYoyo.checked = dialog.yoyo;
+    });
+}
+
+function addSelector(value) {
 
     var selector = {
-        value: value,
+        value: value || '',
     };
-    this._selectors.push(selector);
+    selectors.push(selector);
 
     var height = 23;
 
@@ -304,13 +208,11 @@ p._addSelector = function(value) {
     selector.domElem.addEventListener('mouseleave', function () {
         btnDel.style.visibility = 'hidden';
     });
-};
+}
 
-p._removeSelector = function (selector) {
+function removeSelector(selector) {
 
-    this._selectors.splice(this._selectors.indexOf(selector), 1);
+    selectors.splice(selectors.indexOf(selector), 1);
 
     selector.domElem.parentNode.removeChild(selector.domElem);
-};
-
-module.exports = new DialogTrackOptions();
+}

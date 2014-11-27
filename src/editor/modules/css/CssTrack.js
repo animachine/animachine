@@ -45,7 +45,10 @@ function CssTrack(opt) {
     this._paramGroup = new CssParamGroup({
         optionLine: {
             tgglMerge: false,
-        }
+            title: {
+                onClick: this._onClickName, 
+            },
+        },
     });
 
     this._paramGroup.optionLine.addButton({

@@ -67,7 +67,7 @@ p.show = function (opt) {
 
             this.on(propData.evtName, opt[onOpt]);
         }
-    });
+    }, this);
 
     this.domElem.showModal();
 };

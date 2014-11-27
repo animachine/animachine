@@ -65,11 +65,11 @@ function OptionLine(opt) {
 
             var deNameIcon = amgui.createIcon({
                 icon: 'cog',
-                parent: de,
+                parent: this._deHeadCont,
             });
             deNameIcon.style.display = 'none';
-            this._deName.addEventListener('mouseenter', function () {deNameIcon.style.display = 'inline-block';});
-            this._deName.addEventListener('mouseleave', function () {deNameIcon.style.display = 'none';});
+            this._deTitle.addEventListener('mouseenter', function () {deNameIcon.style.display = 'inline-block';});
+            this._deTitle.addEventListener('mouseleave', function () {deNameIcon.style.display = 'none';});
         }
     }
 
@@ -93,8 +93,8 @@ function OptionLine(opt) {
 
         this.addButton({
             domElem: amgui.createToggleIconBtn({
-                iconOn: 'link',
-                iconOff: 'unlink',
+                iconOn: 'flow-line',
+                iconOff: 'flow-parallel',
                 onClick: opt.tgglMerge.onClick,
             }),
             name: 'tgglMerge',

@@ -6,6 +6,7 @@ var UnitInput = require('../../utils/UnitInput');
 var StringInput = require('../../utils/StringInput');
 
 var deSelectorCont,
+    deSelectors,
     dialog = new Dialog({
         title: 'Track',
     }); 
@@ -25,12 +26,12 @@ dialog.addProperty({
     startValue: [],
     set: function (v) {
 
-        selectors.slice().map(this._removeSelector, this);
-        v.map(addSelector, this);
-        this.emit('changeSelectors', this.selectors);
+        _selectors.slice().map(removeSelector);
+        v.map(addSelector);
+        dialog.emit('changeSelectors', dialog.selectors);
     },
     get: function () {
-        return _.pluck(selectors, 'value'); 
+        return _.pluck(dialog.selectors, 'value'); 
     }
 });
 
@@ -143,7 +144,7 @@ function createContent() {
         inpKeyStretch.value = dialog.keyStretch;
     });
 
-    var cbYoyo = amgui.createChackbox({
+    var cbYoyo = amgui.createCheckbox({
         text: 'yoyo',
         onChange: function (e) {
             dialog.yoyo = e.detail.checked;
@@ -160,7 +161,7 @@ function addSelector(value) {
     var selector = {
         value: value || '',
     };
-    selectors.push(selector);
+    dialog.selectors.push(selector);
 
     var height = 23;
 
@@ -170,7 +171,7 @@ function addSelector(value) {
     selector.domElem.style.paddingLeft = '2px';
     selector.domElem.style.margin = '1px 0';
     selector.domElem.style.background = amgui.color.bg2;
-    this._deSelectorCont.appendChild(selector.domElem);
+    deSelectorCont.appendChild(selector.domElem);
 
     var inp = document.createElement('input');
     inp.type = 'text';
@@ -189,15 +190,14 @@ function addSelector(value) {
     inp.addEventListener('change', function () {
 
         selector.value = inp.value;
-
-        this.emit('changeSelectors', this.selectors);
-    }.bind(this));
+        dialog.emit('changeSelectors', dialog.selectors);
+    });
 
     var btnDel = amgui.createIconBtn({
         icon: 'cancel',
         height: height,
         display: 'inline-block',
-        onClick:this._removeSelector.bind(this, selector),
+        onClick: removeSelector.bind(null, selector),
         parent: selector.domElem
     });
     btnDel.style.visibility = 'hidden';
@@ -212,7 +212,7 @@ function addSelector(value) {
 
 function removeSelector(selector) {
 
-    selectors.splice(selectors.indexOf(selector), 1);
+    dialog.selectors.splice(dilaog.selectors.indexOf(selector), 1);
 
     selector.domElem.parentNode.removeChild(selector.domElem);
 }

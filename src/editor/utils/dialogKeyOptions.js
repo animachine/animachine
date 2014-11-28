@@ -29,39 +29,23 @@ dialog.show = function (opt) {
 function createContent() {
 
     dialog.addButton('ok', 'hide');
-    // this._inpEase = document.createElement('input');
-    // this._inpEase.type = 'text';
-    // this._inpEase.value = 'linear';
-    // this._inpEase.style.width = '245px';
-    // this._inpEase.style.fontSize = '14px';
-    // this._inpEase.style.fontFamily = amgui.FONT_FAMILY;
-    // this._inpEase.style.background = 'none';
-    // this._inpEase.style.border = 'none';
-    // this._inpEase.style.color = amgui.color.text;
-    // this._inpEase.addEventListener('change', this._onChangeEase);
-    // this._deContent.appendChild(this._inpEase);
-
-    // this._btnSelectEase = amgui.createIconBtn({
-    //     icon: 'chart-bar',
-    //     display: 'inline'
-    // });
-    // this._btnSelectEase.style.marginLeft = '4px';
-    // this._deContent.appendChild(this._btnSelectEase);
-
-    // amgui.bindDropdown({
-    //     deTarget: this._btnSelectEase,
-    //     deMenu: amgui.createDropdown({
-    //         options: ['linear', 'ease', 'ease-in', 'ease-out', 'ease-in-out', 'steps(1)', 'cubic-bezier(0,0,1,1)'],
-    //         onSelect: this._onSelectEase,
-    //     }),
-    //     menuParent: this._deContent
-    // });
 
     beizerEditor = amgui.createBezierEditor({
         // width: 330,
         // height: 330,
         parent: dialog.deContent,
-        onChange:   onChangeBezier
+        onChange: onChangeBezier
+    });
+
+    var cbRoughEase = amgui.createCheckbox({
+        text: 'RoughEase',
+        parent: dialog.deContent,
+        onChange: function (e) {
+            if (e.detail.checked) {
+                am.dialogs.WIP.show();
+                cbRoughEase.value = false;
+            }
+        }
     });
 };
 
@@ -76,7 +60,6 @@ function createContent() {
 // };
 
 function onChangeBezier(e) {
-
     currEase.points = e.detail.points;
 };
 

@@ -10,7 +10,8 @@ function Timebar(opt) {
     EventEmitter.call(this);
 
     opt = opt || {};
-
+    
+    this._startMargin = 'startMargin' in opt ? opt.startMargin || 6;
     this._start = opt.start || 0;
     this._width = opt.width || 0;
     this._height = opt.height || 21;
@@ -154,6 +155,22 @@ Object.defineProperties(p, {
             return this._length;
         }
     },
+
+    startMargin: {
+        set: function (v) {
+
+            v = parseInt(v);
+
+            if (!Number.isFinite(v) || this._startMargin === v) return;
+            this._startMargin = v;
+
+            this._renderTape();
+            this.emit('changeTape');
+        },
+        get: function () {
+            return this._startMargin;
+        }
+    },
 });
 
 
@@ -234,6 +251,9 @@ p._renderTape = function () {
 
     if (step) {
 
+        // ctx.save()
+        // ctx.translate(-this.startMargin, 0);
+
         ctx.linweidth = 0.5;
         ctx.strokeStyle = amgui.color.bg3;
         ctx.fillStyle = amgui.color.bg3;
@@ -260,6 +280,8 @@ p._renderTape = function () {
             ctx.fillText(text, i * scale - textW, 12);
         }
         ctx.stroke();
+
+        // ctx.restore();
     }
 
     this._refreshPointer();

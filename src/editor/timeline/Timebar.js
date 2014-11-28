@@ -11,7 +11,7 @@ function Timebar(opt) {
 
     opt = opt || {};
     
-    this._startMargin = 'startMargin' in opt ? opt.startMargin || 6;
+    this._startMargin = ('startMargin' in opt) ? opt.startMargin : 6;
     this._start = opt.start || 0;
     this._width = opt.width || 0;
     this._height = opt.height || 21;

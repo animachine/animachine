@@ -112,12 +112,12 @@ function bindDropdown(opt) {
 
         if (isOpened) return;
         isOpened = true;
-        
-        amgui.placeToPoint(deDropdown, e.clientX, e.clientY, opt.side);
 
         var deCont = opt.menuParent || amgui.deOverlayCont || deBtn;
 
         deCont.appendChild(deDropdown);
+        
+        amgui.placeToPoint(deDropdown, e.clientX, e.clientY, opt.side);
 
         setTimeout(function () {
             window.addEventListener('click', close);

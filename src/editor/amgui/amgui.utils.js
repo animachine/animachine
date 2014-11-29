@@ -73,18 +73,23 @@ function callOnAdded(de, cb, thisArg) {
     }
 
 
-    
-    var setI = setInterval(checkLoop, 234);
+    var setT, setTTime = 1;
+    checkLoop();
     
     function checkLoop() {
 
         if (check(de)) {
 
-            clearInterval(setI);
-
             cb.call(thisArg);
         }
-        
+        else {
+            if (setTTime < 256) {
+                setTTime *= 2;
+            }
+
+            clearTimeout(setT);
+            setT = setTimeout(checkLoop, setTTime)
+        }
     }
 
     function check (node) {

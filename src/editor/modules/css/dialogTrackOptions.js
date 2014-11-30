@@ -4,9 +4,10 @@ var amgui = require('../../amgui');
 var Dialog = require('../../utils/Dialog');
 var UnitInput = require('../../utils/UnitInput');
 var StringInput = require('../../utils/StringInput');
+var OptionLine = require('../../utils/OptionLine');
 
 var deSelectorCont,
-    deSelectors,
+    deSelectors = [],
     dialog = new Dialog({
         title: 'Track',
     }); 
@@ -26,12 +27,12 @@ dialog.addProperty({
     startValue: [],
     set: function (v) {
 
-        _selectors.slice().map(removeSelector);
-        v.map(addSelector);
+        deSelectors.slice().map(removeSelector);
+        v.forEach(addSelector);
         dialog.emit('changeSelectors', dialog.selectors);
     },
     get: function () {
-        return _.pluck(dialog.selectors, 'value'); 
+        return _.pluck(deSelectors, 'value'); 
     }
 });
 
@@ -88,61 +89,65 @@ function createContent() {
         tooltip: 'select from options'
     });
 
-    amgui.createLinebreak({
-        parent: dialog.deContent,
-    });
+    amgui.createLinebreak({parent: dialog.deContent});
 
-    amgui.createLabel({
-        caption: 'repeat:',
-        fontSize: '18px',
-        parent: dialog.deContent
-    });
-    var inpRepeat = new UnitInput({
-        min: -1,
-        units: ['x'],
-        onChange: function (v) {
-            dialog.repeat = v;
-        }
+    var optRepeat = new OptionLine({
+        title: 'repeat',
+        parent: dialog.deContent,
+        inputs: [{
+            type: 'unit',
+            name: 'repeat',
+            min: -1,
+            units: ['x'],
+            onChange: function (v) {
+                dialog.repeat = v;
+            }
+        }],
     });
     dialog.on('changeRepeat', function () {
-        inpRepeat.value = dialog.repeat;
+        optRepeat.inputs.repeat.value = dialog.repeat;
     });
+    $(optRepeat.domElem).one('mousedown', showWIPDialog);
 
-
-    amgui.createLabel({
-        caption: 'repeat delay:',
-        fontSize: '18px',
-        parent: dialog.deContent
-    });
-    var inpRepeatDelay = new UnitInput({
-        precision: 2,
-        min: 0,
-        units: ['x'],
-        onChange: function (v) {
-            dialog.repeatDelay = v;
-        }
+    var optRepeatDelay = new OptionLine({
+        title: 'repeat delay',
+        parent: dialog.deContent,
+        inputs: [{
+            type: 'unit',
+            name: 'repeatDelay',
+            min: 0,
+            precision: 3,
+            dragSpeed: 0.001,
+            units: ['sec'],
+            onChange: function (v) {
+                dialog.repeatDelay = v;
+            }
+        }],
     });
     dialog.on('changeRepeatDelay', function () {
-        inpRepeatDelay.value = dialog.repeatDelay;
+        optRepeatDelay.inputs.repeatDelay.value = dialog.repeatDelay;
     });
+    $(optRepeatDelay.domElem).one('mousedown', showWIPDialog);
 
-
-    amgui.createLabel({
-        caption: 'key stretch:',
-        fontSize: '18px',
+    var optKeyStretch = new OptionLine({
+        title: 'key stretch',
         parent: dialog.deContent,
-    });
-    var inpKeyStretch = new UnitInput({
-        precision: 2,
-        min: 0,
-        units: ['x'],
-        onChange: function (v) {
-            dialog.keyStretch = v;
-        }
+        inputs: [{
+            type: 'unit',
+            name: 'keyStretch',
+            min: 0,
+            dragSpeed: 0.01,
+            precision: 3,
+            units: ['x'],
+            onChange: function (v) {
+                dialog.keyStretch = v;
+            }
+        }],
     });
     dialog.on('changeKeyStretch', function () {
-        inpKeyStretch.value = dialog.keyStretch;
+        optKeyStretch.inputs.keyStretch.value = dialog.keyStretch;
     });
+    $(optKeyStretch.domElem).one('mousedown', showWIPDialog);
 
     var cbYoyo = amgui.createCheckbox({
         text: 'yoyo',
@@ -154,6 +159,11 @@ function createContent() {
     dialog.on('changeYoyo', function () {
         cbYoyo.checked = dialog.yoyo;
     });
+    $(cbYoyo).one('click', showWIPDialog);
+
+    function showWIPDialog() {
+        am.dialogs.WIP.show();
+    }
 }
 
 function addSelector(value) {
@@ -212,7 +222,7 @@ function addSelector(value) {
 
 function removeSelector(selector) {
 
-    dialog.selectors.splice(dilaog.selectors.indexOf(selector), 1);
+    dialog.selectors.splice(dialog.selectors.indexOf(selector), 1);
 
     selector.domElem.parentNode.removeChild(selector.domElem);
 }

@@ -60,6 +60,8 @@ Object.defineProperties(p, {
             this._renderTape();
             this.emit('changeTape');
             this.emit('changeTimescale');
+
+            this.start = this.start;
         },
         get: function () {
             return this._timescale;

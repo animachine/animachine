@@ -106,7 +106,7 @@ p._onSelectDropdown = function (e) {
 
     if (selection === 'ease') {
 
-        ease.showOptinosDialog();
+        this.ease.showOptionsDialog();
     }
     else if (selection === 'delete') {
 

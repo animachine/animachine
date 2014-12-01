@@ -3,19 +3,25 @@
 var inherits = require('inherits');
 var amgui = require('../amgui');
 var Dialog = require('./Dialog');
+var OptionLine = require('./OptionLine');
 
 var currEase, 
     beizerEditor,
-    cbRoughEase,
+    optRoughEase,
     optRoughStrength,
+    optRoughPoints,
+    optRoughClamp,
+    optRoughRandomise,
+    optRoughTaper,
+    optRoughStrength, 
     dialog  = new Dialog({
-    title: 'Key',
-});
+        title: 'Key',
+    });
 
 createContent();
 
-dialog.addProperty({name: 'roughEase', input: cbRoughEase});
-dialog.addProperty({name: 'roughStrengh', input: optRoughStrengh.inputs.input});
+dialog.addProperty({name: 'roughEase', input: optRoughEase.inputs.input});
+dialog.addProperty({name: 'roughStrengh', input: optRoughStrength.inputs.input});
 dialog.addProperty({name: 'roughPoints', input: optRoughPoints.inputs.input});
 dialog.addProperty({name: 'roughClamp', input: optRoughClamp.inputs.input});
 dialog.addProperty({name: 'roughRandomise', input: optRoughRandomise.inputs.input});
@@ -47,15 +53,21 @@ function createContent() {
         onChange: onChangeBezier
     });
 
-    cbRoughEase = amgui.createCheckbox({
-        text: 'RoughEase',
+
+    optRoughEase = new OptionLine({
+        title: 'rough ease',
         parent: dialog.deContent,
-        onChange: function (e) {
-            if (e.detail.checked) {
-                am.dialogs.WIP.show();
-                cbRoughEase.value = false;
+        inputs: [{
+            type: 'checkbox',
+            name: 'input',
+            onChange: function (v) {
+                optRoughStrength.domElem.style.display = v ? 'block' : 'none';
+                optRoughPoints.domElem.style.display = v ? 'block' : 'none';
+                optRoughClamp.domElem.style.display = v ? 'block' : 'none';
+                optRoughRandomise.domElem.style.display = v ? 'block' : 'none';
+                optRoughTaper.domElem.style.display = v ? 'block' : 'none';
             }
-        }
+        }],
     });
 
     optRoughStrength = new OptionLine({

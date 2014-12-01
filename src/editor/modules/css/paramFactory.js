@@ -115,23 +115,21 @@ module.exports = {
 
         opt = opt || {};
 
-        var paramGropup = new CssParamGroup({
+        var pgOpt = {
             name: opt.name,
-        });
+            optionLine: {
+                inputs: [],
+            },
+        };
 
         if (opt.name === 'translate') {
 
-            paramGropup.optionLine.addInput({name: 'x', type: 'unit', units: ['px']});
-            paramGropup.optionLine.addInput({name: 'y', type: 'unit', units: ['px']});
-            paramGropup.optionLine.addButton({
-                name: 'bezier',
-                domElem: amgui.createIconBtn({
-                    icon: 'vector',
-                    tooltip: 'use bezier path',
-                    onClick: function () {am.dialogs.WIP.show()},
-                }),
-            });
+            pgOpt.optionLine.tgglBezier = true;
+            pgOpt.optionLine.inputs.push({name: 'x', type: 'unit', units: ['px']});
+            pgOpt.optionLine.inputs.push({name: 'y', type: 'unit', units: ['px']});
         }
+
+        var paramGropup = new CssParamGroup(pgOpt);
 
         return paramGropup;
     },

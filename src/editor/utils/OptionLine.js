@@ -7,6 +7,7 @@ var UnitInput = require('./UnitInput');
 var StringInput = require('./StringInput');
 var SelectInput = require('./SelectInput');
 var ColorInput = require('./ColorInput');
+var CheckboxInput = require('./CheckboxInput');
 
 function OptionLine(opt) {
 
@@ -96,7 +97,19 @@ function OptionLine(opt) {
 
     if (opt.inputs) {
 
-        opt.inputs.map(this.addInput, this);
+        opt.inputs.forEach(this.addInput, this);
+    }
+
+    if (opt.tgglBezier) {
+
+        this.addButton({
+            domElem: amgui.createIconBtn({
+                icon: 'vector',
+                tooltip: 'use bezier path',
+                onClick: function () {am.dialogs.WIP.show()},
+            }),
+            name: 'bezier',
+        });
     }
 
     if (opt.tgglMerge) {
@@ -185,6 +198,10 @@ p.addInput = function (opt) {
             input = new ColorInput(opt);
             break;
 
+        case 'checkbox':
+            input = new CheckboxInput(opt);
+            break;
+
         case 'string':
         default:
             input = new StringInput(opt);
@@ -202,7 +219,7 @@ p.addButton = function (opt) {
 
     if ('childIdx' in opt && this._btnCont.childNodes[opt.childIdx]) {
 
-        this._btnCont.insertBefore(opt.domElem, this._btnCont.childNodes[childIdx]);
+        this._btnCont.insertBefore(opt.domElem, this._btnCont.childNodes[opt.childIdx]);
     }
     else {
         this._btnCont.appendChild(opt.domElem);

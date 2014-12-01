@@ -137,8 +137,8 @@ p._createDialog = function () {
     
         var rect = this.domElem.getBoundingClientRect();
     
-        if (rect.left > e.x || rect.bottom < e.x ||
-            rect.top > e.y || rect.right < e.y) 
+        if (rect.left > e.x || rect.right < e.x ||
+            rect.top > e.y || rect.bottom < e.y) 
         {
             this.hide();
         }

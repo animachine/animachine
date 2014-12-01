@@ -16,9 +16,9 @@ module.exports = function (_amgui) {
 function createCheckbox(opt) {
 
     var de = amgui.createDiv({
-        display: 'flex',
-        parent: opt.parent,
-    }),
+            display: 'flex',
+            parent: opt.parent,
+        }),
         isChecked = false;
 
     Object.defineProperty(de, 'checked', {
@@ -56,6 +56,10 @@ function createCheckbox(opt) {
 
         de.checked = !de.checked;
     });
+
+    if (opt.onChange) {
+        de.addEventListener('change', opt.onChange);
+    }
 
     de.checked = opt.checked;
 

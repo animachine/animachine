@@ -1,12 +1,12 @@
 'use strict';
 
-module.exports = function (opt) {
+module.exports = function (that, opt) {
 
     var value = opt.startValue, 
         name = opt.name,
         evtName = opt.evtName || 'change' + name.charAt(0).toUpperCase() + name.slice(1);
 
-    Object.defineProperty(this, name, {
+    Object.defineProperty(that, name, {
 
         set: opt.set || function (v) {
             
@@ -22,7 +22,7 @@ module.exports = function (opt) {
             value = v;
             refreshInput();
 
-            this.emit(evtName, value);
+            that.emit(evtName, value);
         },
         get: opt.get || function (v) {
 
@@ -34,8 +34,8 @@ module.exports = function (opt) {
 
         opt.input.on('change', function (v) {
 
-            this[name] = v;
-        }.bind(this));
+            that[name] = v;
+        }.bind(that));
 
         refreshInput();
     }

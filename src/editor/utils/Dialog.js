@@ -3,6 +3,7 @@
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../amgui');
+var defineCompactProperty = require('./defineCompactProperty');
 
 function Dialog (opt) {
 
@@ -87,49 +88,7 @@ p.hide = function () {
 
 p.addProperty = function (opt) {
 
-    var value = opt.startValue, 
-        name = opt.name,
-        evtName = opt.evtName || 'change' + name.charAt(0).toUpperCase() + name.slice(1);
-
-    this._setupProperties.push({
-        name: name,
-        evtName: evtName,
-    });
-
-    Object.defineProperty(this, name, {
-
-        set: opt.set || function (v) {
-
-            if (v === value) return;
-
-            value = v;
-            refreshInput();
-
-            this.emit(evtName, value);
-        },
-        get: opt.get || function (v) {
-
-            return value;
-        }
-    });
-
-    if (opt.input) {
-
-        opt.input.on('change', function (v) {
-
-            this[name] = v;
-        }.bind(this));
-
-        refreshInput();
-    }
-
-    function refreshInput() {
-
-        if (opt.input && opt.input.value !== value) {
-
-            deInput.value = value;
-        }
-    }
+    this._setupProperties.push(defineCompactProperty(this, opt));
 };
 
 p.addButton = function (text, handler) {

@@ -3,6 +3,7 @@
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var Timebar = require('./Timebar');
+var EaseMap = require('./EaseMap');
 var amgui = require('../amgui');
 var mineSave = require('./mineSave');
 var UglifyJS = require('uglify-js');
@@ -55,6 +56,8 @@ function Timeline(opt) {
 
     this._tracks = [];
     this._mapTrackDatas = new WeakMap();
+
+    this.easeMap = new EaseMap();
 
     this._timebar.on('changeTime', this.emit.bind(this, 'changeTime'));
     this._timebar.on('changeTape', this.emit.bind(this, 'changeTape'));
@@ -669,9 +672,9 @@ p._createSettingsHead = function () {
     amgui.bindDropdown({    
         deTarget: this._btnNewTrack,
         deMenu: amgui.createDropdown({
-            options: ['css', 'js', 'attribute', 'media', 'timeline', 'three.js', 'pixi.js'],
-            onSelect: this._onSelectNewTrack
-        })
+            options: ['css', 'js', 'attribute', 'media', 'timeline', 'three.js', 'pixi.js', 'easel.js', 'kinetic.js', 'raphael.js', 'snap.js'],
+            onSelect: this._onSelectNewTrack,
+        }),
     });
 
     

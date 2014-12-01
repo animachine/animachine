@@ -123,6 +123,14 @@ module.exports = {
 
             paramGropup.optionLine.addInput({name: 'x', type: 'unit', units: ['px']});
             paramGropup.optionLine.addInput({name: 'y', type: 'unit', units: ['px']});
+            paramGropup.optionLine.addButton({
+                name: 'bezier',
+                domElem: amgui.createIconBtn({
+                    icon: 'vector',
+                    tooltip: 'use bezier path',
+                    onClick: function () {am.dialogs.WIP.show()},
+                }),
+            });
         }
 
         return paramGropup;

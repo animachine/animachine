@@ -200,7 +200,13 @@ p.addInput = function (opt) {
 
 p.addButton = function (opt) {
 
-    this._btnCont.appendChild(opt.domElem);
+    if ('childIdx' in opt && this._btnCont.childNodes[opt.childIdx]) {
+
+        this._btnCont.insertBefore(opt.domElem, this._btnCont.childNodes[childIdx]);
+    }
+    else {
+        this._btnCont.appendChild(opt.domElem);
+    }
 
     opt.domElem.style.display = 'inline-block';
     opt.domElem.style.verticalAlign = 'top';

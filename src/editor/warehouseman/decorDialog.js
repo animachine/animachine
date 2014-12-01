@@ -469,9 +469,17 @@ function decorDialog(whm) {
         deOptions.style.height = '100%';
         dialog.deContent.appendChild(deOptions);
 
+        amgui.createButton({
+            text: 'add trigger',
+            icon: 'plus',
+            onClick: function () {am.dialogs.WIP.show()},
+            parent: deOptions,
+        });
+
         var checkSave = createCheckbox('include save', true);
         var checkMinify = createCheckbox('minify');
         var checkAuto = createCheckbox('auto play', true);
+        var checkAuto = createCheckbox('debug', true);
 
         deOptions.getOptions = function () {
 
@@ -498,11 +506,15 @@ function decorDialog(whm) {
 
         function createCheckbox(name, checked) {
 
-            return amgui.createCheckbox({
+            var cb = amgui.createCheckbox({
                 text: name,
                 checked: checked,
                 parent: deOptions,
             });
+
+            $(cb).one('click', function () {am.dialogs.WIP.show()});
+
+            return cb;
         }
     }
 }

@@ -2,7 +2,6 @@
 
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
-var dialogKeyOptions = require('./dialogKeyOptions');
 var amgui = require('../amgui');
 var Ease = require('./Ease');
 
@@ -190,9 +189,7 @@ p._onSelectDropdown = function (e) {
 
     if (selection === 'ease') {
 
-        dialogKeyOptions.show({
-            ease: this.ease,
-        });
+        ease.showOptinosDialog();
     }
     else if (selection === 'delete') {
 

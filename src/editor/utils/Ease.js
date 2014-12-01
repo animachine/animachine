@@ -3,6 +3,8 @@
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var BezierEasing = require('bezier-easing');
+var defineCompactProperty = require('./defineCompactProperty');
+var dialogEaseOptions = require('./dialogEaseOptions');
 
 function Ease(opt) {
 
@@ -58,6 +60,13 @@ Object.defineProperties(p, {
     }
 });
 
+defineCompactProperty(p, {name: 'roughEase', type: 'boolean', startValue: false});
+defineCompactProperty(p, {name: 'roughStrength', type: 'float', startValue: 1});
+defineCompactProperty(p, {name: 'roughPoints', type: 'int', startValue: 20});
+defineCompactProperty(p, {name: 'roughClamp', type: 'boolean', startValue: false});
+defineCompactProperty(p, {name: 'roughRandomise', type: 'boolean', startValue: true});
+defineCompactProperty(p, {name: 'roughTaper', type: 'string', startValue: 'none'});
+
 
 
 
@@ -91,3 +100,17 @@ p.clone = function () {
 
     return new Ease(this);
 }
+
+
+p.showOptionsDialog = function () {
+
+    dialogEaseOptions.show({
+        ease: this,
+        onChangeRoughEase: function (v) {this.roughEase = v}.bind(this),
+        onChangeRoughStrength: function (v) {this.roughStrength = v}.bind(this),
+        onChangeRoughPoints: function (v) {this.roughPoints = v}.bind(this),
+        onChangeRoughClamp: function (v) {this.roughClamp = v}.bind(this),
+        onChangeRoughRandomise: function (v) {this.roughRandomise = v}.bind(this),
+        onChangeRoughTaper: function (v) {this.roughTaper = v}.bind(this),
+    });
+};

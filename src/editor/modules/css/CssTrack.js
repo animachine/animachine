@@ -60,7 +60,7 @@ function CssTrack(opt) {
             }
         }),
         name: 'tggl3d',
-        addAt: 0,
+        childIdx: 0,
     });
 
     this.deOptionLine = this._paramGroup.optionLine.domElem;

@@ -2,7 +2,7 @@
 
 var Key = require('./Key');
 var inherits = require('inherits');
-var dialogKeyOptions = require('./dialogKeyOptions');
+var dialogEaseOptions = require('./dialogEaseOptions');
 var amgui = require('../amgui');
 var Ease = require('./Ease');
 
@@ -106,10 +106,7 @@ p._onSelectDropdown = function (e) {
 
     if (selection === 'ease') {
 
-        dialogKeyOptions.show({
-            ease: new Ease(),
-            onChangeEase: this._onChangeEase,
-        });
+        ease.showOptinosDialog();
     }
     else if (selection === 'delete') {
 

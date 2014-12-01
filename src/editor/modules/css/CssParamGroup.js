@@ -18,6 +18,7 @@ function CssParamGroup (opt) {
     this._params = [];
 
     this._merged = opt.merged || false;
+    this._bezier = opt.bezier || false;
 
     this._refreshHeights();
 }
@@ -56,11 +57,27 @@ Object.defineProperties(p, {
 
             this._merged = v;
 
-            this.optionLine.buttons.tgglMerge.setToggle(this.merged);
+            this.optionLine.buttons.tgglMerge.setToggle(this._merged);
         },
         get: function () {
 
             return this._merged;
+        }
+    },
+    bezier: {
+
+        set: function (v) {
+
+            v = !!v;
+            if (v === this._bezier) return;
+
+            this._bezier = v;
+
+            this.optionLine.buttons.bezier.setToggle(this._bezier);
+        },
+        get: function () {
+
+            return this._bezier;
         }
     }
 });

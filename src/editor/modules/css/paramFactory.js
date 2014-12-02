@@ -174,6 +174,8 @@ module.exports = {
             group = group[path.shift()];
         };
 
+        if (_.isPlainObject(group)) group = Object.keys(group);
+
         return group || [];
     },
 };
@@ -185,9 +187,10 @@ var groups = {
     padding: ['paddingTop',  'paddingRight',  'paddingBottom',  'paddingLeft'],
     margin: ['marginTop',  'marginRight',  'marginBottom',  'marginLeft'],
     border: {
-        width: ['bordergTopWidth',  'borderightWidth',  'borderBottomWidth',  'borderLeftWidth'],
+        width: ['borderTopWidth',  'borderRightWidth',  'borderBottomWidth',  'borderLeftWidth'],
         radius: ['borderTopLeftRadius', 'borderTopRightRadius', 'borderBottomLeftRadius', 'borderBottomRightRadius'],
-        color: ['borderColorRed','borderColorGreen','borderColorBlue','borderColorAlpha'],
+        color: ['borderTopColor','borderRightColor','borderBottomColor','borderLeftColor'],
+        style: ['borderTopStyle','borderRightStyle','borderBottomStyle','borderLeftStyle'],
     },
     backgroundPosition: ['backgroundPositionX', 'backgroundPositionY'],
     textShadow: ['textShadowX', 'textShadowY', 'textShadowBlur'],

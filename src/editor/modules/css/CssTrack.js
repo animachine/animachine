@@ -280,21 +280,23 @@ p.removeParam = function (param, skipHistory) {
 
 p.addGroup = function (path, history) {
 
+    path = path.slice();
+    
     var name = path.pop(),
         parent = this._paramGroup;
 
     path.forEach(function (parentName, idx) {
 
-        parent = this.addGroup(parentName, path.slice(0, idx))
+        parent = this.addGroup(path.slice(0, idx+1))
     }, this);
 
-    paramGroup = parent.getParam(name);
+    var paramGroup = parent.getParam(name);
 
     if (!paramGroup) {
 
         //TODO history.save()
 
-        paramGroup = paramFactory.createGroup({name: paramGroupName});
+        paramGroup = paramFactory.createGroup({name: name});
         parent.addParam(paramGroup);
     }
 
@@ -305,18 +307,19 @@ p.removeGroup = function (path, history) {
 
     path = path.slice();
 
-    var group = this._paramGroup;
+    var name = path.pop(),
+        parent = this._paramGroup;
 
     while (path.length) {
 
-        group = group.getParam(path.shift());
+        parent = parent.getParam(path.shift());
 
-        if(!group) return;
+        if (!parent) return;
     }
 
     //TODO history.save()
 
-    group.removeParam(group.getParam(name));
+    parent.removeParam(parent.getParam(name));
 }
 
 

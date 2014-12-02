@@ -20,6 +20,7 @@
     "codemirror": "^4.5.0",
     "gsap": "^1.14.2",
     "colorPicker": "https://github.com/PitPik/colorPicker.git",
-    "mousetrap": "~1.4.6"
+    "mousetrap": "~1.4.6",
+    "typeahead.js": "~0.10.5"
   }
 }

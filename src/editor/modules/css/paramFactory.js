@@ -134,20 +134,47 @@ module.exports = {
         return paramGropup;
     },
 
-    getGroupName: function (paramName) {
+    getRootParamGroupName: function (paramName) {
 
-        for (var paramGroupName in groups) {
+        return Object.keys(groups).find(function (rootKey) {
 
-            if (groups[paramGroupName].indexOf(paramName) !== -1) {
+            return search(groups[rootKey]);
+        });
 
-                return paramGroupName;
+        function search(group) {
+
+            if (_.isArray(group)) {
+
+                if (group.indexOf(paramName) !== -1) {
+
+                    return true;
+                }
+            }
+            else {
+                
+                for (var key in group) {
+
+                    if (search(group[key])) {
+
+                        return true;
+                    }
+                }
             }
         }
     },
 
-    getGroupMembers: function (paramGroupName) {
+    getGroupMemberNames: function (path) {
+        
+        var group = groups;
 
-        return groups[paramGroupName];
+        path = path.slice();
+
+        while (path.length) {
+
+            group = group[path.shift()];
+        };
+
+        return group;
     },
 };
 
@@ -157,11 +184,11 @@ var groups = {
 
     padding: ['paddingTop',  'paddingRight',  'paddingBottom',  'paddingLeft'],
     margin: ['marginTop',  'marginRight',  'marginBottom',  'marginLeft'],
-    // border: {
-    //     width: ['bordergTopWidth',  'borderightWidth',  'borderBottomWidth',  'borderLeftWidth'],
-    //     radius: ['borderTopLeftRadius', 'borderTopRightRadius', 'borderBottomLeftRadius', 'borderBottomRightRadius'],
-    //     color: ['borderColorRed','borderColorGreen','borderColorBlue','borderColorAlpha'],
-    // },
+    border: {
+        width: ['bordergTopWidth',  'borderightWidth',  'borderBottomWidth',  'borderLeftWidth'],
+        radius: ['borderTopLeftRadius', 'borderTopRightRadius', 'borderBottomLeftRadius', 'borderBottomRightRadius'],
+        color: ['borderColorRed','borderColorGreen','borderColorBlue','borderColorAlpha'],
+    },
     backgroundPosition: ['backgroundPositionX', 'backgroundPositionY'],
     textShadow: ['textShadowX', 'textShadowY', 'textShadowBlur'],
     translate: ['x', 'y'],

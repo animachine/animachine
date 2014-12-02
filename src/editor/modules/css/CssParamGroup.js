@@ -87,7 +87,11 @@ Object.defineProperties(p, {
 
 p.addParam = function (param) {
 
-    this.removeParam(param);
+    if (param.parentGroup) {
+
+        param.parentGroup.removeParam(param);
+    }
+    parent.parentGroup = this;
 
     this._params.push(param);
     this.optionLine.addSubline(param.optionLine.domElem);
@@ -113,7 +117,9 @@ p.removeParam = function (param) {
     if (idx === -1) {
         return;
     }
-
+    
+    parent.parentGroup = undefined;
+    
     param.removeListener('changeHeight', this._onChangeSubparamHeight);
     param.removeListener('addKey', this._onAddKeySubparam);
 

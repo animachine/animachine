@@ -228,38 +228,22 @@ p.addParam = function (opt, skipHistory) {
     else {
         param = paramFactory.create(opt);
 
+        //TODO history.flag();
+
         if (!skipHistory) {
             am.history.save([this.removeParam, this, param, true],
                 [this.addParam, this, param, true], 'add param ' + opt.name);
         }
 
         this._endParams.push(param);
+        this._paramGroup.addParam(param);
 
         param.on('change', this._onChangeParameter);
         param.on('delete', this._onDeleteParameter);
 
-        var paramGroupName = paramFactory.getGroupName(opt.name);
+        this._prepareBuiltInGroup(opt.name);
 
-        if (paramGroupName) {
-
-            var paramGroup = this._paramGroup.getParam(paramGroupName);
-
-            if (!paramGroup) {
-
-                paramGroup = paramFactory.createGroup({name: paramGroupName});
-                this._paramGroup.addParam(paramGroup);
-            }
-
-            paramGroup.addParam(param);
-
-            paramFactory.getGroupMembers(paramGroupName).forEach(function (memberParamName) {
-
-                this.addParam({name: memberParamName});
-            }, this);
-        }
-        else {
-            this._paramGroup.addParam(param);
-        }
+        //TODO history.endFlag();
 
         this.emit('addParam');
         this.emit('change');
@@ -270,15 +254,15 @@ p.addParam = function (opt, skipHistory) {
 
 p.removeParam = function (param, skipHistory) {
 
-    if (!skipHistory) {
-        am.history.save([this.addParam, this, param, true],
-            [this.removeParam, this, param, true], 'remove param ' + opt.name);
-    }
-
     var idx = this._endParams.indexOf(param);
 
     if (idx === -1) {
         return;
+    }
+
+    if (!skipHistory) {
+        am.history.save([this.addParam, this, param, true],
+            [this.removeParam, this, param, true], 'remove param ' + opt.name);
     }
 
     this._endParams.splice(idx, 1);
@@ -292,6 +276,79 @@ p.removeParam = function (param, skipHistory) {
     $(param.deKeyline).remove();
 
     this.emit('change');
+};
+
+p.addGroup = function (path, name, history) {
+
+    var parent = this._paramGroup;
+
+    path.forEach(function (parentName, idx) {
+
+        parent = this.addGroup(parentName, path.slice(0, idx))
+    }, this);
+
+    paramGroup = parent.getParam(name);
+
+    if (!paramGroup) {
+
+        //TODO history.save()
+
+        paramGroup = paramFactory.createGroup({name: paramGroupName});
+        parent.addParam(paramGroup);
+    }
+
+    return paramGroup;
+}
+
+p.removeGroup = function (path, name, history) {
+
+    path = path.slice();
+
+    var group = this._paramGroup;
+
+    while (path.length) {
+
+        group = group.getParam(path.shift());
+
+        if(!group) return;
+    }
+
+    //TODO history.save()
+
+    group.removeParam(group.getParam(name));
+}
+
+
+
+p._prepareBuiltInGroup = function (paramName) {
+
+    var rootGroupName = paramFactory.getRootParamGroupName(paramName);
+
+    if (this._paramGroup.getParam(rootGroupName)) return;
+
+    var walkToParam = function (groupName, path) {
+
+        var newPath = path.slice();
+        newPath.push(groupName);
+
+        var memberNames = paramFactory.getGroupMemberNames(newPath);
+
+        if (memberNames.length) {
+
+            memberNames.forEach(function (memberName) {
+
+                walkToParams(memberName, newPath);
+            });
+        }
+        else {
+            var param = this.addParam({name: groupName}),
+                group = this.addGroup(path);
+
+            group.addParam(param);
+        }
+    }.bind(this);
+    
+    walkToParams(rootGroupName, []);
 };
 
 p.select = function (opt) {

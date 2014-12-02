@@ -266,3 +266,38 @@ p.getChain = function (id) {
         return chain.id === id;
     });
 };
+
+
+
+
+
+
+
+//TODO
+// p.wrapFunctionPairs(opt) {
+
+//     var slice = Array.prototype.slice,
+//         oriUndoFn = opt.undoRoot[opt.undoFnName],
+//         history = this,
+//         dummyHistory = {
+//             save: function () {},
+//             flag: function () {},
+//             endFlag: function () {},
+//         },
+//         undoHistory = Object.create(dummyHistory),
+//         redoHistory = Object.create(dummyHistory);
+
+//     undoHistory.save = function () {
+
+//         history.save([opt.undo.addParam, this, param, true],
+//             [this.removeParam, this, param, true], 'remove param ' + opt.name);
+//     }
+
+//     opt.undo.parent[opt.undo.fnName] = function () {
+
+//         var args = slice.call(arguments);
+//         args.push(undoHistory);
+
+//         oriUndoFn.apply(opt.undo.thisArg, args)
+//     }
+// }

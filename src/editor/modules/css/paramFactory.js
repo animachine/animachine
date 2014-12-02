@@ -174,7 +174,7 @@ module.exports = {
             group = group[path.shift()];
         };
 
-        return group;
+        return group || [];
     },
 };
 

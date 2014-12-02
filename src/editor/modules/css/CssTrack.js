@@ -278,9 +278,10 @@ p.removeParam = function (param, skipHistory) {
     this.emit('change');
 };
 
-p.addGroup = function (path, name, history) {
+p.addGroup = function (path, history) {
 
-    var parent = this._paramGroup;
+    var name = path.pop(),
+        parent = this._paramGroup;
 
     path.forEach(function (parentName, idx) {
 
@@ -300,7 +301,7 @@ p.addGroup = function (path, name, history) {
     return paramGroup;
 }
 
-p.removeGroup = function (path, name, history) {
+p.removeGroup = function (path, history) {
 
     path = path.slice();
 
@@ -326,7 +327,7 @@ p._prepareBuiltInGroup = function (paramName) {
 
     if (this._paramGroup.getParam(rootGroupName)) return;
 
-    var walkToParam = function (groupName, path) {
+    var walk = function (groupName, path) {
 
         var newPath = path.slice();
         newPath.push(groupName);
@@ -337,7 +338,7 @@ p._prepareBuiltInGroup = function (paramName) {
 
             memberNames.forEach(function (memberName) {
 
-                walkToParams(memberName, newPath);
+                walk(memberName, newPath);
             });
         }
         else {
@@ -348,7 +349,7 @@ p._prepareBuiltInGroup = function (paramName) {
         }
     }.bind(this);
     
-    walkToParams(rootGroupName, []);
+    walk(rootGroupName, []);
 };
 
 p.select = function (opt) {

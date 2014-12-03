@@ -92,6 +92,8 @@ function CssTrack(opt) {
     am.on('selectTrack', this._onSelectTrack);
     am.on('deselectTrack', this._onDeselectTrack);
 
+    this.setMaxListeners(1234);
+
     if (opt) {
         this.useSave(opt);
     }

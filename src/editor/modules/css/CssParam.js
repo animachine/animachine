@@ -35,6 +35,8 @@ function CssParam (opt) {
 
     am.timeline.on('changeTime', this._onChangeTime);
 
+    this.setMaxListeners(1234);
+
     if (opt) {
         this.useSave(opt);
     }

@@ -18,6 +18,7 @@
     "css.escape": "^0.2.1",
     "domready": "^1.0.5",
     "e": "0.0.4",
+    "eventemitter2": "^0.4.14",
     "events": "^1.0.1",
     "gulp": "^3.8.6",
     "gulp-concat": "^2.3.4",
@@ -34,11 +35,11 @@
     "lodash": "^2.4.1",
     "run-sequence": "^0.3.6",
     "stringify": "^2.2.0",
+    "tiny-emitter": "^1.0.0",
     "transhand": "git+https://github.com/animachine/transhand#master",
     "uglify-js": "^2.4.15",
     "vinyl-source-stream": "^0.1.1",
     "watchify": "^1.0.1",
-    "eventemitter2": "^0.4.14",
     "wolfy87-eventemitter": "^4.2.10"
   }
 }

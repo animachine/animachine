@@ -133,7 +133,8 @@ ColorInput.initColorPicker = function () {
             height: '345px',
         });
 
-    de.setAttribute('am-nopick',1)
+    de.setAttribute('am-nopick',1);
+    de.style.zIndex = 999999;
 
     colorPicker = new ColorPicker({
         size: 2,

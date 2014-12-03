@@ -16,6 +16,7 @@ function CssParam (opt) {
 
     this._lineH =  amgui.LINE_HEIGHT;
     this._inputs = [];
+    this._hidden = false;
     this._defaultValue = opt.defaultValue || 0;
 
     this._onChangeInput = this._onChangeInput.bind(this);
@@ -56,7 +57,7 @@ Object.defineProperties(p, {
     height: {
         get: function () {
             
-            return this._lineH;
+            return this.hidden ? 0 : this._lineH;
         }
     },
     name: {
@@ -68,7 +69,31 @@ Object.defineProperties(p, {
             this.optionLine.title = v;
         },
         get: function () {
-            return this._name
+
+            return this._name;
+        }
+    },
+    hidden: {
+        set: function (v) {
+
+            v = !!v;
+
+            if (v === this._hidden) return;
+
+            this._hidden = v;
+
+            if (this._hidden) {
+                this.keyLine.hide();
+                this.optionLine.hide();
+            }
+            else {
+                this.keyLine.show();
+                this.optionLine.show();
+            }
+        },
+        get: function () {
+
+            return this._hidden;
         }
     }
 });
@@ -81,6 +106,7 @@ p.getSave = function () {
 
     var save = {
         name: this.name,
+        hidden: this.hidden,
         keys: [],
     };
 
@@ -95,6 +121,7 @@ p.getSave = function () {
 p.useSave = function(save) {
 
     this.name = save.name;
+    this.hidden = save.hidden;
 
     if (save.keys) {
 
@@ -518,7 +545,7 @@ p._createOptions = function (opt) {
             units: [],
             name: 'input'
         }],
-        indent: 0
+        indent: 0,
     }, opt));
 
     if (this.optionLine.inputs.input){

@@ -50,7 +50,6 @@ p._onInputChange = function (paramName, value) {
 
     if (!param) {
 
-        var value = input.value;
         param = this._currTrack.addParam({name: paramName});
         param.addKey({value: value});
     }
@@ -209,13 +208,13 @@ p._createBase = function () {
                 {title: 'borderBottomColor', input: 'color'},
                 {title: 'borderLeftColor', input: 'color'},
             ]},
-            {title: 'Width', children: [
+            {title: 'borderWidth', children: [
                 {title: 'borderTopWidth', input: {type: 'unit', units: ['px']}},
                 {title: 'borderRightWidth', input: {type: 'unit', units: ['px']}},
                 {title: 'borderBottomWidth', input: {type: 'unit', units: ['px']}},
                 {title: 'borderLeftWidth', input: {type: 'unit', units: ['px']}},
             ]},
-            {title: 'Style', children: [
+            {title: 'borderStyle', children: [
                 {title: 'borderTopStyle', input: {type: 'select', options: boderStyleOptions}},
                 {title: 'borderRightStyle', input: {type: 'select', options: boderStyleOptions}},
                 {title: 'borderBottomStyle', input: {type: 'select', options: boderStyleOptions}},

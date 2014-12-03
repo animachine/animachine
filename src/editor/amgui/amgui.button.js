@@ -87,12 +87,12 @@ function createBtn(opt) {
 
     function onMOver() {
 
-        this.style.background = amgui.color.bgHover;
+        de.style.backgroundColor = amgui.color.bgHover;
     }
 
     function onMOut() {
         
-        this.style.background = opt.backgroundColor;
+        de.style.backgroundColor = opt.backgroundColor;
     }
 
     if (opt.parent) {

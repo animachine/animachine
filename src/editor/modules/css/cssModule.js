@@ -16,11 +16,10 @@ exports.init = function () {
 
     am.workspace.fillTab('Css Style', paramsTab.domElem);
 
-    am.domPicker.dropdownMenu.addItem({
-        text: 'new css track',
+    am.domPicker.setRightLeftBtn({
         icon: 'plus',
         tooltip: 'create a new css track with this element',
-        onSelect: function () {
+        onClick: function () {
 
             am.domPicker.hide();
 
@@ -36,7 +35,7 @@ exports.init = function () {
 
             am.selectTrack(track);
         }
-    })
+    });
 };
 
 function onSelectDomElement(de) {

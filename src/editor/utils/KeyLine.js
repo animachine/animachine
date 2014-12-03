@@ -215,13 +215,23 @@ p._renderEasePath = function (ease, x, w, color) {
 
     this._svgEase.appendChild(path);
 }
-
+    
 p._sortKeys = function () {
 
     this._keys.sort(function (a, b) {
         
         return a.time - b.time;
     });
+};
+
+p.show = function () {
+
+    this.domElem.style.display = '';
+};
+
+p.hide = function () {
+
+    this.domElem.style.display = 'none';
 };
 
 

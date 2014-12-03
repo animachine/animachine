@@ -33,7 +33,7 @@ function createDialog(opt) {
     deTitle.style.padding = '0 18px';
     deTitle.style.height = '34px';
     deTitle.style.fontSize = '23px';
-    deTitle.style.fontWeight = 'bold';
+    deTitle.style.fontWeight = '700';
     deTitle.style.background = amgui.color.overlay;
     deTitle.style.color = amgui.color.text;
     de.appendChild(deTitle);
@@ -113,11 +113,11 @@ function createDialog(opt) {
         var btn = amgui.createBtn({
             text: text,
             height: '100%',
+            backgroundColor: 'rgba(0,0,0,0)',
         });
         btn.style.display = 'inline-block';
-        btn.style.fontWeight = 'bold';
+        btn.style.fontWeight = '700';
         btn.style.fontSize = '18px';
-        btn.style.background = 'none';
         deButtonsCont.appendChild(btn);
 
         buttons.push(btn);

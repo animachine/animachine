@@ -8,8 +8,12 @@ module.exports = function (_amgui) {
 
     return {
         addTooltip: addTooltip,
+        removeTooltip: removeTooltip,
+        getTooltip: getTooltip,
     };
 };
+
+var tooltipMap = new Map();
 
 
 
@@ -24,6 +28,19 @@ function addTooltip(opt) {
     de.style.display = 'inline-block';
     de.style.background = amgui.color.overlay;
     de.style.color = amgui.color.text;
+
+    de.remove = function () {
+
+        opt.deTarget.removeEventListener('mouseenter', onMEnter);
+        onMLeave();
+    };
+
+    de.setContent = function (content) {
+
+        de.textContent = content;
+    }
+
+    tooltipMap.set(opt.deTarget, de);
 
     opt.deTarget.addEventListener('mouseenter', onMEnter);
 
@@ -77,4 +94,20 @@ function addTooltip(opt) {
             de.parentElement.removeChild(de);
         }
     }
-}
+};
+
+function removeTooltip(deTarget) {
+
+    var tooltip = amgui.getTooltip(deTarget);
+
+    if (tooltip) {
+
+        tooltip.remove();
+    }
+};
+
+function getTooltip(deTarget) {
+
+    return tooltipMap.get(deTarget);
+};
+

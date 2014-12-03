@@ -239,6 +239,16 @@ p.addSubline = function (de) {
     this._deSubcont.appendChild(de);
 };
 
+p.show = function () {
+
+    this.domElem.style.display = '';
+};
+
+p.hide = function () {
+
+    this.domElem.style.display = 'none';
+};
+
 p.showSubline = function () {
 
     this._deSubcont.style.display = '';

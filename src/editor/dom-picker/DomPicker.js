@@ -4,6 +4,13 @@ var EventEmitter = require('events').EventEmitter;
 var inherits = require('inherits');
 var amgui = require('../amgui');
 
+var tee =  new EventEmitter();
+function testLog(){console.log('testLog')};
+tee.on('testLog', testLog);
+tee.on('testLog', testLog);
+tee.on('testLog', testLog);
+tee.emit('testLog');
+
 function DomPicker() {
 
     EventEmitter.call(this);
@@ -74,6 +81,24 @@ p.hide = function () {
     this.domElem.style.display = 'none';
 };
 
+p.setRightLeftBtn = function (opt) {
+
+    this._btnRightLeft.setIcon(opt.icon)
+
+    //TODO remove the previous
+    this._btnRightLeft.addEventListener('click', opt.onClick);
+
+    var tooltip = amgui.getTooltip(this._btnRightLeft);
+    tooltip.setContent(opt.tooltip);
+};
+
+
+
+
+
+
+
+
 p._render = function () {
 
     var br = this._deTarget.getBoundingClientRect();
@@ -104,7 +129,7 @@ p._onMMove =  function (e) {
         this._btnBottom.style.visibility = v;
         this._btnLeft.style.visibility = v;
         this._btnClose.style.visibility = v;
-        this._btnMenu.style.visibility = v;
+        this._btnRightLeft.style.visibility = v;
     }
 };
 
@@ -179,16 +204,9 @@ p._createBase = function () {
     this._btnClose.style.right = -btnSize + 'px';
     this._btnClose.style.top = -btnSize + 'px';
 
-    this._btnMenu = createBtn('ellipsis-vert', 'menu');
-    this._btnMenu.style.right = -btnSize + 'px';
-    this._btnMenu.style.bottom = -btnSize + 'px';
-
-    this.dropdownMenu = amgui.createDropdown();
-
-    amgui.bindDropdown({
-        deTarget: this._btnMenu,
-        deMenu: this.dropdownMenu
-    });
+    this._btnRightLeft = createBtn('plus', '');
+    this._btnRightLeft.style.right = -btnSize + 'px';
+    this._btnRightLeft.style.bottom = -btnSize + 'px';
 
     function createBtn(icon, tooltip, onClick) {
 

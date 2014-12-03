@@ -9,7 +9,10 @@ var KeyLineGroup = require('../../utils/KeyLineGroup');
 var OptionLine = require('../../utils/OptionLine');
 var CssParamGroup = require('./CssParamGroup');
 var dialogTrackOptions = require('./dialogTrackOptions');
+var dialogNewParam = require('./dialogNewParam');
 var mstPlayer = require('./script.player.mst');
+//delMe!
+window.dialogNewParam = dialogNewParam;
 
 function CssTrack(opt) {
 
@@ -60,6 +63,21 @@ function CssTrack(opt) {
             }
         }),
         name: 'tggl3d',
+        childIdx: 0,
+    });
+
+
+    this._paramGroup.optionLine.addButton({
+        domElem: amgui.createToggleIconBtn({
+            icon: 'plus',
+            changeColor: true,
+            onClick: function () {
+                dialogNewParam.show({
+                    track: this,
+                });
+            }
+        }),
+        name: 'newParam',
         childIdx: 0,
     });
 
@@ -165,7 +183,9 @@ p.getScript = function () {
 
     this._endParams.forEach(function (param) {
 
-        timelines.push(param.getScriptKeys());
+        if (!param.hidden) {
+            timelines.push(param.getScriptKeys());
+        }
     });
 
     //merge timelines if it's possible
@@ -224,9 +244,16 @@ p.addParam = function (opt, skipHistory) {
 
             opt.keys.forEach(param.addKey, param);
         }
+
+        if ('hidden' in opt) {
+
+            param.hidden = opt.hidden;
+        }
     }
     else {
         param = paramFactory.create(opt);
+
+        param.parentTrack = this;
 
         //TODO history.flag();
 
@@ -266,6 +293,7 @@ p.removeParam = function (param, skipHistory) {
     }
 
     this._endParams.splice(idx, 1);
+    param.parentTrack = undefined;
 
     param.removeListener('change', this._onChangeParameter);
     param.removeListener('delete', this._onDeleteParameter);
@@ -412,7 +440,10 @@ p.renderTime = function (time) {
 
     this._endParams.forEach(function (param) {
 
-        params[param.name] = param.getValue(time);
+        if (!param.hidden) {
+            
+            params[param.name] = param.getValue(time);
+        }
     });
 
     if (selection.length && this._endParams.length) {

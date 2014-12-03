@@ -15,8 +15,13 @@ function StringInput(opt) {
     this._value = opt.value || '';
     this._defaultValue = opt.defaultValue || '';
 
+    if (opt.placeholder) {
+
+        this._input.placeholder = opt.placeholder;
+    }
+
     if (opt.suggestions) {
-        this._prepareSuggestions(opt.suggestions);
+        this._prepareSuggestions(opt.suggestions, opt.typeaheadOptions, opt.datasetOptions);
     };
     if ('flex' in opt) this.domElem.style.flex = opt.flex;
     if ('parent' in opt) opt.parent.appendChild(this.domElem);
@@ -93,12 +98,46 @@ p._createBase = function () {
         onChange: this._onChangeInput,
         flex: 1, 
     });
-    this._input.style.textAlign =  'right';
+
+    // this._input.style.textAlign =  'right';
     this._input.style.paddingRight =  '2px';
 };
 
-p._prepareSuggestions = function (suggestions) {
-    
+p._prepareSuggestions = function (suggestions, typeaheadOptions, datasetOptions) {
+
+    var states = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace(datasetOptions.displayKey),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        // `states` is an array of state names defined in "The Basics"
+        local: suggestions
+    });
+
+    // kicks off the loading/processing of `local` and `prefetch`
+    states.initialize();
+
+    amgui.callOnAdded(this._input, function () {
+
+        $(this._input).typeahead(_.defaults(typeaheadOptions, {
+                hint: true,
+                highlight: true,
+                minLength: 0
+            }),
+            _.defaults(datasetOptions, {
+                name: 'states',
+                displayKey: 'value',
+                // `ttAdapter` wraps the suggestion engine in an adapter that
+                // is compatible with the typeahead jQuery plugin
+                source: states.ttAdapter(),
+                templates: {
+                    // suggestion: Handlebars.compile([
+                    // '<div class="guess" style="box-shadow:-2px 2px 17px 2px rgba(50, 50, 50, 0.75);margin-bottom: 2px;width:290px;position:relative;left:-90px;font-size:10pt;background-color:#dadada; font-family: \'Open Sans\', \'Helvetica Neue\', \'Helvetica\', Helvetica, Arial, sans-serif;">',
+                    //   '<span><code style="font-size:16px;">{{{value}}}</code> – {{{type}}}</span>',
+                    //   '<br><span>{{{description}}}</span>',
+                    // '</div>'].join(''))
+                }
+            }));
+    }, this)
+/*
     var states = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -107,24 +146,33 @@ p._prepareSuggestions = function (suggestions) {
 
     states.initialize();
 
-    $(this._input).typeahead({
+    $(this._input).typeahead(_.defaults(typeaheadOptions, {
             hint: true,
             highlight: true,
             minLength: 0
-        },
-        {
-        name: 'states',
-        displayKey: 'value',
-        // `ttAdapter` wraps the suggestion engine in an adapter that
-        // is compatible with the typeahead jQuery plugin
-        source: states.ttAdapter(),
-        templates: {
-            // suggestion: Handlebars.compile([
-            // '<div class="guess" style="box-shadow:-2px 2px 17px 2px rgba(50, 50, 50, 0.75);margin-bottom: 2px;width:290px;position:relative;left:-90px;font-size:10pt;background-color:#dadada; font-family: \'Open Sans\', \'Helvetica Neue\', \'Helvetica\', Helvetica, Arial, sans-serif;">',
-            //   '<span><code style="font-size:16px;">{{{value}}}</code> – {{{type}}}</span>',
-            //   '<br><span>{{{description}}}</span>',
-            // '</div>'].join(''))
-        }
-    });
+        }),
+        _.defaults(datasetOptions, {
+            name: 'states',
+            displayKey: 'property',
+            // `ttAdapter` wraps the suggestion engine in an adapter that
+            // is compatible with the typeahead jQuery plugin
+            source: states.ttAdapter(),
+            templates: {
+                // suggestion: Handlebars.compile([
+                // '<div class="guess" style="box-shadow:-2px 2px 17px 2px rgba(50, 50, 50, 0.75);margin-bottom: 2px;width:290px;position:relative;left:-90px;font-size:10pt;background-color:#dadada; font-family: \'Open Sans\', \'Helvetica Neue\', \'Helvetica\', Helvetica, Arial, sans-serif;">',
+                //   '<span><code style="font-size:16px;">{{{value}}}</code> – {{{type}}}</span>',
+                //   '<br><span>{{{description}}}</span>',
+                // '</div>'].join(''))
+            }
+        }));
+    };
+    */
 };
 
+
+!(function ($) {
+
+  'use strict';
+
+
+}(jQuery));

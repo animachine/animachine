@@ -4,7 +4,7 @@ var EventEmitter = require('events').EventEmitter;
 
 WebFont.load({
     google: {
-      families: ['Open Sans']
+      families: ['Open+Sans:400,700,300,600,800:latin,latin-ext']
     }
 });
 

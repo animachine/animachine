@@ -37,6 +37,8 @@
     "transhand": "git+https://github.com/animachine/transhand#master",
     "uglify-js": "^2.4.15",
     "vinyl-source-stream": "^0.1.1",
-    "watchify": "^1.0.1"
+    "watchify": "^1.0.1",
+    "eventemitter2": "^0.4.14",
+    "wolfy87-eventemitter": "^4.2.10"
   }
 }

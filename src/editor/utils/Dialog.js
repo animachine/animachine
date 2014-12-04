@@ -12,6 +12,8 @@ function Dialog (opt) {
     opt = opt || {};
 
     this._setupProperties = [];
+    this._offsetX = 0;
+    this._offsetY = 0;
 
     this._createDialog();
     
@@ -70,6 +72,8 @@ p.show = function (opt) {
         }
     }, this);
 
+    this.emit('show');
+
     this.domElem.showModal();
 };
 
@@ -84,6 +88,8 @@ p.hide = function () {
 
         this.removeAllListeners(propData.evtName);
     }, this);
+
+    this.emit('hide');
 };
 
 p.addProperty = function (opt) {
@@ -139,7 +145,7 @@ p._createDialog = function () {
         buttons: [],
     });
 
-    amgui.mageDraggable({
+    amgui.makeDraggable({
         deTarget: this.domElem,
         thisArg: this,
         onDown: function () {
@@ -148,7 +154,7 @@ p._createDialog = function () {
                 offsetX: this._offsetX,
                 offsetY: this._offsetY,
             }
-        }
+        },
         onDrag: function (md) {
 
             this.move(md.offsetX + md.dx, md.offsetY + md.dy);

@@ -22,6 +22,11 @@ dialog.addButton('add', function () {
 });
 dialog.addButton('close', 'hide');
 
+dialog.on('show', function () {
+
+  inpParamName.value = '';
+});
+
 
 
 dialog.addProperty({name: 'track'});

@@ -11,8 +11,8 @@ var CssParamGroup = require('./CssParamGroup');
 var dialogTrackOptions = require('./dialogTrackOptions');
 var dialogNewParam = require('./dialogNewParam');
 var mstPlayer = require('./script.player.mst');
-//delMe!
-window.dialogNewParam = dialogNewParam;
+
+
 
 function CssTrack(opt) {
 
@@ -72,10 +72,10 @@ function CssTrack(opt) {
             icon: 'plus',
             changeColor: true,
             onClick: function () {
-                dialogNewParam.show({
-                    track: this,
-                });
-            }
+                    dialogNewParam.show({
+                        track: this,
+                    });
+                }.bind(this),
         }),
         name: 'newParam',
         childIdx: 0,
@@ -118,7 +118,6 @@ Object.defineProperties(p, {
             return this._paramGroup.height;
         }
     },
-
     name: {
         set: function (v) {
 
@@ -358,7 +357,7 @@ p._prepareBuiltInGroup = function (paramName) {
 
     var rootGroupName = paramFactory.getRootParamGroupName(paramName);
 
-    if (this._paramGroup.getParam(rootGroupName)) return;
+    if (!rootGroupName || this._paramGroup.getParam(rootGroupName)) return;
 
     var walk = function (groupName, path) {
 
@@ -736,7 +735,7 @@ p._onClickName = function () {
         name: this._name,
         selectors: this._selectors,
         onChangeName: this._onChangeName,
-        onChangeSelectors: this._onChangeSelectors
+        onChangeSelectors: this._onChangeSelectors,
     });
 };
 

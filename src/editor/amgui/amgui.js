@@ -82,7 +82,7 @@ _.extend(amgui,
             de.style.height = '0px';
             de.style.bottom = '0px';
             de.style.position = 'absolute';
-            de.style.borderBottom = 'solid 1px #121212';
+            de.style.borderBottom = 'solid 1px rgba(255,255,255,.11)';
         },
     }
 );

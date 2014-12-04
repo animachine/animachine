@@ -38,6 +38,8 @@ function makeDraggable(opt) {
 
         md.mx = e.clientX;
         md.my = e.clientY;
+        md.dx = 0;
+        md.dy = 0;
 
         window.addEventListener('mousemove', onMove);
         window.addEventListener('mouseup', onUp);
@@ -62,7 +64,13 @@ function makeDraggable(opt) {
         waitingMoveRaf = undefined;
         waitingMoveEvent = undefined;
 
-        call('onMove', [md, wme.clientX, wme.clientY, wme]);
+        var mx = wme.clientX,
+            my = wme.clientY;
+
+        md.dx = mx - md.mx;
+        md.dy = my - md.my;
+
+        call(['onMove', 'onDrag'], [md, mx, my]);
     }
 
     function onUp(e) {
@@ -102,6 +110,16 @@ function makeDraggable(opt) {
     }
 
     function call(name, args) {
+
+        if (name instanceof Array) {
+
+            name.forEach(function (name) {
+
+                call(name, args);
+            });
+
+            return;
+        }
         
         if (name in opt) {
 

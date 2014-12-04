@@ -111,6 +111,14 @@ p.showButton = function (text) {
     this.domElem.showButton(text);
 };
 
+p.move = function (x, y) {
+
+    this._offsetX = x;
+    this._offsetY = y;
+
+    this.domElem.style.transform = 'translate('+x+'px,'+y+'px)';
+};
+
 
 
 p._createDialog = function () {
@@ -129,6 +137,22 @@ p._createDialog = function () {
         content: this.deContent,
         // parent: am.deDialogCont,
         buttons: [],
+    });
+
+    amgui.mageDraggable({
+        deTarget: this.domElem,
+        thisArg: this,
+        onDown: function () {
+
+            return {
+                offsetX: this._offsetX,
+                offsetY: this._offsetY,
+            }
+        }
+        onDrag: function (md) {
+
+            this.move(md.offsetX + md.dx, md.offsetY + md.dy);
+        }
     });
 
     this.domElem.addEventListener('click_ok', this._onClickOk);

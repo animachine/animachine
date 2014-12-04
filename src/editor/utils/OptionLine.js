@@ -280,6 +280,8 @@ p._createDomElem = function() {
     this._deHeadCont.style.height = this._lineH + 'px';
     this.domElem.appendChild(this._deHeadCont);
 
+    amgui.createSeparator({parent: this._deHeadCont});
+
     this._deSubcont = document.createElement('div');
     this._deSubcont.style.width = '100%';
     this.domElem.appendChild(this._deSubcont);

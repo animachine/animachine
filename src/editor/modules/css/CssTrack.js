@@ -56,6 +56,17 @@ function CssTrack(opt) {
 
     this._paramGroup.optionLine.addButton({
         domElem: amgui.createToggleIconBtn({
+            iconOn: 'eye',
+            iconOff: 'eye-off',
+            changeColor: true,
+            onClick: this._onClickTgglHide,
+        }),
+        name: 'tgglHide',
+        childIdx: 0,
+    });
+
+    this._paramGroup.optionLine.addButton({
+        domElem: amgui.createToggleIconBtn({
             icon: 'cube',
             changeColor: true,
             onClick: function () {
@@ -575,7 +586,7 @@ p._hideSelectedElems = function () {
     if (this._isHidingSelectedElems) return;
     this._isHidingSelectedElems = true;
 
-    this._tgglHide.setToggle(true);
+    this._paramGroup.optionLine.buttons.tgglHide.setToggle(true);
 
     this._selectedElems.forEach(function (de) {
 
@@ -589,7 +600,7 @@ p._showSelectedElems = function () {
     if (!this._isHidingSelectedElems) return;
     this._isHidingSelectedElems = false;
 
-    this._tgglHide.setToggle(false);
+    this._paramGroup.optionLine.buttons.tgglHide.setToggle(false);
 
     this._selectedElems.forEach(function (de) {
 

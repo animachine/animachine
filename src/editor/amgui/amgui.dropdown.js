@@ -37,8 +37,8 @@ function createDropdown(opt) {
         li.style.fontSize = '14px';
         li.style.padding = '0 3px';
         li.style.cursor = 'pointer';
-        li.style.color = amgui.color.text;
-        li.style.background = amgui.color.bg2;
+        li.style.color = amgui.color.textInverse;
+        li.style.background = amgui.color.overlayInverse;
 
         li.addEventListener('click', function (e) {
 
@@ -51,6 +51,16 @@ function createDropdown(opt) {
             de.dispatchEvent(new CustomEvent('select', {detail: {selection: optItem.text}}));
         });
         de.appendChild(li);
+
+        li.addEventListener('mouseenter', function () {
+            
+            li.style.background = amgui.color.bgInverse;
+        });
+
+        li.addEventListener('mouseleave', function () {
+            
+            li.style.background = amgui.color.overlayInverse;
+        });
 
         return li;
     }

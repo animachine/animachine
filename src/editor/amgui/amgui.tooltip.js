@@ -26,8 +26,8 @@ function addTooltip(opt) {
     de.style.position = 'fixed';
     de.style.padding = '12px';
     de.style.display = 'inline-block';
-    de.style.background = amgui.color.overlayWhite;
-    de.style.color = amgui.color.textBlack;
+    de.style.background = amgui.color.overlayInverse;
+    de.style.color = amgui.color.textInverse;
 
     de.remove = function () {
 

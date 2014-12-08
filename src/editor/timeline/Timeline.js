@@ -1,6 +1,6 @@
 'use strict';
 
-var EventEmitter = require('events').EventEmitter;
+var EventEmitter = require('eventman');
 var inherits = require('inherits');
 var Timebar = require('./Timebar');
 var EaseMap = require('./EaseMap');

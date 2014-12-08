@@ -1,4 +1,4 @@
-var EventEmitter = require('events').EventEmitter;
+var EventEmitter = require('eventman');
 var dialogSettings = require('./dialogSettings');
 
 var shortcuts = new EventEmitter();

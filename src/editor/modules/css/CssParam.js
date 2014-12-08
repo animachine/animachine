@@ -1,6 +1,6 @@
 'use strict';
 
-var EventEmitter = require('events').EventEmitter;
+var EventEmitter = require('eventman');
 var inherits = require('inherits');
 var uncalc = require('./uncalc');
 var Key = require('../../utils/Key');

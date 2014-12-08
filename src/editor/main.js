@@ -1,7 +1,7 @@
 'use strict';
 
 var amgui = require('./amgui');
-var EventEmitter = require('events').EventEmitter;
+var EventEmitter = require('eventman');
 var Timeline = require('./timeline');
 var Windooman = require('./windooman');
 var HistoryTab = require('./historyTab');

@@ -71,7 +71,7 @@ p.reset = function () {
 
 
 p._onChangeInput = function () {
-
+console.log('_onChangeInput', this._input.value)
     this.value = this._input.value;
 };
 
@@ -135,7 +135,13 @@ p._prepareSuggestions = function (suggestions, typeaheadOptions, datasetOptions)
                     //   '<br><span>{{{description}}}</span>',
                     // '</div>'].join(''))
                 }
-            }));
+            }))
+            // .on('typeahead:autocompleted', function (e, obj, name) {
+            //     console.log('autocompleted', e, obj, name)
+            // })
+            .on('typeahead:opened', function () {console.log('onOpened')})
+            .on('typeahead:autocompleted', function () {console.log('onAutocompleted')})
+            .on('typeahead:selected', function () {console.log('onSelected')})
     }, this)
 /*
     var states = new Bloodhound({

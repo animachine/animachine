@@ -4,13 +4,6 @@ var EventEmitter = require('eventman');
 var inherits = require('inherits');
 var amgui = require('../amgui');
 
-var tee =  new EventEmitter();
-function testLog(){console.log('testLog')};
-tee.on('testLog', testLog);
-tee.on('testLog', testLog);
-tee.on('testLog', testLog);
-tee.emit('testLog');
-
 function DomPicker() {
 
     EventEmitter.call(this);

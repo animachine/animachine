@@ -17,7 +17,11 @@ module.exports = function (that, opt) {
                 case 'string': v = '' + v; break;
             }
 
-            if (v === value) return;
+            if (v === value ||
+                ((opt.type === 'float' || opt.type === 'int') && !_.isFinite(v)))
+            {
+                return;
+            }
 
             value = v;
             refreshInput();

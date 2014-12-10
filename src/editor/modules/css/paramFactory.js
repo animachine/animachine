@@ -55,6 +55,7 @@ module.exports = {
             case 'transformOriginX':
             case 'transformOriginY': 
                 input.units = ['%']; 
+                input.dragSpeed = 0.01; 
                 input.precision = 2;
                 break;
 
@@ -77,12 +78,13 @@ module.exports = {
             case 'bottom':
             case 'left':
             case 'width':
-            case 'height':
-                input.units = LENGTH_UNITS; 
+            case 'height': 
+                input.units = ['px']; 
                 break;
 
             case 'opacity':
                 input.type = 'unit';
+                input.dragSpeed = 0.01; 
                 input.precision = 2;
                 input.min = 0;
                 input.max = 1;

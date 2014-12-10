@@ -112,6 +112,7 @@ function CssTrack(opt) {
 
 inherits(CssTrack, EventEmitter);
 var p = CssTrack.prototype;
+module.exports = CssTrack;
 
 p.type = 'css_track_type';
 
@@ -301,7 +302,7 @@ p.removeParam = function (param, skipHistory) {
 
     if (!skipHistory) {
         am.history.save([this.addParam, this, param, true],
-            [this.removeParam, this, param, true], 'remove param ' + opt.name);
+            [this.removeParam, this, param, true], 'remove param ' + param.name);
     }
 
     this._endParams.splice(idx, 1);
@@ -838,9 +839,3 @@ p.dispose = function () {
 
     //TODO
 };
-
-module.exports = CssTrack;
-
-
-
-

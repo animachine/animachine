@@ -16,6 +16,8 @@ function UnitInput(opt) {
     this._createBase();
 
     this.units = opt.units || [''];
+    this.min = opt.min;
+    this.max = opt.max;
     this._amount = undefined;
     this._unit = undefined;
     this._precison = opt.precision || 0;
@@ -77,6 +79,34 @@ Object.defineProperties(p, {
 
             this._rxUnit = new RegExp('(' + this._units.join('|') + ')+\\s*$');
         }
+    },
+    min: {
+        set: function (v) {
+
+            v = parseFloat(v);
+
+            if (!_.isFinite(v) || this._min === v) return;
+
+            this._min = v;
+        },
+        get: function () {
+
+            return this._min;
+        }
+    },
+    max: {
+        set: function (v) {
+
+            v = parseFloat(v);
+
+            if (!_.isFinite(v) || this._max === v) return;
+
+            this._max = v;
+        },
+        get: function () {
+
+            return this._max;
+        }
     }
 });
 
@@ -102,7 +132,9 @@ p._setValueParts = function (amount, unit) {
 
     if (this._amount === amount && this._unit === unit) return;
     
-
+    if (_.isFinite(this.min)) amount = Math.max(this.min, amount);
+    if (_.isFinite(this.max)) amount = Math.min(this.max, amount);
+    
     this._amount = amount;
     var fixAmount = this._toFixedAmount(amount);
 

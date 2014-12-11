@@ -8,12 +8,15 @@ function () {
         optionLine = {{{optionLine}}},
         animTargets = {{{animTargets}}};
 
-    var tl = TimelineLite();
+    var rootTl = TimelineMax();
 
 
     timelines.forEach(function (timeline) {
 
         var prevTime = 0;
+
+        var tl = TimelineMax();
+        rootTl.add(tl);
         
         timeline.forEach(function (key, idx) {
 
@@ -21,7 +24,5 @@ function () {
         });
     });
 
-    animation = new AnimationGroup(animations);
-
-    return tl;
+    return rootTl;
 }

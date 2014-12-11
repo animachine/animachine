@@ -482,7 +482,6 @@ p.renderTime = function (time) {
         delete params.transformOriginX;
         delete params.transformOriginY;
         delete params.transformOriginZ;
-
     }
 };
 
@@ -608,6 +607,36 @@ p._showSelectedElems = function () {
         de.style.visibility = de._amVisibilitySave;
     });
 };
+
+p._switchFromTranslateToBezier = function () {
+
+    var paramX = this.getParam('x'),
+        paramY = this.getParam('y'),
+        keysX = paramX.getSave().keys,
+        keysY = paramY.getSave().keys,
+        bezierKeys = [],
+        times = _.uniq(_.pluck(keysX, 'time').concat(_.pluck(keysY, 'time'))).sort();
+
+    times.forEach(function (time) {
+
+        var x = parseFloat(paramX.getValue(time)),
+            y = parseFloat(paramY.getValue(time));
+
+        bezierKeys.push({
+            time: time,
+            point: {
+                anchor: {x: x, y: y},
+                handlerLeft: {x: x, y: y},
+                handlerRight: {x: x, y: y},
+            }
+        });
+    });
+
+    this.addParam({
+        name: 'bezier',
+        keys: bezierKeys,
+    });
+}
 
 
 

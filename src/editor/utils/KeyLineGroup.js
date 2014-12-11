@@ -82,6 +82,11 @@ p.removeKeyline = function (keyLine) {
     this._refreshHeadKeyline();
 };
 
+p.moveKeylineTo = function (keyline, idx) {
+
+    var keyline = this._keyLines.splice(idx, 1);
+}
+
 p.getEases = function () {
 
     var eases = [];

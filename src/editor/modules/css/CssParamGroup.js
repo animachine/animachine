@@ -130,6 +130,11 @@ p.removeParam = function (param) {
     this._refreshHeights();
 };
 
+p.moveParam = function () {
+
+    
+}
+
 p.getParam = function (paramName) {
 
     return this._params.find(function (param) {

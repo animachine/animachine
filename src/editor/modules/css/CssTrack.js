@@ -547,7 +547,7 @@ p.focusHandler = function (de) {
     });
     
     this._handler.setup({
-        hand: handOpt
+        hand: handOpt,
     });
     this._handler.activate();
 
@@ -615,14 +615,16 @@ p._switchFromTranslateToBezier = function () {
         keysX = paramX.getSave().keys,
         keysY = paramY.getSave().keys,
         bezierKeys = [],
-        times = _.uniq(_.pluck(keysX, 'time').concat(_.pluck(keysY, 'time'))).sort();
+        times = _.uniq(_.pluck(keysX, 'time').concat(_.pluck(keysY, 'time'))).sort(),
+        oldBezierKeys = this.__savedBezierKeys || [];
 
     times.forEach(function (time) {
 
         var x = parseFloat(paramX.getValue(time)),
-            y = parseFloat(paramY.getValue(time));
+            y = parseFloat(paramY.getValue(time)),
+            oldKey = _.where(oldBezierKeys, {time: time, anchor: {x:x, y:y}});
 
-        bezierKeys.push({
+        bezierKeys.push(oldKey || {
             time: time,
             point: {
                 anchor: {x: x, y: y},
@@ -636,7 +638,41 @@ p._switchFromTranslateToBezier = function () {
         name: 'bezier',
         keys: bezierKeys,
     });
-}
+};
+
+p._switchFromBezierToTranslate = function () {
+
+    //TODO restore original x, y keys when bezier wasn't changed
+
+    var bezierParam = this.getParam('bezier'),
+        bezierKeys = bezierParam.getSave().keys,
+        xKeys = [],
+        yKeys = [];
+    
+    this.__savedBezierKeys = keys;
+
+    bezierKeys.forEach(function (bezierKey) {
+
+        xKeys.push(oldKey || {
+            time: time,
+            value: bezierKey.anchor.x + 'px',
+        });
+        yKeys.push(oldKey || {
+            time: time,
+            value: bezierKey.anchor.y + 'px',
+        });
+    });
+
+    this.addParam({
+        name: 'x',
+        keys: xKeys,
+    });
+    this.addParam({
+        name: 'y',
+        keys: yKeys,
+    });
+};
+
 
 
 

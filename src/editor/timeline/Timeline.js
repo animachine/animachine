@@ -86,7 +86,7 @@ module.exports = Timeline;
 
 Object.defineProperties(p, {
 
-    'currTime': {
+    currTime: {
         set: function (v) {
             this._timebar.currTime = v;
         },
@@ -94,21 +94,31 @@ Object.defineProperties(p, {
             return this._timebar.currTime;
         }
     },
-    'timescale': {
+    timescale: {
         get: function () {
             return this._timebar.timescale;
         }
     },
-    'tracks': {
+    tracks: {
         get: function () {
             return this._tracks;
         }
     },
-    'length': {
+    length: {
         get: function () {
             return this._timebar.length;
         }
-    }
+    },
+    width: {
+        get: function () {
+            return this._timebar.width;
+        }
+    },
+    start: {
+        get: function () {
+            return this._timebar.start;
+        }
+    },
 });
 
 p.getSave = function () {
@@ -408,10 +418,10 @@ p._onChangeTime = function () {
 
 p._onChangeTape = function () {
 
-    var left = (this._timebar.start * this.timescale);
+    // var left = (this._timebar.start * this.timescale);
 
-    this._deKeyLineCont.style.left = left + 'px';
-    this._deKeyLineCont.style.width = 'calc(100% + ' + (-left) + 'px)';
+    // this._deKeyLineCont.style.left = left + 'px';
+    // this._deKeyLineCont.style.width = 'calc(100% + ' + (-left) + 'px)';
 
     this._refreshDePointer();
 };

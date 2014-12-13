@@ -3,24 +3,27 @@
 var EventEmitter = require('eventman');
 var inherits = require('inherits');
 var amgui = require('../amgui');
+var idCounter = 0;
 
 function KeyLine (opt) {
 
     EventEmitter.call(this);
 
+    this.debugId = idCounter++;
+
     this._keys = [];
 
     this._height = amgui.LINE_HEIGHT;
 
-    this._onChangeKeyTime = this._onChangeKeyTime.bind(this);
-    this._onChangeKeyEase = this._onChangeKeyEase.bind(this);
+    this._onChangeKey = this._onChangeKey.bind(this);
     this._onKeyNeedsRemove = this._onKeyNeedsRemove.bind(this);
     this._onChangeTimescale = this._onChangeTimescale.bind(this);
     this._onDblClick = this._onDblClick.bind(this);
+    this._onMouseDown = this._onMouseDown.bind(this);
     
     this._createDomElem();
 
-    amgui.callOnAdded(this.domElem, this._renderEase.bind(this));
+    amgui.callOnAdded(this.domElem, this._render.bind(this));
 
     am.timeline.on('changeTimescale', this._onChangeTimescale);
 }
@@ -57,13 +60,14 @@ p.addKey = function (key) {
     
     this._keys.push(key);
     key.keyLine = this;
-    this._deLine.appendChild(key.domElem);
 
-    key.on('changeTime', this._onChangeKeyTime);
-    key.on('changeEase', this._onChangeKeyEase);
+    key.on('changeTime', this._onChangeKey);
+    key.on('changeEase', this._onChangeKey);
+    key.on('select', this._onChangeKey);
+    key.on('deselect', this._onChangeKey);
     key.on('needsRemove', this._onKeyNeedsRemove);
     
-    this._renderEase();
+    this._render();
     this.emit('change');
 };
 
@@ -77,17 +81,15 @@ p.removeKey = function (key) {
 
     this._keys.splice(idx, 1);
     
-    key.removeListener('changeTime', this._onChangeKeyTime);
-    key.removeListener('changeEase', this._onChangeKeyEase);
+    key.removeListener('changeTime', this._onChangeKey);
+    key.removeListener('changeEase', this._onChangeKey);
+    key.removeListener('select', this._onChangeKey);
+    key.removeListener('deselect', this._onChangeKey);
     key.removeListener('needsRemove', this._onKeyNeedsRemove);
-
-    if (key.domElem.parentNode) {
-        key.domElem.parentNode.removeChild(key.domElem);
-    }
 
     key.dispose();
 
-    this._renderEase();
+    this._render();
     this.emit('change');
 
     return true;
@@ -136,6 +138,24 @@ p.getNextKey = function (time) {
     return retKey;
 };
 
+p.getClosestKey = function (time) {
+
+    var retKey, retDist;
+    
+    this._keys.forEach(function(key) {
+
+        var dist = Math.abs(time - key.time);
+
+        if (!retKey || retDist > dist) {
+
+            retDist = dist;
+            retKey = key;
+        }
+    });
+
+    return retKey;
+};
+
 p.getKeyTimes = function () {
 
     var times = [];
@@ -148,73 +168,34 @@ p.getKeyTimes = function () {
     return times;
 };
 
-p.getEases = function () {
 
-    var eases = [];
 
-    this._keys.forEach(function (key, idx) {
 
-        if (idx !== this._keys.length-1) {
 
-            var ease = {
-                x: key.domElem.offsetLeft,
-                ease: key.ease,
-            }
-            ease.w = this._keys[idx+1].domElem.offsetLeft - ease.x;
 
-            eases.push(ease);
-        }
-    }, this);
 
-    return eases;
+
+
+p._render = function () {
+
+    var canvas = this._canvas,
+        ctx = this._ctx,
+        tlStart = am.timeline.start,
+        tlTimescale = am.timeline.timescale;
+
+    canvas.width = am.timeline.width;
+    canvas.height = this._height;
+
+    this._keys.forEach(function (key, idx, arr) {
+
+        var start = (key.time + tlStart) * tlTimescale,
+            isLast = idx === arr.length - 1,
+            end = isLast ? start : (arr[idx+1].time + tlStart) * tlTimescale,
+            width = end - start;
+
+        key.renderToLine(ctx, start, width);
+    });
 };
-
-
-
-
-
-
-
-
-
-
-
-p._renderEase = function () {
-
-    this._sortKeys();
-
-    this._svgEase.innerHTML = '';
-
-    this.forEachKeys(function (key, idx) {
-
-        if (idx === this._keys.length-1) {
-            return;
-        }
-
-        var x = key.domElem.offsetLeft,
-            w = this._keys[idx+1].domElem.offsetLeft - x;
-    
-        this._renderEasePath(key.ease, x, w);
-    }, this);
-};
-
-p._renderEasePath = function (ease, x, w, color) {
-
-    var p = ease.points,
-        h = this._height,
-        path = document.createElementNS('http://www.w3.org/2000/svg', 'path'),
-        d = '';
-
-    d += 'M' + x + ',' + h + ' ';
-    d += 'C' + (x + w*p[0]) + ',' + (h - h*p[1]) + ' ';
-    d += (x + w*p[2]) + ',' + (h - h*p[3]) + ' ';
-    d += (x + w) + ',' + 0;
-
-    path.style.stroke = color;
-    path.setAttribute('d', d);
-
-    this._svgEase.appendChild(path);
-}
     
 p._sortKeys = function () {
 
@@ -240,21 +221,16 @@ p.hide = function () {
 
 
 
-p._onChangeKeyEase = function (key) {
 
-    this._renderEase();
-    this.emit('change');
-};
+p._onChangeKey = function (key) {
 
-p._onChangeKeyTime = function (key) {
-
-    this._renderEase();
+    this._render();
     this.emit('change');
 };
 
 p._onChangeTimescale = function (key) {
 
-    this._renderEase();
+    this._render();
 };
 
 p._onKeyNeedsRemove = function (key) {
@@ -264,10 +240,9 @@ p._onKeyNeedsRemove = function (key) {
 
 p._onDblClick = function (e) {
 
-    var time = am.timeline.screenXToTime(e.screenX);
-
-    var prevKey = this.getPrevKey(time);
-    var nextKey = this.getNextKey(time);
+    var time = am.timeline.screenXToTime(e.screenX),
+        prevKey = this.getPrevKey(time),
+        nextKey = this.getNextKey(time);
 
     if (prevKey && nextKey) {
 
@@ -275,6 +250,17 @@ p._onDblClick = function (e) {
             key: prevKey,
             nextKey: nextKey
         });
+    }
+};
+
+p._onMouseDown = function (e) {
+
+    var time = am.timeline.screenXToTime(e.screenX),
+        key = this.getClosestKey(time);
+
+    if (key && Math.abs(time - key.time) < 3) {
+console.log('on mouse down grab', this.debugId)
+        key.grab(e);
     }
 };
 
@@ -297,31 +283,24 @@ p._createDomElem = function createKeyline(opt) {
     this.domElem.setAttribute('debug-keyline', 1);
     this.domElem.style.overflow = 'hidden';
 
-    this.domElem.addEventListener('dblclick', this._onDblClick);
 
+    //TODO remove _deLine if it's doesn't needed;
     this._deLine = document.createElement('div');
     this._deLine.style.position = 'relative';
     this._deLine.style.width = '100%';
     this._deLine.style.height = this._height + 'px';
-    // this._deLine.style.background = this._background || 'grey';
     this.domElem.appendChild(this._deLine);
     amgui.createSeparator({parent: this._deLine});
 
-    this._svgEase = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    this._svgEase.style.width = '100%';
-    this._svgEase.style.height = '100%';
-    this._svgEase.style.fill = 'none';
-    this._svgEase.style.stroke = '#444';
-    this._svgEase.style.position = 'absolute';
-    this._deLine.appendChild(this._svgEase);
-}
-
-
-
-
-
+    this._canvas = document.createElement('canvas');
+    this._canvas.style.position = 'absolute';
+    this._deLine.appendChild(this._canvas);
+    this._ctx = this._canvas.getContext('2d');
+    
+    this._canvas.addEventListener('dblclick', this._onDblClick);
+    this._canvas.addEventListener('mousedown', this._onMouseDown);
+};
 
 p.dispose = function () {
     //TODO
 };
-

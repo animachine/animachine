@@ -85,25 +85,7 @@ p.removeKeyline = function (keyLine) {
 p.moveKeylineTo = function (keyline, idx) {
 
     var keyline = this._keyLines.splice(idx, 1);
-}
-
-p.getEases = function () {
-
-    var eases = [];
-
-    this._keyLines.forEach(function (keyLine) {
-
-        keyLine.getEases().forEach(function (ease) {
-
-            if (!_.find(eases, ease)) {
-
-                eases.push(ease);
-            };
-        });
-    });
-
-    return eases;
-}
+};
 
 
 
@@ -121,12 +103,6 @@ p._onChangeKeyLine = function (key) {
 
     this.emit('change');
 };
-
-p._onChangeTimescale = function (key) {
-
-    this._renderEase();
-};
-
 
 
 
@@ -184,18 +160,6 @@ p._delayedRefreshHeadKeyline = function () {
         key.setSubkeys(keysOnTimes[idx]);
 
     }, this);
-
-    this._renderEase();
-};
-
-p._renderEase = function () {
-    
-    this._svgEase.innerHTML = '';
-
-    this.getEases().forEach(function (ease) {
-
-        this._renderEasePath(ease.ease, ease.x, ease.w);
-    }, this);
 };
 
 
@@ -206,4 +170,4 @@ p._createSubcont = function () {
     this._deSubcont = document.createElement('div');
     this._deSubcont.style.width = '100%';
     this.domElem.appendChild(this._deSubcont);
-}
+};

@@ -18,9 +18,20 @@ function makeDraggable(opt) {
     var md, isOver, isDrag, 
         waitingMoveEvent, waitingMoveRaf;
 
-    opt.deTarget.addEventListener('mousedown', onDown);
-    opt.deTarget.addEventListener('mouseover', onEnter);
-    opt.deTarget.addEventListener('mouseleave', onLeave);
+    if (opt.deTarget) {
+        
+        opt.deTarget.addEventListener('mousedown', onDown);
+        opt.deTarget.addEventListener('mouseover', onEnter);
+        opt.deTarget.addEventListener('mouseleave', onLeave);
+    }
+
+    return {
+        emitDown: function (e) {
+
+            onDown(e);
+        },
+        destroy: function () {}
+    }
 
     function onDown(e) {
 
@@ -34,7 +45,14 @@ function makeDraggable(opt) {
 
         isDrag = true;
 
-        md = call('onDown', [e]) || {};
+        var custom = call('onDown', [e]);
+
+        if (custom === false) {//prevent dragging
+
+            return;
+        }
+
+        md = custom || {};
 
         md.mx = e.clientX;
         md.my = e.clientY;

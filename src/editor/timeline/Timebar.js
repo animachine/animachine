@@ -60,7 +60,7 @@ Object.defineProperties(p, {
             this._renderTape();
             this.emit('changeTape');
             this.emit('changeTimescale');
-
+            //prevent to get bigger start margin than "_startMargin" 
             this.start = this.start;
         },
         get: function () {
@@ -84,6 +84,7 @@ Object.defineProperties(p, {
         }
     }, 
 
+    /**px*/
     width: {
         set: function (v) {
 
@@ -105,7 +106,7 @@ Object.defineProperties(p, {
             return this._start + (this._width / this._timescale);
         }
     },
-    
+    /**ms*/
     visibleTime: {
         set: function (v) {
             this.timescale = this._width / v;

@@ -412,41 +412,6 @@ p.detachInput = function (input) {
 
 
 
-
-p._applyEase = function (ease, value) {
-
-    var rx = /cubic-bezier\(\s*([\d\.]+)\s*,\s*([\d\.-]+)\s*,\s*([\d\.]+)\s*,\s*([\d\.-]+)\s*\)/,
-        m = rx.exec(ease);
-
-    if (!m) {
-        return value;
-    }
-    
-    var p = [0, 0, parseFloat(m[1]), parseFloat(m[2]), parseFloat(m[3]), parseFloat(m[4]), 1, 1];
-
-    count(0);
-    count(2);
-    count(4);
-    count(0);
-    count(2);
-    count(0);
-
-    return p[1];
-
-    function count(i) {
-
-        p[i+0] = p[i+0] + (p[i+2] - p[i+0]) * value;
-        p[i+1] = p[i+1] + (p[i+3] - p[i+1]) * value;
-    }
-};
-
-
-
-
-
-
-
-
 p._onChangeInput = function (value) {
 
     if (String(value) === String(this.getValue())) {

@@ -15,20 +15,23 @@ function Key(opt) {
     this._isSelected = false;
     this._height = amgui.LINE_HEIGHT;
 
+
+    this._looks = opt.looks || {
+        line: {
+            color: '#eee'
+        }
+    }
+
     this._onSelectDropdown = this._onSelectDropdown.bind(this);
     this._onChangeEase = this._onChangeEase.bind(this);
-    this._onChangeTape = this._onChangeTape.bind(this);
     this._onDeselectAllKeys = this._onDeselectAllKeys.bind(this);
     this._onTranslateSelectedKeys = this._onTranslateSelectedKeys.bind(this);
-
-    this._createDomElem();
 
     this._deMenu = amgui.createDropdown({
         options: ['ease', 'delete'],
         onSelect: this._onSelectDropdown,
     });
 
-    am.timeline.on('changeTape', this._onChangeTape);
     am.timeline.on('deselectAllKeys', this._onDeselectAllKeys);
     am.timeline.on('translateSelectedKeys', this._onTranslateSelectedKeys);
 
@@ -36,13 +39,13 @@ function Key(opt) {
         this.ease.on('change', this._onChangeEase);
     }
 
-    amgui.bindDropdown({
-        deTarget: this.domElem,
-        deMenu: this._deMenu,
-        asContextMenu: true
-    });
+    // amgui.bindDropdown({
+    //     deTarget: this.domElem,
+    //     deMenu: this._deMenu,
+    //     asContextMenu: true
+    // });
 
-    amgui.makeDraggable({
+    this._dragger = amgui.makeDraggable({
         deTarget: this.domElem,
         thisArg: this,
         onDown: function (e) {
@@ -68,10 +71,9 @@ function Key(opt) {
                 dragged: 0,
             };
         },
-        onMove: function (md, mx) {
+        onMove: function (md) {
 
-            var diff = mx - md.mx,
-                diffTime = (diff / am.timeline.timescale) - md.dragged;
+            var diffTime = (md.dx / am.timeline.timescale) - md.dragged;
                 
             md.dragged += diffTime;
 
@@ -98,8 +100,6 @@ Object.defineProperties(p, {
             if (!Number.isFinite(v) || this._time === v) return;
 
             this._time = parseInt(v);
-
-            this._refreshDomElem();
 
             this.emit('changeTime', this);
         },
@@ -152,8 +152,6 @@ p.select = function () {
 
     this._isSelected = true;
 
-    this._refreshDomElem();
-
     this.emit('select');
 }
 
@@ -163,14 +161,89 @@ p.deselect = function () {
 
     this._isSelected = false;
 
-    this._refreshDomElem();
-
     this.emit('deselect');
 };
+
+p.grab = function (e) {
+
+    this._dragger.emitDown(e);
+}
 
 p.remove = function () {
 
     this.emit('needsRemove', this);
+};
+
+p.getPrevKey = function (time) {
+
+    return this.keyLine.getPrevKey(this.time);
+};
+
+p.getNextKey = function (time) {
+
+    return this.keyLine.getNextKey(this.time);
+};
+
+p.renderToLine = function (ctx, start, width) {
+
+    this.renderEaseToLine(ctx, start, width);
+
+    var looks = this._looks,
+        height = this._height,
+        line = looks.line,
+        circle = looks.circle,
+        fixStart = ~~start + 0.5,
+        isSelected = this._isSelected;
+    
+    if (line) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.strokeStyle = isSelected ? 'gold' : (line.color || '#eee');
+        ctx.lineWidth = line.width || 1;
+        ctx.moveTo(fixStart, 0);
+        ctx.lineTo(fixStart, height);
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    if (circle) {
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.strokeStyle = circle.color || '#eee';
+        ctx.fillStyle = circle.fillColor || 'rgba(0,0,0,0)';
+        ctx.lineWidth = circle.width || 1;
+        ctx.arc(fixStart, height/2,
+            'r' in circle ? circle.r : height * 0.4,
+            'arcStart' in circle ? circle.arcStart : 0,
+            'arcEnd' in circle ? circle.arcEnd : 2 * Math.PI);
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+    }
+};
+
+p.renderEaseToLine = function (ctx, start, width) {
+
+    if (!this.ease) return;
+
+    var ease = this.ease,
+        color = (this._looks.ease && this._looks.ease.color) || 'rgba(225,225,225,.23)',
+        height = this._height;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.strokeWidth = 1;
+    ctx.moveTo(start, height);
+
+    for (var i = 0; i < width; ++i) {
+
+        ctx.lineTo(start + i, height - height * ease.getRatio(i/width));
+    }
+
+    ctx.stroke();
+    ctx.restore();
 }
 
 
@@ -202,11 +275,6 @@ p._onChangeEase = function (ease) {
     this.emit('changeEase');
 };
 
-p._onChangeTape = function () {
-
-    this._refreshDomElem();
-};
-
 p._onDeselectAllKeys = function () {
 
     this.deselect();
@@ -226,41 +294,6 @@ p._onTranslateSelectedKeys = function (offset) {
 
 
 
-
-
-p._refreshDomElem = function () {
-
-    this.domElem.style.left = Math.floor(this.time * am.timeline.timescale) + 'px';
-    this.domElem.style.background = this._isSelected ? 'white' : 'none';
-};
-
-
-
-
-
-
-
-
-
-p._createDomElem = function () {
-
-    var color = this.color || '#7700ff';
-
-    this.domElem = document.createElement('div');
-    this.domElem.style.width = '8px';
-    this.domElem.style.position = 'absolute';
-    this.domElem.style.transform = 'translateX(-4px)';
-    this.domElem.setAttribute('debug-key', '');
-
-
-    var deKey = document.createElement('div');
-    deKey.style.width = '0px';
-    deKey.style.marginLeft = '3px';
-    deKey.style.height = amgui.LINE_HEIGHT + 'px';
-    deKey.style.borderLeft = '1px solid ' + color;
-    deKey.style.transform = 'translateX(0.5px)';
-    this.domElem.appendChild(deKey);
-};
 
 
 

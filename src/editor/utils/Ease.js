@@ -99,7 +99,7 @@ p.getRatio = function (p) {
 p.clone = function () {
 
     return new Ease(this);
-}
+};
 
 
 p.showOptionsDialog = function () {

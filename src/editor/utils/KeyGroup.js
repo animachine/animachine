@@ -90,7 +90,24 @@ p.remove = function () {
     });
 };
 
+p.renderEaseToLine = function (ctx) {
 
+    var tlStart = am.timeline.start,
+        tlTimescale = am.timeline.timescale;
+
+    this._subkeys.forEach(function (key) {
+
+        var nextKey = key.getNextKey();
+
+        if (!nextKey) return;
+
+        var start = (key.time + tlStart) * tlTimescale,
+            end = (nextKey.time + tlStart) * tlTimescale,
+            width = end - start;
+
+        key.renderEaseToLine(ctx, start, width);
+    });
+};
 
 
 
@@ -129,14 +146,14 @@ p._refreshSelected = function () {
 
     var selected = this._subkeys.every(function (key) {
 
-        return key._selected;
+        return key._isSelected;
     });
 
-    if (selected !== this._selected) {
+    if (selected !== this._isSelected) {
 
-        this._selected = selected;
+        this._isSelected = selected;
 
-        this._refreshDomElem();
+        this.emit(this._isSelected ? 'select' : 'deselect')
     }
 }
 

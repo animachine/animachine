@@ -318,7 +318,6 @@ p.getPlayer = function () {
 
         param.forEach(function (key) {
 
-            console.log('tl.to(', selectedElems, key.duration, key.options);
             tl.to(selectedElems, key.duration, key.options);
         });
 

@@ -45,7 +45,7 @@ p.show = function (opt) {
     this._render();
 
     this.domElem.style.display = '';
-}
+};
 
 p.hide = function () {
 
@@ -57,7 +57,7 @@ p.hide = function () {
     window.removeEventListener('click', this._onClickWindow);
 
     this.domElem.style.display = 'none';
-}
+};
 
 
 
@@ -66,39 +66,40 @@ p.hide = function () {
 
 p._render = function() {
 
-    var brKey = this._key.domElem.getBoundingClientRect(),
-        brNextKey = this._nextKey.domElem.getBoundingClientRect(),
+    var key = this._key,
+        nextKey = key.getNextKey(),
+        brKeyLine = key.parentKeyLine.domElem.getBoundingClientRect(),
         brParent = this.domElem.parentNode.getBoundingClientRect(),
         p = this._points,
-        x = 0,
-        w = brNextKey.left - brKey.left,
+        x = ((key.time + am.timeline.start) * am.timeline.timescale) + brKeyLine.left,
+        w = (nextKey.time - key.time) * am.timeline.timescale,
         h = this._height,
         d = '';
 
     this._width = w;
 
-    this.domElem.style.left = (brKey.left + (brKey.width/2) - brParent.left) + 'px';
-    this.domElem.style.top = (brKey.top  - brParent.top + h) + 'px';
+    this.domElem.style.left = x + 'px';
+    this.domElem.style.top = (brKeyLine.bottom - brParent.top) + 'px';
 
-    d += 'M' + (x + w*p[0]) + ',' + (h*p[1]) + ' ';
-    d += 'L' + x + ',' + 0 + ' ';
-    d += 'C' + (x + w*p[0]) + ',' + (h*p[1]) + ' ';
-    d += (x + w*p[2]) + ',' + (h*p[3]) + ' ';
-    d += (x + w) + ',' + h + ' ';
-    d += 'L' + (x + w*p[2]) + ',' + (h*p[3]);
+    d += 'M' + (w*p[0]) + ',' + (h*p[1]) + ' ';
+    d += 'L0,0 ';
+    d += 'C' + (w*p[0]) + ',' + (h*p[1]) + ' ';
+    d += (w*p[2]) + ',' + (h*p[3]) + ' ';
+    d += w + ',' + h + ' ';
+    d += 'L' + (w*p[2]) + ',' + (h*p[3]);
     
     this._path.setAttribute('d', d);
   
     this._deCp0.refreshPosition();
     this._deCp1.refreshPosition();
-}
+};
 
 p._setPoint = function (pidx, x, y) {
 
     this._points[pidx] = x;
     this._points[pidx+1] = y;
     this._key.ease.points = this._points;
-}
+};
 
 
 
@@ -108,12 +109,12 @@ p._setPoint = function (pidx, x, y) {
 p._onChangeEase = function () {
 
     this._render();
-}
+};
 
 p._onClickWindow = function () {
 
     this.hide();
-}
+};
 
 
 
@@ -143,7 +144,7 @@ p._createBase = function () {
   
     this._deCp0 = this._createCp(0);
     this._deCp1 = this._createCp(2);
-}
+};
 
 p._createCp = function(pointIdx) {
 
@@ -186,5 +187,5 @@ p._createCp = function(pointIdx) {
     deCp.refreshPosition();
   
     return deCp;
-}
+};
 

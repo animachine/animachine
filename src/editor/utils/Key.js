@@ -177,12 +177,12 @@ p.remove = function () {
 
 p.getPrevKey = function (time) {
 
-    return this.keyLine.getPrevKey(this.time);
+    return this.parentKeyLine.getPrevKey(this.time);
 };
 
 p.getNextKey = function (time) {
 
-    return this.keyLine.getNextKey(this.time);
+    return this.parentKeyLine.getNextKey(this.time);
 };
 
 p.renderToLine = function (ctx, start, width) {

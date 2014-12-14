@@ -56,7 +56,7 @@ Object.defineProperties(p, {
 p.addKey = function (key) {
     
     this._keys.push(key);
-    key.keyLine = this;
+    key.parentKeyLine = this;
 
     key.on('changeTime', this._onChangeKey);
     key.on('changeEase', this._onChangeKey);
@@ -77,6 +77,7 @@ p.removeKey = function (key) {
     }
 
     this._keys.splice(idx, 1);
+    key.parentKeyLine = undefined;
     
     key.removeListener('changeTime', this._onChangeKey);
     key.removeListener('changeEase', this._onChangeKey);

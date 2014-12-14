@@ -16,10 +16,11 @@ function Key(opt) {
     this._height = amgui.LINE_HEIGHT;
 
 
-    this._looks = opt.looks || {
+    this.looks = opt.looks || {
         line: {
             color: '#eee'
-        }
+        },
+        circle: {}
     }
 
     this._onSelectDropdown = this._onSelectDropdown.bind(this);
@@ -188,10 +189,11 @@ p.renderToLine = function (ctx, start, width) {
 
     this.renderEaseToLine(ctx, start, width);
 
-    var looks = this._looks,
+    var looks = this.looks,
         height = this._height,
         line = looks.line,
         circle = looks.circle,
+        r = 2,
         fixStart = ~~start + 0.5,
         isSelected = this._isSelected;
     
@@ -210,11 +212,11 @@ p.renderToLine = function (ctx, start, width) {
 
         ctx.save();
         ctx.beginPath();
-        ctx.strokeStyle = circle.color || '#eee';
-        ctx.fillStyle = circle.fillColor || 'rgba(0,0,0,0)';
+        ctx.strokeStyle = isSelected ? 'gold' : (circle.color || '#eee');
+        ctx.fillStyle = isSelected ? 'gold' : (circle.fillColor || '#eee');
         ctx.lineWidth = circle.width || 1;
         ctx.arc(fixStart, height/2,
-            'r' in circle ? circle.r : height * 0.4,
+            'r' in circle ? circle.r : r,
             'arcStart' in circle ? circle.arcStart : 0,
             'arcEnd' in circle ? circle.arcEnd : 2 * Math.PI);
         ctx.fill();
@@ -228,7 +230,7 @@ p.renderEaseToLine = function (ctx, start, width) {
     if (!this.ease) return;
 
     var ease = this.ease,
-        color = (this._looks.ease && this._looks.ease.color) || 'rgba(225,225,225,.23)',
+        color = (this.looks.ease && this.looks.ease.color) || 'rgba(225,225,225,.23)',
         height = this._height;
 
     ctx.save();

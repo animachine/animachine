@@ -14,6 +14,12 @@ function KeyGroup(opt) {
 
     Key.call(this, opt);
 
+    this.looks = {
+        line: {
+            color: '#eee'
+        }
+    }
+
     am.timeline.removeListener('deselectAllKeys', this._onDeselectAllKeys);
     am.timeline.removeListener('translateSelectedKeys', this._onTranslateSelectedKeys);
 }

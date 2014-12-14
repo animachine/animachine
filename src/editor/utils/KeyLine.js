@@ -3,13 +3,10 @@
 var EventEmitter = require('eventman');
 var inherits = require('inherits');
 var amgui = require('../amgui');
-var idCounter = 0;
 
 function KeyLine (opt) {
 
     EventEmitter.call(this);
-
-    this.debugId = idCounter++;
 
     this._keys = [];
 
@@ -186,7 +183,7 @@ p._render = function () {
     canvas.width = am.timeline.width;
     canvas.height = this._height;
 
-    this._keys.forEach(function (key, idx, arr) {
+    _.sortBy(this._keys, 'time').forEach(function (key, idx, arr) {
 
         var start = (key.time + tlStart) * tlTimescale,
             isLast = idx === arr.length - 1,
@@ -258,8 +255,8 @@ p._onMouseDown = function (e) {
     var time = am.timeline.screenXToTime(e.screenX),
         key = this.getClosestKey(time);
 
-    if (key && Math.abs(time - key.time) < 3) {
-console.log('on mouse down grab', this.debugId)
+    if (key && (Math.abs(time - key.time) * am.timeline.timescale) < 4) {
+
         key.grab(e);
     }
 };

@@ -100,18 +100,6 @@ function OptionLine(opt) {
         opt.inputs.forEach(this.addInput, this);
     }
 
-    if (opt.tgglBezier) {
-
-        this.addButton({
-            domElem: amgui.createIconBtn({
-                icon: 'vector',
-                tooltip: 'use bezier path',
-                onClick: function () {am.dialogs.WIP.show()},
-            }),
-            name: 'bezier',
-        });
-    }
-
     if (opt.tgglMerge) {
 
         this.addButton({

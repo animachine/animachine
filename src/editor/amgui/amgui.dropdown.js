@@ -113,26 +113,33 @@ function bindDropdown(opt) {
         });
     }
 
-    deDropdown.style.position = 'fixed';
-    deDropdown.style.pointerEvents = 'auto';
     
-    deDropdown.addEventListener('select', close);
+
+    return {
+        setDropdown: function (dd) {
+
+            deDropdown = dd;
+        }
+    }
 
     function open(e) {
 
         if (isOpened) return;
         isOpened = true;
 
+        if (opt.onOpening) opt.onOpening(e);
+
         var deCont = opt.menuParent || amgui.deOverlayCont || deBtn;
 
+        deDropdown.style.position = 'fixed';
+        deDropdown.style.pointerEvents = 'auto';
         deCont.appendChild(deDropdown);
         
         amgui.placeToPoint(deDropdown, e.clientX, e.clientY, opt.side);
 
-        setTimeout(function () {
-            window.addEventListener('click', close);
-            window.addEventListener('contextmenu', close);
-        });
+        deDropdown.addEventListener('select', close);
+        window.addEventListener('click', close);
+        window.addEventListener('contextmenu', close);
     }
 
     function close(e) {
@@ -143,7 +150,8 @@ function bindDropdown(opt) {
         if (deDropdown.parentElement) {
             deDropdown.parentElement.removeChild(deDropdown);
         }
+        deDropdown.removeEventListener('select', close);
         window.removeEventListener('click', close);
         window.removeEventListener('contextmenu', close);
     }
-}
+};

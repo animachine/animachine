@@ -1,9 +1,11 @@
 'use strict';
 
 var CssParam = require('./CssParam');
+var BezierCssParam = require('./BezierCssParam');
 var CssParamGroup = require('./CssParamGroup');
+var amgui = require('../../amgui');
 
-var defaultHidden = 'z,rotationX,rotationY,scaleZ,perspectiveOriginX,bezier'.split(',');
+var defaultHidden = 'z,rotationX,rotationY,scaleZ,perspectiveOriginX,transformOriginZ'.split(',');
     
 module.exports = {
 
@@ -24,6 +26,8 @@ module.exports = {
             case 'x':
             case 'y': 
             case 'z':
+            case 'transformOriginZ': 
+                paramOpt.defaultValue = '0px';
                 input.units = ['px']; 
                 break;
 
@@ -40,6 +44,7 @@ module.exports = {
             case 'rotateX': 
             case 'rotateY': 
             case 'rotateZ': 
+                paramOpt.defaultValue = '0deg';
                 input.units = ['deg', 'rad']; 
                 input.precision = 1;
                 input.conterters = {
@@ -54,14 +59,11 @@ module.exports = {
 
             case 'transformOriginX':
             case 'transformOriginY': 
+                paramOpt.defaultValue = '50%';
                 input.units = ['%']; 
                 input.dragSpeed = 0.01; 
                 input.precision = 2;
                 break;
-
-            case 'transformOriginZ': 
-                input.units = ['px'];
-                break; 
 
             case 'color':
             case 'borderColorTop':
@@ -83,6 +85,7 @@ module.exports = {
                 break;
 
             case 'opacity':
+                paramOpt.defaultValue = 1;
                 input.type = 'unit';
                 input.dragSpeed = 0.01; 
                 input.precision = 2;
@@ -103,13 +106,16 @@ module.exports = {
             input.type = 'unit';
         }
 
-        var param =  new CssParam(paramOpt);
+        var param;
 
         if (opt.name === 'bezier') {
 
-            if ('hidden' in opt) {}
-            prepareBezierParam(param);
+            param = new BezierCssParam(paramOpt);
         }
+        else {
+            param = new CssParam(paramOpt);
+        }
+
         return param;
     },
 
@@ -125,15 +131,28 @@ module.exports = {
         };
 
         if (opt.name === 'translate') {
-
-            pgOpt.optionLine.tgglBezier = true;
+            
             pgOpt.optionLine.inputs.push({name: 'x', type: 'unit', units: ['px']});
             pgOpt.optionLine.inputs.push({name: 'y', type: 'unit', units: ['px']});
         }
 
-        var paramGropup = new CssParamGroup(pgOpt);
+        var paramGroup = new CssParamGroup(pgOpt);
 
-        return paramGropup;
+        if (opt.name === 'translate') {
+
+            paramGroup.optionLine.addButton({
+                domElem: amgui.createIconBtn({
+                    icon: 'vector',
+                    tooltip: 'use bezier path',
+                    onClick: function () {
+                        paramGroup.emit('translateToBezier')
+                    },
+                }),
+                name: 'bezier',
+            });
+        }
+
+        return paramGroup;
     },
 
     getRootParamGroupName: function (paramName) {
@@ -196,7 +215,7 @@ var groups = {
     },
     backgroundPosition: ['backgroundPositionX', 'backgroundPositionY'],
     textShadow: ['textShadowX', 'textShadowY', 'textShadowBlur'],
-    translate: ['x', 'y', 'z', 'bezier'],
+    translate: ['x', 'y', 'z'],
     scale: ['scaleX', 'scaleY', 'scaleZ'],
     rotation: ['rotationX', 'rotationY', 'rotationZ'],
     skeew: ['skeewX', 'skeewY'],
@@ -205,72 +224,3 @@ var groups = {
     boxShadow: ['boxShadowX', 'boxShadowY', 'boxShadowBlur'],
     clip: ['clipTop',  'clipRight',  'clipBottom',  'clipLeft'],
 };
-
-function prepareBezierParam(param) {
-
-    // param.parentTrack.on('focusHandler', function () {
-
-
-    // });
-
-    // function focusHandler(de) {
-
-    //     de = de || this._currHandledDe;
-    //     this._currHandledDe = de;
-
-    //     if (!param._currHandledDe) return this._blurHandler();
-
-    //     var transformSave;
-    //     if (de.style.transform) {
-    //         transformSave = de.style.transform;
-    //         de.style.transform = '';
-    //     }
-
-    //     var br = de.getBoundingClientRect();
-
-    //     de.style.transform = transformSave;
-
-    //     var handOpt = {
-    //         type: 'transformer',
-    //         base: {
-    //             x: br.left,
-    //             y: br.top,
-    //             w: br.width,
-    //             h: br.height,
-    //         },
-    //         params: {}
-    //     };
-
-    //     var p = handOpt.params;
-    //     this._endParams.forEach(function (param) {
-
-    //         switch (param.name) {
-    //             case 'x': p.tx = parseFloat(param.getValue()); break;
-    //             case 'y': p.ty = parseFloat(param.getValue()); break;
-    //             case 'scaleX': p.sx = parseFloat(param.getValue()); break;
-    //             case 'scaleY': p.sy = parseFloat(param.getValue()); break;
-    //             case 'rotationZ': p.rz = parseFloat(param.getValue()) / 180 * Math.PI; break;
-    //             case 'transformOriginX': p.ox = parseFloat(param.getValue()) / 100; break;
-    //             case 'transformOriginY': p.oy = parseFloat(param.getValue()) / 100; break;
-    //         }
-    //     });
-        
-    //     this._handler.setup({
-    //         hand: handOpt
-    //     });
-    //     this._handler.activate();
-
-    //     am.deHandlerCont.appendChild(this._handler.domElem);
-    // };
-
-    // function blurHandler() {
-
-    //     this._currHandledDe = undefined;
-
-    //     if (this._handler && this._handler.domElem && this._handler.domElem.parentNode) {
-
-    //         this._handler.deactivate();
-    //         this._handler.domElem.parentNode.removeChild(this._handler.domElem);
-    //     }
-    // };
-}

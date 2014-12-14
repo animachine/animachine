@@ -1,48 +1,18 @@
 'use strict';
 
-var EventEmitter = require('eventman');
 var inherits = require('inherits');
-var uncalc = require('./uncalc');
+var CssParam = require('./CssParam');
 var Key = require('../../utils/Key');
-var OptionLine = require('../../utils/OptionLine');
-var KeyLine = require('../../utils/KeyLine');
 var amgui = require('../../amgui');
 
 function BezierCssParam (opt) {
 
     opt = opt || {};
 
-    EventEmitter.call(this);
-
-    this._lineH =  amgui.LINE_HEIGHT;
-    this._inputs = [];
-    this._hidden = false;
-    this._defaultValue = opt.defaultValue || 0;
-
-    this._onChangeInput = this._onChangeInput.bind(this);
-    this._onChangeTime = this._onChangeTime.bind(this);
-    this._onChangeKeyLine = this._onChangeKeyLine.bind(this);
-    this._onKeyNeedsRemove = this._onKeyNeedsRemove.bind(this);
-    this._onClickTgglKey = this._onClickTgglKey.bind(this);
-    this._onClickStepPrevKey = this._onClickStepPrevKey.bind(this);
-    this._onClickStepNextKey = this._onClickStepNextKey.bind(this);
-
-    this._createKeyline(opt.keyLine);
-    this._createOptions(opt.optionLine);
-
-    this.deOptionLine = this.optionLine.domElem;
-    this.deKeyLine = this.keyLine.domElem;
-
-    am.timeline.on('changeTime', this._onChangeTime);
-
-    this.setMaxListeners(1234);
-
-    if (opt) {
-        this.useSave(opt);
-    }
+    CssParam.call(this, opt);
 }
 
-inherits(BezierCssParam, EventEmitter);
+inherits(BezierCssParam, CssParam);
 var p = BezierCssParam.prototype;
 module.exports = BezierCssParam;
 
@@ -90,6 +60,8 @@ p.getScriptKeys = function () {
 };
 
 p.getValue = function (time) {
+
+    return 0;
 
     if (!_.isNumber(time)) {
         time = am.timeline.currTime;

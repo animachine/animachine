@@ -2,7 +2,7 @@
 
 var EventEmitter = require('eventman');
 var inherits = require('inherits');
-var BezierEasing = require('bezier-easing');
+var bezierEasing = require('bezier-easing');
 var defineCompactProperty = require('./defineCompactProperty');
 var dialogEaseOptions = require('./dialogEaseOptions');
 
@@ -49,7 +49,7 @@ Object.defineProperties(p, {
 
             p.length = 0;
             p.push.apply(this._points, v);
-            this._easer = new BezierEasing(p[0], p[1], p[2], p[3]);
+            this._easer = new GreenSockGlobals.Ease(bezierEasing(p[0], p[1], p[2], p[3]));
 
             this.emit('change');
         },
@@ -93,8 +93,13 @@ p.useSave = function (save) {
 
 p.getRatio = function (p) {
 
-    return this._easer(p);
+    return this._easer.getRatio(p);
 };
+
+p.getEaser = function () {
+
+    return this._easer;
+}
 
 p.clone = function () {
 

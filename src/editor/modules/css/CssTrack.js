@@ -37,7 +37,6 @@ function CssTrack(opt) {
     this._onChangeTime = this._onChangeTime.bind(this);
     this._onChangeParameter = this._onChangeParameter.bind(this);
     this._onChangeName = this._onChangeName.bind(this);
-    this._onChangeName = this._onChangeName.bind(this);
     this._onChangeSelectors = this._onChangeSelectors.bind(this);
     this._onWindowResize = this._onWindowResize.bind(this);
     this._onWindowScroll = this._onWindowScroll.bind(this);
@@ -207,7 +206,7 @@ p.getScript = function () {
 
             if (i !== j && timelines[i].length === timelines[j].length) {
 
-                var match = timelines[i].evety(function (key, idx) {
+                var match = timelines[i].every(function (key, idx) {
 
                     return key.time === timelines[j][idx].time;
                 });
@@ -242,6 +241,91 @@ p.getScript = function () {
     });
 
     return code;
+};
+
+p._getScriptParams = function () {
+
+    var params = [];
+
+    this._endParams.forEach(function (param) {
+
+        if (param.hidden) return;
+
+        var tl = new TimelineMax(),
+            lastTime = 0;
+
+        var param = param.getScriptKeys().map(function (key) {
+
+            key.duration = (key.time - lastTime)/1000;
+            lastTime = key.time;
+            delete key.time;
+
+            return key;
+        });
+
+        if (param.length) {
+
+            params.push(param);
+        }
+    });
+
+    handleTransformOrigin();
+
+    return params;
+
+
+
+
+    function handleTransformOrigin() {
+
+        var tox = _.find(params, function (param) {return 'transformOriginX' in param[0].options});
+        var toy = _.find(params, function (param) {return 'transformOriginY' in param[0].options});
+        var toz = _.find(params, function (param) {return 'transformOriginZ' in param[0].options});
+
+        if (!tox) return;
+
+        var to = [];
+        tox.forEach(function (key, idx) {
+
+            to.push({
+                duration: key.duration,
+                options: {
+                    ease: key.options.ease,
+                    transformOrigin: '' + 
+                        (tox[idx].options.transformOriginX || '50%') + ' ' +
+                        (toy[idx].options.transformOriginY || '50%') + ' ' +
+                        (toz ? (toz[idx].options.transformOriginZ || '0px') : ''),
+                } 
+            });
+        });
+
+        params.splice(params.indexOf(tox), 1);
+        params.splice(params.indexOf(toy), 1);
+        params.splice(params.indexOf(toz), 1);
+        params.push(to);
+    }
+}
+
+p.getPlayer = function () {
+
+    var rootTl = new TimelineMax().pause(),
+        scriptParams = this._getScriptParams(),
+        selectedElems = this._selectedElems;
+
+    scriptParams.forEach(function (param) {
+
+        var tl = new TimelineMax();
+
+        param.forEach(function (key) {
+
+            console.log('tl.to(', selectedElems, key.duration, key.options);
+            tl.to(selectedElems, key.duration, key.options);
+        });
+
+        rootTl.add(tl, 0);
+    });
+
+    return rootTl;
 };
 
 p.addParam = function (opt, skipHistory) {
@@ -319,6 +403,14 @@ p.removeParam = function (param, skipHistory) {
     this.emit('change');
 };
 
+p.getParam = function (name) {
+
+    return this._endParams.find(function(param) {
+
+        return param.name === name;
+    });
+};
+
 p.addGroup = function (path, history) {
 
     path = path.slice();
@@ -339,10 +431,12 @@ p.addGroup = function (path, history) {
 
         paramGroup = paramFactory.createGroup({name: name});
         parent.addParam(paramGroup);
+        paramGroup.on('bezierToTranslate', this._switchFromBezierToTranslate, this);
+        paramGroup.on('translateToBezier', this._switchFromTranslateToBezier, this);
     }
 
     return paramGroup;
-}
+};
 
 p.removeGroup = function (path, history) {
 
@@ -359,9 +453,13 @@ p.removeGroup = function (path, history) {
     }
 
     //TODO history.save()
+    paramGroup = parent.getParam(name);
 
-    parent.removeParam(parent.getParam(name));
-}
+    paramGroup.off('bezierToTranslate', this._switchFromBezierToTranslate, this);
+    paramGroup.off('translateToBezier', this._switchFromTranslateToBezier, this);
+
+    parent.removeParam();
+};
 
 
 
@@ -448,41 +546,8 @@ p.renderTime = function (time) {
         return;
     }
 
-    var selection = _.toArray(am.deRoot.querySelectorAll(this._selectors.join(','))),
-        params = {};
-
-    this._endParams.forEach(function (param) {
-
-        if (!param.hidden) {
-            
-            params[param.name] = param.getValue(time);
-        }
-    });
-
-    if (selection.length && this._endParams.length) {
-
-        handleTransformOrigin();
-
-        TweenLite.set(selection, params);
-    }
-
-    function handleTransformOrigin() {
-
-        var tox = params.transformOriginX,
-            toy = params.transformOriginY,
-            toz = params.transformOriginZ,
-            to = '';
-
-        to += (tox || '50%') + ' ';
-        to += (toy || '50%') + ' ';
-        to += toz || '0px';
-
-        params.transformOrigin = to;
-
-        delete params.transformOriginX;
-        delete params.transformOriginY;
-        delete params.transformOriginZ;
-    }
+    this._player.time(time/1000);
+    return;
 };
 
 p.play = function () {
@@ -622,7 +687,7 @@ p._switchFromTranslateToBezier = function () {
 
         var x = parseFloat(paramX.getValue(time)),
             y = parseFloat(paramY.getValue(time)),
-            oldKey = _.where(oldBezierKeys, {time: time, anchor: {x:x, y:y}});
+            oldKey = _.find(oldBezierKeys, {time: time, anchor: {x:x, y:y}});
 
         bezierKeys.push(oldKey || {
             time: time,
@@ -711,7 +776,7 @@ p._onChangeHandler = function(params, type) {
 
         prop.addKey({
             time: time,
-            value: value
+            value: value,
         });
     }.bind(this);
 
@@ -730,9 +795,6 @@ p._onChangeHandler = function(params, type) {
             }
         });
     }
-
-    this.renderTime(time);
-    this.focusHandler();
 };
 
 p._onChangeTime = function (time) {
@@ -746,13 +808,13 @@ p._onChangeTime = function (time) {
 };
 
 p._onChangeParameter = function () {
-
+    
+    this._refreshPlayer();
     this.renderTime();
     this.focusHandler();
 
     this.emit('change');
 };
-
 
 p._onWindowResize = function () {
 
@@ -827,6 +889,7 @@ p._onChangeSelectors = function (selectors) {
     this._selectors = this._selectors.concat(selectors);
 
     this._selectElements();
+    this._refreshPlayer();
 
     if (this._selectedElems.indexOf(this._currHandledDe) === -1) {
 
@@ -846,6 +909,13 @@ p._onChangeHeight = function (selectors) {
 
 
 
+p._refreshPlayer = function () { 
+
+    if (this._player) this._player.kill();
+
+    this._player = this.getPlayer();
+}
+
 
 
 
@@ -856,14 +926,6 @@ p._isAllParamsHaveKey = function (time) {
     return this._endParams.every(function (param) {
 
         return param.getKey(time) || !param.isValid();
-    });
-};
-
-p.getParam = function (name) {
-
-    return this._endParams.find(function(param) {
-
-        return param.name === name;
     });
 };
 

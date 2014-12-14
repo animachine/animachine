@@ -138,26 +138,17 @@ p.getScriptKeys = function () {
     this.keyLine.forEachKeys(function (key) {
 
         var k = {
-            offset: key.time / am.timeline.length,
+            time: key.time,
+            options: {
+                ease: key.ease.getEaser(),
+            }
         };
-
-        k[this.name] = this.getValue(key.time);
-        
-        if (key.ease && key.ease !== 'linear') {
-
-           k.easing = key.ease;
-        }
-
+        k.options[this.name] = key.value;
         keys.push(k);
     }, this);
 
-    keys.sort(function (a, b) {
-
-        return a.offset - b.offset;
-    });
-
-    return keys;
-};
+    return _.sortBy(keys, 'time');
+}
 
 p.getValue = function (time) {
 
@@ -413,7 +404,7 @@ p.detachInput = function (input) {
 
 
 p._onChangeInput = function (value) {
-
+var deMe = this.getValue();
     if (String(value) === String(this.getValue())) {
         return;
     }

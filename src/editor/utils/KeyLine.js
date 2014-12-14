@@ -23,6 +23,23 @@ function KeyLine (opt) {
     amgui.callOnAdded(this.domElem, this._render.bind(this));
 
     am.timeline.on('changeTimescale', this._onChangeTimescale);
+
+    var dropdownBinding = amgui.bindDropdown({
+        deTarget: this.domElem,
+        onOpening: function (e) {
+
+            var key = this.getKeyUnderPos(e.screenX),
+                dropdown = key && key.getDropdown();
+
+            if (dropdown) {
+
+                dropdownBinding.setDropdown(dropdown);
+            }
+            else {
+                return false;
+            }
+        }.bind(this);
+    })
 }
 
 inherits(KeyLine, EventEmitter);
@@ -154,6 +171,17 @@ p.getClosestKey = function (time) {
     return retKey;
 };
 
+p.getKeyUnderPos = function (x) {
+
+    var time = am.timeline.screenXToTime(x),
+        key = this.getClosestKey(time);
+
+    if (key && (Math.abs(time - key.time) * am.timeline.timescale) < 4) {
+
+        return key;
+    }
+};
+
 p.getKeyTimes = function () {
 
     var times = [];
@@ -253,11 +281,9 @@ p._onDblClick = function (e) {
 
 p._onMouseDown = function (e) {
 
-    var time = am.timeline.screenXToTime(e.screenX),
-        key = this.getClosestKey(time);
+    var key = this.getKeyUnderPos(e.screenX);
 
-    if (key && (Math.abs(time - key.time) * am.timeline.timescale) < 4) {
-
+    if (key) {
         key.grab(e);
     }
 };

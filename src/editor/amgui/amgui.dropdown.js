@@ -127,7 +127,9 @@ function bindDropdown(opt) {
         if (isOpened) return;
         isOpened = true;
 
-        if (opt.onOpening) opt.onOpening(e);
+        if (opt.onOpening && opt.onOpening(e) === false) {   
+            return;
+        }
 
         var deCont = opt.menuParent || amgui.deOverlayCont || deBtn;
 

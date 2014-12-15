@@ -404,7 +404,7 @@ p.detachInput = function (input) {
 
 
 p._onChangeInput = function (value) {
-var deMe = this.getValue();
+    
     if (String(value) === String(this.getValue())) {
         return;
     }

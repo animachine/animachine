@@ -575,6 +575,8 @@ p.focusHandler = function (de) {
 
     if (!this._currHandledDe) return this._blurHandler();
 
+    this.emit('focusHandler');
+
     var transformSave;
     if (de.style.transform) {
         transformSave = de.style.transform;
@@ -607,6 +609,11 @@ p.focusHandler = function (de) {
             case 'rotationZ': p.rz = parseFloat(param.getValue()) / 180 * Math.PI; break;
             case 'transformOriginX': p.ox = parseFloat(param.getValue()) / 100; break;
             case 'transformOriginY': p.oy = parseFloat(param.getValue()) / 100; break;
+            case 'bezier':
+                var value = param.getValue();
+                p.tx = value.x;
+                p.ty = value.y;
+            break;
         }
     });
     
@@ -616,6 +623,19 @@ p.focusHandler = function (de) {
     this._handler.activate();
 
     am.deHandlerCont.appendChild(this._handler.domElem);
+};
+
+p._blurHandler = function () {
+
+    this._currHandledDe = undefined;
+
+    this.emit('blurHandler');
+
+    if (this._handler && this._handler.domElem && this._handler.domElem.parentNode) {
+
+        this._handler.deactivate();
+        this._handler.domElem.parentNode.removeChild(this._handler.domElem);
+    }
 };
 
 
@@ -632,17 +652,6 @@ p._animPlay = function () {
     this._animPlayRafid = window.requestAnimationFrame(this._animPlay);
 
     this.renderTime(am.timeline.currTime);
-};
-
-p._blurHandler = function () {
-
-    this._currHandledDe = undefined;
-
-    if (this._handler && this._handler.domElem && this._handler.domElem.parentNode) {
-
-        this._handler.deactivate();
-        this._handler.domElem.parentNode.removeChild(this._handler.domElem);
-    }
 };
 
 p._hideSelectedElems = function () {
@@ -766,14 +775,29 @@ p._onSelectClick = function () {
 
 p._onChangeHandler = function(params, type) {
 
-    var time = am.timeline.currTime, 
-        prop, value;
+    var time = am.timeline.currTime;
 
     var add = function (name, value) {
 
-        prop = this.addParam({name: name});
+        var param;
 
-        prop.addKey({
+        if (name === 'x' || name === 'y') {
+
+            var param = this.getParam('bezier');
+
+            if (param && !param.hidden) {
+
+                var keyOpt = {time: time};
+                keyOpt[name] = parseFloat(value);
+                param.addKey(keyOpt);
+
+                return;
+            }
+        }
+
+        param = this.addParam({name: name});
+
+        param.addKey({
             time: time,
             value: value,
         });

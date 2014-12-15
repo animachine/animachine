@@ -10,12 +10,38 @@ function BezierCssParam (opt) {
     opt = opt || {};
 
     CssParam.call(this, opt);
+
+    this._defaultValue = {x: 0, y: 0};
 }
 
 inherits(BezierCssParam, CssParam);
 var p = BezierCssParam.prototype;
 module.exports = BezierCssParam;
 
+Object.defineProperties(p, {
+
+    parentTrack: {
+        set: function (v) {
+
+            if (this._parentTrack) {
+                this._parentTrack.off('focusHandler', this._focusHandler, this);
+                this._parentTrack.off('blurHandler', this._blueHandler, this);
+            }
+
+            this._parentTrack = v;
+
+
+            if (this._parentTrack) {
+                this._parentTrack.on('focusHandler', this._focusHandler, this);
+                this._parentTrack.on('blurHandler', this._blueHandler, this);
+            }
+        },
+        get: function () {
+
+            return this._parentTrack;
+        }
+    }
+})
 
 
 
@@ -35,28 +61,36 @@ p.getScriptKeys = function () {
 
     var keys = [];
 
-    // this.keyLine.forEachKeys(function (key) {
+    this.keyLine.forEachKeys(function (key) {
 
-    //     var k = {
-    //         offset: key.time / am.timeline.length,
-    //     };
-
-    //     k[this.name] = this.getValue(key.time);
+        var nextKey = key.getNextKey();
         
-    //     if (key.ease && key.ease !== 'linear') {
+        if(!nextKey) return;
 
-    //        k.easing = key.ease;
-    //     }
+        var values = [],
+            k = {
+                time: key.time,
+                options: {
+                    bezier: {
+                        type: 'cubic',
+                        values: values,
+                    },
+                    ease: key.ease.getEaser(),
+                }
+            };
 
-    //     keys.push(k);
-    // }, this);
+        key.value.forEach(function (point, idx, arr) {
 
-    // keys.sort(function (a, b) {
+            if (idx !== 0) values.push(point.handleLeft);
+            values.push(point.anchor);
+            if (idx !== arr.length - 1) values.push(point.handleRight);
+        });
 
-    //     return a.offset - b.offset;
-    // });
+        values.push(nextKey.value[0].handleLeft);
+        values.push(nextKey.value[0].anchor);
+    }, this);
 
-    return keys;
+    return _.sortBy(keys, 'time');
 };
 
 p.getValue = function (time) {
@@ -89,89 +123,50 @@ p.getValue = function (time) {
 
     if (same) {
 
-        ret = same.value;
+        var point = same.value[0];
+
+        ret = {
+            x: point.anchore.x + 'px',
+            y: point.anchore.y + 'px',
+        };
     }
     else {
 
         if (after && before) {
 
             var p = (time - before.time) / (after.time - before.time), 
-                av = uncalc(after.value), bv = uncalc(before.value);
+                av = after.value, 
+                bv = before.value,
+                points = [];
 
             p = before.ease.getRatio(p);
 
-            ret = createCalc(av, bv, p);
+            bv.value.forEach(function (point, idx) {
+
+                if (idx !== 0) {
+                    points.push(point.handleLeft.x, point.handleLeft.y);
+                }
+                points.push(point.anchor.x, point.anchor.y);
+                points.push(point.handleRight.x, point.handleRight.y);
+            });
+            points.push(bv.value[0].handleLeft.x, bv.value[0].handleLeft.y);
+            points.push(bv.value[0].anchor.x, bv.value[0].anchor.y);
+
+
+
+            ret = this._calcEase(points, p);
         }
         else if (before) {
             
-            ret = before.value;
+            ret = _.clone(before.value[0].anchor);
         }
         else if (after) {
             
-            ret = after.value;
+            ret = _.clone(after.value[0].anchor);
         }
     }
     
     return ret === undefined ? this._defaultValue : ret;
-
-
-
-
-
-    function createCalc(av, bv, p) {
-
-        if (!isNaN(av) && !isNaN(bv)) {
-
-            return parseFloat(bv) + ((av - bv) * p);
-        }
-
-        var aUnit = getUnit(av);
-        var bUnit = getUnit(bv);
-        
-        if (aUnit === bUnit) {
-
-            av = parseFloat(av);
-            bv = parseFloat(bv);
-            
-            return (bv + ((av - bv) * p)) + aUnit;
-        };
-
-        var avs = _.compact(av.split(' ')),
-            bvs = _.compact(bv.split(' ')),
-            avl = avs.length,
-            bvl = bvs.length,
-            ret = [];
-
-        if (avl !== bvl) {
-
-            if (avl < bvl) {
-
-                avs = avs.concat(bvs.slice(avl));
-            }
-            else {
-                bvs = bvs.concat(avs.slice(bvl));
-            }         
-        }
-
-        avs.forEach(function (a, idx) {
-
-            ret.push(calc(a, bvs[idx]));
-        });
-
-        return ret.join(' ');
-
-        function calc(a, b) {
-
-            return 'calc(' + b + ' + (' + a + ' - ' + b + ')*' + p + ')';
-        }
-
-        function getUnit(v) {
-
-            var m = /([a-z]+)$/.exec(v);
-
-            return m && m[1];
-        }
-    }
 };
 
 p.addKey = function (opt, skipHistory) {
@@ -186,13 +181,36 @@ p.addKey = function (opt, skipHistory) {
                 am.history.saveChain(key, [this.addKey, this, key, true], [this.addKey, this, opt, true], 'edit key');
             }
 
-            key.value = opt.value;
+            var diff;
+
+            if ('x' in opt.value) {
+                diff = opt.value.x - key.value[0].anchor.x;
+                key.value[0].anchor.x += diff;
+                key.value[0].handlerLeft.x += diff;
+                key.value[0].handlerLeft.x += diff;
+            }
+            if ('y' in opt.value) {
+                diff = opt.value.y - key.value[0].anchor.y;
+                key.value[0].anchor.y += diff;
+                key.value[0].handlerLeft.y += diff;
+                key.value[0].handlerLeft.y += diff;
+            }
         }
     }
     else {
 
+        var anchor = this.getValue(opt.value);
+
+        if ('x' in opt.value) anchor.x = opt.value.x;
+        if ('y' in opt.value) anchor.y = opt.value.y;
+
+        opt.value = [{
+            anchor: anchor,
+            handleLeft: {x: anchor.x - 25, y: anchor.y},
+            handleRight: {x: anchor.x + 25, y: anchor.y},
+        }];
+
         key = new Key(opt);
-        key.value = 'value' in opt ? opt.value : this.getValue(opt.time);//??
 
         this.keyLine.addKey(key);
 
@@ -216,7 +234,7 @@ p.addKey = function (opt, skipHistory) {
 
 
 
-p._applyEase = function (p, pos) {
+p._calcEase = function (p, pos) {
 
     var l = p.length / 2;
 
@@ -227,7 +245,7 @@ p._applyEase = function (p, pos) {
         }
     }
 
-    return p.slice(0, 2);
+    return {x: p[0], y: p[1]};
 
     function count(i) {
 
@@ -236,4 +254,81 @@ p._applyEase = function (p, pos) {
     }
 };
 
+p._focusHandler = function (de) {
 
+    de = de || this._currHandledDe;
+    this._currHandledDe = de;
+
+    if (!this._currHandledDe) return this._blurHandler();
+
+    if (!this._handler) {
+        this._handler = new Transhand();
+        this._handler.on('change', this._onChangeHandler, this);
+    }
+
+
+    var transformSave;
+    if (de.style.transform) {
+        transformSave = de.style.transform;
+        de.style.transform = '';
+    }
+
+    var br = de.getBoundingClientRect();
+
+    de.style.transform = transformSave;
+
+    var handOpt = {
+        type: 'curver',
+        base: {
+            x: br.left,
+            y: br.top,
+            w: br.width,
+            h: br.height,
+        },
+        params: {}
+    };
+
+    var p = handOpt.params;
+    this._endParams.forEach(function (param) {
+
+        switch (param.name) {
+            case 'x': p.tx = parseFloat(param.getValue()); break;
+            case 'y': p.ty = parseFloat(param.getValue()); break;
+            case 'scaleX': p.sx = parseFloat(param.getValue()); break;
+            case 'scaleY': p.sy = parseFloat(param.getValue()); break;
+            case 'rotationZ': p.rz = parseFloat(param.getValue()) / 180 * Math.PI; break;
+            case 'transformOriginX': p.ox = parseFloat(param.getValue()) / 100; break;
+            case 'transformOriginY': p.oy = parseFloat(param.getValue()) / 100; break;
+            case 'bezier':
+                var value = param.getValue();
+                p.tx = value.x;
+                p.ty = value.y;
+            break;
+        }
+    });
+    
+    this._handler.setup({
+        hand: handOpt,
+    });
+    this._handler.activate();
+
+    am.deHandlerCont.appendChild(this._handler.domElem);
+};
+
+p._blurHandler = function () {
+
+    this._currHandledDe = undefined;
+
+    this.emit('blurHandler');
+
+    if (this._handler && this._handler.domElem && this._handler.domElem.parentNode) {
+
+        this._handler.deactivate();
+        this._handler.domElem.parentNode.removeChild(this._handler.domElem);
+    }
+};
+
+p._onChangeHandler = function (points) {
+
+
+};

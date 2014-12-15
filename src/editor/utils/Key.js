@@ -28,7 +28,7 @@ function Key(opt) {
     this._onDeselectAllKeys = this._onDeselectAllKeys.bind(this);
     this._onTranslateSelectedKeys = this._onTranslateSelectedKeys.bind(this);
 
-    this._deMenu = amgui.createDropdown({
+    this._deDropdown = amgui.createDropdown({
         options: ['ease', 'delete'],
         onSelect: this._onSelectDropdown,
     });
@@ -39,12 +39,6 @@ function Key(opt) {
     if (this.ease) {
         this.ease.on('change', this._onChangeEase);
     }
-
-    // amgui.bindDropdown({
-    //     deTarget: this.domElem,
-    //     deMenu: this._deMenu,
-    //     asContextMenu: true
-    // });
 
     this._dragger = amgui.makeDraggable({
         deTarget: this.domElem,
@@ -246,10 +240,12 @@ p.renderEaseToLine = function (ctx, start, width) {
 
     ctx.stroke();
     ctx.restore();
-}
+};
 
+p.getDropdown = function () {
 
-
+    return this._deDropdown;
+};
 
 
 
@@ -305,11 +301,11 @@ p._onTranslateSelectedKeys = function (offset) {
 
 p.dispose = function () {
 
-    this._deMenu.removeEventListener('select', this._onSelectDropdown);
+    this._deDropdown.removeEventListener('select', this._onSelectDropdown);
     am.timeline.removeListener('changeTape', this._onChangeTape);
     am.timeline.removeListener('deselectAllKeys', this._onDeselectAllKeys);
     am.timeline.removeListener('translateSelectedKeys', this._onTranslateSelectedKeys);
 
-    if (this._deMenu.parentNode) this._deMenu.parentNode.removeChild(this._deMenu); 
+    if (this._deDropdown.parentNode) this._deDropdown.parentNode.removeChild(this._deDropdown); 
 };
 

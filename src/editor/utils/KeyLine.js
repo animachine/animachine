@@ -38,8 +38,8 @@ function KeyLine (opt) {
             else {
                 return false;
             }
-        }.bind(this);
-    })
+        }.bind(this),
+    });
 }
 
 inherits(KeyLine, EventEmitter);

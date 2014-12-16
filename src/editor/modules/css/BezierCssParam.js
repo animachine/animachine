@@ -198,7 +198,6 @@ p.addKey = function (opt, skipHistory) {
         }
     }
     else {
-
         var anchor = this.getValue(opt.value);
 
         if ('x' in opt.value) anchor.x = opt.value.x;
@@ -232,8 +231,6 @@ p.addKey = function (opt, skipHistory) {
 
 
 
-
-
 p._calcEase = function (p, pos) {
 
     var l = p.length / 2;
@@ -256,7 +253,7 @@ p._calcEase = function (p, pos) {
 
 p._focusHandler = function (de) {
 
-    de = de || this._currHandledDe;
+    de = de || this.parentTrack._currHandledDe;
     this._currHandledDe = de;
 
     if (!this._currHandledDe) return this._blurHandler();
@@ -265,7 +262,6 @@ p._focusHandler = function (de) {
         this._handler = new Transhand();
         this._handler.on('change', this._onChangeHandler, this);
     }
-
 
     var transformSave;
     if (de.style.transform) {
@@ -277,38 +273,27 @@ p._focusHandler = function (de) {
 
     de.style.transform = transformSave;
 
-    var handOpt = {
-        type: 'curver',
-        base: {
-            x: br.left,
-            y: br.top,
-            w: br.width,
-            h: br.height,
-        },
-        params: {}
-    };
+    var points = [];
 
-    var p = handOpt.params;
-    this._endParams.forEach(function (param) {
+    this.keyLine.forEachKeys(function (key) {
 
-        switch (param.name) {
-            case 'x': p.tx = parseFloat(param.getValue()); break;
-            case 'y': p.ty = parseFloat(param.getValue()); break;
-            case 'scaleX': p.sx = parseFloat(param.getValue()); break;
-            case 'scaleY': p.sy = parseFloat(param.getValue()); break;
-            case 'rotationZ': p.rz = parseFloat(param.getValue()) / 180 * Math.PI; break;
-            case 'transformOriginX': p.ox = parseFloat(param.getValue()) / 100; break;
-            case 'transformOriginY': p.oy = parseFloat(param.getValue()) / 100; break;
-            case 'bezier':
-                var value = param.getValue();
-                p.tx = value.x;
-                p.ty = value.y;
-            break;
-        }
+        key.value.forEach(function (point, idx) {
+
+            points.push({
+                anchor: {x: point.anchor.x, x: point.anchor.y, },
+                handlerLeft: {x: point.handlerLeft.x, x: point.handlerLeft.y},
+                handlerRight: {x: point.handlerRight.x, x: point.handlerRight.y},
+            });
+        });
     });
+
+    var handOpt = ;
     
     this._handler.setup({
-        hand: handOpt,
+        hand: {
+            type: 'curver',
+            base: points: points
+        },
     });
     this._handler.activate();
 
@@ -328,7 +313,48 @@ p._blurHandler = function () {
     }
 };
 
-p._onChangeHandler = function (points) {
+p._onChangeHandler = function (change) {
 
+    var idx = change.idx, key;
 
+    for (var i = 0, l = this.keyLine._keys.length; i < l, ++i) {
+
+        key = this.keyLine._keys[i];
+
+        if (key.value.length > idx) {
+
+            idx -= key.value.length;
+        }
+        else {
+            break;
+        }
+    }
+
+    if (change.type === 'add') {
+
+        key.value.splice(idx, 0, {
+            anchor: {x: change.point.anchor.x, y: change.point.anchor.y},
+            handlerLeft: {x: change.point.handlerLeft.x, y: change.point.handlerLeft.y},
+            handlerRight: {x: change.point.handlerRight.x, y: change.point.handlerRight.y},
+        });
+    }
+    else if (change.type === 'remove') {
+        
+        key.value.splice(idx, 1);
+
+        if (key.value.length === 0) {
+
+            this.keyLine.removeKey(key);
+        }
+    },
+    else if (change.type === 'edit') {
+
+        var point = key.value[idx];
+        point.anchore.x = change.point.anchor.x;
+        point.anchore.y = change.point.anchor.y;
+        point.handlerLeft.x = change.point.handlerLeft.x;
+        point.handlerLeft.y = change.point.handlerLeft.y;
+        point.handlerRight.x = change.point.handlerRight.x;
+        point.handlerRight.y = change.point.handlerRight.y;
+    }
 };

@@ -280,19 +280,21 @@ p._focusHandler = function (de) {
         key.value.forEach(function (point, idx) {
 
             points.push({
-                anchor: {x: point.anchor.x, x: point.anchor.y, },
-                handlerLeft: {x: point.handlerLeft.x, x: point.handlerLeft.y},
-                handlerRight: {x: point.handlerRight.x, x: point.handlerRight.y},
+                anchor: {x: point.anchor.x, y: point.anchor.y},
+                handlerLeft: {x: point.handlerLeft.x, y: point.handlerLeft.y},
+                handlerRight: {x: point.handlerRight.x, y: point.handlerRight.y},
+                style: {
+                    anchoreFill: idx !== 0 ? 'navajowhite' : undefined, 
+                },
+                linked: point.linked,
             });
         });
     });
-
-    var handOpt = ;
     
     this._handler.setup({
         hand: {
             type: 'curver',
-            base: points: points
+            points: points,
         },
     });
     this._handler.activate();
@@ -302,14 +304,9 @@ p._focusHandler = function (de) {
 
 p._blurHandler = function () {
 
-    this._currHandledDe = undefined;
-
-    this.emit('blurHandler');
-
     if (this._handler && this._handler.domElem && this._handler.domElem.parentNode) {
 
         this._handler.deactivate();
-        this._handler.domElem.parentNode.removeChild(this._handler.domElem);
     }
 };
 
@@ -317,7 +314,7 @@ p._onChangeHandler = function (change) {
 
     var idx = change.idx, key;
 
-    for (var i = 0, l = this.keyLine._keys.length; i < l, ++i) {
+    for (var i = 0, l = this.keyLine._keys.length; i < l; ++i) {
 
         key = this.keyLine._keys[i];
 
@@ -336,6 +333,7 @@ p._onChangeHandler = function (change) {
             anchor: {x: change.point.anchor.x, y: change.point.anchor.y},
             handlerLeft: {x: change.point.handlerLeft.x, y: change.point.handlerLeft.y},
             handlerRight: {x: change.point.handlerRight.x, y: change.point.handlerRight.y},
+            linked: change.point.linked,
         });
     }
     else if (change.type === 'remove') {
@@ -346,7 +344,7 @@ p._onChangeHandler = function (change) {
 
             this.keyLine.removeKey(key);
         }
-    },
+    }
     else if (change.type === 'edit') {
 
         var point = key.value[idx];
@@ -356,5 +354,8 @@ p._onChangeHandler = function (change) {
         point.handlerLeft.y = change.point.handlerLeft.y;
         point.handlerRight.x = change.point.handlerRight.x;
         point.handlerRight.y = change.point.handlerRight.y;
+        point.linked = change.point.linked;
     }
+
+    this._focusHandler();
 };

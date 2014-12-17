@@ -129,7 +129,7 @@ p.getSave = function () {
             timescale: this._timebar.timescale,
             length: this._timebar.length,
         },
-        tracks: []
+        tracks: [],
     };
 
     this._tracks.forEach(function (track) {

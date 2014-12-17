@@ -131,7 +131,7 @@ p.useSave = function(save) {
     }
 };
 
-p.getScriptKeys = function () {
+p.getScriptKeys = function (runnable) {
 
     var keys = [];
 
@@ -140,7 +140,7 @@ p.getScriptKeys = function () {
         var k = {
             time: key.time,
             options: {
-                ease: key.ease.getEaser(),
+                ease: runnable ? key.ease.getEaser() : key.ease.getScript(),
             }
         };
         k.options[this.name] = key.value;
@@ -148,7 +148,7 @@ p.getScriptKeys = function () {
     }, this);
 
     return _.sortBy(keys, 'time');
-}
+};
 
 p.getValue = function (time) {
 

@@ -51,7 +51,7 @@ am.open = function (save) {
     
         return alertUnsupportedBrowsers();
     }
-setTimeout(function(){am.timeline.pause();}, 300);
+    
     am._init();
 
     if (save) {
@@ -363,7 +363,7 @@ function onSelectWithDomPicker(de) {
 
 function createAmRoot() {
 
-    // $('body').css('opacity', 0)
+    $('body').css('opacity', 0)
         // .mouseenter(function () {$('body').css('opacity', 1)})
         // .mouseleave(function () {$('body').css('opacity', .23)});
     

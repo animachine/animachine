@@ -2,7 +2,7 @@
 
 var EventEmitter = require('eventman');
 var inherits = require('inherits');
-var bezierEasing = require('bezier-easing');
+var BezierEasing = require('bezier-easing');
 var defineCompactProperty = require('./defineCompactProperty');
 var dialogEaseOptions = require('./dialogEaseOptions');
 
@@ -14,6 +14,8 @@ function Ease(opt) {
     this._points = []
     this.points = [0, 0, 1, 1];
     this._easer;
+
+    this.on('change.rough', this._refreshEaser, this);
 
     if (opt) {
         this.useSave(opt);
@@ -49,7 +51,8 @@ Object.defineProperties(p, {
 
             p.length = 0;
             p.push.apply(this._points, v);
-            this._easer = new GreenSockGlobals.Ease(bezierEasing(p[0], p[1], p[2], p[3]));
+            
+            this._refreshEaser()
 
             this.emit('change');
         },
@@ -60,16 +63,12 @@ Object.defineProperties(p, {
     }
 });
 
-defineCompactProperty(p, {name: 'roughEase', type: 'boolean', startValue: false});
-defineCompactProperty(p, {name: 'roughStrength', type: 'float', startValue: 1});
-defineCompactProperty(p, {name: 'roughPoints', type: 'int', startValue: 20});
-defineCompactProperty(p, {name: 'roughClamp', type: 'boolean', startValue: false});
-defineCompactProperty(p, {name: 'roughRandomise', type: 'boolean', startValue: true});
-defineCompactProperty(p, {name: 'roughTaper', type: 'string', startValue: 'none'});
-
-
-
-
+defineCompactProperty(p, {name: 'roughEase', type: 'boolean', startValue: false, evtName: 'change.rough.ease'});
+defineCompactProperty(p, {name: 'roughStrength', type: 'float', startValue: 1, evtName: 'change.rough.strength'});
+defineCompactProperty(p, {name: 'roughPoints', type: 'int', startValue: 20, evtName: 'change.rough.points'});
+defineCompactProperty(p, {name: 'roughClamp', type: 'boolean', startValue: false, evtName: 'change.rough.clamp'});
+defineCompactProperty(p, {name: 'roughRandomise', type: 'boolean', startValue: true, evtName: 'change.rough.randomise'});
+defineCompactProperty(p, {name: 'roughTaper', type: 'string', startValue: 'none', evtName: 'change.rough.taper'});
 
 
 
@@ -99,11 +98,51 @@ p.getRatio = function (p) {
 p.getEaser = function () {
 
     return this._easer;
-}
+};
+
+p.getScript = function () {
+
+    var base = 'new Ease(BezierEasing('+this.points.join()+'))';
+
+    if (this.roughEase) {
+
+        var roughOpt = {
+            ease: '{{ease}}',
+            strength: this.roughStrength,
+            points: this.roughPoints,
+            clamp: this.roughClamp,
+            randomise: this.roughRandomise,
+            taper: this.roughTaper,
+        };
+        roughOpt = JSON.stringify(roughOpt);
+        //this is for avoid the quotes around the constructor call
+        roughOpt = roughOpt.replace('"{{ease}"', base);
+
+        return 'new RoughEase('+roughOpt+')';
+    }
+    else {
+        return base;
+    }
+};
 
 p.clone = function () {
 
     return new Ease(this);
+};
+
+p.match = function (ease) {
+
+    return ease.type === this.type &&
+        ease.points[0] === this.points[0] &&
+        ease.points[1] === this.points[1] &&
+        ease.points[2] === this.points[2] &&
+        ease.points[3] === this.points[3] &&
+        ease.roughEase === this.roughEase &&
+        ease.roughStrength === this.roughStrength &&
+        ease.roughPoints === this.roughPoints &&
+        ease.roughClamp === this.roughClamp &&
+        ease.roughRandomise === this.roughRandomise &&
+        ease.roughTaper === this.roughTaper;
 };
 
 
@@ -118,4 +157,25 @@ p.showOptionsDialog = function () {
         onChangeRoughRandomise: function (v) {this.roughRandomise = v}.bind(this),
         onChangeRoughTaper: function (v) {this.roughTaper = v}.bind(this),
     });
+};
+
+
+
+
+
+p._refreshEaser = function () {
+
+    this._easer = new GreenSockGlobals.Ease(BezierEasing(p[0], p[1], p[2], p[3]));
+
+    if (this.roughEase) {
+
+        this._easer = new RoughEase({
+            ease: this._easer,
+            strength: this.roughStrength,
+            points: this.roughPoints,
+            clamp: this.roughClamp,
+            randomise: this.roughRandomise,
+            taper: this.roughTaper,
+        });
+    }
 };

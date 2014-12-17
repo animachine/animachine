@@ -189,61 +189,7 @@ p.useSave = function (save) {
     }
 };
 
-p.getScript = function () {
-
-    var timelines = [], code = '', optionLine, selectors;
-
-    this._endParams.forEach(function (param) {
-
-        if (!param.hidden) {
-            timelines.push(param.getScriptKeys());
-        }
-    });
-
-    //merge timelines if it's possible
-    for (var i = 0; i < timelines.length; ++i) {
-        for (var j = 0; j < timelines.length; ++j) {
-
-            if (i !== j && timelines[i].length === timelines[j].length) {
-
-                var match = timelines[i].every(function (key, idx) {
-
-                    return key.time === timelines[j][idx].time;
-                });
-
-                if (match) {
-
-                    timelines[i].forEach(function (key, idx) {
-
-                        _.assign(key, timelines[j][idx]);
-
-                        timelines.splice(j, idx);
-                        if (--j < i) {
-                            --i;
-                        }
-                    });
-                }
-            } 
-        }
-    }
-
-    optionLine = {
-        direction: "normal",
-        duration: am.timeline.length
-    };
-
-    selectors = this._selectors.join(',').replace('\\','\\\\');
-
-    code = Mustache.render(mstPlayer, {
-        paramKeys: JSON.stringify(paramKeys),
-        optionLine: JSON.stringify(optionLine),
-        selectors: selectors
-    });
-
-    return code;
-};
-
-p._getScriptParams = function () {
+p._getScriptParams = function (runnable) {
 
     var params = [];
 
@@ -254,7 +200,7 @@ p._getScriptParams = function () {
         var tl = new TimelineMax(),
             lastTime = 0;
 
-        var param = param.getScriptKeys().map(function (key) {
+        var param = param.getScriptKeys(runnable).map(function (key) {
 
             key.duration = (key.time - lastTime)/1000;
             lastTime = key.time;
@@ -304,12 +250,12 @@ p._getScriptParams = function () {
         params.splice(params.indexOf(toz), 1);
         params.push(to);
     }
-}
+};
 
 p.getPlayer = function () {
 
     var rootTl = new TimelineMax().pause(),
-        scriptParams = this._getScriptParams(),
+        scriptParams = this._getScriptParams(true),
         selectedElems = this._selectedElems;
 
     scriptParams.forEach(function (param) {
@@ -325,6 +271,59 @@ p.getPlayer = function () {
     });
 
     return rootTl;
+};
+
+p.getScript = function () {
+
+    var timelines = [], code = '', optionLine, selectors,
+        scriptParams = this._getScriptParams(false);
+
+    scriptParams.forEach(function (param) {
+
+        timelines.push(param);
+    });
+
+    //TODO: merge timelines if it's possible
+    // for (var i = 0; i < timelines.length; ++i) {
+    //     for (var j = 0; j < timelines.length; ++j) {
+
+    //         if (i !== j && timelines[i].length === timelines[j].length) {
+
+    //             var match = timelines[i].every(function (iKey, idx) {
+
+    //                 var jKey = timelines[j][idx];
+
+    //                 return iKey.time === jKey.time && iKey.ease.match(jKey.ease);
+    //             });
+
+    //             if (match) {
+
+    //                 timelines[i].forEach(function (key, idx) {
+
+    //                     _.assign(key, timelines[j][idx]);
+
+    //                     timelines.splice(j, idx);
+    //                     if (--j < i) {
+    //                         --i;
+    //                     }
+    //                 });
+    //             }
+    //         } 
+    //     }
+    // }
+
+    selectors = JSON.stringify(this._selectors);
+    timelines = JSON.stringify(timelines);
+    //remove quotes around the Ease constructor calls
+    //TODO: do this somehow nicer
+    timelines = timelines.replace(/"ease":"(.*?)"/, '"ease":$1');
+
+    code = Mustache.render(mstPlayer, {
+        timelines: timelines,
+        animTargets: selectors,
+    });
+
+    return code;
 };
 
 p.addParam = function (opt, skipHistory) {
@@ -683,18 +682,18 @@ p._showSelectedElems = function () {
 
 p._switchFromTranslateToBezier = function () {
 
-    var paramX = this.getParam('x'),
-        paramY = this.getParam('y'),
-        keysX = paramX.getSave().keys,
-        keysY = paramY.getSave().keys,
+    var xParam = this.getParam('x'),
+        yParam = this.getParam('y'),
+        keysX = xParam.getSave().keys,
+        keysY = yParam.getSave().keys,
         bezierKeys = [],
         times = _.uniq(_.pluck(keysX, 'time').concat(_.pluck(keysY, 'time'))).sort(),
         oldBezierKeys = this.__savedBezierKeys || [];
 
     times.forEach(function (time) {
 
-        var x = parseFloat(paramX.getValue(time)),
-            y = parseFloat(paramY.getValue(time)),
+        var x = parseFloat(xParam.getValue(time)),
+            y = parseFloat(yParam.getValue(time)),
             oldKey = _.find(oldBezierKeys, {time: time, anchor: {x:x, y:y}});
 
         bezierKeys.push(oldKey || {
@@ -707,10 +706,14 @@ p._switchFromTranslateToBezier = function () {
         });
     });
 
-    this.addParam({
+    var bezierParam = this.addParam({
         name: 'bezier',
         keys: bezierKeys,
     });
+
+    xParam.hidden = true;
+    yParam.hidden = true;
+    bezierParam.hidden = false;
 };
 
 p._switchFromBezierToTranslate = function () {
@@ -736,14 +739,18 @@ p._switchFromBezierToTranslate = function () {
         });
     });
 
-    this.addParam({
+    var xParam = this.addParam({
         name: 'x',
         keys: xKeys,
     });
-    this.addParam({
+    var yParam = this.addParam({
         name: 'y',
         keys: yKeys,
     });
+
+    xParam.hidden = false;
+    yParam.hidden = false;
+    bezierParam.hidden = true;
 };
 
 

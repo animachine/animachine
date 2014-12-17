@@ -1,14 +1,8 @@
 function () {
 
-    var player,
-        animation,
-        isInited = false,
-        animations = [],
-        timelines = {{{timelines}}},
-        optionLine = {{{optionLine}}},
-        animTargets = {{{animTargets}}};
-
-    var rootTl = TimelineMax();
+    var timelines = {{{timelines}}},
+        animTargets = {{{animTargets}}},
+        rootTl = TimelineMax();
 
 
     timelines.forEach(function (timeline) {
@@ -20,7 +14,7 @@ function () {
         
         timeline.forEach(function (key, idx) {
 
-            tl.to(animTargets, (key.time - prevTime) / 1000, key, idx === 0 ? 0 : undefined);
+            tl.to(animTargets, key.duration, key.options);
         });
     });
 

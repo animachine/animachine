@@ -29,18 +29,23 @@ module.exports = InlineEaseEditor;
 
 p.show = function (opt) {
 
-    if (!opt.key || !opt.key.ease) return;
+    if (!opt.key || (!opt.key.ease && !opt.eases)) return;
 
     this._key = opt.key;
     this._nextKey = opt.nextKey;
+    this._eases = opt.eases ? opt.eases.slice() : [opt.key.ease];
 
-    this._points[0] = this._key.ease.points[0];
-    this._points[1] = this._key.ease.points[1];
-    this._points[2] = this._key.ease.points[2];
-    this._points[3] = this._key.ease.points[3];
+    this._points[0] = this._eases[0].points[0];
+    this._points[1] = this._eases[0].points[1];
+    this._points[2] = this._eases[0].points[2];
+    this._points[3] = this._eases[0].points[3];
 
     this._key.ease.on('change', this._onChangeEase);
-    window.addEventListener('click', this._onClickWindow);
+
+    this._eases.forEach(function (ease) {
+
+        ease.on('change', this._onChangeEase);
+    });
 
     this._render();
 
@@ -49,9 +54,12 @@ p.show = function (opt) {
 
 p.hide = function () {
 
-    if (this._key) {
+    if (this._eases) {
 
-        this._key.ease.removeListener('change', this._onChangeEase);
+        this._eases.forEach(function (ease) {
+
+            ease.off('change', this._onChangeEase);
+        });
     }
 
     window.removeEventListener('click', this._onClickWindow);
@@ -98,7 +106,10 @@ p._setPoint = function (pidx, x, y) {
 
     this._points[pidx] = x;
     this._points[pidx+1] = y;
-    this._key.ease.points = this._points;
+
+    this._eases.forEach(function (ease) {
+        ease.points = this._points;
+    });
 };
 
 

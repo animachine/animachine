@@ -11,6 +11,7 @@ module.exports = function (_amgui) {
     };
 };
 
+var buff = [];
 
 function createCursorFromText(opt) {
 
@@ -29,6 +30,30 @@ function createCursorFromText(opt) {
     opt.rotateOriginY = opt.rotateOriginY || 0;
     opt.text = opt.text || 'A';
     
+    var buffered = buff.find(function(b) {
+
+        if (b.opt.width === opt.width &&
+            b.opt.height === opt.height &&
+            b.opt.hotspotX === opt.hotspotX &&
+            b.opt.hotspotY === opt.hotspotY &&
+            b.opt.textX === opt.textX &&
+            b.opt.textY === opt.textY &&
+            b.opt.fontFamily === opt.fontFamily &&
+            b.opt.fontSize === opt.fontSize &&
+            b.opt.color === opt.color &&
+            b.opt.rotate === opt.rotate &&
+            b.opt.rotateOriginX === opt.rotateOriginX &&
+            b.opt.rotateOriginY === opt.rotateOriginY &&
+            b.opt.text === opt.text)
+        {
+            return true;
+        }
+    });
+
+    if (buffered) {
+
+        return buffered.url;
+    }
   
     var canvas = document.createElement('canvas'),
         ctx = canvas.getContext('2d');
@@ -62,7 +87,13 @@ function createCursorFromText(opt) {
         ctx.fillRect(opt.hotspotX, opt.hotspotY, 1, 1);
     }
     
-    var uri = canvas.toDataURL();
- 
-    return 'url(\'' + uri + '\') '+opt.hotspotX+' '+opt.hotspotY+', auto';
+    var uri = canvas.toDataURL(),
+        url = 'url(\'' + uri + '\') '+opt.hotspotX+' '+opt.hotspotY+', auto';
+
+    buff.push({
+        opt: opt,
+        url: url,
+    });
+
+    return url;
 }

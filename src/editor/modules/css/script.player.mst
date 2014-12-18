@@ -1,9 +1,8 @@
-function () {
-
+function (opt) {
+    
     var timelines = {{{timelines}}},
         animTargets = {{{animTargets}}},
         rootTl = TimelineMax();
-
 
     timelines.forEach(function (timeline) {
 

@@ -16,6 +16,8 @@ function Timeline(opt) {
     EventEmitter.call(this);
     this.setMaxListeners(1100);
 
+    this.inputs = {};
+    
     this._headerH = 23;
 
     this._onSelectTrack = this._onSelectTrack.bind(this);
@@ -360,7 +362,44 @@ p.pause = function () {
 p.screenXToTime = function (screenX) {
 
     return this._timebar.screenXToTime(screenX);
-}
+};
+
+p.addInput = function (path, value) {
+
+    var obj = this.inputs;
+
+    if (typeof(path) !== 'string') {
+        //TODO: throw a detailed error
+        throw Error();
+    }
+
+    path = path.split('.');
+
+    path.forEach(function (name, idx, arr) {
+
+        if (idx === arr.length-1) {
+
+            obj[name] = value;
+        }
+        else {
+            obj = _.isPlainObject(obj[name]) ? obj[name] : {};
+        }
+    });
+
+    this.emit('change.inputs');
+};
+
+p.setInputs = function (inputs) {
+
+    if (!_.isPlainObject(inputs)) {
+        //TODO: throw a detailed error
+        throw Error();
+    }
+
+    this.inputs = inputs;
+
+    this.emit('change.inputs');
+};
 
 
 

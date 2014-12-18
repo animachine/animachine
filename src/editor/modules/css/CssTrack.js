@@ -964,7 +964,12 @@ p._isAllParamsHaveKey = function (time) {
 
 
 
-
+// am.anims.myAnim.create({
+//     targets: {
+//         head: maci.$head,
+//         floor: '#ground2',
+//     }
+// });
 
 
 
@@ -982,9 +987,16 @@ p._selectElements = function () {
 
     this._selectors.forEach(function (selector) {
 
-        var items = am.deRoot.querySelectorAll(selector);
-        items = Array.prototype.slice.call(items);
-        list = list.concat(items);
+        if (selector.type === 'css') {
+
+            var items = am.deRoot.querySelectorAll(selector);
+            items = Array.prototype.slice.call(items);
+            list = list.concat(items);
+        }
+        else if (selector.type === 'input') {
+
+
+        }
     });
 
     this._selectedElems = list;

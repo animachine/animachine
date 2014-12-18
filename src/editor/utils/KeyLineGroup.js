@@ -104,6 +104,22 @@ p._onChangeKeyLine = function (key) {
     this.emit('change');
 };
 
+p._onDblClick = function (e) {
+
+    var time = am.timeline.screenXToTime(e.screenX),
+        prevKey = this.getPrevKey(time),
+        nextKey = this.getNextKey(time);
+
+    if (prevKey && nextKey) {
+
+        am.timeline.inlineEaseEditor.show({
+            key: prevKey,
+            nextKey: nextKey,
+            eases: _.pluck(prevKey._subkeys, 'ease')
+        });
+    }
+};
+
 
 
 

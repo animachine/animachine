@@ -211,6 +211,8 @@ p.addKey = function (opt, skipHistory) {
 
         key = new Key(opt);
 
+        key.on('prerender', this._onKeyPrerender, this);
+
         this.keyLine.addKey(key);
 
         if (!skipHistory) {
@@ -228,6 +230,8 @@ p.addKey = function (opt, skipHistory) {
 
     return key;
 };
+
+//TODO removeKey -> key.off('prerender', this._onKeyPrerender, this);
 
 
 
@@ -310,6 +314,11 @@ p._blurHandler = function () {
     }
 };
 
+
+
+
+
+
 p._onChangeHandler = function (change) {
 
     var idx = change.idx, key;
@@ -358,4 +367,19 @@ p._onChangeHandler = function (change) {
     }
 
     this._focusHandler();
+};
+
+p._onKeyPrerender = function (ctx, start, width, key) {
+
+    for (var i = 1; i < key.value.length; ++i) {
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.strokeStyle = 'deepskyblue';
+        ctx.fillStyle = 'deepskyblue';
+        ctx.lineWidth = 1;
+        ctx.arc(start, key._height/2, 3, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.restore();
+    }
 };

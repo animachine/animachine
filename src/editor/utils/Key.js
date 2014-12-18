@@ -21,7 +21,7 @@ function Key(opt) {
             color: '#eee'
         },
         circle: {}
-    }
+    };
 
     this._onSelectDropdown = this._onSelectDropdown.bind(this);
     this._onChangeEase = this._onChangeEase.bind(this);
@@ -190,6 +190,8 @@ p.renderToLine = function (ctx, start, width) {
         r = 2,
         fixStart = ~~start + 0.5,
         isSelected = this._isSelected;
+
+    this.emit('prerender', ctx, fixStart, width, key);
     
     if (line) {
         ctx.save();
@@ -217,9 +219,11 @@ p.renderToLine = function (ctx, start, width) {
         ctx.stroke();
         ctx.restore();
     }
+
+    this.emit('postrender', ctx, fixStart, width);
 };
 
-p.renderEaseToLine = function (ctx, start, width) {
+p.renderEaseToLine = function (ctx, start, width, key) {
 
     if (!this.ease) return;
 

@@ -64,6 +64,19 @@ p.reset = function () {
     this.value = this._defaultValue;
 };
 
+p.setSuggestions = function (suggestions) {
+
+    if (this._suggestionEngine) {
+
+        this._suggestionEngine.clear();
+        this._suggestionEngine.local = suggestions;
+        this._suggestionEngine.initialize(true);
+    }
+    else {
+        this._prepareSuggestions(suggestions);
+    }
+};
+
 
 
 
@@ -103,82 +116,43 @@ p._createBase = function () {
     this._input.style.paddingRight =  '2px';
 };
 
-p._prepareSuggestions = function (suggestions, typeaheadOptions, datasetOptions) {
+p._prepareSuggestions = function (suggestions) {
 
-    var states = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.obj.whitespace(datasetOptions.displayKey),
+    this._suggestionEngine = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         // `states` is an array of state names defined in "The Basics"
-        local: suggestions
+        local: suggestions, 
     });
 
     // kicks off the loading/processing of `local` and `prefetch`
-    states.initialize();
+    this._suggestionEngine.initialize();
+
+    var template = [
+        '<div class="guess" style="padding: 2px;color:'+amgui.color.textColor+';background-color:'+amgui.color.bg1+';">',
+          '<span>{{{value}}}</span>',
+        '</div>'].join('');
 
     amgui.callOnAdded(this._input, function () {
 
-        $(this._input).typeahead(_.defaults(typeaheadOptions, {
+        $(this._input).typeahead({
                 hint: true,
                 highlight: true,
                 minLength: 0
-            }),
-            _.defaults(datasetOptions, {
+            },{
                 name: 'states',
                 displayKey: 'value',
                 // `ttAdapter` wraps the suggestion engine in an adapter that
                 // is compatible with the typeahead jQuery plugin
-                source: states.ttAdapter(),
+                source: this._suggestionEngine.ttAdapter(),
                 templates: {
-                    // suggestion: Handlebars.compile([
-                    // '<div class="guess" style="box-shadow:-2px 2px 17px 2px rgba(50, 50, 50, 0.75);margin-bottom: 2px;width:290px;position:relative;left:-90px;font-size:10pt;background-color:#dadada; font-family: \'Open Sans\', \'Helvetica Neue\', \'Helvetica\', Helvetica, Arial, sans-serif;">',
-                    //   '<span><code style="font-size:16px;">{{{value}}}</code> – {{{type}}}</span>',
-                    //   '<br><span>{{{description}}}</span>',
-                    // '</div>'].join(''))
+                    suggestion: function (context) {
+                        return Mustache.render(template, context);
+                    }
                 }
-            }))
-            // .on('typeahead:autocompleted', function (e, obj, name) {
-            //     console.log('autocompleted', e, obj, name)
-            // })
+            })
             .on('typeahead:opened', function () {console.log('onOpened')})
             .on('typeahead:autocompleted', function () {console.log('onAutocompleted')})
-            .on('typeahead:selected', function () {console.log('onSelected')})
-    }, this)
-/*
-    var states = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        local: suggestions
-    });
-
-    states.initialize();
-
-    $(this._input).typeahead(_.defaults(typeaheadOptions, {
-            hint: true,
-            highlight: true,
-            minLength: 0
-        }),
-        _.defaults(datasetOptions, {
-            name: 'states',
-            displayKey: 'property',
-            // `ttAdapter` wraps the suggestion engine in an adapter that
-            // is compatible with the typeahead jQuery plugin
-            source: states.ttAdapter(),
-            templates: {
-                // suggestion: Handlebars.compile([
-                // '<div class="guess" style="box-shadow:-2px 2px 17px 2px rgba(50, 50, 50, 0.75);margin-bottom: 2px;width:290px;position:relative;left:-90px;font-size:10pt;background-color:#dadada; font-family: \'Open Sans\', \'Helvetica Neue\', \'Helvetica\', Helvetica, Arial, sans-serif;">',
-                //   '<span><code style="font-size:16px;">{{{value}}}</code> – {{{type}}}</span>',
-                //   '<br><span>{{{description}}}</span>',
-                // '</div>'].join(''))
-            }
-        }));
-    };
-    */
+            .on('typeahead:selected', function () {console.log('onSelected')});
+    }, this);
 };
-
-
-!(function ($) {
-
-  'use strict';
-
-
-}(jQuery));

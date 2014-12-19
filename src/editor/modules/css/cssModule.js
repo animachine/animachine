@@ -27,7 +27,7 @@ exports.init = function () {
             console.log('selector:', selector);
 
             var track = new CssTrack({
-                selectors: [selector],
+                selectors: [{type: 'css', value: selector}],
                 name: selector
             });
 

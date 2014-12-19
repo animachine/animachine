@@ -4,13 +4,13 @@ var amgui = require('../../amgui');
 var Dialog = require('../../utils/Dialog');
 var StringInput = require('../../utils/StringInput');
 
-var inpParamName,
+var inited = false,
+    inpParamName,
     dialog = new Dialog({
         title: 'New param',
     }); 
 module.exports = dialog;
 
-createContent();
 dialog.addButton('add', function () {
 
     if (inpParamName.value) {
@@ -23,8 +23,10 @@ dialog.addButton('add', function () {
 dialog.addButton('close', 'hide');
 
 dialog.on('show', function () {
+    
+    createContent();
 
-  inpParamName.value = '';
+    inpParamName.value = '';
 });
 
 
@@ -34,33 +36,19 @@ dialog.addProperty({name: 'track'});
 
 function createContent() {
 
-    var template = [
-        '<div class="guess" style="padding: 2px;color:'+amgui.color.textColor+';background-color:'+amgui.color.bg1+';">',
-          '<span>{{{property}}}</span>',
-          // ' – <small>{{{media}}}</small>',
-          // '<br><span>{{{description}}}</span>',
-        '</div>'].join('')
+    if (inited) return;
+    inited = true;
+
+    var suggestions = getCssParams().map(function (suggestion) {
+      return {value: suggestion.property};
+    });
 
     inpParamName = new StringInput({
         parent: dialog.deContent,
         placeholder: 'css parameter name',
-        suggestions: getCssParams(),
-        typeaheadOptions: {
-            hint: true,
-            highlight: true,
-            minLength: 0
-        },
-        datasetOptions: {
-            displayKey: 'property',
-            // `ttAdapter` wraps the suggestion engine in an adapter that
-            // is compatible with the typeahead jQuery plugin
-            templates: {
-                suggestion: function (context) {
-                    return Mustache.render(template, context);
-                }
-            }
-        }
+        suggestions: suggestions
     });
+window.inpParamName = inpParamName;
 }
 
 

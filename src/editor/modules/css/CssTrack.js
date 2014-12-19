@@ -11,7 +11,7 @@ var CssParamGroup = require('./CssParamGroup');
 var dialogTrackOptions = require('./dialogTrackOptions');
 var dialogNewParam = require('./dialogNewParam');
 var mstPlayer = require('./script.player.mst');
-
+window.dialogNewParam = dialogNewParam;
 
 
 function CssTrack(opt) {
@@ -181,7 +181,7 @@ p.useSave = function (save) {
         save.endParams.forEach(this.addParam, this);
     }
 
-    this._selectElements();
+    this._refreshSelectedElems();
 
     if (save.isShowingParams) {
 
@@ -508,7 +508,7 @@ p.select = function (opt) {
     window.addEventListener('resize', this._onWindowResize);
     window.addEventListener('scroll', this._onWindowScroll);
 
-    this._selectElements();
+    this._refreshSelectedElems();
 
     if (this._selectedElems.length) {
 
@@ -918,7 +918,7 @@ p._onChangeSelectors = function (selectors) {
     this._selectors.length = 0;
     this._selectors = this._selectors.concat(selectors);
 
-    this._selectElements();
+    this._refreshSelectedElems();
     this._refreshPlayer();
 
     if (this._selectedElems.indexOf(this._currHandledDe) === -1) {
@@ -981,7 +981,7 @@ p.isOwnedDomElem = function (de) {
     return this._selectedElems.indexOf(de) !== -1;
 };
 
-p._selectElements = function () {
+p._refreshSelectedElems = function () {
 
     var list = [];
 
@@ -989,17 +989,37 @@ p._selectElements = function () {
 
         if (selector.type === 'css') {
 
-            var items = am.deRoot.querySelectorAll(selector);
-            items = Array.prototype.slice.call(items);
-            list = list.concat(items);
+            add(selector.value);
         }
         else if (selector.type === 'input') {
 
+            var parent = am.timeline.inputs;
 
+            selector.value.split('.').every(function (name) {
+
+                return parent = parent[name]
+            });
+
+            if (parent) {
+                add(parent);
+            }
         }
     });
 
     this._selectedElems = list;
+
+    function add(item) {
+
+        if (typeof(item) === 'string') {
+            
+            var items = am.deRoot.querySelectorAll(selector);
+            items = Array.prototype.slice.call(items);
+            list = list.concat(items);
+        }
+        else {
+            list.push(item);
+        }
+    }
 };
 
 p.dispose = function () {

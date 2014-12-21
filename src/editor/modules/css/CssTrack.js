@@ -698,11 +698,11 @@ p._switchFromTranslateToBezier = function () {
 
         bezierKeys.push(oldKey || {
             time: time,
-            point: {
+            value: [{
                 anchor: {x: x, y: y},
-                handlerLeft: {x: x, y: y},
-                handlerRight: {x: x, y: y},
-            }
+                handleLeft: {x: x, y: y},
+                handleRight: {x: x, y: y},
+            }]
         });
     });
 
@@ -731,11 +731,11 @@ p._switchFromBezierToTranslate = function () {
 
         xKeys.push(oldKey || {
             time: time,
-            value: bezierKey.anchor.x + 'px',
+            value: bezierKey.value[0].anchor.x + 'px',
         });
         yKeys.push(oldKey || {
             time: time,
-            value: bezierKey.anchor.y + 'px',
+            value: bezierKey.value[0].anchor.y + 'px',
         });
     });
 
@@ -751,6 +751,8 @@ p._switchFromBezierToTranslate = function () {
     xParam.hidden = false;
     yParam.hidden = false;
     bezierParam.hidden = true;
+
+    this.focusHandler();
 };
 
 
@@ -1012,7 +1014,7 @@ p._refreshSelectedElems = function () {
 
         if (typeof(item) === 'string') {
             
-            var items = am.deRoot.querySelectorAll(selector);
+            var items = am.deRoot.querySelectorAll(item);
             items = Array.prototype.slice.call(items);
             list = list.concat(items);
         }

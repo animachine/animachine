@@ -14,7 +14,6 @@ function KeyLine (opt) {
 
     this._onChangeKey = this._onChangeKey.bind(this);
     this._onKeyNeedsRemove = this._onKeyNeedsRemove.bind(this);
-    this._onChangeTimescale = this._onChangeTimescale.bind(this);
     this._onDblClick = this._onDblClick.bind(this);
     this._onMouseDown = this._onMouseDown.bind(this);
     
@@ -22,7 +21,7 @@ function KeyLine (opt) {
 
     amgui.callOnAdded(this.domElem, this._render.bind(this));
 
-    am.timeline.on('changeTimescale', this._onChangeTimescale);
+    am.timeline.on(['changeTimescale', 'changeTape'], this._render, this);
 
     var dropdownBinding = amgui.bindDropdown({
         deTarget: this.domElem,
@@ -252,11 +251,6 @@ p._onChangeKey = function (key) {
 
     this._render();
     this.emit('change');
-};
-
-p._onChangeTimescale = function (key) {
-
-    this._render();
 };
 
 p._onKeyNeedsRemove = function (key) {

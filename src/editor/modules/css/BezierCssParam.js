@@ -4,6 +4,7 @@ var inherits = require('inherits');
 var CssParam = require('./CssParam');
 var Key = require('../../utils/Key');
 var amgui = require('../../amgui');
+var Transhand = require('transhand');
 
 function BezierCssParam (opt) {
 
@@ -24,16 +25,16 @@ Object.defineProperties(p, {
         set: function (v) {
 
             if (this._parentTrack) {
-                this._parentTrack.off('focusHandler', this._focusHandler, this);
-                this._parentTrack.off('blurHandler', this._blueHandler, this);
+                this._parentTrack.off('focusHandler', this._focusTransformer, this);
+                this._parentTrack.off('blurHandler', this._blurTransformer, this);
             }
 
             this._parentTrack = v;
 
 
             if (this._parentTrack) {
-                this._parentTrack.on('focusHandler', this._focusHandler, this);
-                this._parentTrack.on('blurHandler', this._blueHandler, this);
+                this._parentTrack.on('focusHandler', this._focusTransformer, this);
+                this._parentTrack.on('blurHandler', this._blurTransformer, this);
             }
         },
         get: function () {
@@ -41,15 +42,7 @@ Object.defineProperties(p, {
             return this._parentTrack;
         }
     }
-})
-
-
-
-
-
-
-
-
+});
 
 
 
@@ -94,8 +87,6 @@ p.getScriptKeys = function () {
 };
 
 p.getValue = function (time) {
-
-    return 0;
 
     if (!_.isNumber(time)) {
         time = am.timeline.currTime;
@@ -181,33 +172,11 @@ p.addKey = function (opt, skipHistory) {
                 am.history.saveChain(key, [this.addKey, this, key, true], [this.addKey, this, opt, true], 'edit key');
             }
 
-            var diff;
-
-            if ('x' in opt.value) {
-                diff = opt.value.x - key.value[0].anchor.x;
-                key.value[0].anchor.x += diff;
-                key.value[0].handlerLeft.x += diff;
-                key.value[0].handlerLeft.x += diff;
-            }
-            if ('y' in opt.value) {
-                diff = opt.value.y - key.value[0].anchor.y;
-                key.value[0].anchor.y += diff;
-                key.value[0].handlerLeft.y += diff;
-                key.value[0].handlerLeft.y += diff;
-            }
+            key.value.length = 0;
+            [].push.apply(key.value, opt.value);
         }
     }
     else {
-        var anchor = this.getValue(opt.value);
-
-        if ('x' in opt.value) anchor.x = opt.value.x;
-        if ('y' in opt.value) anchor.y = opt.value.y;
-
-        opt.value = [{
-            anchor: anchor,
-            handleLeft: {x: anchor.x - 25, y: anchor.y},
-            handleRight: {x: anchor.x + 25, y: anchor.y},
-        }];
 
         key = new Key(opt);
 
@@ -255,16 +224,16 @@ p._calcEase = function (p, pos) {
     }
 };
 
-p._focusHandler = function (de) {
+p._focusTransformer = function (de) {
 
     de = de || this.parentTrack._currHandledDe;
     this._currHandledDe = de;
 
-    if (!this._currHandledDe) return this._blurHandler();
+    if (!this._currHandledDe) return this._blurTransformer();
 
-    if (!this._handler) {
-        this._handler = new Transhand();
-        this._handler.on('change', this._onChangeHandler, this);
+    if (!this._transformer) {
+        this._transformer = new Transhand();
+        this._transformer.on('change', this._onChangeTransformer, this);
     }
 
     var transformSave;
@@ -285,8 +254,8 @@ p._focusHandler = function (de) {
 
             points.push({
                 anchor: {x: point.anchor.x, y: point.anchor.y},
-                handlerLeft: {x: point.handlerLeft.x, y: point.handlerLeft.y},
-                handlerRight: {x: point.handlerRight.x, y: point.handlerRight.y},
+                handleLeft: {x: point.handleLeft.x, y: point.handleLeft.y},
+                handleRight: {x: point.handleRight.x, y: point.handleRight.y},
                 style: {
                     anchoreFill: idx !== 0 ? 'navajowhite' : undefined, 
                 },
@@ -295,22 +264,22 @@ p._focusHandler = function (de) {
         });
     });
     
-    this._handler.setup({
+    this._transformer.setup({
         hand: {
             type: 'curver',
             points: points,
         },
     });
-    this._handler.activate();
+    this._transformer.activate();
 
-    am.deHandlerCont.appendChild(this._handler.domElem);
+    am.deHandlerCont.appendChild(this._transformer.domElem);
 };
 
-p._blurHandler = function () {
+p._blurTransformer = function () {
 
-    if (this._handler && this._handler.domElem && this._handler.domElem.parentNode) {
+    if (this._transformer && this._transformer.domElem && this._transformer.domElem.parentNode) {
 
-        this._handler.deactivate();
+        this._transformer.deactivate();
     }
 };
 
@@ -319,7 +288,7 @@ p._blurHandler = function () {
 
 
 
-p._onChangeHandler = function (change) {
+p._onChangeTransformer = function (change) {
 
     var idx = change.idx, key;
 
@@ -340,8 +309,8 @@ p._onChangeHandler = function (change) {
 
         key.value.splice(idx, 0, {
             anchor: {x: change.point.anchor.x, y: change.point.anchor.y},
-            handlerLeft: {x: change.point.handlerLeft.x, y: change.point.handlerLeft.y},
-            handlerRight: {x: change.point.handlerRight.x, y: change.point.handlerRight.y},
+            handleLeft: {x: change.point.handleLeft.x, y: change.point.handleLeft.y},
+            handleRight: {x: change.point.handleRight.x, y: change.point.handleRight.y},
             linked: change.point.linked,
         });
     }
@@ -359,14 +328,14 @@ p._onChangeHandler = function (change) {
         var point = key.value[idx];
         point.anchore.x = change.point.anchor.x;
         point.anchore.y = change.point.anchor.y;
-        point.handlerLeft.x = change.point.handlerLeft.x;
-        point.handlerLeft.y = change.point.handlerLeft.y;
-        point.handlerRight.x = change.point.handlerRight.x;
-        point.handlerRight.y = change.point.handlerRight.y;
+        point.handleLeft.x = change.point.handleLeft.x;
+        point.handleLeft.y = change.point.handleLeft.y;
+        point.handleRight.x = change.point.handleRight.x;
+        point.handleRight.y = change.point.handleRight.y;
         point.linked = change.point.linked;
     }
 
-    this._focusHandler();
+    this._focusTransformer();
 };
 
 p._onKeyPrerender = function (ctx, start, width, key) {

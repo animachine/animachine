@@ -191,7 +191,7 @@ p.renderToLine = function (ctx, start, width) {
         fixStart = ~~start + 0.5,
         isSelected = this._isSelected;
 
-    this.emit('prerender', ctx, fixStart, width, key);
+    this.emit('prerender', ctx, fixStart, width, this);
     
     if (line) {
         ctx.save();
@@ -220,10 +220,10 @@ p.renderToLine = function (ctx, start, width) {
         ctx.restore();
     }
 
-    this.emit('postrender', ctx, fixStart, width);
+    this.emit('postrender', ctx, fixStart, width, this);
 };
 
-p.renderEaseToLine = function (ctx, start, width, key) {
+p.renderEaseToLine = function (ctx, start, width) {
 
     if (!this.ease) return;
 

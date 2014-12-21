@@ -165,7 +165,7 @@ p.showOptionsDialog = function () {
 
 p._refreshEaser = function () {
 
-    this._easer = new GreenSockGlobals.Ease(BezierEasing(p[0], p[1], p[2], p[3]));
+    this._easer = new GreenSockGlobals.Ease(BezierEasing.apply(null, this._points));
 
     if (this.roughEase) {
 

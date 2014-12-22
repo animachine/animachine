@@ -117,8 +117,8 @@ p.getValue = function (time) {
         var point = same.value[0];
 
         ret = {
-            x: point.anchore.x + 'px',
-            y: point.anchore.y + 'px',
+            x: point.anchor.x + 'px',
+            y: point.anchor.y + 'px',
         };
     }
     else {
@@ -126,13 +126,13 @@ p.getValue = function (time) {
         if (after && before) {
 
             var p = (time - before.time) / (after.time - before.time), 
-                av = after.value, 
                 bv = before.value,
+                av = after.value, 
                 points = [];
 
             p = before.ease.getRatio(p);
 
-            bv.value.forEach(function (point, idx) {
+            bv.forEach(function (point, idx) {
 
                 if (idx !== 0) {
                     points.push(point.handleLeft.x, point.handleLeft.y);
@@ -140,8 +140,8 @@ p.getValue = function (time) {
                 points.push(point.anchor.x, point.anchor.y);
                 points.push(point.handleRight.x, point.handleRight.y);
             });
-            points.push(bv.value[0].handleLeft.x, bv.value[0].handleLeft.y);
-            points.push(bv.value[0].anchor.x, bv.value[0].anchor.y);
+            points.push(av[0].handleLeft.x, av[0].handleLeft.y);
+            points.push(av[0].anchor.x, av[0].anchor.y);
 
 
 
@@ -257,7 +257,7 @@ p._focusTransformer = function (de) {
                 handleLeft: {x: point.handleLeft.x, y: point.handleLeft.y},
                 handleRight: {x: point.handleRight.x, y: point.handleRight.y},
                 style: {
-                    anchoreFill: idx !== 0 ? 'navajowhite' : undefined, 
+                    anchorFill: idx !== 0 ? 'navajowhite' : undefined, 
                 },
                 linked: point.linked,
             });
@@ -268,6 +268,10 @@ p._focusTransformer = function (de) {
         hand: {
             type: 'curver',
             points: points,
+            offset: {
+                x: br.left,
+                y: br.top,
+            }
         },
     });
     this._transformer.activate();
@@ -326,8 +330,8 @@ p._onChangeTransformer = function (change) {
     else if (change.type === 'edit') {
 
         var point = key.value[idx];
-        point.anchore.x = change.point.anchor.x;
-        point.anchore.y = change.point.anchor.y;
+        point.anchor.x = change.point.anchor.x;
+        point.anchor.y = change.point.anchor.y;
         point.handleLeft.x = change.point.handleLeft.x;
         point.handleLeft.y = change.point.handleLeft.y;
         point.handleRight.x = change.point.handleRight.x;

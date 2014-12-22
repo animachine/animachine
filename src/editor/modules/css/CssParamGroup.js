@@ -18,7 +18,6 @@ function CssParamGroup (opt) {
     this._params = [];
 
     this._merged = opt.merged || false;
-    this._bezier = opt.bezier || false;
 
     this._refreshHeights();
 }
@@ -58,26 +57,21 @@ Object.defineProperties(p, {
             this._merged = v;
 
             this.optionLine.buttons.tgglMerge.setToggle(this._merged);
+            this.optionLine.buttons.tgglChildren.inactive = this._merged;
+            
+            if (this._merged) {
+                
+                this.hideSubparams(); 
+                this._makeKeyLinesSymmetric();
+            } 
+            else {
+                this.showSubparams();
+            }
+
         },
         get: function () {
 
             return this._merged;
-        }
-    },
-    bezier: {
-
-        set: function (v) {
-
-            v = !!v;
-            if (v === this._bezier) return;
-
-            this._bezier = v;
-
-            this.optionLine.buttons.bezier.setToggle(this._bezier);
-        },
-        get: function () {
-
-            return this._bezier;
         }
     }
 });
@@ -133,7 +127,7 @@ p.removeParam = function (param) {
 p.moveParam = function () {
 
     
-}
+};
 
 p.getParam = function (paramName) {
 
@@ -161,6 +155,19 @@ p.toggleKey = function (time) {
     }
 };
 
+p._makeKeyLinesSymmetric = function (time) {
+
+    times = [];
+
+    this._params.forEach(function (param) {
+        
+        [].push.apply(times, param.getKeyTimes());
+    });
+
+    _.uniq(times).forEach(this.addKeyAll, this);
+};
+
+
 p.addKeyAll = function (time) {
 
     time = time || am.timeline.currTime;
@@ -169,7 +176,7 @@ p.addKeyAll = function (time) {
 
         if (param instanceof CssParamGroup) {
 
-            param.addKeyAll();
+            param.addKeyAll(time);
         }
         else {
             param.addKey({time: time});

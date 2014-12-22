@@ -15,7 +15,7 @@ var map = {
     'selectAll': ['ctrl+c'],
     'undo': ['ctrl+z'],
     'save': ['ctrl+s'],
-    'save': ['ctrl+shift+s'],
+    'saveAs': ['ctrl+shift+s'],
     'play/pause': ['space'],
     'groupElements': ['ctrl+g'],
     'show/hidePanels': ['tab'],

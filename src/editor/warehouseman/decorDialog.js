@@ -415,13 +415,7 @@ function decorDialog(whm) {
 
             buttons.forEach(function (btn) {
 
-                if (btn.storage === whm._currStorage) {
-
-                    btn.domElem.fixHighlight();
-                }
-                else {
-                    btn.domElem.removeFixHighlight();
-                }
+                btn.domElem.fixedHighlight = btn.storage === whm._currStorage;
             });
         };
 

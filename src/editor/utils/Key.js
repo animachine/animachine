@@ -205,7 +205,6 @@ p.renderToLine = function (ctx, start, width) {
     }
 
     if (circle) {
-
         ctx.save();
         ctx.beginPath();
         ctx.strokeStyle = isSelected ? 'gold' : (circle.color || '#eee');
@@ -234,7 +233,7 @@ p.renderEaseToLine = function (ctx, start, width) {
     ctx.save();
     ctx.beginPath();
     ctx.strokeStyle = color;
-    ctx.strokeWidth = 1;
+    ctx.lineWidth = 1.2;
     ctx.moveTo(start, height);
 
     for (var i = 0; i < width; ++i) {

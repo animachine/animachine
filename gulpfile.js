@@ -15,6 +15,8 @@ var browserify = require('browserify');
 var watchify = require('watchify');
 var runSequence = require('run-sequence');
 var stringify = require('stringify');
+var exec = require('child_process').exec;
+var to5ify = require("6to5ify");
 
 var paths = {
   bower: 'bower_components/',
@@ -85,7 +87,8 @@ gulp.task('js', function () {
 
   watchify.args.debug = true;
   var bundler = watchify(browserify('./src/editor/main.js', watchify.args))
-    .transform(stringify(['.css', '.mst']));
+    .transform(stringify(['.css', '.mst']))
+    .transform(to5ify);
 
   bundler.on('update', rebundle);
 
@@ -135,6 +138,40 @@ gulp.task('connect', function() {
   });
 });
 
+gulp.task('init',  function (cb) {
+
+  var cmds = [
+    'git pull',
+    // 'npm update'
+    
+    'cd node_modules/eventman',
+    'git pull',
+    // 'npm update',
+    'cd node_modules/transhand',
+    'git pull',
+    // 'npm update',
+    // 'cd ../..',
+  ];
+
+  call();
+
+  function call() {
+
+    var cmd = cmds.shift();
+
+    if (!cmd) {
+      return gulp.run('dev');
+    };
+
+    console.log('run', cmd,  '...');
+
+    exec(cmd, function (err, stdout, stderr) {
+      console.log(stdout);
+      console.log(stderr);
+      call();
+    });
+  }
+});
 
 gulp.task('dev',  function (cb) {
   runSequence('clean', 'css', ['init-build', 'init-build-chrome'], 'init-build-chrome-assets', 'vendor', 'connect', 'js', 'js-chrome', cb);

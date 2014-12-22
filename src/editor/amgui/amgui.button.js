@@ -59,7 +59,7 @@ function createBtn(opt) {
 
     opt.backgroundColor = opt.backgroundColor || amgui.color.bg0;
 
-    var de = amgui.createDiv();
+    var de = amgui.createDiv(opt);
     de.style.height = (opt.height || amgui.LINE_HEIGHT) + 'px';
     de.style.padding = '0 15px';
     de.style.cursor = 'pointer';
@@ -82,18 +82,7 @@ function createBtn(opt) {
     
     de.text = opt.text || opt.caption || 'button';
 
-    de.addEventListener('mouseenter', onMOver);
-    de.addEventListener('mouseleave', onMOut);
-
-    function onMOver() {
-
-        de.style.backgroundColor = amgui.color.bgHover;
-    }
-
-    function onMOut() {
-        
-        de.style.backgroundColor = opt.backgroundColor;
-    }
+    behaviorBtn(de, opt);
 
     if (opt.parent) {
         opt.parent.appendChild(de);
@@ -110,6 +99,17 @@ function createIconBtn(opt) {
     de.style.cursor = 'pointer';
     de.style.overflow = 'hidden';
 
+    behaviorBtn(de, opt);
+
+    return de;
+}
+
+function behaviorBtn(de, opt) {
+
+    var _inactive = false,
+        _fixedHighlight = false,
+        _mouseOver = false;
+
     de.addEventListener('mouseenter', onMOver);
     de.addEventListener('mouseleave', onMOut);
 
@@ -117,31 +117,56 @@ function createIconBtn(opt) {
         de.addEventListener('click', opt.onClick);
     }
 
+    Object.defineProperties(de, {
+
+        inactive: {
+            set: function () {
+
+                v = !!v;
+                if (_inactive === v) return;
+
+                _inactive = v;
+                refreshDe();
+            },
+            get: function () {
+
+                return _inactive;
+            }
+        },
+        fixedHighlight: {
+            set: function () {
+
+                v = !!v;
+                if (_fixedHighlight === v) return;
+
+                _fixedHighlight = v;
+                refreshDe();
+            },
+            get: function () {
+
+                return _fixedHighlight;
+            }
+        },
+    })
+
     function onMOver() {
 
-        de.style.background = amgui.color.bgHover;
+        _mouseOver = true;
+        refreshDe();
     }
 
     function onMOut() {
-        
-        if (isFixedHighlight) return;
 
-        de.style.background = 'none';
+        _mouseOver = false;
+        refreshDe();
     }
 
-    de.fixHighlight = function () {
+    function refreshDe() {
 
-        isFixedHighlight = true;
-        onMOver();
-    };
-
-    de.removeFixHighlight = function () {
-
-        isFixedHighlight = false;
-        onMOut();
-    };
-
-    return de;
+        de.style.opacity = _inactive ? .43 : 1;
+        de.style.pointerEvents = _inactive ? 'none' : 'auto';
+        de.style.background = (_mouseOver || _fixedHighlight) ? amgui.color.bgHover : 'none';
+    }
 }
 
 function createToggleIconBtn(opt) {

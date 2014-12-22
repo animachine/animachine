@@ -145,7 +145,7 @@ am._init = function () {
 
     window.addEventListener('click', onClickRoot);
 
-    Object.keys(modules).forEach(function (moduleName) {
+    Object.keys(modules).forEach( moduleName => {
 
         console.log('init', moduleName, 'module...');
 

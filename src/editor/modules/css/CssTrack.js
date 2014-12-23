@@ -477,10 +477,7 @@ p._prepareBuiltInGroup = function (paramName) {
 
         if (memberNames.length) {
 
-            memberNames.forEach(function (memberName) {
-
-                walk(memberName, newPath);
-            });
+            memberNames.forEach(memberName => walk(memberName, newPath));
         }
         else {
             var param = this.addParam({name: groupName}),

@@ -5,7 +5,7 @@ var inherits = require('inherits');
 var BezierEasing = require('bezier-easing');
 var defineCompactProperty = require('./defineCompactProperty');
 var dialogEaseOptions = require('./dialogEaseOptions');
-
+window.BezierEasing = BezierEasing;
 function Ease(opt) {
 
     EventEmitter.call(this);
@@ -116,7 +116,7 @@ p.getScript = function () {
         };
         roughOpt = JSON.stringify(roughOpt);
         //this is for avoid the quotes around the constructor call
-        roughOpt = roughOpt.replace('"{{ease}"', base);
+        roughOpt = roughOpt.replace('"{{ease}}"', base);
 
         return 'new RoughEase('+roughOpt+')';
     }
@@ -165,8 +165,7 @@ p.showOptionsDialog = function () {
 
 p._refreshEaser = function () {
 
-    // this._easer = new GreenSockGlobals.Ease(BezierEasing.apply(null, this._points.slice()));
-    this._easer = new GreenSockGlobals.Ease(() => Math.random());
+    this._easer = new GreenSockGlobals.Ease(BezierEasing(...this._points));
 
     if (this.roughEase) {
 

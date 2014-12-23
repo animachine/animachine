@@ -130,7 +130,7 @@ p.getValue = function (time) {
                 av = after.value, 
                 points = [];
 
-            p = before.ease.getRatio(p);
+            p = after.ease.getRatio(p);
 
             bv.forEach(function (point, idx) {
 

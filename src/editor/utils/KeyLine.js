@@ -268,7 +268,8 @@ p._onDblClick = function (e) {
 
         am.timeline.inlineEaseEditor.show({
             key: prevKey,
-            nextKey: nextKey
+            nextKey: nextKey,
+            eases: [nextKey.ease],
         });
     }
 };

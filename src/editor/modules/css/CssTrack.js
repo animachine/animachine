@@ -182,6 +182,7 @@ p.useSave = function (save) {
     }
 
     this._refreshSelectedElems();
+    this._refreshPlayer();
 
     if (save.isShowingParams) {
 
@@ -539,6 +540,10 @@ p.deselect = function () {
 };
 
 p.renderTime = function (time) {
+
+    if (time === undefined) {
+        time = am.timeline.currTime;
+    }
 
     if (this._selectors.length === 0) {
         return;

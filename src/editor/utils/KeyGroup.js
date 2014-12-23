@@ -171,11 +171,11 @@ p._refreshSelected = function () {
 
 p.dispose = function () {
 
-    this._deMenu.removeEventListener('select', this._onSelectDropdown);
+    this._deDropdown.removeEventListener('select', this._onSelectDropdown);
     am.timeline.removeListener('changeTape', this._onChangeTape);
     am.timeline.removeListener('deselectAllKeys', this._onDeselectAllKeys);
     am.timeline.removeListener('translateSelectedKeys', this._onTranslateSelectedKeys);
 
-    if (this._deMenu.parentNode) this._deMenu.parentNode.removeChild(this._deMenu); 
+    if (this._deDropdown.parentNode) this._deDropdown.parentNode.removeChild(this._deDropdown); 
 };
 

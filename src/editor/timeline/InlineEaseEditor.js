@@ -32,7 +32,6 @@ p.show = function (opt) {
     if (!opt.key || (!opt.key.ease && !opt.eases)) return;
 
     this._key = opt.key;
-    this._nextKey = opt.nextKey;
     this._eases = opt.eases ? opt.eases.slice() : [opt.key.ease];
 
     this._points[0] = this._eases[0].points[0];
@@ -40,9 +39,7 @@ p.show = function (opt) {
     this._points[2] = this._eases[0].points[2];
     this._points[3] = this._eases[0].points[3];
 
-    this._key.ease.on('change', this._onChangeEase);
-
-    this._eases.forEach(function (ease) {
+    this._eases.forEach(ease => {
 
         ease.on('change', this._onChangeEase);
     });
@@ -56,7 +53,7 @@ p.hide = function () {
 
     if (this._eases) {
 
-        this._eases.forEach(function (ease) {
+        this._eases.forEach(ease => {
 
             ease.off('change', this._onChangeEase);
         });
@@ -75,12 +72,12 @@ p.hide = function () {
 p._render = function() {
 
     var key = this._key,
-        nextKey = key.getNextKey(),
+        prevKey = key.getPrevKey(),
         brKeyLine = key.parentKeyLine.domElem.getBoundingClientRect(),
         brParent = this.domElem.parentNode.getBoundingClientRect(),
         p = this._points,
-        x = ((key.time + am.timeline.start) * am.timeline.timescale) + brKeyLine.left,
-        w = (nextKey.time - key.time) * am.timeline.timescale,
+        x = am.timeline.timeToScreenX(prevKey ? prevKey.time : 0),
+        w = am.timeline.timeToScreenX(key.time) - x,
         h = this._height,
         d = '';
 
@@ -107,9 +104,7 @@ p._setPoint = function (pidx, x, y) {
     this._points[pidx] = x;
     this._points[pidx+1] = y;
 
-    this._eases.forEach(function (ease) {
-        ease.points = this._points;
-    });
+    this._eases.forEach(ease => ease.points = this._points);
 };
 
 

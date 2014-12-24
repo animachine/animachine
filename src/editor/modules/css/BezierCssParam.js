@@ -342,7 +342,7 @@ p._onChangeTransformer = function (change) {
     this._focusTransformer();
 };
 
-p._onKeyPrerender = function (ctx, start, width, key) {
+p._onKeyPrerender = function (ctx, key) {
 
     for (var i = 1; i < key.value.length; ++i) {
 

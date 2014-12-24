@@ -364,6 +364,16 @@ p.screenXToTime = function (screenX) {
     return this._timebar.screenXToTime(screenX);
 };
 
+p.timeToRenderPos = function (time) {
+
+    return (time + am.timeline.start) * am.timeline.timescale;
+};
+
+p.timeToScreenX = function (time) {
+
+    return this._timebar.domElem.getBoundingClientRect().left + this.timeToRenderPos(time);
+};
+
 p.addInput = function (path, value) {
 
     var obj = this.inputs;

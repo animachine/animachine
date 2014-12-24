@@ -107,15 +107,28 @@ p._onChangeKeyLine = function (key) {
 p._onDblClick = function (e) {
 
     var time = am.timeline.screenXToTime(e.screenX),
-        prevKey = this.getPrevKey(time),
-        nextKey = this.getNextKey(time);
+        key = this.getNextKey(time),
+        eases = [];
 
-    if (prevKey && nextKey) {
+    collectEases(key);
 
-        am.timeline.inlineEaseEditor.show({
-            key: prevKey,
-            nextKey: nextKey,
-            eases: _.pluck(prevKey._subkeys, 'ease')
+    if (key) {
+
+        am.timeline.inlineEaseEditor.show({key, eases});
+    }
+
+
+    function collectEases(key) {
+
+        key._subkeys.forEach(subKey => {
+
+            if (subKey instanceof KeyGroup) {
+
+                collectEases(subKey);
+            }
+            else {
+                eases.push(subKey.ease);
+            }
         });
     }
 };
@@ -130,7 +143,7 @@ p._refreshHeadKeyline = function () {
 
         this._refreshHeadKeylineRafId = requestAnimationFrame(this._delayedRefreshHeadKeyline);
     }
-}
+};
 
 p._delayedRefreshHeadKeyline = function () {
 
@@ -176,6 +189,8 @@ p._delayedRefreshHeadKeyline = function () {
         key.setSubkeys(keysOnTimes[idx]);
 
     }, this);
+
+    this._render();
 };
 
 

@@ -204,22 +204,12 @@ p.getKeyTimes = function () {
 p._render = function () {
 
     var canvas = this._canvas,
-        ctx = this._ctx,
-        tlStart = am.timeline.start,
-        tlTimescale = am.timeline.timescale;
+        ctx = this._ctx;
 
     canvas.width = am.timeline.width;
     canvas.height = this._height;
 
-    _.sortBy(this._keys, 'time').forEach(function (key, idx, arr) {
-
-        var start = (key.time + tlStart) * tlTimescale,
-            isLast = idx === arr.length - 1,
-            end = isLast ? start : (arr[idx+1].time + tlStart) * tlTimescale,
-            width = end - start;
-
-        key.renderToLine(ctx, start, width);
-    });
+    _.sortBy(this._keys, 'time').forEach(key => key.renderToLine(ctx));
 };
     
 p._sortKeys = function () {
@@ -261,16 +251,10 @@ p._onKeyNeedsRemove = function (key) {
 p._onDblClick = function (e) {
 
     var time = am.timeline.screenXToTime(e.screenX),
-        prevKey = this.getPrevKey(time),
-        nextKey = this.getNextKey(time);
+        key = this.getNextKey(time);
 
-    if (prevKey && nextKey) {
-
-        am.timeline.inlineEaseEditor.show({
-            key: prevKey,
-            nextKey: nextKey,
-            eases: [nextKey.ease],
-        });
+    if (key) {
+        am.timeline.inlineEaseEditor.show({key});
     }
 };
 

@@ -99,7 +99,7 @@ Object.defineProperties(p, {
             this.emit('changeTime', this);
         },
         get: function () {
-
+         
             return this._time;
         }
     },
@@ -111,10 +111,10 @@ Object.defineProperties(p, {
             this._value = v;
         },
         get: function () {
-
+         
             return this._value;
         }
-    }
+    },
 });
 
 
@@ -179,27 +179,29 @@ p.getNextKey = function (time) {
     return this.parentKeyLine.getNextKey(this.time);
 };
 
-p.renderToLine = function (ctx, start, width) {
-
-    this.renderEaseToLine(ctx, start, width);
+p.renderToLine = function (ctx) {
 
     var looks = this.looks,
         height = this._height,
+        keyPos = ~~am.timeline.timeToRenderPos(this.time) + 0.5,
+        prevKey = this.getPrevKey(),
+        prevKeyPos = am.timeline.timeToRenderPos(prevKey ? prevKey.time : 0),
         line = looks.line,
         circle = looks.circle,
         r = 2,
-        fixStart = ~~start + 0.5,
         isSelected = this._isSelected;
 
-    this.emit('prerender', ctx, fixStart, width, this);
+    this.renderEaseToLine(ctx);
+
+    this.emit('prerender', ctx, this);
     
     if (line) {
         ctx.save();
         ctx.beginPath();
         ctx.strokeStyle = isSelected ? 'gold' : (line.color || '#eee');
         ctx.lineWidth = line.width || 1;
-        ctx.moveTo(fixStart, 0);
-        ctx.lineTo(fixStart, height);
+        ctx.moveTo(keyPos, 0);
+        ctx.lineTo(keyPos, height);
         ctx.stroke();
         ctx.restore();
     }
@@ -210,7 +212,7 @@ p.renderToLine = function (ctx, start, width) {
         ctx.strokeStyle = isSelected ? 'gold' : (circle.color || '#eee');
         ctx.fillStyle = isSelected ? 'gold' : (circle.fillColor || '#eee');
         ctx.lineWidth = circle.width || 1;
-        ctx.arc(fixStart, height/2,
+        ctx.arc(keyPos, height/2,
             'r' in circle ? circle.r : r,
             'arcStart' in circle ? circle.arcStart : 0,
             'arcEnd' in circle ? circle.arcEnd : 2 * Math.PI);
@@ -219,26 +221,32 @@ p.renderToLine = function (ctx, start, width) {
         ctx.restore();
     }
 
-    this.emit('postrender', ctx, fixStart, width, this);
+    this.emit('postrender', ctx, this);
 };
 
-p.renderEaseToLine = function (ctx, start, width) {
+p.renderEaseToLine = function (ctx) {
 
     if (!this.ease) return;
 
     var ease = this.ease,
         color = (this.looks.ease && this.looks.ease.color) || 'rgba(225,225,225,.23)',
-        height = this._height;
+        height = this._height,
+        keyPos = am.timeline.timeToRenderPos(this.time),
+        prevKey = this.getPrevKey(),
+        prevKeyPos = am.timeline.timeToRenderPos(prevKey ? prevKey.time : 0),
+        width = keyPos - prevKeyPos;
+
+    if (width === 0) return;
 
     ctx.save();
     ctx.beginPath();
     ctx.strokeStyle = color;
     ctx.lineWidth = 1.2;
-    ctx.moveTo(start, height);
+    ctx.moveTo(prevKeyPos, height);
 
     for (var i = 0; i < width; ++i) {
 
-        ctx.lineTo(start + i, height - height * ease.getRatio(i/width));
+        ctx.lineTo(prevKeyPos + i, height - height * ease.getRatio(i/width));
     }
 
     ctx.stroke();

@@ -96,23 +96,9 @@ p.remove = function () {
     });
 };
 
-p.renderEaseToLine = function (ctx) {
+p.renderEaseToLine = function (ctx, start, width) {
 
-    var tlStart = am.timeline.start,
-        tlTimescale = am.timeline.timescale;
-
-    this._subkeys.forEach(function (key) {
-
-        var nextKey = key.getNextKey();
-
-        if (!nextKey) return;
-
-        var start = (key.time + tlStart) * tlTimescale,
-            end = (nextKey.time + tlStart) * tlTimescale,
-            width = end - start;
-
-        key.renderEaseToLine(ctx, start, width);
-    });
+    this._subkeys.forEach(key => key.renderEaseToLine(ctx));
 };
 
 

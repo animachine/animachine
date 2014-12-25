@@ -300,7 +300,7 @@ p._onChangeTransformer = function (change) {
 
         key = this.keyLine._keys[i];
 
-        if (key.value.length > idx) {
+        if (key.value.length <= idx) {
 
             idx -= key.value.length;
         }

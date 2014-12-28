@@ -246,9 +246,9 @@ p._getScriptParams = function (runnable) {
             });
         });
 
-        params.splice(params.indexOf(tox), 1);
-        params.splice(params.indexOf(toy), 1);
-        params.splice(params.indexOf(toz), 1);
+        if (tox) params.splice(params.indexOf(tox), 1);
+        if (toy) params.splice(params.indexOf(toy), 1);
+        if (toz) params.splice(params.indexOf(toz), 1);
         params.push(to);
     }
 };
@@ -612,8 +612,8 @@ p.focusHandler = function (de) {
             case 'transformOriginY': p.oy = parseFloat(param.getValue()) / 100; break;
             case 'bezier':
                 var value = param.getValue();
-                p.tx = value.x;
-                p.ty = value.y;
+                p.tx = parseFloat(value.x);
+                p.ty = parseFloat(value.y);
             break;
         }
     });
@@ -686,24 +686,27 @@ p._switchFromTranslateToBezier = function () {
 
     var xParam = this.getParam('x'),
         yParam = this.getParam('y'),
-        keysX = xParam.getSave().keys,
-        keysY = yParam.getSave().keys,
+        xKeys = xParam.getSave().keys,
+        yKeys = yParam.getSave().keys,
         bezierKeys = [],
-        times = _.uniq(_.pluck(keysX, 'time').concat(_.pluck(keysY, 'time'))).sort(),
+        times = _.uniq(_.pluck(xKeys, 'time').concat(_.pluck(yKeys, 'time'))).sort(),
         oldBezierKeys = this.__savedBezierKeys || [];
 
     times.forEach(function (time) {
 
         var x = parseFloat(xParam.getValue(time)),
             y = parseFloat(yParam.getValue(time)),
+            xKey = xParam.getKey(time),
+            yKey = yParam.getKey(time),
             oldKey = _.find(oldBezierKeys, {time: time, anchor: {x:x, y:y}});
 
         bezierKeys.push(oldKey || {
             time: time,
+            ease: (xKey && xKey.ease) || (yKey && yKey.ease),
             value: [{
-                anchor: {x: x, y: y},
-                handleLeft: {x: x, y: y},
-                handleRight: {x: x, y: y},
+                anchor: {x, y},
+                handleLeft: {x, y},
+                handleRight: {x, y},
             }]
         });
     });
@@ -715,6 +718,7 @@ p._switchFromTranslateToBezier = function () {
 
     xParam.hidden = true;
     yParam.hidden = true;
+    this._paramGroup.getParam('translate').hidden = true;
     bezierParam.hidden = false;
 };
 
@@ -731,13 +735,15 @@ p._switchFromBezierToTranslate = function () {
 
     bezierKeys.forEach(function (bezierKey) {
 
+        var lastPoint = _.last(bezierKey.value);
+
         xKeys.push(oldKey || {
             time: time,
-            value: bezierKey.value[0].anchor.x + 'px',
+            value: lastPoint.anchor.x + 'px',
         });
         yKeys.push(oldKey || {
             time: time,
-            value: bezierKey.value[0].anchor.y + 'px',
+            value: lastPoint.anchor.y + 'px',
         });
     });
 
@@ -752,6 +758,7 @@ p._switchFromBezierToTranslate = function () {
 
     xParam.hidden = false;
     yParam.hidden = false;
+    this._paramGroup.getParam('translate').hidden = false;
     bezierParam.hidden = true;
 
     this.focusHandler();
@@ -790,23 +797,44 @@ p._onChangeHandler = function(params, type) {
 
     var add = function (name, value) {
 
-        var param;
-
         if (name === 'x' || name === 'y') {
 
-            var param = this.getParam('bezier');
+            let bezierParam = this.getParam('bezier');
 
-            if (param && !param.hidden) {
+            if (bezierParam && !bezierParam.hidden) {
 
-                var keyOpt = {time: time};
-                keyOpt[name] = parseFloat(value);
-                param.addKey(keyOpt);
+                let key = bezierParam.getKey(time),
+                    keyOpt;
+
+                if (key) {
+
+                    keyOpt = key.getSave();
+                }
+                else {
+                    let {x, y} = bezierParam.getValue(time);
+                    //TODO bezierParam.inzertPoint(time, ...)
+                    keyOpt = {time, value: [{
+                        anchor: {x, y},
+                        handleLeft: {x, y},
+                        handleRight: {x, y},
+                    }]};
+                }
+
+                value = parseFloat(value);
+                let lastPoint = _.last(keyOpt.value),
+                    diff = value - lastPoint.anchor[name];
+
+                lastPoint.anchor[name] += diff;
+                lastPoint.handleLeft[name] += diff;
+                lastPoint.handleRight[name] += diff;
+
+                bezierParam.addKey(keyOpt);
 
                 return;
             }
         }
 
-        param = this.addParam({name: name});
+        var param = this.addParam({name: name});
 
         param.addKey({
             time: time,

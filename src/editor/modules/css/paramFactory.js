@@ -93,6 +93,9 @@ module.exports = {
                 input.max = 1;
                 break;
 
+            case 'bezier':
+                paramOpt.optionLine.inputs = [];
+                break;
         }
 
         if (defaultHidden.indexOf(opt.name) !== -1) {

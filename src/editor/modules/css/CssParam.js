@@ -92,6 +92,8 @@ Object.defineProperties(p, {
                 this.keyLine.show();
                 this.optionLine.show();
             }
+
+            this.emit('changeHeight');
         },
         get: function () {
 

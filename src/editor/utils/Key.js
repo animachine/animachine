@@ -128,7 +128,7 @@ Object.defineProperties(p, {
 p.getSave = function () {
 
     return {
-        value: this.value,
+        value: _.cloneDeep(this.value),
         time: this.time,
         ease: this.ease.getSave(),
     };

@@ -116,10 +116,7 @@ p.forEachKeys = function (fn, thisArg) {
 
 p.getKeyByTime = function (time) {
 
-    return this._keys.find(function(key) {
-
-        return key.time === time;
-    });
+    return this._keys.find(key => key.time === time);
 };
 
 p.getPrevKey = function (time) {

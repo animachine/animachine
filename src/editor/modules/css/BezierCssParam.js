@@ -56,10 +56,6 @@ p.getScriptKeys = function () {
 
     this.keyLine.forEachKeys(function (key) {
 
-        var nextKey = key.getNextKey();
-        
-        if(!nextKey) return;
-
         var values = [],
             k = {
                 time: key.time,
@@ -70,17 +66,20 @@ p.getScriptKeys = function () {
                     },
                     ease: key.ease.getEaser(),
                 }
-            };
+            },
+            prevKey = key.getPrevKey();
+
+        values.push(prevKey ? _.last(prevKey.value).anchor : key.value[0].anchor);
+        values.push(prevKey ? _.last(prevKey.value).handleRight : key.value[0].anchor);
 
         key.value.forEach(function (point, idx, arr) {
 
-            if (idx !== 0) values.push(point.handleLeft);
+            values.push(point.handleLeft);
             values.push(point.anchor);
             if (idx !== arr.length - 1) values.push(point.handleRight);
         });
 
-        values.push(nextKey.value[0].handleLeft);
-        values.push(nextKey.value[0].anchor);
+        keys.push(k);
     }, this);
 
     return _.sortBy(keys, 'time');
@@ -114,7 +113,7 @@ p.getValue = function (time) {
 
     if (same) {
 
-        var point = same.value[0];
+        let point = same.value[0];
 
         ret = {
             x: point.anchor.x + 'px',
@@ -125,25 +124,24 @@ p.getValue = function (time) {
 
         if (after && before) {
 
-            var p = (time - before.time) / (after.time - before.time), 
+            let p = (time - before.time) / (after.time - before.time), 
                 bv = before.value,
                 av = after.value, 
                 points = [];
 
             p = after.ease.getRatio(p);
 
-            bv.forEach(function (point, idx) {
+            points.push(bv[0].handleLeft.x, bv[0].handleLeft.y);
+            points.push(bv[0].anchor.x, bv[0].anchor.y);
+            
+            av.forEach(function (point, idx, arr) {
 
-                if (idx !== 0) {
-                    points.push(point.handleLeft.x, point.handleLeft.y);
-                }
+                points.push(point.handleLeft.x, point.handleLeft.y);
                 points.push(point.anchor.x, point.anchor.y);
-                points.push(point.handleRight.x, point.handleRight.y);
+                if (idx !== arr.length - 1) {
+                    points.push(point.handleRight.x, point.handleRight.y);
+                }
             });
-            points.push(av[0].handleLeft.x, av[0].handleLeft.y);
-            points.push(av[0].anchor.x, av[0].anchor.y);
-
-
 
             ret = this._calcEase(points, p);
         }
@@ -248,7 +246,7 @@ p._focusTransformer = function (de) {
 
     var points = [];
 
-    this.keyLine.forEachKeys(function (key) {
+    _.sortBy(this.keyLine._keys, 'time').forEach(function (key) {
 
         key.value.forEach(function (point, idx) {
 
@@ -344,14 +342,19 @@ p._onChangeTransformer = function (change) {
 
 p._onKeyPrerender = function (ctx, key) {
 
-    for (var i = 1; i < key.value.length; ++i) {
+    var prevKey = key.getPrevKey(),
+        start = prevKey ? prevKey.time : 0,
+        width = key.time - start,
+        step = width / key.value.length;
+
+    for (var i = 1; i < key.value.length - 1; ++i) {
 
         ctx.save();
         ctx.beginPath();
         ctx.strokeStyle = 'deepskyblue';
         ctx.fillStyle = 'deepskyblue';
         ctx.lineWidth = 1;
-        ctx.arc(start, key._height/2, 3, 0, 2 * Math.PI);
+        ctx.arc(start + step/i, key._height/2, 3, 0, 2 * Math.PI);
         ctx.stroke();
         ctx.restore();
     }

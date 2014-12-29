@@ -116,6 +116,9 @@ function createStepperKey(opt) {
     function createStepper(isLeft) {
 
         var deStepper = amgui.createIconBtn({
+            color: amgui.color.textInverse,
+            background: amgui.color.bgInverse,
+            backgroundHover: amgui.color.bgInverse,
             icon: isLeft ? 'angle-left' : 'angle-right',
             height: opt.height,
             width: stepperW,

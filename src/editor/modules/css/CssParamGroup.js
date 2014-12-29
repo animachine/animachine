@@ -67,7 +67,6 @@ Object.defineProperties(p, {
             else {
                 this.showSubparams();
             }
-
         },
         get: function () {
 
@@ -78,6 +77,20 @@ Object.defineProperties(p, {
 
 
 
+
+p.getSave = function () {
+
+    var save = CssParam.prototype.getSave.call(this);
+
+    save.merged = this.merged;
+};
+
+p.useSave = function (save) {
+
+    CssParam.prototype.useSave.call(this, save);
+
+    if ('merged' in save) save.merged = save.merged;
+};
 
 p.addParam = function (param) {
 

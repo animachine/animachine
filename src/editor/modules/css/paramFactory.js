@@ -131,6 +131,7 @@ module.exports = {
             optionLine: {
                 inputs: [],
             },
+            merged: true,
         };
 
         if (opt.name === 'translate') {

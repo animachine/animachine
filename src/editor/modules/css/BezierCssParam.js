@@ -79,6 +79,14 @@ p.getScriptKeys = function () {
             if (idx !== arr.length - 1) values.push(point.handleRight);
         });
 
+        //optimise and fix GSAP bug
+        if (values.every(v => v.x === values[0].x && v.y === values[0].y)) {
+
+            delete k.options.bezier;
+            k.options.x = values[0].x;
+            k.options.y = values[0].y;
+        }
+
         keys.push(k);
     }, this);
 
@@ -113,7 +121,7 @@ p.getValue = function (time) {
 
     if (same) {
 
-        let point = same.value[0];
+        let point = _.last(same.value);
 
         ret = {
             x: point.anchor.x + 'px',
@@ -121,7 +129,6 @@ p.getValue = function (time) {
         };
     }
     else {
-
         if (after && before) {
 
             let p = (time - before.time) / (after.time - before.time), 
@@ -131,8 +138,8 @@ p.getValue = function (time) {
 
             p = after.ease.getRatio(p);
 
-            points.push(bv[0].handleLeft.x, bv[0].handleLeft.y);
             points.push(bv[0].anchor.x, bv[0].anchor.y);
+            points.push(bv[0].handleRight.x, bv[0].handleRight.y);
             
             av.forEach(function (point, idx, arr) {
 
@@ -147,7 +154,7 @@ p.getValue = function (time) {
         }
         else if (before) {
             
-            ret = _.clone(before.value[0].anchor);
+            ret = _.clone(_.last(before.value).anchor);
         }
         else if (after) {
             
@@ -248,17 +255,26 @@ p._focusTransformer = function (de) {
 
     _.sortBy(this.keyLine._keys, 'time').forEach(function (key) {
 
-        key.value.forEach(function (point, idx) {
+        key.value.forEach(function (point, idx, arr) {
 
-            points.push({
-                anchor: {x: point.anchor.x, y: point.anchor.y},
-                handleLeft: {x: point.handleLeft.x, y: point.handleLeft.y},
-                handleRight: {x: point.handleRight.x, y: point.handleRight.y},
-                style: {
-                    anchorFill: idx !== 0 ? 'navajowhite' : undefined, 
-                },
-                linked: point.linked,
-            });
+            var srcKey = {
+                    anchor: {x: point.anchor.x, y: point.anchor.y},
+                    handleLeft: {x: point.handleLeft.x, y: point.handleLeft.y},
+                    handleRight: {x: point.handleRight.x, y: point.handleRight.y},
+                    linked: point.linked,
+                };
+
+            if (idx !== arr.length - 1) {
+
+                srcKey.style = {
+                    anchorFill: 'navajowhite', 
+                    anchorStroke: 'deepskyblue',
+                    handleFill: 'navajowhite', 
+                    handleStroke: 'deepskyblue', 
+                }
+            }
+            
+            points.push(srcKey);
         });
     });
     
@@ -267,8 +283,8 @@ p._focusTransformer = function (de) {
             type: 'curver',
             points: points,
             offset: {
-                x: br.left,
-                y: br.top,
+                x: br.left + br.width/2,
+                y: br.top + br.height/2,
             }
         },
     });
@@ -292,11 +308,13 @@ p._blurTransformer = function () {
 
 p._onChangeTransformer = function (change) {
 
-    var idx = change.idx, key;
+    var idx = change.idx, 
+        keys = _.sortBy(this.keyLine._keys, 'time'),
+        key;
 
-    for (var i = 0, l = this.keyLine._keys.length; i < l; ++i) {
+    for (var i = 0, l = keys.length; i < l; ++i) {
 
-        key = this.keyLine._keys[i];
+        key = keys[i];
 
         if (key.value.length <= idx) {
 
@@ -335,26 +353,26 @@ p._onChangeTransformer = function (change) {
         point.handleRight.x = change.point.handleRight.x;
         point.handleRight.y = change.point.handleRight.y;
         point.linked = change.point.linked;
+        
     }
 
-    this._focusTransformer();
+    key.emit('change');
 };
 
 p._onKeyPrerender = function (ctx, key) {
 
     var prevKey = key.getPrevKey(),
-        start = prevKey ? prevKey.time : 0,
-        width = key.time - start,
+        start = am.timeline.timeToRenderPos(prevKey ? prevKey.time : 0),
+        width = am.timeline.timeToRenderPos(key.time) - start,
         step = width / key.value.length;
 
-    for (var i = 1; i < key.value.length - 1; ++i) {
+    for (var i = 0; i < key.value.length - 1; ++i) {
 
         ctx.save();
         ctx.beginPath();
         ctx.strokeStyle = 'deepskyblue';
-        ctx.fillStyle = 'deepskyblue';
         ctx.lineWidth = 1;
-        ctx.arc(start + step/i, key._height/2, 3, 0, 2 * Math.PI);
+        ctx.arc(start + (step * (i+1)), key._height/2, 3, 0, 2 * Math.PI);
         ctx.stroke();
         ctx.restore();
     }

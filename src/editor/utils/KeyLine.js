@@ -9,8 +9,8 @@ function KeyLine (opt) {
     EventEmitter.call(this);
 
     this._keys = [];
-
     this._height = amgui.LINE_HEIGHT;
+    this._hidden = false;
 
     this._onChangeKey = this._onChangeKey.bind(this);
     this._onKeyNeedsRemove = this._onKeyNeedsRemove.bind(this);
@@ -24,7 +24,7 @@ function KeyLine (opt) {
     am.timeline.on(['changeTimescale', 'changeTape'], this._render, this);
 
     var dropdownBinding = amgui.bindDropdown({
-        deTarget: this.domElem,
+        deTarget: this._canvas,
         onOpening: function (e) {
 
             var key = this.getKeyUnderPos(e.screenX),
@@ -60,6 +60,27 @@ Object.defineProperties(p, {
 
             return this._keys.length;
         }
+    },
+    hidden: {
+        set: function (v) {
+
+            v = !!v;
+
+            if (v === this._hidden) return;
+
+            this._hidden = v;
+
+            if (this._hidden) {
+                this.hide();
+            }
+            else {
+                this.show();
+            }
+        },
+        get: function () {
+
+            return this._hidden;
+        }
     }
 });
 
@@ -74,8 +95,7 @@ p.addKey = function (key) {
     this._keys.push(key);
     key.parentKeyLine = this;
 
-    key.on('changeTime', this._onChangeKey);
-    key.on('changeEase', this._onChangeKey);
+    key.on('change', this._onChangeKey);
     key.on('select', this._onChangeKey);
     key.on('deselect', this._onChangeKey);
     key.on('needsRemove', this._onKeyNeedsRemove);
@@ -95,8 +115,7 @@ p.removeKey = function (key) {
     this._keys.splice(idx, 1);
     key.parentKeyLine = undefined;
     
-    key.removeListener('changeTime', this._onChangeKey);
-    key.removeListener('changeEase', this._onChangeKey);
+    key.removeListener('change', this._onChangeKey);
     key.removeListener('select', this._onChangeKey);
     key.removeListener('deselect', this._onChangeKey);
     key.removeListener('needsRemove', this._onKeyNeedsRemove);

@@ -108,7 +108,9 @@ function behaviorBtn(de, opt) {
 
     var _inactive = false,
         _fixedHighlight = false,
-        _mouseOver = false;
+        _mouseOver = false,
+        background = opt.background || 'none',
+        backgroundHover = opt.backgroundHover || amgui.color.bgHover;
 
     de.addEventListener('mouseenter', onMOver);
     de.addEventListener('mouseleave', onMOut);
@@ -147,7 +149,9 @@ function behaviorBtn(de, opt) {
                 return _fixedHighlight;
             }
         },
-    })
+    });
+
+    refreshDe();
 
     function onMOver() {
 
@@ -165,7 +169,7 @@ function behaviorBtn(de, opt) {
 
         de.style.opacity = _inactive ? .43 : 1;
         de.style.pointerEvents = _inactive ? 'none' : 'auto';
-        de.style.background = (_mouseOver || _fixedHighlight) ? amgui.color.bgHover : 'none';
+        de.style.background = (_mouseOver || _fixedHighlight) ? backgroundHover : background;
     }
 }
 
@@ -238,7 +242,7 @@ function createIcon(opt) {
     opt.size = opt.size || opt.height || amgui.LINE_HEIGHT;
     
     var de = amgui.createDiv();
-    de.style.color = amgui.color.text;
+    de.style.color = opt.color || amgui.color.text;
     de.style.width = (opt.width || opt.size) + 'px';
     de.style.height = (opt.height || opt.size) + 'px';
     de.style.lineHeight = opt.size + 'px';

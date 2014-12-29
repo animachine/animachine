@@ -96,7 +96,7 @@ Object.defineProperties(p, {
 
             this._time = parseInt(v);
 
-            this.emit('changeTime', this);
+            this.emit('change.time', this);
         },
         get: function () {
          
@@ -281,7 +281,7 @@ p._onSelectDropdown = function (e) {
 
 p._onChangeEase = function (ease) {
 
-    this.emit('changeEase');
+    this.emit('change.ease');
 };
 
 p._onDeselectAllKeys = function () {

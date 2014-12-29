@@ -153,6 +153,8 @@ p._delayedRefreshHeadKeyline = function () {
 
     this._keyLines.forEach(function (keyLine) {
 
+        if (keyLine.hidden) return;
+        
         keyLine.forEachKeys(function (key, idx) {
 
             var tidx = times.indexOf(key.time);

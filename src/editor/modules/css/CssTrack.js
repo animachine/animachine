@@ -225,9 +225,9 @@ p._getScriptParams = function (runnable) {
 
     function handleTransformOrigin() {
 
-        var tox = _.find(params, function (param) {return 'transformOriginX' in param[0].options});
-        var toy = _.find(params, function (param) {return 'transformOriginY' in param[0].options});
-        var toz = _.find(params, function (param) {return 'transformOriginZ' in param[0].options});
+        var tox = _.find(params, param => 'transformOriginX' in param[0].options);
+        var toy = _.find(params, param => 'transformOriginY' in param[0].options);
+        var toz = _.find(params, param => 'transformOriginZ' in param[0].options);
 
         if (!tox) return;
 
@@ -239,9 +239,9 @@ p._getScriptParams = function (runnable) {
                 options: {
                     ease: key.options.ease,
                     transformOrigin: '' + 
-                        (tox[idx].options.transformOriginX || '50%') + ' ' +
-                        (toy[idx].options.transformOriginY || '50%') + ' ' +
-                        (toz ? (toz[idx].options.transformOriginZ || '0px') : ''),
+                        (tox && tox[idx] ? tox[idx].options.transformOriginX : '50%') + ' ' +
+                        (toy && toy[idx] ? toy[idx].options.transformOriginY : '50%') + ' ' +
+                        (toz && toz[idx] ? (toz[idx].options.transformOriginZ || '0px') : ''),
                 } 
             });
         });
@@ -720,6 +720,8 @@ p._switchFromTranslateToBezier = function () {
     yParam.hidden = true;
     this._paramGroup.getParam('translate').hidden = true;
     bezierParam.hidden = false;
+    
+    this.focusHandler();
 };
 
 p._switchFromBezierToTranslate = function () {

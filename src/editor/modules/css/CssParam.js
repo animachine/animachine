@@ -83,13 +83,13 @@ Object.defineProperties(p, {
             if (v === this._hidden) return;
 
             this._hidden = v;
+            
+            this.keyLine.hidden = v;
 
             if (this._hidden) {
-                this.keyLine.hide();
                 this.optionLine.hide();
             }
             else {
-                this.keyLine.show();
                 this.optionLine.show();
             }
 

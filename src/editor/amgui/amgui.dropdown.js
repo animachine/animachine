@@ -101,7 +101,7 @@ function bindDropdown(opt) {
 
             // e.stopPropagation();
             e.preventDefault();
-            isOpened ? close(e) : open(e);
+            if (!isOpened) open(e);
         });
     }
     else {
@@ -109,7 +109,7 @@ function bindDropdown(opt) {
         deBtn.addEventListener('click', function (e) {
 
             // e.stopPropagation();
-            isOpened ? close(e) : open(e);
+            if (!isOpened) open(e);
         });
     }
 
@@ -140,8 +140,10 @@ function bindDropdown(opt) {
         amgui.placeToPoint(deDropdown, e.clientX, e.clientY, opt.side);
 
         deDropdown.addEventListener('select', close);
-        window.addEventListener('click', close);
-        window.addEventListener('contextmenu', close);
+        setTimeout(() => {
+            window.addEventListener('click', close);
+            window.addEventListener('contextmenu', close);
+        });
     }
 
     function close(e) {

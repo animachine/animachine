@@ -25,9 +25,10 @@ function KeyLine (opt) {
 
     var dropdownBinding = amgui.bindDropdown({
         deTarget: this._canvas,
+        asContextMenu: true,
         onOpening: function (e) {
 
-            var key = this.getKeyUnderPos(e.screenX),
+            var key = this.getKeyUnderPos(e.x),
                 dropdown = key && key.getDropdown();
 
             if (dropdown) {

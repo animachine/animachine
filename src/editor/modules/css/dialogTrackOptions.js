@@ -3,10 +3,12 @@
 var amgui = require('../../amgui');
 var Dialog = require('../../utils/Dialog');
 var UnitInput = require('../../utils/UnitInput');
+var TargetsInput = require('../../utils/TargetsInput');
 var StringInput = require('../../utils/StringInput');
 var OptionLine = require('../../utils/OptionLine');
 
-var deSelectorCont,
+var targetsInput,
+    deSelectorCont,
     deSelectors = [],
     dialog = new Dialog({
         title: 'Track',
@@ -23,17 +25,9 @@ dialog.addProperty({name: 'repeatDelay', startValue: 0});
 dialog.addProperty({name: 'yoyo', startValue: false});
 dialog.addProperty({name: 'keyStretch', startValue: 1});
 dialog.addProperty({
-    name: 'selectors', 
-    startValue: [],
-    set: function (v) {
-
-        deSelectors.slice().map(removeSelector);
-        v.forEach(addSelector);
-        dialog.emit('changeSelectors', dialog.selectors);
-    },
-    get: function () {
-        return _.pluck(deSelectors, 'value'); 
-    }
+    name: 'selectors',
+    set: v => targetsInput.value = v,
+    get: () => targetsInput.value,
 });
 
 
@@ -65,28 +59,14 @@ function createContent() {
     amgui.createLabel({
         caption: 'Selectors',
         fontSize: '18px',
+        height: '25px',
         display: 'block',
         parent: dialog.deContent
     });
 
-    deSelectorCont = amgui.createDiv({
-        width: '100%',
+    targetsInput = new TargetsInput({
         parent: dialog.deContent,
-    });
-
-    amgui.createIconBtn({
-        icon: 'hash',
-        display: 'inline-block',
-        onClick: addSelector.bind(null, ''),
-        parent: dialog.deContent
-    });
-
-    amgui.createIconBtn({
-        icon: 'code',
-        display: 'inline-block',
-        onClick: function () {am.dialogs.WIP.show();},
-        parent: dialog.deContent,
-        tooltip: 'select from options'
+        onChange: () => dialog.emit('changeSelectors', targetsInput.value),
     });
 
     amgui.createLinebreak({parent: dialog.deContent});
@@ -164,65 +144,4 @@ function createContent() {
     function showWIPDialog() {
         am.dialogs.WIP.show();
     }
-}
-
-function addSelector(value) {
-
-    var selector = {
-        value: value || '',
-    };
-    dialog.selectors.push(selector);
-
-    var height = 23;
-
-    selector.domElem = document.createElement('div');
-    selector.domElem.style.display = 'flex';
-    selector.domElem.style.height = height + 'px';
-    selector.domElem.style.paddingLeft = '2px';
-    selector.domElem.style.margin = '1px 0';
-    selector.domElem.style.background = amgui.color.bg2;
-    deSelectorCont.appendChild(selector.domElem);
-
-    var inp = document.createElement('input');
-    inp.type = 'text';
-    inp.value = value;
-    inp.placeholder = 'selector';
-    inp.style.width = '245px';
-    inp.style.height = height + 'px';
-    inp.style.fontSize = '14px';
-    inp.style.fontFamily = amgui.FONT_FAMILY;
-    inp.style.flex = '1';
-    inp.style.background = 'none';
-    inp.style.border = 'none';
-    inp.style.color = amgui.color.text;
-    selector.domElem.appendChild(inp);
-
-    inp.addEventListener('change', function () {
-
-        selector.value = inp.value;
-        dialog.emit('changeSelectors', dialog.selectors);
-    });
-
-    var btnDel = amgui.createIconBtn({
-        icon: 'cancel',
-        height: height,
-        display: 'inline-block',
-        onClick: removeSelector.bind(null, selector),
-        parent: selector.domElem
-    });
-    btnDel.style.visibility = 'hidden';
-
-    selector.domElem.addEventListener('mouseenter', function () {
-        btnDel.style.visibility = 'visible';
-    });
-    selector.domElem.addEventListener('mouseleave', function () {
-        btnDel.style.visibility = 'hidden';
-    });
-}
-
-function removeSelector(selector) {
-
-    dialog.selectors.splice(dialog.selectors.indexOf(selector), 1);
-
-    selector.domElem.parentNode.removeChild(selector.domElem);
 }

@@ -84,7 +84,7 @@ p.setSuggestions = function (suggestions) {
 
 
 p._onChangeInput = function () {
-console.log('_onChangeInput', this._input.value)
+    
     this.value = this._input.value;
 };
 

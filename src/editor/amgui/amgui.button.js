@@ -21,7 +21,6 @@ module.exports = function (_amgui) {
 function createLinebreak(opt) {
 
     var de = document.createElement('br');
-    de.innerHTML = opt.caption || 'label';
     
     if (opt.parent) {
         opt.parent.appendChild(de);

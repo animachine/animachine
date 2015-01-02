@@ -100,6 +100,8 @@ p.setRightLeftBtn = function (opt) {
 
 p._render = function () {
 
+    if (!this._deTarget) return;
+
     var br = this._deTarget.getBoundingClientRect();
 
     this.domElem.style.left = br.left + 'px';

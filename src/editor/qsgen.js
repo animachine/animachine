@@ -15,7 +15,7 @@ function generate(de, root) {
         do {
             qsCurr = gen(deCurr, rootCurr);
         }
-        while(!qsCurr && 
+        while(!qsCurr && deCurr.parentNode &&
             deCurr.parentNode !== rootCurr &&
             (deCurr = deCurr.parentNode));
 

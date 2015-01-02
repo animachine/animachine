@@ -2,6 +2,7 @@
 
 var amgui = require('../../amgui');
 var Branch = require('./Branch');
+var qsgen = require('../../qsgen');
 
 function DomTreeTab() {
 
@@ -52,7 +53,7 @@ p.focusElem = function (de) {
 
     var path = [], deStep = de, maxDeep = 3;
 
-    while (this._branches.lenght) {
+    while (this._branches.length) {
 
         this._removeBranch(this._branches[0]);
     }
@@ -62,14 +63,14 @@ p.focusElem = function (de) {
         var deStep = deStep.parentNode;
 
         path.unshift({
-            name: deStep.nodeName,
+            name: qsgen(deStep) || deStep.nodeName.toLowerCase(),
             value: deStep
         });
     }
 
     this._breadcrumbs.setItems(path);
 
-    var step = function (de, deep) {
+    var step = (de, deep) => {
 
         this._addBranch({
             domElem: de,
@@ -78,14 +79,14 @@ p.focusElem = function (de) {
 
         if (deep < maxDeep) {
 
-            var childNodes = de.childNodes;
+            var children = de.children;
 
-            for (var i = 0, l = childNodes.length; i < l; ++i) {
+            for (var i = 0, l = children.length; i < l; ++i) {
 
-                step(childNodes[i], deep + 1);
+                step(children[i], deep + 1);
             }
         }
-    }.bind(this);
+    };
 
     step(de, 0);
 };
@@ -97,7 +98,7 @@ p.focusElem = function (de) {
 
 p._onSelectBranch = function (branch) {
 
-    am.selectDomElem(branch.domElem);
+    am.selectDomElem(branch.value);
 };
 
 p._onSelectCrumb = function (e) {

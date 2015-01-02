@@ -26,9 +26,9 @@ function createBreadcrumbs(opt) {
         opt.parent.appendChild(de);
     }
 
-    de.addEventListener('click', function () {
+    de.addEventListener('click', function (e) {
 
-        var crumb = getCrumbByDe(this);
+        var crumb = getCrumbByDe(e.target);
 
         if (crumb) {
 
@@ -36,9 +36,14 @@ function createBreadcrumbs(opt) {
                 crumb.onSelect();
             }
 
-            de.dispatchEvent(new CustomEvent('select', {selection: crumb}));
+            de.dispatchEvent(new CustomEvent('select', {detail: {selection: crumb}}));
         }
     });
+
+    if (opt.onSelect) {
+
+        de.addEventListener('select', opt.onSelect);
+    }
 
     de.setItems = function (_crumbs) {
 
@@ -73,17 +78,7 @@ function createBreadcrumbs(opt) {
 
     function getCrumbByDe(deCrumb) {
 
-        var ret;
-
-        crumbs.some(function (crumb) {
-
-            if (crumb.domElem === deCrumb) {
-
-                ret = deChrumb;
-            }
-        });
-
-        return ret;
+        return crumbs.find(crumb => crumb.domElem === deCrumb);
     }
 
     function createCrumb(name, value) {

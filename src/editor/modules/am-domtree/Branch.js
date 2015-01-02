@@ -3,6 +3,7 @@
 var EventEmitter = require('eventman');
 var inherits = require('inherits');
 var amgui = require('../../amgui');
+var qsgen = require('../../qsgen');
 
 function Branch() {
 
@@ -19,8 +20,12 @@ module.exports = Branch;
 
 p.setup = function (opt) {
 
-    this._label.innerHTML = opt.domElem.nodeName;
-    this.domElem.style.marginLeft = (opt.indent * 6) + 'px';
+    var qs = qsgen(opt.domElem);
+
+    this.value = opt.domElem;
+    
+    this._label.innerHTML = qs;
+    this._label.style.marginLeft = (opt.indent * 6) + 'px';
 };
 
 
@@ -35,9 +40,11 @@ p._createBase = function () {
 
     this.domElem = document.createElement('div');
     this.domElem.style.display = 'flex';
+    this.domElem.style.position = 'relative';
     this.domElem.style.width = '100%';
-    this.domElem.style.height = '21px';
-    this.domElem.style.background = amgui.color.bg1;
+    this.domElem.style.height = amgui.LINE_HEIGHT;
+
+    amgui.createSeparator({parent: this.domElem});
 
     this.domElem.addEventListener('click', this._onClick);
 

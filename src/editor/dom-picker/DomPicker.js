@@ -15,6 +15,8 @@ function DomPicker() {
     this._render = this._render.bind(this);
     window.addEventListener('mousemove', this._onMMove);
 
+    am.on('selectDomElem', this._onSelectDomElem, this);
+
     this._createBase();
 }
 
@@ -24,6 +26,8 @@ var p = DomPicker.prototype;
 module.exports = DomPicker;
 
 p.focusElem = function (target) {
+
+    if (target === this._deTarget) return;
 
     var oldTarget = this._deTarget,
         crumbs = this._crumbs,
@@ -67,6 +71,8 @@ p.focusElem = function (target) {
 };
 
 p.hide = function () {
+
+    this._deTarget = undefined;
 
     clearInterval(this._rerenderSetI);
     window.removeEventListener('resize', this._render);
@@ -125,6 +131,11 @@ p._onMMove =  function (e) {
         this._btnRightLeft.style.visibility = v;
     }
 };
+
+p._onSelectDomElem = function (de) {
+
+    this.focusElem(de);
+}
 
 p._createBase = function () {
 

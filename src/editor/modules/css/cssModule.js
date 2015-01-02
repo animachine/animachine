@@ -12,7 +12,7 @@ exports.init = function () {
 
     am.registerTrackType(CssTrack, CssTrack.prototype.type);
 
-    am.on('selectDomElement', onSelectDomElement);
+    am.on('selectDomElem', onSelectDomElem);
 
     am.workspace.fillTab('Css Style', paramsTab.domElem);
 
@@ -38,7 +38,7 @@ exports.init = function () {
     });
 };
 
-function onSelectDomElement(de) {
+function onSelectDomElem(de) {
 
     am.timeline.tracks.forEach(function (track) {
 

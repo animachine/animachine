@@ -8,12 +8,12 @@ exports.init = function () {
 
     domTreeTab = new DomTreeTab();
 
-    am.on('selectDomElement', onSelectDomElement);
+    am.on('selectDomElem', onSelectDomElem);
 
     am.workspace.fillTab('Dom Tree', domTreeTab.domElem);
 };
 
-function onSelectDomElement(de) {
+function onSelectDomElem(de) {
 
     domTreeTab.focusElem(de);
 }

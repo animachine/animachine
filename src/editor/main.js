@@ -179,7 +179,7 @@ am.selectDomElem = function (de) {
     if (am.selectedDomElem === de) return;
 
     am.selectedDomElem = de;
-    am.emit('selectDomElement', am.selectedDomElem);
+    am.emit('selectDomElem', am.selectedDomElem);
 };
 
 am.deselectDomElem = function () {

@@ -8,7 +8,13 @@ var Transhand = require('transhand');
 
 function BezierCssParam (opt) {
 
-    opt = opt || {};
+    opt = opt || {optionLine: {}};
+
+    opt.optionLine.inputs = [
+        {name: 'x', type: 'unit'},
+        {name: 'y', type: 'unit'},
+        {name: 'autoRotate', type: 'checkbox'},
+    ];
 
     CssParam.call(this, opt);
 

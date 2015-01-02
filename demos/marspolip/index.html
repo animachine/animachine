@@ -4,9 +4,7 @@
   <head>
     <meta charset="utf-8">
     <title>Animachine css mars polip demo</title>
-    <script src="../../build/vendor.js"></script>
-    <script src="../../build/main.js"></script>
-    <script src="marslanding.am.js"></script>
+    <!-- // <script src="marslanding.am.js"></script> -->
     <link rel="stylesheet" href="../../build/assets/fontello/css/amgui.css">
   </head>
   <body>
@@ -76,8 +74,6 @@
         box-sizing: border-box;
         border-radius: 100%;
         border-left: 15px solid #1aae1e;
-        transform: rotate(-30deg);
-        animation: tentacle 12s cubic-bezier(0.645, 0.045, 0.355, 1) infinite;
       }
       .space .mars .flag {
         position: absolute;
@@ -85,7 +81,6 @@
         width: 15px;
         top: -57px;
         left: -1px;
-        animation: flag-pole 12s cubic-bezier(0.645, 0.045, 0.355, 1) infinite;
       }
       .space .mars .flag .staff {
         content: "";
@@ -102,7 +97,6 @@
         left: 2px;
         top: 0;
         background: #aaaaaa;
-        animation: flag-unfurl 12s cubic-bezier(0.645, 0.045, 0.355, 1) infinite;
       }
       .space .mars .flag .small-tentacle {
         position: absolute;
@@ -112,8 +106,6 @@
         width: 50px;
         border-left: 10px solid #1aae1e;
         border-radius: 100%;
-        transform: rotate(25deg);
-        animation: small-tentacle 12s cubic-bezier(0.645, 0.045, 0.355, 1) infinite;
         z-index: 2;
       }
       .space .mars:before {
@@ -179,21 +171,17 @@
       }
       .space .ship {
         position: absolute;
-        right: 50%;
+        left: 234px;
         top: 50%;
-        margin-top: -55px;
-        margin-right: -55px;
-        height: 22px;
-        background: rgba(0, 0, 0, 0.1);
-        transform-origin: 0% 100% 0;
         z-index: 1;
-        animation: ship 12s cubic-bezier(0.645, 0.045, 0.355, 1) infinite;
+        width: 23px;
+        height: 34px;
       }
       .space .ship .ship-rotate {
         position: absolute;
         height: 22px;
-        transform: rotate(-110deg);
-        animation: ship-rotate 12s cubic-bezier(0.645, 0.045, 0.355, 1) infinite;
+        top: 6px;
+        left: 12px;
       }
       .space .ship .pod {
         position: absolute;
@@ -235,197 +223,15 @@
         width: 16px;
         background: #374d5c;
         border-radius: 100%;
-        animation: ship-shadow 12s cubic-bezier(0.645, 0.045, 0.355, 1) infinite;
       }
-
-      /*@keyframes small-tentacle {
-        0% {
-          transform: rotate(-60deg);
-        }
-
-        86% {
-          transform: rotate(-60deg);
-        }
-
-        89% {
-          transform: rotate(10deg);
-        }
-
-        100% {
-          transform: rotate(10deg);
-        }
-      }
-
-      @keyframes tentacle {
-        0% {
-          transform: rotate(-30deg);
-        }
-
-        75% {
-          transform: rotate(-30deg);
-        }
-
-        80% {
-          transform: rotate(-165deg) translate(6px, 8px);
-        }
-
-        82.5% {
-          transform: rotate(-165deg) translate(28px, -17px);
-        }
-
-        100% {
-          transform: rotate(-165deg) translate(35px, -22px);
-        }
-      }
-
-      @keyframes ship {
-        0% {
-          right: -10%;
-          top: -10%;
-          margin-top: -55px;
-          margin-right: -55px;
-        }
-
-        40% {
-          right: 50%;
-          top: 50%;
-        }
-
-        79.5% {
-          margin-top: -55px;
-          margin-right: -55px;
-        }
-
-        84% {
-          margin-top: -20px;
-          margin-right: 0px;
-        }
-
-        100% {
-          right: 50%;
-          top: 50%;
-          margin-top: 0px;
-          margin-right: 0px;
-        }
-      }
-
-      @keyframes ship-rotate {
-        0% {
-          transform: rotate(-110deg);
-        }
-
-        20% {
-          transform: rotate(-110deg);
-        }
-
-        34% {
-          transform: rotate(47deg);
-        }
-
-        79% {
-          transform: rotate(47deg);
-        }
-
-        100% {
-          transform: rotate(47deg);
-        }
-      }
-
-      @keyframes ship-shadow {
-        0% {
-          right: -10%;
-          transform: scale(1.4, 1);
-          opacity: .3;
-        }
-
-        40% {
-          right: 50%;
-          transform: scale(0.75, 1);
-          opacity: 1;
-        }
-
-        100% {
-          right: 50%;
-        }
-      }
-
-      @keyframes planet-bump {
-        0% {
-          margin-left: 0;
-        }
-
-        39% {
-          margin-left: 0;
-        }
-
-        40% {
-          margin-left: -1px;
-        }
-
-        40.5% {
-          margin-left: 1px;
-        }
-
-        41% {
-          margin-left: 0;
-        }
-
-        100% {
-          margin-left: 0;
-        }
-      }
-
-      @keyframes flag-pole {
-        0% {
-          top: -57px;
-        }
-
-        48% {
-          top: -57px;
-        }
-
-        54% {
-          top: -77px;
-        }
-
-        90% {
-          top: -77px;
-        }
-
-        92% {
-          top: -57px;
-        }
-
-        100% {
-          top: -57px;
-        }
-      }
-
-      @keyframes flag-unfurl {
-        0% {
-          width: 0;
-        }
-
-        55% {
-          width: 0;
-        }
-
-        60% {
-          width: 14px;
-        }
-
-        90% {
-          width: 14px;
-        }
-
-        100% {
-          width: 14px;
-        }
-      }*/
-    </style>
+    </style> 
+    <script src="../../build/vendor.js"></script>
+    <script src="../../build/main.js"></script>
     <script>
-      am.open(am.pageScripts.amsave.saveJson);
-      am.timeline.play();
+      $(function () {
+        am.open();
+        // am.timeline.play();
+      })
     </script>
   </body>
 </html>

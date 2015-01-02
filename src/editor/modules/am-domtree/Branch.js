@@ -28,7 +28,7 @@ p.setup = function (opt) {
 
 p._onClick = function () {
 
-    this.emit('select');
+    this.emit('select', this);
 }
 
 p._createBase = function () {

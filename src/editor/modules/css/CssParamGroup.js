@@ -36,7 +36,7 @@ Object.defineProperties(p, {
 
             var ret = this._lineH;
 
-            if (this._isShowingSubparams) {
+            if (this.collapsed) {
 
                 this._params.forEach(function (param) {
 
@@ -56,26 +56,36 @@ Object.defineProperties(p, {
 
             this._merged = v;
 
-            this.optionLine.buttons.tgglMerge.setToggle(this._merged);
-            this.optionLine.buttons.tgglChildren.inactive = this._merged;
-            
-            if (this._merged) {
-                
-                this.hideSubparams(); 
-                this._makeKeyLinesSymmetric();
-            } 
-            else {
-                this.showSubparams();
-            }
+            this.optionLine.buttons.tgglMerge.setToggle(v);
+            this.optionLine.buttons.tgglChildren.inactive = v;
+            this.collapsed = v;
+
+            if (v) this._makeKeyLinesSymmetric();
         },
         get: function () {
 
             return this._merged;
         }
+    },
+    collapsed: {
+
+        set: function (v) {
+
+            v = !!v;
+            if (v === this._collapsed) return;
+
+            this._collapsed = v;
+
+            this.optionLine.buttons.tgglChildren.setToggle(!v);
+            this.emit('changeHeight', this);
+            this._refreshHeights();
+        },
+        get: function () {
+
+            return this._collapsed;
+        }
     }
 });
-
-
 
 
 p.getSave = function () {
@@ -83,6 +93,7 @@ p.getSave = function () {
     var save = CssParam.prototype.getSave.call(this);
 
     save.merged = this.merged;
+    save.collapsed = this.collapsed;
 };
 
 p.useSave = function (save) {
@@ -90,6 +101,7 @@ p.useSave = function (save) {
     CssParam.prototype.useSave.call(this, save);
 
     if ('merged' in save) save.merged = save.merged;
+    if ('collapsed' in save) save.collapsed = save.collapsed;
 };
 
 p.addParam = function (param) {
@@ -210,26 +222,6 @@ p.removeKeyAll = function (time) {
     });
 };
 
-p.showSubparams = function () {
-
-    if (this._isShowingSubparams) return;
-    this._isShowingSubparams = true;
-
-    this.optionLine.buttons.tgglChildren.setToggle(true);
-    this.emit('changeHeight', this);
-    this._refreshHeights();
-};
-
-p.hideSubparams = function () {
-
-    if (!this._isShowingSubparams) return;
-    this._isShowingSubparams = false;
-
-    this.optionLine.buttons.tgglChildren.setToggle(false);
-    this.emit('changeHeight', this);
-    this._refreshHeights();
-};
-
 
 
 
@@ -252,12 +244,7 @@ p._onChangeTime = function () {
 
 p._onClickTgglChildren = function () {
 
-    if (this._isShowingSubparams) {
-        this.hideSubparams();
-    }
-    else {
-        this.showSubparams();
-    }
+    this.collapsed = !this.collapsed;
 };
 
 p._onClickTgglMerge = function () {

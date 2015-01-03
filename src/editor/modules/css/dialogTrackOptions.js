@@ -20,46 +20,39 @@ dialog.addButton('ok', 'hide');
 
 
 
-dialog.addProperty({name: 'repeat', startValue: 0});
-dialog.addProperty({name: 'repeatDelay', startValue: 0});
-dialog.addProperty({name: 'yoyo', startValue: false});
-dialog.addProperty({name: 'keyStretch', startValue: 1});
+dialog.addProperty({name: 'name', startValue: 'Track'});
 dialog.addProperty({
     name: 'selectors',
     set: v => targetsInput.value = v,
     get: () => targetsInput.value,
 });
+dialog.addProperty({name: 'repeat', startValue: 0});
+dialog.addProperty({name: 'repeatDelay', startValue: 0});
+dialog.addProperty({name: 'yoyo', startValue: false});
+dialog.addProperty({name: 'keyStretch', startValue: 1});
 
 
 function createContent() {
 
-    amgui.createLabel({
-        caption: 'Name: ',
-        fontSize: '18px',
-        parent: dialog.deContent
-    });
-
-    var inpTitle = new StringInput({
+    var optName = new OptionLine({
+        title: 'name:',
         parent: dialog.deContent,
+        inputs: [{
+            type: 'string',
+            name: 'name',
+            onChange: v => dialog.name = v,
+        }],
     });
-    inpTitle.domElem.style.width = '245px';
-    inpTitle.domElem.style.fontSize = '14px';
-    inpTitle.domElem.style.fontFamily = amgui.FONT_FAMILY;
-    inpTitle.domElem.style.background = 'none';
-    inpTitle.domElem.style.border = 'none';
-    inpTitle.domElem.style.marginBottom = '12px';
-    inpTitle.domElem.style.color = amgui.color.text;
-    inpTitle.on('change', function (v) {
-        dialog.title = v;
-    });
-    dialog.on('changeTitle', function () {
-        inpTitle.value = dialog.title;
+    dialog.on('changeName', function () {
+        optName.inputs.name.value = dialog.name;
+        dialog.title = dialog.name;
     });
 
+
     amgui.createLabel({
-        caption: 'Selectors',
-        fontSize: '18px',
-        height: '25px',
+        caption: 'Selectors:',
+        // fontSize: '18px',
+        // height: '25px',
         display: 'block',
         parent: dialog.deContent
     });

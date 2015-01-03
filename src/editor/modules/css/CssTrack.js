@@ -966,7 +966,7 @@ p._onClickTgglHide = function () {
 p._onClickName = function () {
 
     dialogTrackOptions.show({
-        name: this._name,
+        name: this.name,
         selectors: this._selectors,
         onChangeName: this._onChangeName,
         onChangeSelectors: this._onChangeSelectors,

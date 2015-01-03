@@ -49,7 +49,10 @@ Object.defineProperties(p, {
 
 
 
+p.getSave = function () {
 
+    return {};
+}
 
 p.select = function () {
 

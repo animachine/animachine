@@ -13,11 +13,11 @@ function CssParamGroup (opt) {
     this._onClickTgglChildren = this._onClickTgglChildren.bind(this);
     this._onClickTgglMerge = this._onClickTgglMerge.bind(this);
 
-    CssParam.call(this, opt);
-
     this._params = [];
+    this._merged = false;
+    this._collapsed = false;
 
-    this._merged = opt.merged || false;
+    CssParam.call(this, opt);
 
     this._refreshHeights();
 }
@@ -76,7 +76,7 @@ Object.defineProperties(p, {
 
             this._collapsed = v;
 
-            this.optionLine.buttons.tgglChildren.setToggle(!v);
+            this.optionLine.buttons.tgglChildren.setToggle(v);
             this.emit('changeHeight', this);
             this._refreshHeights();
         },
@@ -92,8 +92,12 @@ p.getSave = function () {
 
     var save = CssParam.prototype.getSave.call(this);
 
+    delete save.keys;
+    
     save.merged = this.merged;
     save.collapsed = this.collapsed;
+
+    return save;
 };
 
 p.useSave = function (save) {
@@ -107,11 +111,12 @@ p.useSave = function (save) {
 p.addParam = function (param) {
 
     if (param.parentGroup) {
-
+    console.log('addParam/removeParam', param.name)
         param.parentGroup.removeParam(param);
     }
     parent.parentGroup = this;
 
+    console.log('addParam', param.name)
     this._params.push(param);
     this.optionLine.addSubline(param.optionLine.domElem);
     this.keyLine.addKeyLine(param.keyLine);
@@ -136,7 +141,7 @@ p.removeParam = function (param) {
     if (idx === -1) {
         return;
     }
-    
+    console.log('removeParam', param.name)
     parent.parentGroup = undefined;
     
     param.removeListener('changeHeight', this._onChangeSubparamHeight);
@@ -149,17 +154,19 @@ p.removeParam = function (param) {
     this._refreshHeights();
 };
 
+p.getParam = function (paramName) {
+
+    return this._params.find(param => param.name === paramName);
+};
+
+p.getParamNames = function () {
+
+    return _.pluck(this._params, 'name');
+};
+
 p.moveParam = function () {
 
     
-};
-
-p.getParam = function (paramName) {
-
-    return this._params.find(function (param) {
-
-        return param.name === paramName
-    })
 };
 
 p.toggleKey = function (time) {

@@ -45,6 +45,7 @@ function CssTrack(opt) {
     this._animPlay = this._animPlay.bind(this);
 
     this._paramGroup = new CssParamGroup({
+        name: '',
         optionLine: {
             tgglMerge: false,
             title: {
@@ -154,14 +155,27 @@ p.getSave = function () {
     var save = {
         name: this.name,
         selectors: _.clone(this._selectors),
-        endParams: [],
+        paramTree: {children: []},
         isShowingParams: this._isShowingParams,
     };
 
-    this._endParams.forEach(function (param) {
+    var saveChildren = (children, paramGroup) => {
 
-        save.endParams.push(param.getSave());
-    });
+        paramGroup.getParamNames().forEach(name => {
+
+            let param = paramGroup.getParam(name),
+                child = {save: param.getSave()};
+
+            children.push(child);
+
+            if (param instanceof CssParamGroup) {
+
+                child.children = [];
+                saveChildren(child.children, param);
+            }
+        });
+    };
+    saveChildren(save.paramTree.children, this._paramGroup);
 
     return save;
 };
@@ -176,10 +190,24 @@ p.useSave = function (save) {
 
     if ('name' in save) this.name = save.name;
 
-    if (save.endParams) {
+    var loadChildren = (children, path) => {
 
-        save.endParams.forEach(this.addParam, this);
-    }
+        children.forEach(child => {
+            
+            if (child.children) {
+
+                path = path.slice().concat(child.save.name);
+
+                this.addGroup(path, child.save);
+
+                loadChildren(children, path);
+            }
+            else {
+                this.addParam(child.save);
+            }
+        });
+    };
+    if ('paramTree' in save) loadChildren(save.paramTree.children, []);
 
     this._refreshSelectedElems();
     this._refreshPlayer();
@@ -332,7 +360,7 @@ p.addParam = function (opt, skipHistory) {
     opt = opt || {};
 
     var param = this.getParam(opt.name);
-    
+    console.log('cssTrack:addParam', opt.name, param + '', param && param.parentGroup);
 
     if (param) {
 
@@ -410,7 +438,7 @@ p.getParam = function (name) {
     });
 };
 
-p.addGroup = function (path, history) {
+p.addGroup = function (path, opt) {
 
     path = path.slice();
     
@@ -468,10 +496,9 @@ p._prepareBuiltInGroup = function (paramName) {
 
     if (!rootGroupName || this._paramGroup.getParam(rootGroupName)) return;
 
-    var walk = function (groupName, path) {
+    var walk = (groupName, path) => {
 
-        var newPath = path.slice();
-        newPath.push(groupName);
+        var newPath = path.slice().concat(groupName);
 
         var memberNames = paramFactory.getGroupMemberNames(newPath);
 
@@ -485,7 +512,7 @@ p._prepareBuiltInGroup = function (paramName) {
 
             group.addParam(param);
         }
-    }.bind(this);
+    };
     
     walk(rootGroupName, []);
 };

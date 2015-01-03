@@ -155,10 +155,10 @@ p.getSave = function () {
     var save = {
         name: this.name,
         selectors: _.clone(this._selectors),
-        paramTree: {children: []},
+        paramTree: {children: [], save: this._paramGroup.getSave()},
         isShowingParams: this._isShowingParams,
     };
-
+    //TODO make param and group handling cleaner
     var saveChildren = (children, paramGroup) => {
 
         paramGroup.getParamNames().forEach(name => {
@@ -200,14 +200,18 @@ p.useSave = function (save) {
 
                 this.addGroup(path, child.save);
 
-                loadChildren(children, path);
+                loadChildren(child.children, path);
             }
             else {
                 this.addParam(child.save);
             }
         });
     };
-    if ('paramTree' in save) loadChildren(save.paramTree.children, []);
+    if ('paramTree' in save) {
+
+        loadChildren(save.paramTree.children, []);
+        if ('save' in save.paramTree) this._paramGroup.useSave(save.paramTree.save);
+    }
 
     this._refreshSelectedElems();
     this._refreshPlayer();
@@ -360,7 +364,6 @@ p.addParam = function (opt, skipHistory) {
     opt = opt || {};
 
     var param = this.getParam(opt.name);
-    console.log('cssTrack:addParam', opt.name, param + '', param && param.parentGroup);
 
     if (param) {
 
@@ -405,6 +408,7 @@ p.addParam = function (opt, skipHistory) {
 
 p.removeParam = function (param, skipHistory) {
 
+console.log('removeParam', opt)
     var idx = this._endParams.indexOf(param);
 
     if (idx === -1) {
@@ -445,10 +449,9 @@ p.addGroup = function (path, opt) {
     var name = path.pop(),
         parent = this._paramGroup;
 
-    path.forEach(function (parentName, idx) {
-
-        parent = this.addGroup(path.slice(0, idx+1))
-    }, this);
+    path.forEach((parentName, idx) => {
+        this.addGroup(path.slice(0, idx+1));
+    });
 
     var paramGroup = parent.getParam(name);
 
@@ -456,10 +459,10 @@ p.addGroup = function (path, opt) {
 
         //TODO history.save()
 
-        paramGroup = paramFactory.createGroup({name: name});
+        if (opt && opt.name !== name) throw Error;
+
+        paramGroup = paramFactory.createGroup(opt || {name});
         parent.addParam(paramGroup);
-        paramGroup.on('bezierToTranslate', this._switchFromBezierToTranslate, this);
-        paramGroup.on('translateToBezier', this._switchFromTranslateToBezier, this);
     }
 
     return paramGroup;
@@ -467,6 +470,7 @@ p.addGroup = function (path, opt) {
 
 p.removeGroup = function (path, history) {
 
+console.log('removeGroup', path)
     path = path.slice();
 
     var name = path.pop(),
@@ -494,7 +498,7 @@ p._prepareBuiltInGroup = function (paramName) {
 
     var rootGroupName = paramFactory.getRootParamGroupName(paramName);
 
-    if (!rootGroupName || this._paramGroup.getParam(rootGroupName)) return;
+    if (!rootGroupName) return;
 
     var walk = (groupName, path) => {
 

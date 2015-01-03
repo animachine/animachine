@@ -53,12 +53,12 @@ Object.defineProperties(p, {
 
             v = !!v;
             if (v === this._merged) return;
-
+            
             this._merged = v;
 
             this.optionLine.buttons.tgglMerge.setToggle(v);
             this.optionLine.buttons.tgglChildren.inactive = v;
-            this.collapsed = v;
+            this.collapsed = !v;
 
             if (v) this._makeKeyLinesSymmetric();
         },
@@ -84,7 +84,7 @@ Object.defineProperties(p, {
 
             return this._collapsed;
         }
-    }
+    },
 });
 
 
@@ -104,19 +104,17 @@ p.useSave = function (save) {
 
     CssParam.prototype.useSave.call(this, save);
 
-    if ('merged' in save) save.merged = save.merged;
-    if ('collapsed' in save) save.collapsed = save.collapsed;
+    if ('collapsed' in save) this.collapsed = save.collapsed;
+    if ('merged' in save) this.merged = save.merged;
 };
 
 p.addParam = function (param) {
 
     if (param.parentGroup) {
-    console.log('addParam/removeParam', param.name)
         param.parentGroup.removeParam(param);
     }
-    parent.parentGroup = this;
+    param.parentGroup = this;
 
-    console.log('addParam', param.name)
     this._params.push(param);
     this.optionLine.addSubline(param.optionLine.domElem);
     this.keyLine.addKeyLine(param.keyLine);
@@ -141,7 +139,7 @@ p.removeParam = function (param) {
     if (idx === -1) {
         return;
     }
-    console.log('removeParam', param.name)
+    
     parent.parentGroup = undefined;
     
     param.removeListener('changeHeight', this._onChangeSubparamHeight);
@@ -189,7 +187,7 @@ p.toggleKey = function (time) {
 
 p._makeKeyLinesSymmetric = function (time) {
 
-    times = [];
+    var times = [];
 
     this._params.forEach(function (param) {
         

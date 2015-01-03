@@ -504,7 +504,7 @@ p._onSelectNewTrack = function (e) {
 
     var addTrack = function (type) {
 
-        var TrackClassf = am.trackTypes[type];
+        var TrackClass = am.trackTypes[type];
 
         this.addTrack(new TrackClass());
     }.bind(this);

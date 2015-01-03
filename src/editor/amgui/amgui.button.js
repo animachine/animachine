@@ -121,7 +121,7 @@ function behaviorBtn(de, opt) {
     Object.defineProperties(de, {
 
         inactive: {
-            set: function () {
+            set: function (v) {
 
                 v = !!v;
                 if (_inactive === v) return;
@@ -135,7 +135,7 @@ function behaviorBtn(de, opt) {
             }
         },
         fixedHighlight: {
-            set: function () {
+            set: function (v) {
 
                 v = !!v;
                 if (_fixedHighlight === v) return;

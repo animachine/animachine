@@ -99,7 +99,20 @@ Object.defineProperties(p, {
 
             return this._hidden;
         }
-    }
+    },
+    parentGroup: {
+
+        set: function (v) {
+
+            if (v === this._parentGroup) return;
+            
+            this._parentGroup = v
+        },
+        get: function () {
+
+            return this._parentGroup;
+        }
+    },
 });
 
 

@@ -14,6 +14,7 @@ module.exports = {
         var paramOpt = {
                 name: opt.name,
                 keys: opt.keys,
+                hidden: opt.hidden,
                 optionLine: {
                     inputs: [{name: 'input'}]
                 }
@@ -128,10 +129,12 @@ module.exports = {
 
         var pgOpt = {
             name: opt.name,
+            collapsed: opt.collapsed || false,
+            merged: opt.merged || false,
+            hidden: opt.hidden || false,
             optionLine: {
                 inputs: [],
             },
-            merged: true,
         };
 
         if (opt.name === 'translate') {

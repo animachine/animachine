@@ -651,6 +651,8 @@ p.focusHandler = function (de) {
         }
     });
     
+
+    this._handler.setLocalRoot(de.parentNode);
     this._handler.setup({
         hand: handOpt,
     });

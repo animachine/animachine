@@ -131,7 +131,7 @@
 }
 .space .ship {
   position: absolute;
-  left: 234px;
+  left: 50%;
   top: 50%;
   z-index: 1;
   width: 23px;

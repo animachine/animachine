@@ -22,6 +22,7 @@ function BezierCssParam (opt) {
     CssParam.call(this, opt);
 
     this.on('change', this._refreshCheckTimeline, this);
+    this._refreshCheckTimeline();
 
     this._defaultValue = {x: 0, y: 0};
 }
@@ -136,70 +137,70 @@ p.getValue = function (time) {
         y: this._checkObj.y,
     };
 
-    var ret, before, after, same;
+    // var ret, before, after, same;
 
-    this.keyLine.forEachKeys(function (key) {
+    // this.keyLine.forEachKeys(function (key) {
 
-        if (key.time === time) {
+    //     if (key.time === time) {
         
-            same = key;
-        }
+    //         same = key;
+    //     }
 
-        if (key.time < time && (!before || before.time < key.time)) {
+    //     if (key.time < time && (!before || before.time < key.time)) {
         
-            before = key;
-        }
+    //         before = key;
+    //     }
 
-        if (key.time > time && (!after || after.time > key.time)) {
+    //     if (key.time > time && (!after || after.time > key.time)) {
         
-            after = key;
-        }
-    });
+    //         after = key;
+    //     }
+    // });
 
-    if (same) {
+    // if (same) {
 
-        let point = _.last(same.value);
+    //     let point = _.last(same.value);
 
-        ret = {
-            x: point.anchor.x + 'px',
-            y: point.anchor.y + 'px',
-        };
-    }
-    else {
-        if (after && before) {
+    //     ret = {
+    //         x: point.anchor.x + 'px',
+    //         y: point.anchor.y + 'px',
+    //     };
+    // }
+    // else {
+    //     if (after && before) {
 
-            let p = (time - before.time) / (after.time - before.time), 
-                bv = before.value,
-                av = after.value, 
-                points = [];
+    //         let p = (time - before.time) / (after.time - before.time), 
+    //             bv = before.value,
+    //             av = after.value, 
+    //             points = [];
 
-            p = after.ease.getRatio(p);
+    //         p = after.ease.getRatio(p);
 
-            points.push(bv[0].anchor.x, bv[0].anchor.y);
-            points.push(bv[0].handleRight.x, bv[0].handleRight.y);
+    //         points.push(bv[0].anchor.x, bv[0].anchor.y);
+    //         points.push(bv[0].handleRight.x, bv[0].handleRight.y);
             
-            av.forEach(function (point, idx, arr) {
+    //         av.forEach(function (point, idx, arr) {
 
-                points.push(point.handleLeft.x, point.handleLeft.y);
-                points.push(point.anchor.x, point.anchor.y);
-                if (idx !== arr.length - 1) {
-                    points.push(point.handleRight.x, point.handleRight.y);
-                }
-            });
+    //             points.push(point.handleLeft.x, point.handleLeft.y);
+    //             points.push(point.anchor.x, point.anchor.y);
+    //             if (idx !== arr.length - 1) {
+    //                 points.push(point.handleRight.x, point.handleRight.y);
+    //             }
+    //         });
 
-            ret = this._calcEase(points, p);
-        }
-        else if (before) {
+    //         ret = this._calcEase(points, p);
+    //     }
+    //     else if (before) {
             
-            ret = _.clone(_.last(before.value).anchor);
-        }
-        else if (after) {
+    //         ret = _.clone(_.last(before.value).anchor);
+    //     }
+    //     else if (after) {
             
-            ret = _.clone(after.value[0].anchor);
-        }
-    }
+    //         ret = _.clone(after.value[0].anchor);
+    //     }
+    // }
     
-    return ret === undefined ? this._defaultValue : ret;
+    // return ret === undefined ? this._defaultValue : ret;
 };
 
 p.addKey = function (opt, skipHistory) {

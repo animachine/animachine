@@ -40,8 +40,8 @@ function makeDraggable(opt) {
             return;
         }
 
-        // e.stopPropagation();
-        // e.preventDefault();
+        e.stopPropagation();//ex. prevent to drag the parent if that's draggable too
+        e.preventDefault();//ex. prevent selecting text
 
         isDrag = true;
 

@@ -163,16 +163,35 @@ p._createDialog = function () {
 
     this.domElem.addEventListener('click_ok', this._onClickOk);
 
-    this.domElem.addEventListener('click', function (e) {
-    
-        var rect = this.domElem.getBoundingClientRect();
-    
-        if (rect.left > e.x || rect.right < e.x ||
-            rect.top > e.y || rect.bottom < e.y) 
-        {
+
+
+
+    var onMDown = (e) => {
+        if (isInside(e)) {
+            this.domElem.addEventListener('mouseup', onMUp);
+        }
+    }
+
+    var onMUp = (e) => {
+        if (isInside(e)) {
             this.hide();
         }
-    }.bind(this));
+        offBgClickTest();
+    }
+
+    var offBgClickTest = ()  => {
+        this.domElem.removeEventListener('mouseup', onMUp);
+    }
+
+    var isInside = (e) => {
+
+        var rect = this.domElem.getBoundingClientRect();
+    
+        return (rect.left > e.x || rect.right < e.x ||
+            rect.top > e.y || rect.bottom < e.y);
+    }
+
+    this.domElem.addEventListener('click', onMDown);
 };
 
 

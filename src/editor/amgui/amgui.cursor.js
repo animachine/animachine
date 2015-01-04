@@ -18,17 +18,17 @@ function createCursorFromText(opt) {
     opt = opt || {};
     opt.width = opt.width || 24;
     opt.height = opt.height || 24;
-    opt.hotspotX = opt.hotspotX || opt.width / 2;
-    opt.hotspotY = opt.hotspotY || opt.height / 2;
+    opt.hotspotX = 'hotspotX' in opt ? opt.hotspotX : opt.width / 2;
+    opt.hotspotY = 'hotspotY' in opt ? opt.hotspotY : opt.height / 2;
     opt.textX = opt.textX || 0;
     opt.textY = opt.textY || 0;
     opt.fontFamily = opt.fontFamily || 'amgui';
-    opt.fontSize = opt.fontSize || opt.height / 2 + 'px';
+    opt.fontSize = opt.fontSize || opt.height + 'px';
     opt.color = opt.color || '#000';
     opt.rotate = opt.rotate || 0;
     opt.rotateOriginX = opt.rotateOriginX || 0;
     opt.rotateOriginY = opt.rotateOriginY || 0;
-    opt.text = opt.text || 'A';
+    opt.text = opt.text || (opt.icon && amgui.getIconChar(opt.icon)) || 'A';
     
     var buffered = buff.find(function(b) {
 
@@ -60,11 +60,6 @@ function createCursorFromText(opt) {
     
     canvas.width = opt.width;
     canvas.height = opt.height;
-  
-    if (opt.backgroundColor) {
-        ctx.fillStyle = opt.backgroundColor;
-        ctx.fillRect(0, 0, opt.width, opt.height);
-    }
     
     ctx.translate(opt.rotateOriginX, opt.rotateOriginY);
     ctx.rotate(opt.rotate);
@@ -81,9 +76,14 @@ function createCursorFromText(opt) {
     
     ctx.fillStyle = opt.color;
     ctx.fillText(opt.text, opt.textX, opt.textY);
-  
-    if (opt.hotspotColor) {
-        ctx.fillStyle = opt.hotspotColor;
+
+    if (opt.debug) {
+        ctx.strokeStyle = 'lime';
+        ctx.lineWidth = '3';
+        ctx.rect(0, 0, opt.width, opt.height);
+        ctx.stroke();
+
+        ctx.fillStyle = 'red';
         ctx.fillRect(opt.hotspotX, opt.hotspotY, 1, 1);
     }
     

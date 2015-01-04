@@ -1,6 +1,5 @@
 'use strict';
 
-var fontelloConf = require('../assets/fontello/config.json');
 var amgui;
 
 module.exports = function (_amgui) {
@@ -255,13 +254,7 @@ function createIcon(opt) {
 
     de.setIcon = function (icon) {
 
-        var glyph = fontelloConf.glyphs.find(function (glyph) {
-
-            return glyph.css === icon;
-        });
-
-        var code = glyph ? glyph.code : 59407;
-        textNode.textContent = String.fromCharCode(code);
+        textNode.textContent = amgui.getIconChar(icon);
     };
 
     de.setIcon(opt.icon);

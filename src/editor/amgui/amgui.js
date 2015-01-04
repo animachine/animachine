@@ -1,6 +1,7 @@
 'use strict';
 
 var EventEmitter = require('eventman');
+var fontelloConf = require('../assets/fontello/config.json');
 
 WebFont.load({
     google: {
@@ -8,7 +9,7 @@ WebFont.load({
     }
 });
 
-var amgui = new EventEmitter();
+var amgui = window.amgui = new EventEmitter();
 
 _.extend(amgui,
     require('./amgui.bezierEditor')(amgui),
@@ -87,6 +88,15 @@ _.extend(amgui,
             de.style.position = 'absolute';
             de.style.borderBottom = 'solid 1px rgba(255,255,255,.11)';
         },
+
+        getIconChar: function (iconName) {
+
+            var glyph = fontelloConf.glyphs.find(glyph => glyph.css === iconName);
+
+            var code = glyph ? glyph.code : 59407;
+            
+            return String.fromCharCode(code);
+        }
     }
 );
 

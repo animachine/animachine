@@ -746,7 +746,10 @@ p._createSettingsHead = function () {
         display: 'inline-block',
         onClick: this._onTogglePlayPause
     });
-    this.toolbar.addIcon({deIcon: this._btnTogglePlay});
+    this.toolbar.addIcon({
+        deIcon: this._btnTogglePlay,
+        separator: 'controlls',
+    });
 
     this._deCurrTime = amgui.createLabel({
         caption: '',

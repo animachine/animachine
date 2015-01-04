@@ -16,15 +16,17 @@ function Toolbar(opt) {
 
     this.domElem = document.createElement('div');
     this.domElem.style.position = 'fixed';
+    this.domElem.style.display = 'flex';
     this.domElem.style.backgroundColor = opt.bgColor || amgui.color.bg0;
     this.domElem.style.pointerEvents = 'auto';
     this.domElem.style.height = this._height + 'px';
 
-    this.addSeparator('first');
-    this.addSeparator('tools');
-    this.addSeparator('handler');
-    this.addSeparator('global');
-    this.addSeparator('rest');
+    this.addSeparator({name: 'first'});
+    this.addSeparator({name: 'tools'});
+    this.addSeparator({name: 'handler'});
+    this.addSeparator({name: 'global'});
+    this.addSeparator({name: 'rest'});
+    this.addSeparator({name: 'controls', flex: 1});
 }
 
 inherits(Toolbar, EventEmitter);
@@ -61,9 +63,13 @@ p.removeIcon = function (deIcon) {
     deIcon.parentNode.removeChild(deIcon);
 };
 
-p.addSeparator = function (name) {
+p.addSeparator = function (opt) {
 
     var de = document.createElement('span');
     this.domElem.appendChild(de);
-    this._separators[name] = de;
+    this._separators[opt.name] = de;
+
+    if ('flex' in opt) {
+        de.style.flex = opt.flex;
+    }
 };

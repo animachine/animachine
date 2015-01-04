@@ -222,7 +222,7 @@ p.useSave = function (save) {
     }
 };
 
-p._getScriptParams = function (runnable) {
+p._getScriptParams = function (opt) {
 
     var params = [];
 
@@ -233,7 +233,7 @@ p._getScriptParams = function (runnable) {
         var tl = new TimelineMax(),
             lastTime = 0;
 
-        var param = param.getScriptKeys(runnable).map(function (key) {
+        var param = param.getScriptKeys({runnable: opt.runnable}).map(key => {
 
             key.duration = (key.time - lastTime)/1000;
             lastTime = key.time;
@@ -463,6 +463,8 @@ p.addGroup = function (path, opt) {
 
         paramGroup = paramFactory.createGroup(opt || {name});
         parent.addParam(paramGroup);
+
+        paramGroup.on('translateToBezier', this._switchFromTranslateToBezier, this);
     }
 
     return paramGroup;

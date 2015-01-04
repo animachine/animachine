@@ -16,7 +16,12 @@ function BezierCssParam (opt) {
         {name: 'autoRotate', type: 'checkbox'},
     ];
 
+    this._checkTimeline = undefined;
+    this._checkObj = {x: 0, y: 0};
+
     CssParam.call(this, opt);
+
+    this.on('change', this._refreshCheckTimeline, this);
 
     this._defaultValue = {x: 0, y: 0};
 }
@@ -99,11 +104,37 @@ p.getScriptKeys = function () {
     return _.sortBy(keys, 'time');
 };
 
+p._refreshCheckTimeline = function () {
+
+    var time = 0,
+        tl = new TimelineMax();
+
+    if (this._checkTimeline) this._checkTimeline.kill();
+    this._checkTimeline = tl;
+
+    this.getScriptKeys(true).forEach(key => {
+
+        tl.to(this._checkObj, (key.time - time) / 1000, key.options);
+
+        time = key.time;
+    });
+};
+
 p.getValue = function (time) {
 
     if (!_.isNumber(time)) {
         time = am.timeline.currTime;
     }
+
+    if (!this._checkTimeline) {
+        this._refreshCheckTimeline();
+    }
+
+    this._checkTimeline.time(time/1000);
+    return {
+        x: this._checkObj.x,
+        y: this._checkObj.y,
+    };
 
     var ret, before, after, same;
 

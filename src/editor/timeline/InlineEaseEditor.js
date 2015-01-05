@@ -8,7 +8,6 @@ function InlineEaseEditor(opt) {
 
     EventEmitter.call(this);
 
-    this._onChangeEase = this._onChangeEase.bind(this);
     this._onClickWindow = this._onClickWindow.bind(this);
 
     this._height = amgui.LINE_HEIGHT;
@@ -41,7 +40,8 @@ p.show = function (opt) {
 
     this._eases.forEach(ease => {
 
-        ease.on('change', this._onChangeEase);
+        ease.on('change', this._onChangeEase, this);
+        am.timeline.on(['changeTape', 'changeTimescale'], this._render, this);
     });
 
     this._render();
@@ -55,7 +55,8 @@ p.hide = function () {
 
         this._eases.forEach(ease => {
 
-            ease.off('change', this._onChangeEase);
+            ease.off('change', this._onChangeEase, this);
+            am.timeline.off(['changeTape', 'changeTimescale'], this._render, this);
         });
     }
 

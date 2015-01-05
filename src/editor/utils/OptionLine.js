@@ -205,9 +205,9 @@ p.addInput = function (opt) {
 
 p.addButton = function (opt) {
 
-    if ('childIdx' in opt && this._btnCont.childNodes[opt.childIdx]) {
+    if ('childIdx' in opt && this._btnCont.children[opt.childIdx]) {
 
-        this._btnCont.insertBefore(opt.domElem, this._btnCont.childNodes[opt.childIdx]);
+        this._btnCont.insertBefore(opt.domElem, this._btnCont.tgglChildren[opt.childIdx]);
     }
     else {
         this._btnCont.appendChild(opt.domElem);

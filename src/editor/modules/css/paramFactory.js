@@ -42,13 +42,13 @@ module.exports = {
                 input.precision = 2;
                 break;
 
-            case 'rotateX': 
-            case 'rotateY': 
-            case 'rotateZ': 
+            case 'rotationX': 
+            case 'rotationY': 
+            case 'rotationZ': 
                 paramOpt.defaultValue = '0deg';
                 input.units = ['deg', 'rad']; 
                 input.precision = 1;
-                input.conterters = {
+                input.converters = {
                     deg2rad: function (deg) {
                         return deg / 180 * Math.PI;
                     },
@@ -138,7 +138,6 @@ module.exports = {
         };
 
         if (opt.name === 'translate') {
-            
             pgOpt.optionLine.inputs.push({name: 'x', type: 'unit', units: ['px']});
             pgOpt.optionLine.inputs.push({name: 'y', type: 'unit', units: ['px']});
         }
@@ -150,12 +149,11 @@ module.exports = {
             paramGroup.optionLine.addButton({
                 domElem: amgui.createIconBtn({
                     icon: 'vector',
-                    tooltip: 'use bezier path',
-                    onClick: function () {
-                        paramGroup.emit('translateToBezier')
-                    },
+                    tooltip: 'convert to bezier path',
+                    onClick: () => paramGroup.emit('translateToBezier'),
                 }),
                 name: 'bezier',
+                childIdx: 0,
             });
         }
 

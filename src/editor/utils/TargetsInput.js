@@ -3,6 +3,7 @@
 var EventEmitter = require('eventman');
 var inherits = require('inherits');
 var amgui = require('../amgui');
+var StringInput = require('../utils/StringInput');
 
 function TargetsInput(opt) {
 
@@ -32,13 +33,13 @@ Object.defineProperties(p, {
 
             if (!Array.isArray(v)) throw Error;
 
-            this._value.slice().forEach(i => this.removeTarget(i));
+            this._value.slice().forEach(target => this.removeTarget(target));
 
             v.forEach(i => this.addTarget(i));
         },
         get: function () {
 
-            return _.pluck(this._targets, 'value');
+            return _.pluck(this._targets, 'data');
         }
     },
 });
@@ -61,7 +62,8 @@ p.removeTarget = function (target) {
     if (idx === -1) return;
 
     this._targets.splice(idx, 1);
-    this._deTargetsCont.removeChild(target.domElem);
+    $(target.domElem).remove();
+    target.dispose();
 };
 
 p.reset = function () {
@@ -103,15 +105,15 @@ p._createBase = function () {
     amgui.createIconBtn({
         icon: 'code',
         display: 'inline-block',
-        onClick: () => am.dialogs.WIP.show(),
+        onClick: () => this.addTarget({type: 'input', value: ''}),
         parent: this.domElem,
-        tooltip: 'select from options'
+        tooltip: 'select from js inputs'
     });
 };
 
-p._createTarget = function (value) {
+p._createTarget = function (data) {
 
-    var target = {value};
+    var target = {data};
 
     var height = 23;
 
@@ -122,24 +124,49 @@ p._createTarget = function (value) {
     target.domElem.style.margin = '1px 0';
     target.domElem.style.background = amgui.color.bg2;
 
-    var inp = document.createElement('input');
-    inp.type = 'text';
-    inp.value = target.value.value;
-    inp.placeholder = 'target';
+    var deHighlight = document.createElement('div');
+    deHighlight.style.display = 'inline-block';
+    deHighlight.style.width = '2px';
+    deHighlight.style.height = this._lineH + 'px';
+    deHighlight.style.background = target.data === 'css' ? amgui.purple : amgui.blue;
+    deHighlight.style.opacity = 0;
+    deHeadCont.appendChild(this._deHighlight);
+
+    var inp = new StringInput({
+        parent: target.domElem,
+        placeholder: 'type here',
+        onChange: () => {
+            target.value.data = inp.value;
+            this.emit('change');
+        }
+    });
     inp.style.width = '245px';
     inp.style.height = height + 'px';
     inp.style.fontSize = '14px';
-    inp.style.fontFamily = amgui.FONT_FAMILY;
-    inp.style.flex = '1';
-    inp.style.background = 'none';
-    inp.style.border = 'none';
-    inp.style.color = amgui.color.text;
-    target.domElem.appendChild(inp);
 
-    inp.addEventListener('change', () => {
-        target.value.value = inp.value;
-        this.emit('change');
-    });
+    var refreshSuggestions = () => {
+
+        inp.setSuggestions(am.timeline.getInputNames());
+    }
+
+    if (target.data.type === 'input') {
+
+        refreshSuggestions();
+        am.timeline.on('change.inputs', refreshSuggestions);
+    } 
+
+    if (target.data.type === 'css') {
+
+        var btnPick = amgui.createIconBtn({
+            icon: 'target',
+            height: height,
+            display: 'inline-block',
+            onClick: () => am.dialogs.WIP.show(),
+            parent: target.domElem,
+            tooltip: 'pick DOM element'
+        });
+        btnDel.style.visibility = 'hidden';
+    }
 
     var btnDel = amgui.createIconBtn({
         icon: 'cancel',
@@ -156,6 +183,11 @@ p._createTarget = function (value) {
     target.domElem.addEventListener('mouseleave', function () {
         btnDel.style.visibility = 'hidden';
     });
+
+    target.dispose = function () {
+
+        am.timeline.off('change.inputs', refreshSuggestions);
+    }
 
     return target;
 }

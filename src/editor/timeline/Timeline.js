@@ -39,7 +39,7 @@ function Timeline(opt) {
     this._timebar = new Timebar({
         height: this._headerH,
         timescale: 0.12,
-        length: 6000
+        length: 6000,
     });
 
     this.toolbar = new Toolbar({
@@ -409,6 +409,31 @@ p.setInputs = function (inputs) {
     this.inputs = inputs;
 
     this.emit('change.inputs');
+};
+
+p.getInputPaths = function (maxLevel = 4) {
+
+    var ret = [];
+
+    var step = (obj, path, level) => {
+
+        Object.keys(obj).forEach(key => {
+
+            if (_.isPlainObject(obj[key])) {
+
+                ret.push(path + key);
+
+                if (level <= maxLevel) {
+
+                    step(obj[key], path + key + '.', level + 1);
+                }
+            }
+        });
+    }
+
+    step(this.inputs, '', 0);
+
+    return ret;
 };
 
 

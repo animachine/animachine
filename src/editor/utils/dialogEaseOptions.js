@@ -46,6 +46,12 @@ function createContent() {
 
     dialog.addButton('ok', 'hide');
 
+    amgui.createButton({
+        text: 'save/load ease',
+        parent: dialog.deContent,
+        onClick: () => am.dialogs.WIP.show(),
+    });
+
     beizerEditor = amgui.createBezierEditor({
         // width: 330,
         // height: 330,

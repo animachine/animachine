@@ -611,23 +611,15 @@ p.focusHandler = function (de) {
 
     this.emit('focusHandler');
 
-    var transformSave;
-    if (de.style.transform) {
-        transformSave = de.style.transform;
-        de.style.transform = '';
-    }
-
-    var br = de.getBoundingClientRect();
-
     de.style.transform = transformSave;
 
     var handOpt = {
         type: 'transformer',
         base: {
-            x: br.left,
-            y: br.top,
-            w: br.width,
-            h: br.height,
+            x: de.offsetLeft,
+            y: de.offsetTop,
+            w: de.offsetWidth,
+            h: de.offsetHeight,
         },
         params: {}
     };

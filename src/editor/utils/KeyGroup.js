@@ -38,7 +38,7 @@ Object.defineProperties(p, {
 
             this._subkeys.forEach(function (key) {
 
-                key.ease.useSave(ease);
+                key.ease.useSave(ease.getSave());
             });
         }
     }
@@ -93,7 +93,7 @@ p.removeSubkey = function (key) {
 
 p.remove = function () {
 
-    this._subkeys.forEach(function (key) {
+    this._subkeys.slice().forEach(function (key) {
 
         key.remove();
     });

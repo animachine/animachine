@@ -25,6 +25,16 @@ function BezierCssParam (opt) {
     this._refreshCheckTimeline();
 
     this._defaultValue = {x: 0, y: 0};
+
+    paramGroup.optionLine.addButton({
+        domElem: amgui.createIconBtn({
+            icon: 'chart-line',
+            tooltip: 'convert to plain translate',
+            onClick: () => paramGroup.emit('bezierToTranslate'),
+        }),
+        name: 'bezier',
+        childIdx: 0,
+    });
 }
 
 inherits(BezierCssParam, CssParam);
@@ -42,7 +52,6 @@ Object.defineProperties(p, {
             }
 
             this._parentTrack = v;
-
 
             if (this._parentTrack) {
                 this._parentTrack.on('focusHandler', this._focusTransformer, this);

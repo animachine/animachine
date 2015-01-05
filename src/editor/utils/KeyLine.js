@@ -220,6 +220,8 @@ p.getKeyTimes = function () {
 
 p._render = function () {
 
+    if (this._skipRender) return;
+
     var canvas = this._canvas,
         ctx = this._ctx;
 

@@ -149,6 +149,8 @@ p._delayedRefreshHeadKeyline = function () {
 
     this._refreshHeadKeylineRafId = undefined;
 
+    this._skipRender = true;
+
     var times = [], keysOnTimes = [];
 
     this._keyLines.forEach(function (keyLine) {
@@ -192,6 +194,7 @@ p._delayedRefreshHeadKeyline = function () {
 
     }, this);
 
+    this._skipRender = false;
     this._render();
 };
 

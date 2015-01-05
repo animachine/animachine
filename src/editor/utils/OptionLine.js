@@ -75,7 +75,7 @@ function OptionLine(opt) {
             this._deTitle.addEventListener('click', opt.title.onClick);
 
             var deNameIcon = amgui.createIcon({
-                icon: 'cog',
+                icon: 'pencil',
                 parent: this._deHeadCont,
             });
             deNameIcon.style.display = 'none';
@@ -207,7 +207,7 @@ p.addButton = function (opt) {
 
     if ('childIdx' in opt && this._btnCont.children[opt.childIdx]) {
 
-        this._btnCont.insertBefore(opt.domElem, this._btnCont.tgglChildren[opt.childIdx]);
+        this._btnCont.insertBefore(opt.domElem, this._btnCont.children[opt.childIdx]);
     }
     else {
         this._btnCont.appendChild(opt.domElem);

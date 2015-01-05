@@ -67,11 +67,10 @@ function CssTrack(opt) {
 
     this._paramGroup.optionLine.addButton({
         domElem: amgui.createToggleIconBtn({
+            tooltip: 'enable/disable 3d',
             icon: 'cube',
             changeColor: true,
-            onClick: function () {
-                am.dialogs.WIP.show();
-            }
+            onClick: () => am.dialogs.WIP.show(),
         }),
         name: 'tggl3d',
         childIdx: 0,
@@ -80,13 +79,9 @@ function CssTrack(opt) {
 
     this._paramGroup.optionLine.addButton({
         domElem: amgui.createToggleIconBtn({
+            tooltip: 'add new css parameter',
             icon: 'plus',
-            changeColor: true,
-            onClick: function () {
-                    dialogNewParam.show({
-                        track: this,
-                    });
-                }.bind(this),
+            onClick: () => dialogNewParam.show({track: this}),
         }),
         name: 'newParam',
         childIdx: 0,
@@ -610,8 +605,6 @@ p.focusHandler = function (de) {
     if (!this._currHandledDe) return this._blurHandler();
 
     this.emit('focusHandler');
-
-    de.style.transform = transformSave;
 
     var handOpt = {
         type: 'transformer',

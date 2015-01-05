@@ -46,7 +46,7 @@ function createContent() {
 
     dialog.addButton('ok', 'hide');
 
-    amgui.createButton({
+    amgui.createBtn({
         text: 'save/load ease',
         parent: dialog.deContent,
         onClick: () => am.dialogs.WIP.show(),

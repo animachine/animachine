@@ -26,11 +26,11 @@ function BezierCssParam (opt) {
 
     this._defaultValue = {x: 0, y: 0};
 
-    paramGroup.optionLine.addButton({
+    this.optionLine.addButton({
         domElem: amgui.createIconBtn({
             icon: 'chart-line',
             tooltip: 'convert to plain translate',
-            onClick: () => paramGroup.emit('bezierToTranslate'),
+            onClick: () => this.emit('bezierToTranslate'),
         }),
         name: 'bezier',
         childIdx: 0,

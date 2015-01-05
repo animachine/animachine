@@ -34,6 +34,8 @@ function createInput(opt) {
     if (opt.onChange) {
         inp.addEventListener('change', opt.onChange);
     }
+    
+    inp.addEventListener('mousedown', e => e.stopPropagation());
 
     if (opt.parent) {
         opt.parent.appendChild(inp);

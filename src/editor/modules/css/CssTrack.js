@@ -403,7 +403,6 @@ p.addParam = function (opt, skipHistory) {
 
 p.removeParam = function (param, skipHistory) {
 
-console.log('removeParam', opt)
     var idx = this._endParams.indexOf(param);
 
     if (idx === -1) {

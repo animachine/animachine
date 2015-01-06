@@ -506,7 +506,7 @@ p._createOptions = function (opt) {
             {text: 'delete', onSelect: this.emit.bind(this, 'delete', this)}
         ],
         title: {
-            text: this.name
+            text: this.name,
         },
         btnKey: {
             onClick: this._onClickTgglKey,

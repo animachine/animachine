@@ -54,6 +54,9 @@ function CssTrack(opt) {
         },
     });
 
+    //test hack
+    this._paramGroup.optionLine._deTitle.style.fontWeight = 'bold';
+
     this._paramGroup.optionLine.addButton({
         domElem: amgui.createToggleIconBtn({
             iconOn: 'eye',

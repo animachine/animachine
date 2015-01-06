@@ -130,7 +130,7 @@ p._createTarget = function (data) {
     deHighlight.style.height = this._lineH + 'px';
     deHighlight.style.background = target.data === 'css' ? amgui.purple : amgui.blue;
     deHighlight.style.opacity = 0;
-    deHeadCont.appendChild(this._deHighlight);
+    deHeadCont.appendChild(deHighlight);
 
     var inp = new StringInput({
         parent: target.domElem,

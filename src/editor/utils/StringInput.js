@@ -108,9 +108,10 @@ p._createBase = function () {
 
     this._input = amgui.createInput({
         parent: this.domElem,
-        onChange: this._onChangeInput,
         flex: 1, 
     });
+
+    $(this._input).on('change', this._onChangeInput);
 
     // this._input.style.textAlign =  'right';
     this._input.style.paddingRight =  '2px';

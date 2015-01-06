@@ -34,14 +34,10 @@ Object.defineProperties(p, {
 
         get: function () {
 
-            var ret = this._lineH;
+            var ret = this.hidden ? 0 : this._lineH;
 
             if (this.collapsed) {
-
-                this._params.forEach(function (param) {
-
-                    ret += param.height;
-                });
+                this._params.forEach(param => ret += param.height);
             }
 
             return ret;

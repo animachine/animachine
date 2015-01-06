@@ -230,6 +230,17 @@ p.addKey = function (opt, skipHistory) {
     }
     else {
 
+        if (!opt.value) {
+
+            let {x, y} = this.getValue(opt.time);
+
+            opt.value = [{
+                anchor: {x, y},
+                handleLeft: {x, y},
+                handleRight: {x, y}
+            }];
+        }
+
         key = new Key(opt);
 
         key.on('prerender', this._onKeyPrerender, this);

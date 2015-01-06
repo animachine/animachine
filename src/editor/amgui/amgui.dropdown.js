@@ -80,11 +80,11 @@ function createDropdown(opt) {
         }
     };
 
-    de.setItems = function (items) {
+    de.setItems = function (newItems) {
 
         while (items.length) de.removeItem(items[0]);
         
-        items.forEach(optItem => de.addItem(optItem));
+        newItems.forEach(optItem => de.addItem(optItem));
     };
 
     if (opt.options) {

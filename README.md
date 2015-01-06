@@ -4,6 +4,6 @@ Animachine is an animation tool for HTML and JS projects. You can use it as a Ch
 
 The program is currently in the technical preview state, but you can see the core of the idea by watching these [demos](#demos) and follow the project to get the updates.
 
-The todo list would be too long to start but the main goal (of course:) is to make the most handy, open source, hackable animation tool ever made, both for artists and programmers.
+The todo list would be too long to start but the main goal (of course:) is to make the most handy, open source and hackable animation tool ever made, both for artists and programmers.
 
 ###<a name="demos"></a>Demos: [1](http://animachine.github.io/animachine/demos/marspolip/), ...(wip)

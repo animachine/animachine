@@ -543,7 +543,7 @@ p.select = function (opt) {
         this.focusHandler(opt.focusElem || this._selectedElems[0]);
     }
 
-    this._paramGroup.highlight = true;
+    this._paramGroup.optionLine.highlight = true;
 
     this.emit('select', this);
 };
@@ -555,7 +555,7 @@ p.deselect = function () {
 
     this._blurHandler();
 
-    this._paramGroup.highlight = false;
+    this._paramGroup.optionLine.highlight = false;
 
     window.removeEventListener('resize', this._onWindowResize);
     window.removeEventListener('scroll', this._onWindowScroll);

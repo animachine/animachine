@@ -281,7 +281,7 @@ p._createHighlight = function () {
     this._deHighlight.style.display = 'inline-block';
     this._deHighlight.style.width = '2px';
     this._deHighlight.style.height = this._lineH + 'px';
-    this._deHighlight.style.background = 'gold';
+    this._deHighlight.style.background = amgui.color.lime;
     this._deHighlight.style.opacity = 0;
     this._deHeadCont.appendChild(this._deHighlight);
 };

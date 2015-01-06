@@ -211,13 +211,21 @@ p._createBase = function () {
 
             return {
                 amount: this._amount,
+                moved: false,
             }
         },
         onMove: function (md, mx) {
 
-            var dx = mx - md.mx;
+            md.moved = true;
 
+            var dx = mx - md.mx;
+            
             this._setValueParts(md.amount + this._dragSpeed * dx);
+        },
+        onUp: function (md) {
+            if (!md.moved) {
+                this._inpAmount.focus()
+            }
         }
     });
 

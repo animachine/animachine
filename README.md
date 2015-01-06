@@ -6,4 +6,4 @@ The program is currently in the technical preview state, but you can see the cor
 
 The todo list would be too long to start but the main goal (of course:) is to make the most handy, open source, hackable animation tool ever made, both for artists and programmers.
 
-###<a name="demos"></a>Demos: [1](http://animachine.github.io/animachine/demos/marspolip/), [2](http://animachine.github.io/animachine/demos/zomb1/), [3](http://animachine.github.io/animachine/demos/js/), [4](http://animachine.github.io/animachine/demos/3dcircles/)
+###<a name="demos"></a>Demos: [1](http://animachine.github.io/animachine/demos/marspolip/), ...(wip)

@@ -23,6 +23,8 @@ function createDropdown(opt) {
     de.style.margin = 0;
     de.style.padding = 0;
 
+    var items = [];
+
     de.addItem = function (optItem) {
 
         if (typeof(optItem) === 'string') {
@@ -62,24 +64,33 @@ function createDropdown(opt) {
             li.style.background = amgui.color.overlayInverse;
         });
 
+        items.push(li);
         return li;
-    }
+    };
 
     de.removeItem = function (li) {
+
+        var idx = items.indexOf(li);
+        if (idx === -1) return;
+        items.splice(idx, 1);
 
         if (li.parentNode) {
 
             li.parentNode.removeChild(li);
         }
-    }
+    };
+
+    de.setItems = function (items) {
+
+        while (items.length) de.removeItem(items[0]);
+        
+        items.forEach(optItem => de.addItem(optItem));
+    };
 
     if (opt.options) {
 
-        opt.options.forEach(function (optItem) {
-
-           de.addItem(optItem);
-        });
-    }
+        de.setItems(opt.options)
+    };
 
     if (opt.onSelect) {
 

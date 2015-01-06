@@ -4,6 +4,7 @@ var EventEmitter = require('eventman');
 var inherits = require('inherits');
 var Timebar = require('./Timebar');
 var EaseMap = require('./EaseMap');
+var TriggerMap = require('./TriggerMap');
 var amgui = require('../amgui');
 var mineSave = require('./mineSave');
 var UglifyJS = require('uglify-js');
@@ -60,6 +61,7 @@ function Timeline(opt) {
     this._mapTrackDatas = new WeakMap();
 
     this.easeMap = new EaseMap();
+    this.triggerMap = new TriggerMap();
 
     this._timebar.on('changeTime', this.emit.bind(this, 'changeTime'));
     this._timebar.on('changeTape', this.emit.bind(this, 'changeTape'));
@@ -759,6 +761,19 @@ p._createSettingsHead = function () {
             options: ['css', 'js', 'attribute', 'media', 'timeline', 'three.js', 'pixi.js', 'easel.js', 'kinetic.js', 'raphael.js', 'snap.js'],
             onSelect: this._onSelectNewTrack,
         }),
+    });
+
+    
+    this._btnEditTriggers = amgui.createIconBtn({
+        tooltip: 'set timeline triggers',
+        icon: 'flash', 
+        size: this._headerH,
+        // parent: this._deSettingsHead,
+        display: 'inline-block',
+        onClick: () => this.triggerMap.showEditor(),
+    });
+    this.toolbar.addIcon({
+        deIcon: this._btnEditTriggers,
     });
 
     

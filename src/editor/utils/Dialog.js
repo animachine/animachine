@@ -75,6 +75,8 @@ p.show = function (opt) {
     this.emit('show');
 
     this.domElem.showModal();
+
+    return this;
 };
 
 p.hide = function () {
@@ -90,11 +92,15 @@ p.hide = function () {
     }, this);
 
     this.emit('hide');
+
+    return this;
 };
 
 p.addProperty = function (opt) {
 
     this._setupProperties.push(defineCompactProperty(this, opt));
+    
+    return this;
 };
 
 p.addButton = function (text, handler) {
@@ -105,16 +111,22 @@ p.addButton = function (text, handler) {
     }
 
     this.domElem.addButton(text, handler);
+
+    return this;
 };
 
 p.hideButton = function (text) {
 
     this.domElem.hideButton(text);
+
+    return this;
 };
 
 p.showButton = function (text) {
 
     this.domElem.showButton(text);
+
+    return this;
 };
 
 p.move = function (x, y) {
@@ -123,6 +135,8 @@ p.move = function (x, y) {
     this._offsetY = y;
 
     this.domElem.style.transform = 'translate('+x+'px,'+y+'px)';
+
+    return this;
 };
 
 

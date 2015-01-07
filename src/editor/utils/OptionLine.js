@@ -79,8 +79,8 @@ function OptionLine(opt) {
                 parent: this._deHeadCont,
             });
             deNameIcon.style.display = 'none';
-            this._deTitle.addEventListener('mouseenter', function () {deNameIcon.style.display = 'inline-block';});
-            this._deTitle.addEventListener('mouseleave', function () {deNameIcon.style.display = 'none';});
+            this._deTitle.addEventListener('mouseenter', () => deNameIcon.style.display = 'inline-block');
+            this._deTitle.addEventListener('mouseleave', () => deNameIcon.style.display = 'none');
         }
     }
 

@@ -113,7 +113,7 @@ function createDialog(opt) {
         var btn = amgui.createBtn({
             text: text,
             height: '100%',
-            backgroundColor: 'rgba(0,0,0,0)',
+            background: 'rgba(0,0,0,0)',
         });
         btn.style.display = 'inline-block';
         btn.style.fontWeight = '700';

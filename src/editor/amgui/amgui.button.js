@@ -55,14 +55,14 @@ function createLabel(opt) {
 
 function createBtn(opt) {
 
-    opt.backgroundColor = opt.backgroundColor || amgui.color.bg0;
+    opt.background = opt.background || amgui.color.bg1;
 
     var de = amgui.createDiv(opt);
     de.style.height = (opt.height || amgui.LINE_HEIGHT) + 'px';
-    de.style.padding = '0 15px';
-    de.style.cursor = 'pointer';
+    de.style.fontSize = (opt.fontSize || amgui.FONT_SIZE);
+    de.style.display = opt.display || 'inline-block';
+    de.style.padding = '0 5px';
     de.style.color = amgui.color.text;
-    de.style.backgroundColor = opt.backgroundColor;
 
     Object.defineProperties(de, {
 
@@ -94,7 +94,6 @@ function createIconBtn(opt) {
     var isFixedHighlight = false;
 
     var de = amgui.createIcon(opt);
-    de.style.cursor = 'pointer';
     de.style.overflow = 'hidden';
 
     behaviorBtn(de, opt);
@@ -110,6 +109,8 @@ function behaviorBtn(de, opt) {
         background = opt.background || 'none',
         backgroundHover = opt.backgroundHover || amgui.color.bgHover;
 
+    de.style.cursor = 'pointer';
+    
     de.addEventListener('mouseenter', onMOver);
     de.addEventListener('mouseleave', onMOut);
 

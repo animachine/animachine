@@ -3,6 +3,7 @@
 var EventEmitter = require('eventman');
 var inherits = require('inherits');
 var Dialog = require('../utils/Dialog');
+var OptionLine = require('../utils/OptionLine');
 var StringInput = require('../utils/StringInput');
 
 var ACTIONS = [{
@@ -89,7 +90,8 @@ p._createTrigger = function () {
 
 p._createEditDialog = function () {
 
-    var dialog = new Dialog(),
+    var dialog = new Dialog({title: 'TriggerMap'})
+            .addButton('ok', 'hide'),
         deCont = dialog.deContent,
         currTrigger;
 
@@ -100,7 +102,7 @@ p._createEditDialog = function () {
         if (!trigger) return;
 
         currTrigger = trigger;
-        inpName = currTrigger.name;
+        olName.inputs.input.name = currTrigger.name;
         inpEvent = currTrigger.events[0];
         inpSelector = currTrigger.selectors[0];
         inpMethod = currTrigger.actions[0].method;
@@ -113,6 +115,17 @@ p._createEditDialog = function () {
         onClick: () => selectTrigger(this.addTrigger()),
     });
 
+    var olName = new OptionLine({
+        title: 'name:',
+        parent: deCont,
+        inputs: [{
+            name: 'name',
+            type: 'string',
+            placeholder: 'name of the trigger',
+            onChange: v => currTrigger.name = v,
+        }]
+    });
+
     var refreshTriggerList = () => deTriggerList.setItems(_.pluck(this._triggers, name));
     var deTriggerList = amgui.createDropdown({
         parent: deCont,
@@ -123,12 +136,15 @@ p._createEditDialog = function () {
 
     amgui.createLabel({parent: deCont, text: 'name:'});
     var inpName = new StringInput({
+        parent: deCont,
         defaultValue: 'myTrigger',
         onChange: v => currTrigger.name = v,
     });
 
+
     amgui.createLabel({parent: deCont, text: 'event:'});
     var inpEvent = new StringInput({
+        parent: deCont,
         defaultValue: 'click',
         suggestions: 'click,mousedown,mouseup,mouseover,mouseout,ready,mouseenter,mouseleave,change'.split(','),
         onChange: v => currTrigger.events[0] = v,
@@ -136,18 +152,21 @@ p._createEditDialog = function () {
 
     amgui.createLabel({parent: deCont, text: 'selector:'});
     var inpSelector = new StringInput({
+        parent: deCont,
         defaultValue: '#selector',
         onChange: v => currTrigger.targets[0] = v,
     });
 
     amgui.createLabel({parent: deCont, text: 'action:'});
     var inpMethod = new StringInput({
+        parent: deCont,
         defaultValue: 'play',
         suggestions: _.pluck(ACTIONS, 'method'),
         onChange: v => currTrigger.actions[0].method = v,
     });
     amgui.createLabel({parent: deCont, text: '('});
     var inpArguments = new StringInput({
+        parent: deCont,
         defaultValue: '',
         onChange: v => currTrigger.actions[0].arguments[0] = v,
     });

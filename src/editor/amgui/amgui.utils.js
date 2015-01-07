@@ -9,6 +9,7 @@ module.exports = function (_amgui) {
     return {
         placeToPoint: placeToPoint,
         callOnAdded: callOnAdded,
+        delayWithRAF: delayWithRAF,
     };
 };
 
@@ -102,6 +103,24 @@ function callOnAdded(de, cb, thisArg) {
 
                 return true;
             }
+        }
+    }
+}
+
+function delayWithRAF(fn, thisArg) {
+
+    var waiting = undefined;
+
+    return (...args) => {
+
+        if (waiting === undefined) {
+
+            waiting = window.requestAnimationFrame(() => {
+
+                waiting = false;
+
+                fn.apply(thisArg, args);
+            });
         }
     }
 }

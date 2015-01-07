@@ -16,6 +16,8 @@ function KeyLine (opt) {
     this._onKeyNeedsRemove = this._onKeyNeedsRemove.bind(this);
     this._onDblClick = this._onDblClick.bind(this);
     this._onMouseDown = this._onMouseDown.bind(this);
+
+    this._render = amgui.delayWithRAF(this._render, this);
     
     this._createDomElem();
 
@@ -200,14 +202,7 @@ p.getKeyUnderPos = function (x) {
 
 p.getKeyTimes = function () {
 
-    var times = [];
-
-    this._keys.forEach(function (key) {
-
-        times.push(key.time);
-    });
-
-    return times;
+    return _.pluck(this._keys, 'time');
 };
 
 
@@ -220,7 +215,7 @@ p.getKeyTimes = function () {
 
 p._render = function () {
 
-    if (this._skipRender) return;
+    if (this._skipRender || this.hidden) return;
 
     var canvas = this._canvas,
         ctx = this._ctx;
@@ -229,14 +224,6 @@ p._render = function () {
     canvas.height = this._height;
 
     _.sortBy(this._keys, 'time').forEach(key => key.renderToLine(ctx));
-};
-    
-p._sortKeys = function () {
-
-    this._keys.sort(function (a, b) {
-        
-        return a.time - b.time;
-    });
 };
 
 p.show = function () {

@@ -226,6 +226,14 @@ p.removeKeyAll = function (time) {
 
 
 
+p._isKeySet = function (time) {
+
+    return this._params.every(p => p._isKeySet(time));
+};
+
+
+
+
 
 
 
@@ -278,7 +286,7 @@ p._refreshHeights = function () {
     var h = this.height;
     this.keyLine.domElem.style.height = h + 'px';
     this.optionLine.domElem.style.height = h + 'px';
-}
+};
 
 
 

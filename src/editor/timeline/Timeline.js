@@ -134,6 +134,8 @@ p.getSave = function () {
             length: this._timebar.length,
         },
         tracks: [],
+        easeMap: this.easeMap.getSave(),
+        triggerMap: this.triggerMap.getSave(),
     };
 
     this._tracks.forEach(function (track) {
@@ -167,6 +169,9 @@ p.useSave = function (save) {
     this._timebar.currTime = save.timebar.currTime;
     this._timebar.timescale = save.timebar.timescale;
     this._timebar.length = save.timebar.length;
+
+    if ('easeMap' in save) this.easeMap.useSave(save.easeMap);
+    if ('triggerMap' in save) this.triggerMap.useSave(save.triggerMap);
 
     save.tracks.forEach(function (trackData) {
 

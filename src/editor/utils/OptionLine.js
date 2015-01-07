@@ -37,8 +37,8 @@ function OptionLine(opt) {
             asContextMenu: true,
             deTarget: this._deHeadCont,
             deMenu: amgui.createDropdown({
-                options: opt.contextMenuOptions
-            })
+                options: opt.contextMenuOptions,
+            }),
         });
     }
 

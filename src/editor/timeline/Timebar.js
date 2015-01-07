@@ -185,7 +185,13 @@ Object.defineProperties(p, {
 
 
 
+p.getSave = function () {
+    //TODO
+}
 
+p.useSave = function () {
+    //TODO
+}
 
 p.screenXToTime = function (screenX) {
 

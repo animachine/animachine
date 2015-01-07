@@ -3,6 +3,7 @@
 var EventEmitter = require('eventman');
 var inherits = require('inherits');
 var Dialog = require('../utils/Dialog');
+var StringInput = require('../utils/StringInput');
 
 var ACTIONS = [{
     method: 'play',
@@ -14,6 +15,8 @@ function TriggerMap(opt) {
     EventEmitter.call(this);
 
     this._triggers = {};
+
+    this._createEditDialog();
 }
 
 inherits(TriggerMap, EventEmitter);
@@ -87,12 +90,12 @@ p._createTrigger = function () {
 p._createEditDialog = function () {
 
     var dialog = new Dialog(),
-        currTrigger = trigger
-        deCont = dialog._deContent;
+        deCont = dialog.deContent,
+        currTrigger;
 
     this._editDialog = dialog;
 
-    selectTrigger = trigger => {
+    var selectTrigger = trigger => {
         
         if (!trigger) return;
 
@@ -140,13 +143,12 @@ p._createEditDialog = function () {
     amgui.createLabel({parent: deCont, text: 'action:'});
     var inpMethod = new StringInput({
         defaultValue: 'play',
-        suggestions: actions.pluck(method),
+        suggestions: _.pluck(ACTIONS, 'method'),
         onChange: v => currTrigger.actions[0].method = v,
     });
     amgui.createLabel({parent: deCont, text: '('});
     var inpArguments = new StringInput({
         defaultValue: '',
-        suggestions: actions.pluck(method),
         onChange: v => currTrigger.actions[0].arguments[0] = v,
     });
     amgui.createLabel({parent: deCont, text: ')'});
@@ -156,6 +158,6 @@ p._createEditDialog = function () {
         text: 'remove trigger',
         onClick: () => {
             this.removeTrigger(currTrigger);
-        },
+        },  
     });
 };

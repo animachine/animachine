@@ -154,7 +154,6 @@ p.getSave = function () {
         name: this.name,
         selectors: _.clone(this._selectors),
         paramTree: {children: [], save: this._paramGroup.getSave()},
-        isShowingParams: this._isShowingParams,
     };
     //TODO make param and group handling cleaner
     var saveChildren = (children, paramGroup) => {
@@ -213,11 +212,6 @@ p.useSave = function (save) {
 
     this._refreshSelectedElems();
     this._refreshPlayer();
-
-    if (save.isShowingParams) {
-
-        this._showParams();
-    }
 };
 
 p._getScriptParams = function (opt) {
@@ -711,7 +705,7 @@ p._switchFromTranslateToBezier = function () {
         xKeys = xParam.getSave().keys,
         yKeys = yParam.getSave().keys,
         bezierKeys = [],
-        times = _.uniq(_.pluck(xKeys, 'time').concat(_.pluck(yKeys, 'time'))).sort(),
+        times = _.sortBy(_.uniq(_.pluck(xKeys, 'time').concat(_.pluck(yKeys, 'time')))),
         oldBezierKeys = this.__savedBezierKeys || [];
 
     times.forEach(function (time) {

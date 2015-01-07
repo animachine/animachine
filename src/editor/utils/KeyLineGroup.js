@@ -189,6 +189,7 @@ p._delayedRefreshHeadKeyline = function () {
         var key = this._keys[idx];
 
         key.time = time;
+        key.looks.circle = this.merged;
 
         key.setSubkeys(keysOnTimes[idx]);
 

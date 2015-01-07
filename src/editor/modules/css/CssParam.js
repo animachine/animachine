@@ -411,6 +411,11 @@ p.detachInput = function (input) {
     this._inputs.splice(idx, 1);
 };
 
+p._isKeySet = function (time) {
+
+    return !!this.getKey(time);
+};
+
 
 
 
@@ -485,10 +490,9 @@ p._refreshInputs = function () {
 
 p._refreshTgglKey = function () {
 
-    var time = am.timeline.currTime,
-        key = this.getKey(time);
+    var time = am.timeline.currTime;
     
-    this.optionLine.buttons.key.setHighlight(!!key);
+    this.optionLine.buttons.key.setHighlight(this._isKeySet(time));
     this.optionLine.buttons.key.setSteppers(!!this.getPrevKey(time), !!this.getNextKey(time));
 };
 
@@ -501,9 +505,9 @@ p._createOptions = function (opt) {
 
     this.optionLine = new OptionLine(_.assign({
         contextMenuOptions: [
-            {text: 'move up', onSelect: this.emit.bind(this, 'move', this, -1)},
-            {text: 'move down', onSelect: this.emit.bind(this, 'move', this, 1)},
-            {text: 'delete', onSelect: this.emit.bind(this, 'delete', this)}
+            {text: 'move up', onSelect: () => this.emit('move', this, -1)},
+            {text: 'move down', onSelect: () => this.emit('move', this, 1)},
+            {text: 'delete', onSelect: () => this.emit('delete', this)}
         ],
         title: {
             text: this.name,

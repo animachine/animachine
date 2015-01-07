@@ -198,7 +198,7 @@ p.renderToLine = function (ctx) {
     if (line) {
         ctx.save();
         ctx.beginPath();
-        ctx.strokeStyle = isSelected ? 'gold' : (line.color || '#eee');
+        ctx.strokeStyle = isSelected ? amgui.lime : (line.color || '#eee');
         ctx.lineWidth = line.width || 1;
         ctx.moveTo(keyPos, 0);
         ctx.lineTo(keyPos, height);
@@ -209,8 +209,8 @@ p.renderToLine = function (ctx) {
     if (circle) {
         ctx.save();
         ctx.beginPath();
-        ctx.strokeStyle = isSelected ? 'gold' : (circle.color || '#eee');
-        ctx.fillStyle = isSelected ? 'gold' : (circle.fillColor || '#eee');
+        ctx.strokeStyle = isSelected ? amgui.lime : (circle.color || '#eee');
+        ctx.fillStyle = isSelected ? amgui.lime : (circle.fillColor || '#eee');
         ctx.lineWidth = circle.width || 1;
         ctx.arc(keyPos, height/2,
             'r' in circle ? circle.r : r,

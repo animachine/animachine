@@ -21,6 +21,8 @@ function OptionLine(opt) {
     this._createDomElem();
     this._createHighlight();
 
+    this._subOptionLines = [];
+
     if (opt.separator) {
         
         amgui.createSeparator({parent: this._deHeadCont});;
@@ -222,9 +224,19 @@ p.addButton = function (opt) {
     }
 };
 
-p.addSubline = function (de) {
+p.addOptionLine = function (optionLine) {
 
-    this._deSubcont.appendChild(de);
+    this._subOptionLines.push(optionLine);
+    this._deSubcont.appendChild(optionLine.domElem);
+};
+
+p.removeOptionLine = function (optionLine) {
+
+    var idx = this._subOptionLines.indexOf(optionLine);
+    if (idx === -1) return;
+
+    this._subOptionLines.splice(idx, 1);
+    $(optionLine).remove();
 };
 
 p.show = function () {
@@ -245,6 +257,32 @@ p.showSubline = function () {
 p.hideSubline = function () {
 
     this._deSubcont.style.display = 'none';
+};
+p.borrowChildInputs = function () {
+//TODO: do this two somehow better
+
+    this._subOptionLines.forEach(line => {
+
+        Object.keys(line.inputs).forEach(key => {
+
+            this._inputCont.appendChild(line.inputs[key].domElem);
+        });
+    });
+};
+
+p.returnChildInputs = function () {
+
+    var deInputs = _.toArray(this._inputCont.children);
+
+    this._subOptionLines.forEach(line => {
+
+        Object.keys(line.inputs).forEach(key => {
+
+            var idx = deInputs.indexOf(line.inputs[key].domElem);
+            if (idx === -1) return;
+            line._inputCont.appendChild(deInput[idx]);
+        });
+    });
 };
 
 

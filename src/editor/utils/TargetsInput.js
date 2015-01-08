@@ -130,7 +130,7 @@ p._createTarget = function (data) {
     deHighlight.style.height = this._lineH + 'px';
     deHighlight.style.background = target.data === 'css' ? amgui.purple : amgui.blue;
     deHighlight.style.opacity = 0;
-    deHeadCont.appendChild(deHighlight);
+    target.domElem.appendChild(deHighlight);
 
     var inp = new StringInput({
         parent: target.domElem,
@@ -140,9 +140,9 @@ p._createTarget = function (data) {
             this.emit('change');
         }
     });
-    inp.style.width = '245px';
-    inp.style.height = height + 'px';
-    inp.style.fontSize = '14px';
+    inp.domElem.style.width = '245px';
+    inp.domElem.style.height = height + 'px';
+    inp.domElem.style.fontSize = '14px';
 
     var refreshSuggestions = () => {
 
@@ -165,7 +165,7 @@ p._createTarget = function (data) {
             parent: target.domElem,
             tooltip: 'pick DOM element'
         });
-        btnDel.style.visibility = 'hidden';
+        btnPick.style.visibility = 'hidden';
     }
 
     var btnDel = amgui.createIconBtn({
@@ -178,9 +178,11 @@ p._createTarget = function (data) {
     btnDel.style.visibility = 'hidden';
 
     target.domElem.addEventListener('mouseenter', function () {
+        btnPick.style.visibility = 'visible';
         btnDel.style.visibility = 'visible';
     });
     target.domElem.addEventListener('mouseleave', function () {
+        btnPick.style.visibility = 'hidden';
         btnDel.style.visibility = 'hidden';
     });
 

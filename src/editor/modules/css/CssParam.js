@@ -505,9 +505,9 @@ p._createOptions = function (opt) {
 
     this.optionLine = new OptionLine(_.assign({
         contextMenuOptions: [
-            {text: 'move up', onSelect: () => this.emit('move', this, -1)},
-            {text: 'move down', onSelect: () => this.emit('move', this, 1)},
-            {text: 'delete', onSelect: () => this.emit('delete', this)}
+            {text: 'move up', onSelect: () => am.dialogs.WIP.show()/*this.emit('move', this, -1)*/},
+            {text: 'move down', onSelect: () => am.dialogs.WIP.show()/*this.emit('move', this, 1)*/},
+            {text: 'delete', onSelect: () => am.dialogs.WIP.show()/*this.emit('needsRemove', this)*/},
         ],
         title: {
             text: this.name,

@@ -326,9 +326,9 @@ p._createBase = function () {
 
 
             //append to parent
-            if (parent.addSubline) {
+            if (parent.addOptionLine) {
 
-                parent.addSubline(optionLine.domElem);
+                parent.addOptionLine(optionLine);
             }
             else {
                 parent.appendChild(optionLine.domElem);

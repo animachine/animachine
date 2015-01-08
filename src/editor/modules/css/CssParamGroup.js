@@ -8,8 +8,6 @@ var amgui = require('../../amgui');
 
 function CssParamGroup (opt) {
 
-    this._onChangeSubparamHeight = this._onChangeSubparamHeight.bind(this);
-    this._onAddKeySubparam = this._onAddKeySubparam.bind(this);
     this._onClickTgglChildren = this._onClickTgglChildren.bind(this);
     this._onClickTgglMerge = this._onClickTgglMerge.bind(this);
 
@@ -75,6 +73,14 @@ Object.defineProperties(p, {
             this.optionLine.buttons.tgglChildren.setToggle(v);
             this.emit('changeHeight', this);
             this._refreshHeights();
+
+            if (this._borrow)
+            if (v) {
+                this.optionLine.borrowChildInputs();
+            }
+            else {
+                this.optionLine.returnChildInputs();
+            }
         },
         get: function () {
 
@@ -112,12 +118,13 @@ p.addParam = function (param) {
     param.parentGroup = this;
 
     this._params.push(param);
-    this.optionLine.addSubline(param.optionLine.domElem);
+    this.optionLine.addOptionLine(param.optionLine);
     this.keyLine.addKeyLine(param.keyLine);
     
     param.optionLine.indent = this.optionLine.indent + 1;
-    param.on('changeHeight', this._onChangeSubparamHeight);
-    param.on('addKey', this._onAddKeySubparam);
+    param.on('changeHeight', this._onChangeSubparamHeight, this);
+    param.on('addKey', this._onAddKeySubparam, this);
+    param.on('needsRemove', this._onSubparamNeedsRemove, this);
     
     if (param.name in this.optionLine.inputs) {
 
@@ -138,8 +145,9 @@ p.removeParam = function (param) {
     
     parent.parentGroup = undefined;
     
-    param.removeListener('changeHeight', this._onChangeSubparamHeight);
-    param.removeListener('addKey', this._onAddKeySubparam);
+    param.off('changeHeight', this._onChangeSubparamHeight, this);
+    param.off('addKey', this._onAddKeySubparam, this);
+    param.off('needsRemove', this._onSubparamNeedsRemove, this);
 
     this._params.splice(idx, 1);
     this.keyLine.removeKeyline(param.keyLine);
@@ -244,6 +252,11 @@ p._onKeyNeedsRemove = function (key) {
         var key = param.getKey(time);
         if (key) param.removeKey(key);
     });
+};
+
+p._onSubparamNeedsRemove = function (key) {
+
+    this.emit('needsRemove', this);
 };
 
 p._onChangeTime = function () {

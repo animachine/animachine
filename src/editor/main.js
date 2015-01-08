@@ -91,6 +91,7 @@ am._init = function () {
     am.deGuiCont = createAmLayer();
     am.deDialogCont = createAmLayer();
 
+    inspectHandlerCont(am.deHandlerCont);
 
     amgui.deOverlayCont = am.deDialogCont;
 
@@ -232,7 +233,23 @@ am.isPickableDomElem = function (deTest) {
 
 
 
+function inspectHandlerCont() {
 
+    var config = {childList: true},
+        observer = new MutationObserver(function(mutations) {
+        
+        observer.disconnect();
+        
+        _(am.deHandlerCont.children)
+            .toArray()
+            .sortBy('renderLevel')
+            .forEach(de => am.deHandlerCont.appendChild(de));
+    
+        observer.observe(am.deHandlerCont, config);
+    });
+
+    observer.observe(am.deHandlerCont, config);
+}
 
 function addToggleGui() {
 

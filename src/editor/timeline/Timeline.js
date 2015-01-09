@@ -733,7 +733,7 @@ p._createBase = function () {
         deTarget: [this._deOptionLineCont, this._deKeyLineCont],
         deRange: this._deRange
     });
-
+    
     this._createDividerHandler();
 };
 

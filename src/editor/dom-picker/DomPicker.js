@@ -16,6 +16,7 @@ function DomPicker() {
     window.addEventListener('mousemove', this._onMMove);
 
     am.on('selectDomElem', this._onSelectDomElem, this);
+    am.on('selectTrack', this.hide, this);
 
     this._createBase();
 }

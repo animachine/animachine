@@ -47,6 +47,7 @@ _.extend(amgui,
             overlay: 'rgba(0,0,0,.785)',
             overlayInverse: 'rgba(222,232,222,.785)',
             bgHover: 'rgba(255,255,255,0.12)',
+            selected: "#01FF70",
             //https://github.com/mrmrs/colors
             aqua: "#7FDBFF",
             blue: "#0074D9",

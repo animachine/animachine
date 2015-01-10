@@ -233,22 +233,22 @@ am.isPickableDomElem = function (deTest) {
 
 
 
-function inspectHandlerCont() {
+function inspectHandlerCont(deCont) {
 
     var config = {childList: true},
         observer = new MutationObserver(function(mutations) {
         
         observer.disconnect();
         
-        _(am.deHandlerCont.children)
+        _(deCont.children)
             .toArray()
             .sortBy('renderLevel')
-            .forEach(de => am.deHandlerCont.appendChild(de));
+            .forEach(de => deCont.appendChild(de));
     
-        observer.observe(am.deHandlerCont, config);
+        observer.observe(deCont, config);
     });
 
-    observer.observe(am.deHandlerCont, config);
+    observer.observe(deCont, config);
 }
 
 function addToggleGui() {

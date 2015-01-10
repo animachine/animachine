@@ -13,9 +13,14 @@ function CssParamGroup (opt) {
 
     this._params = [];
     this._merged = false;
-    this._collapsed = false;
+    this._collapsed = true;
+
 
     CssParam.call(this, opt);
+
+    this.borrowChildInputsOnCollapse = opt.borrowChildInputsOnCollapse;
+    
+    this.keyLine.keyLooks.circle = undefined;
 
     this._refreshHeights();
 }
@@ -34,7 +39,7 @@ Object.defineProperties(p, {
 
             var ret = this.hidden ? 0 : this._lineH;
 
-            if (this.collapsed) {
+            if (!this.collapsed) {
                 this._params.forEach(param => ret += param.height);
             }
 
@@ -53,7 +58,8 @@ Object.defineProperties(p, {
             this.optionLine.buttons.tgglMerge.setToggle(v);
             this.optionLine.buttons.tgglChildren.inactive = v;
             this.keyLine.keyLooks.circle = v ? {} : undefined;
-            this.collapsed = !v;
+            this.keyLine._render();//TODO: do this keyLooks thing somehow better
+            this.collapsed = v;
 
             if (v) this._makeKeyLinesSymmetric();
         },
@@ -71,16 +77,17 @@ Object.defineProperties(p, {
 
             this._collapsed = v;
 
-            this.optionLine.buttons.tgglChildren.setToggle(v);
+            this.optionLine.buttons.tgglChildren.setToggle(!v);
             this.emit('changeHeight', this);
             this._refreshHeights();
 
-            if (this._borrow)
-            if (v) {
-                this.optionLine.borrowChildInputs();
-            }
-            else {
-                this.optionLine.returnChildInputs();
+            if (this.borrowChildInputsOnCollapse) {
+                if (v) {
+                    this.optionLine.borrowChildInputs();
+                }
+                else {
+                    this.optionLine.returnChildInputs();
+                }
             }
         },
         get: function () {
@@ -199,13 +206,13 @@ p._makeKeyLinesSymmetric = function (time) {
         [].push.apply(times, param.getKeyTimes());
     });
 
-    _.uniq(times).forEach(this.addKeyAll, this);
+    _.uniq(times).forEach(time => this.addKeyAll(time));
 };
 
 
 p.addKeyAll = function (time) {
 
-    time = time || am.timeline.currTime;
+    time = time === undefined ? am.timeline.currTime : time;
 
     this._params.forEach(function (param) {
 

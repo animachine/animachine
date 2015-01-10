@@ -54,7 +54,8 @@ function OptionLine(opt) {
             parent: this._deHeadCont
         });
     }
-    else {
+    else if (opt.keepSpaceForTgglChildren) {
+
         this._deHighlight.style.marginRight = '16px';
     }
 
@@ -258,6 +259,7 @@ p.hideSubline = function () {
 
     this._deSubcont.style.display = 'none';
 };
+
 p.borrowChildInputs = function () {
 //TODO: do this two somehow better
 
@@ -280,7 +282,7 @@ p.returnChildInputs = function () {
 
             var idx = deInputs.indexOf(line.inputs[key].domElem);
             if (idx === -1) return;
-            line._inputCont.appendChild(deInput[idx]);
+            line._inputCont.appendChild(deInputs[idx]);
         });
     });
 };

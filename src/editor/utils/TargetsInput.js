@@ -135,8 +135,9 @@ p._createTarget = function (data) {
     var inp = new StringInput({
         parent: target.domElem,
         placeholder: 'type here',
+        value: target.data.value,
         onChange: () => {
-            target.value.data = inp.value;
+            target.data.value = inp.value;
             this.emit('change');
         }
     });

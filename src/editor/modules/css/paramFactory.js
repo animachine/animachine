@@ -129,19 +129,15 @@ module.exports = {
 
         var pgOpt = {
             name: opt.name,
-            collapsed: opt.collapsed || false,
-            merged: opt.merged || false,
-            hidden: opt.hidden || false,
+            collapsed: 'collapsed' in opt ? opt.collapsed : false,
+            merged: 'merged' in opt ? opt.merged : true,
+            hidden: 'hidden' in opt ? opt.hidden : false,
+            borrowChildInputsOnCollapse: true,
             optionLine: {
                 inputs: [],
             },
         };
-
-        if (opt.name === 'translate') {
-            pgOpt.optionLine.inputs.push({name: 'x', type: 'unit', units: ['px']});
-            pgOpt.optionLine.inputs.push({name: 'y', type: 'unit', units: ['px']});
-        }
-
+        
         var paramGroup = new CssParamGroup(pgOpt);
 
         if (opt.name === 'translate') {

@@ -249,6 +249,7 @@ p._createBase = function () {
                 isChildrenVisible = true;
 
             node.indent = indent;
+            node.keepSpaceForTgglChildren = true;
 
             if (node.input) {
 

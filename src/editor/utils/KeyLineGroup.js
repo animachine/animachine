@@ -13,7 +13,8 @@ function KeyLineGroup (opt) {
 
     this._onChangeKeyLine = this._onChangeKeyLine.bind(this);
     this._onKeyNeedsRemove = this._onKeyNeedsRemove.bind(this);
-    this._delayedRefreshHeadKeyline = this._delayedRefreshHeadKeyline.bind(this);
+
+    this._refreshHeadKeyline = amgui.delayWithRAF(this._refreshHeadKeyline, this);
 
     this._createSubcont();
 }
@@ -139,16 +140,6 @@ p._onDblClick = function (e) {
 
 p._refreshHeadKeyline = function () {
 
-    if (!this._refreshHeadKeylineRafId) {
-
-        this._refreshHeadKeylineRafId = requestAnimationFrame(this._delayedRefreshHeadKeyline);
-    }
-};
-
-p._delayedRefreshHeadKeyline = function () {
-
-    this._refreshHeadKeylineRafId = undefined;
-
     this._skipRender = true;
 
     var times = [], keysOnTimes = [];
@@ -189,7 +180,6 @@ p._delayedRefreshHeadKeyline = function () {
         var key = this._keys[idx];
 
         key.time = time;
-        key.looks.circle = this.merged;
 
         key.setSubkeys(keysOnTimes[idx]);
 

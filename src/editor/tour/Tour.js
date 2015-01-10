@@ -202,7 +202,9 @@ p._refreshChecklist = function () {
 
     if (!this._currStep) return;
 
-    for (var i = 0; i < this._currStep.checklistLength; ++i) {
+    var i = 0;
+
+    for (i = 0; i < this._currStep.checklistLength; ++i) {
 
         if (!this._deCheckboxes[i]) {
 
@@ -217,6 +219,9 @@ p._refreshChecklist = function () {
 
         this._deCheckboxes[i].style.display = 'none';
     }
+
+    var allChecked =  this._currStep._checklist.every(v => !!v);
+    this._btnDone.style.visibility = allChecked ? '' : 'hidden';
 }
 
 
@@ -248,6 +253,17 @@ p._createBase = function () {
     this._deStepCont.style.position = 'absolute';
     this._deStepCont.style.width = '100%';
     this._srStepContScroll.appendChild(this._deStepCont);
+
+    this._deStepContent = amgui.createDiv({
+        parent: this._deStepCont,
+    });
+
+    this._btnDone = amgui.createBtn({
+        'text': 'next',
+        color: amgui.color.bg0,
+        background: amgui.color.green,
+        parent: this._deStepCont,
+    });
 
     var style = document.createElement('style');
     style.innerHTML = cssAmgui;
@@ -298,7 +314,7 @@ p._createCheckbox = function () {
         iconOn: 'circle',
         iconOff: 'circle-thin',
         changeColor: true,
-        colorOn: 'lime',
+        colorOn: amgui.color.lime,
     });
 
     de.style.pointerEvents = 'none';

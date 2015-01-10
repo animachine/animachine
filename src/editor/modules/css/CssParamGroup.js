@@ -52,6 +52,7 @@ Object.defineProperties(p, {
 
             this.optionLine.buttons.tgglMerge.setToggle(v);
             this.optionLine.buttons.tgglChildren.inactive = v;
+            this.keyLine.keyLooks.circle = v ? {} : undefined;
             this.collapsed = !v;
 
             if (v) this._makeKeyLinesSymmetric();

@@ -117,7 +117,7 @@ function delayWithRAF(fn, thisArg) {
 
             waiting = window.requestAnimationFrame(() => {
 
-                waiting = false;
+                waiting = undefined;
 
                 fn.apply(thisArg, args);
             });

@@ -12,6 +12,13 @@ function KeyLine (opt) {
     this._height = amgui.LINE_HEIGHT;
     this._hidden = false;
 
+    this.keyLooks = {
+        line: {
+            color: '#eee'
+        },
+        circle: {}
+    };
+
     this._onChangeKey = this._onChangeKey.bind(this);
     this._onKeyNeedsRemove = this._onKeyNeedsRemove.bind(this);
     this._onDblClick = this._onDblClick.bind(this);

@@ -16,12 +16,7 @@ function Key(opt) {
     this._height = amgui.LINE_HEIGHT;
 
 
-    this.looks = opt.looks || {
-        line: {
-            color: '#eee'
-        },
-        circle: {}
-    };
+    this.looks = opt.looks;
 
     this._onSelectDropdown = this._onSelectDropdown.bind(this);
     this._onChangeEase = this._onChangeEase.bind(this);
@@ -43,7 +38,7 @@ function Key(opt) {
     this._dragger = amgui.makeDraggable({
         deTarget: this.domElem,
         thisArg: this,
-        onDown: function (e) {
+        onDown: e => {
 
             if (!e.shiftKey && !e.ctrlKey) {
                 am.timeline.emit('deselectAllKeys');
@@ -66,7 +61,7 @@ function Key(opt) {
                 dragged: 0,
             };
         },
-        onMove: function (md) {
+        onMove: md => {
 
             var diffTime = (md.dx / am.timeline.timescale) - md.dragged;
                 
@@ -181,7 +176,7 @@ p.getNextKey = function (time) {
 
 p.renderToLine = function (ctx) {
 
-    var looks = this.looks,
+    var looks = this.looks || this.parentKeyLine.keyLooks,
         height = this._height,
         keyPos = ~~am.timeline.timeToRenderPos(this.time) + 0.5,
         prevKey = this.getPrevKey(),
@@ -228,8 +223,10 @@ p.renderEaseToLine = function (ctx) {
 
     if (!this.ease) return;
 
+    var looks = this.looks || this.parentKeyLine.keyLooks;
+
     var ease = this.ease,
-        color = (this.looks.ease && this.looks.ease.color) || 'rgba(225,225,225,.23)',
+        color = (looks.ease && looks.ease.color) || 'rgba(225,225,225,.23)',
         height = this._height,
         keyPos = am.timeline.timeToRenderPos(this.time),
         prevKey = this.getPrevKey(),

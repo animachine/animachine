@@ -33,8 +33,9 @@ function makeScrollable(opt) {
     });
     deTargets.forEach(deT => {
         var pos = deT.style.position;
-        if (pos !== 'absolute' || pos !== 'fixed') {
-            deT.style.position = 'absolute';
+        if (pos !== 'absolute' && pos !== 'fixed' && pos !== 'relative') {
+            
+            deT.style.position = 'relative';
         };
     });
 

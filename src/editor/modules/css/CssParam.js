@@ -85,13 +85,7 @@ Object.defineProperties(p, {
             this._hidden = v;
             
             this.keyLine.hidden = v;
-
-            if (this._hidden) {
-                this.optionLine.hide();
-            }
-            else {
-                this.optionLine.show();
-            }
+            this.optionLine.hidden = v;
 
             this.emit('changeHeight');
         },

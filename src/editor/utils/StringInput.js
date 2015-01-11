@@ -26,6 +26,8 @@ function StringInput(opt) {
     if ('flex' in opt) this.domElem.style.flex = opt.flex;
     if ('parent' in opt) opt.parent.appendChild(this.domElem);
     if (opt.onChange) this.on('change', opt.onChange);
+
+    this._refreshInput();
 }
 
 inherits(StringInput, EventEmitter);

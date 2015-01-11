@@ -33,7 +33,7 @@ Object.defineProperties(p, {
 
             if (!Array.isArray(v)) throw Error;
 
-            this._value.slice().forEach(target => this.removeTarget(target));
+            this._targets.slice().forEach(target => this.removeTarget(target));
 
             v.forEach(i => this.addTarget(i));
         },
@@ -115,7 +115,7 @@ p._createTarget = function (data) {
 
     var target = {data};
 
-    var height = 23;
+    var height = amgui.LINE_HEIGHT;
 
     target.domElem = document.createElement('div');
     target.domElem.style.display = 'flex';

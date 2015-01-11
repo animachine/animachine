@@ -5,13 +5,13 @@ var inherits = require('inherits');
 var BezierEasing = require('bezier-easing');
 var defineCompactProperty = require('./defineCompactProperty');
 var dialogEaseOptions = require('./dialogEaseOptions');
-window.BezierEasing = BezierEasing;
+
 function Ease(opt) {
 
     EventEmitter.call(this);
     
     this._type =  'bezier';
-    this._points = []
+    this._points = [];
     this.points = [0, 0, 1, 1];
     this._easer;
 

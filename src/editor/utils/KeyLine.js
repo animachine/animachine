@@ -80,12 +80,7 @@ Object.defineProperties(p, {
 
             this._hidden = v;
 
-            if (this._hidden) {
-                this.hide();
-            }
-            else {
-                this.show();
-            }
+            this.domElem.style.display = v ? 'none' : '';
         },
         get: function () {
 
@@ -231,16 +226,6 @@ p._render = function () {
     canvas.height = this._height;
 
     _.sortBy(this._keys, 'time').forEach(key => key.renderToLine(ctx));
-};
-
-p.show = function () {
-
-    this.domElem.style.display = '';
-};
-
-p.hide = function () {
-
-    this.domElem.style.display = 'none';
 };
 
 

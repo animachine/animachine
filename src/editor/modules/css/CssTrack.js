@@ -11,7 +11,6 @@ var CssParamGroup = require('./CssParamGroup');
 var dialogTrackOptions = require('./dialogTrackOptions');
 var dialogNewParam = require('./dialogNewParam');
 var mstPlayer = require('./script.player.mst');
-window.dialogNewParam = dialogNewParam;
 
 
 function CssTrack(opt) {

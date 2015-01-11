@@ -17,6 +17,7 @@ function OptionLine(opt) {
     this.buttons = {};
     this._indent = 0;
     this._lineH = amgui.LINE_HEIGHT;
+    this._hidden = false;
 
     this._createDomElem();
     this._createHighlight();
@@ -161,6 +162,22 @@ Object.defineProperties(p, {
             return this._indent;
         },
     },
+    hidden: {
+        set: function (v) {
+
+            v = !!v;
+
+            if (v === this._hidden) return;
+
+            this._hidden = v;
+
+            this.domElem.style.display = v ? 'none' : '';
+        },
+        get: function () {
+
+            return this._hidden;
+        }
+    }
 });
 
 
@@ -240,16 +257,6 @@ p.removeOptionLine = function (optionLine) {
     $(optionLine).remove();
 };
 
-p.show = function () {
-
-    this.domElem.style.display = '';
-};
-
-p.hide = function () {
-
-    this.domElem.style.display = 'none';
-};
-
 p.showSubline = function () {
 
     this._deSubcont.style.display = '';
@@ -265,9 +272,11 @@ p.borrowChildInputs = function () {
 
     this._subOptionLines.forEach(line => {
 
-        Object.keys(line.inputs).forEach(key => {
+        if (line.hidden) return;
+        
+        Object.keys(line.inputs).forEach(inpName => {
 
-            this._inputCont.appendChild(line.inputs[key].domElem);
+            this._inputCont.appendChild(line.inputs[inpName].domElem);
         });
     });
 };
@@ -278,9 +287,9 @@ p.returnChildInputs = function () {
 
     this._subOptionLines.forEach(line => {
 
-        Object.keys(line.inputs).forEach(key => {
+        Object.keys(line.inputs).forEach(inpName => {
 
-            var idx = deInputs.indexOf(line.inputs[key].domElem);
+            var idx = deInputs.indexOf(line.inputs[inpName].domElem);
             if (idx === -1) return;
             line._inputCont.appendChild(deInputs[idx]);
         });

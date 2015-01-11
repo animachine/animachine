@@ -98,13 +98,9 @@ function createBreadcrumbs(opt) {
 
     function createLi(content) {
 
-        var li = document.createElement('div');
-        li.textContent = content;
-        // li.style.float = 'left';
-        li.style.display = 'inline-block';
-
-        de.appendChild(li);
-
-        return li;
+        return amgui.createLabel({
+            text: content,
+            parent: de,
+        });
     }
 }

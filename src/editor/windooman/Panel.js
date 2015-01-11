@@ -171,6 +171,8 @@ p._createTabBase = function () {
     this._deTabBase.appendChild(this._deTabHead);
 
     this._deTabContent = document.createElement('div');
+    this._deTabContent.style.position = 'relative';
+    this._deTabContent.style.overflow = 'hidden';
     this._deTabContent.style.width = '100%';
     this._deTabContent.style.flex = 1;
     this._deTabContent.setAttribute('data-debug', 'tabcontent')

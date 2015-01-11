@@ -25,16 +25,17 @@ function makeScrollable(opt) {
     if (!Array.isArray(deConts)) deConts = [deConts];
     if (!Array.isArray(deTargets)) deTargets = [deTargets];
 
-    deConts.forEach(function (cont) {
-        if (!cont) throw 'false contaiter';
-    });
-    deTargets.forEach(function (target) {
-        if (!target) throw 'false target';
-    });
+    deConts.forEach(cont => {if (!cont) throw 'false contaiter';});
+    deTargets.forEach(target => {if (!target) throw 'false target';});
 
-    deConts.forEach(function (deC) {
-
+    deConts.forEach(deC => {
         deC.addEventListener('wheel', onWheel);
+    });
+    deTargets.forEach(deT => {
+        var pos = deT.style.position;
+        if (pos !== 'absolute' || pos !== 'fixed') {
+            deT.style.position = 'absolute';
+        };
     });
 
 

@@ -134,14 +134,13 @@
   left: 50%;
   top: 50%;
   z-index: 1;
-  width: 23px;
-  height: 34px;
+  width: 12px;
+  height: 30px;
 }
-.space .ship .ship-rotate {
+.space .ship-body {
   position: absolute;
-  height: 22px;
-  top: 6px;
-  left: 12px;
+  left: 6px;
+  top: 3px;
 }
 .space .ship .pod {
   position: absolute;

@@ -47,22 +47,45 @@ am.throwHandler = function (handler) {
 
 am.open = function (save) {
 
-    if (!window.chrome) {
-    
-        return alertUnsupportedBrowsers();
-    }
-    
-    am._init();
+    var promise = new Promise((fulfill, reject) => {
 
-    if (save) {
 
-        if (typeof(save) === 'string') {
+        if (!window.chrome) {
+            
+            reject();
+            return alertUnsupportedBrowsers();
+        }
+        
+        am._init();
 
-            save = JSON.parse(save);
+        if (save) {
+
+            if (typeof(save) === 'object') {
+
+                useSave(save);
+            }
+            else if (typeof(save) === 'string') {
+                
+                if (save.indexOf('{') === -1) {
+
+                    fetch(save)
+                        .then(response => response.json(), reject)
+                        .then(json => useSave(json), reject);
+                }
+                else {
+                    useSave(JSON.parse(save));
+                }
+            }
         }
 
-        am.timeline.useSave(save);
-    }
+        function useSave(save) {
+
+            am.timeline.useSave(save);
+            fulfill();
+        }
+    });
+
+    return promise;
 };
 
 am._init = function () {

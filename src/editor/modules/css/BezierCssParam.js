@@ -145,71 +145,6 @@ p.getValue = function (time) {
         x: this._checkObj.x,
         y: this._checkObj.y,
     };
-
-    // var ret, before, after, same;
-
-    // this.keyLine.forEachKeys(function (key) {
-
-    //     if (key.time === time) {
-        
-    //         same = key;
-    //     }
-
-    //     if (key.time < time && (!before || before.time < key.time)) {
-        
-    //         before = key;
-    //     }
-
-    //     if (key.time > time && (!after || after.time > key.time)) {
-        
-    //         after = key;
-    //     }
-    // });
-
-    // if (same) {
-
-    //     let point = _.last(same.value);
-
-    //     ret = {
-    //         x: point.anchor.x + 'px',
-    //         y: point.anchor.y + 'px',
-    //     };
-    // }
-    // else {
-    //     if (after && before) {
-
-    //         let p = (time - before.time) / (after.time - before.time), 
-    //             bv = before.value,
-    //             av = after.value, 
-    //             points = [];
-
-    //         p = after.ease.getRatio(p);
-
-    //         points.push(bv[0].anchor.x, bv[0].anchor.y);
-    //         points.push(bv[0].handleRight.x, bv[0].handleRight.y);
-            
-    //         av.forEach(function (point, idx, arr) {
-
-    //             points.push(point.handleLeft.x, point.handleLeft.y);
-    //             points.push(point.anchor.x, point.anchor.y);
-    //             if (idx !== arr.length - 1) {
-    //                 points.push(point.handleRight.x, point.handleRight.y);
-    //             }
-    //         });
-
-    //         ret = this._calcEase(points, p);
-    //     }
-    //     else if (before) {
-            
-    //         ret = _.clone(_.last(before.value).anchor);
-    //     }
-    //     else if (after) {
-            
-    //         ret = _.clone(after.value[0].anchor);
-    //     }
-    // }
-    
-    // return ret === undefined ? this._defaultValue : ret;
 };
 
 p.addKey = function (opt, skipHistory) {
@@ -364,57 +299,62 @@ p._blurTransformer = function () {
 
 
 
-p._onChangeTransformer = function (change) {
+p._onChangeTransformer = function (changes) {
 
-    var idx = change.idx, 
-        keys = _.sortBy(this.keyLine._keys, 'time'),
-        key;
+    var changedKeys = [];
 
-    for (var i = 0, l = keys.length; i < l; ++i) {
+    changes.forEach(change => {
 
-        key = keys[i];
+        var idx = change.idx,
+            keys = _.sortBy(this.keyLine._keys, 'time'),
+            key;
 
-        if (key.value.length <= idx) {
+        for (var i = 0, l = keys.length; i < l; ++i) {
 
-            idx -= key.value.length;
+            key = keys[i];
+
+            if (key.value.length <= idx) {
+
+                idx -= key.value.length;
+            }
+            else {
+                break;
+            }
         }
-        else {
-            break;
+
+        if (change.type === 'add') {
+
+            key.value.splice(idx, 0, {
+                anchor: {x: change.point.anchor.x, y: change.point.anchor.y},
+                handleLeft: {x: change.point.handleLeft.x, y: change.point.handleLeft.y},
+                handleRight: {x: change.point.handleRight.x, y: change.point.handleRight.y},
+                linked: change.point.linked,
+            });
         }
-    }
+        else if (change.type === 'remove') {
+            
+            key.value.splice(idx, 1);
 
-    if (change.type === 'add') {
+            if (key.value.length === 0) {
 
-        key.value.splice(idx, 0, {
-            anchor: {x: change.point.anchor.x, y: change.point.anchor.y},
-            handleLeft: {x: change.point.handleLeft.x, y: change.point.handleLeft.y},
-            handleRight: {x: change.point.handleRight.x, y: change.point.handleRight.y},
-            linked: change.point.linked,
-        });
-    }
-    else if (change.type === 'remove') {
+                this.keyLine.removeKey(key);
+            }
+        }
+        else if (change.type === 'edit') {
+
+            var point = key.value[idx];
+            point.anchor.x = change.point.anchor.x;
+            point.anchor.y = change.point.anchor.y;
+            point.handleLeft.x = change.point.handleLeft.x;
+            point.handleLeft.y = change.point.handleLeft.y;
+            point.handleRight.x = change.point.handleRight.x;
+            point.handleRight.y = change.point.handleRight.y;
+            point.linked = change.point.linked;            
+        }
         
-        key.value.splice(idx, 1);
-
-        if (key.value.length === 0) {
-
-            this.keyLine.removeKey(key);
-        }
-    }
-    else if (change.type === 'edit') {
-
-        var point = key.value[idx];
-        point.anchor.x = change.point.anchor.x;
-        point.anchor.y = change.point.anchor.y;
-        point.handleLeft.x = change.point.handleLeft.x;
-        point.handleLeft.y = change.point.handleLeft.y;
-        point.handleRight.x = change.point.handleRight.x;
-        point.handleRight.y = change.point.handleRight.y;
-        point.linked = change.point.linked;
-        
-    }
-
-    key.emit('change');
+    });
+    
+    changedKeys.forEach(key => key.emit('change'));
 };
 
 p._onKeyPrerender = function (ctx, key) {

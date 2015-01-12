@@ -14,11 +14,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "6to5ify": "^2.0.0",
     "bezier-easing": "^0.4.4",
     "browserify": "^5.9.1",
     "css.escape": "^0.2.1",
     "domready": "^1.0.5",
     "eventman": "0.0.1",
+    "fetch": "git://github.com/github/fetch",
     "gulp": "^3.8.6",
     "gulp-concat": "^2.3.4",
     "gulp-concat-css": "^0.1.4",
@@ -37,7 +39,6 @@
     "transhand": "git+https://github.com/animachine/transhand#master",
     "uglify-js": "^2.4.15",
     "vinyl-source-stream": "^0.1.1",
-    "watchify": "^1.0.1",
-    "6to5ify": "^2.0.0"
+    "watchify": "^1.0.1"
   }
 }

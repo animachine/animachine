@@ -27,3 +27,13 @@ img {
   right: 0px;
   width: 234px;
 }
+
+#shake {left: -25px; top: -77px;}
+#release {left: -49px; top: 107px;}
+#lfoot {left: -29px; top: -5px;}
+#rfoot {left: 89px; top: -5px;}
+#lhand {left: -72px; top: 3px;}
+#rhand {left: 131px; top: -6px;}
+#lshoulder {left: -29px; top: 65px;}
+#rshoulder {left: 82px; top: 66px;}
+#head {left: 12px; top: -9px;}

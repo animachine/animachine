@@ -246,6 +246,11 @@ p.addOptionLine = function (optionLine) {
 
     this._subOptionLines.push(optionLine);
     this._deSubcont.appendChild(optionLine.domElem);
+
+    if (this._isBorrowingChildInputs) {
+        this.returnChildInputs();
+        this.borrowChildInputs();
+    }
 };
 
 p.removeOptionLine = function (optionLine) {
@@ -255,6 +260,11 @@ p.removeOptionLine = function (optionLine) {
 
     this._subOptionLines.splice(idx, 1);
     $(optionLine).remove();
+
+    if (this._isBorrowingChildInputs) {
+        this.returnChildInputs();
+        this.borrowChildInputs();
+    }
 };
 
 p.showSubline = function () {
@@ -270,6 +280,8 @@ p.hideSubline = function () {
 p.borrowChildInputs = function () {
 //TODO: do this two somehow better
 
+    this._isBorrowingChildInputs = true;
+
     this._subOptionLines.forEach(line => {
 
         if (line.hidden) return;
@@ -282,6 +294,8 @@ p.borrowChildInputs = function () {
 };
 
 p.returnChildInputs = function () {
+
+    this._isBorrowingChildInputs = false;
 
     var deInputs = _.toArray(this._inputCont.children);
 

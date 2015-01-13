@@ -46,7 +46,7 @@ $(function () {
         function create(name) {
 
             return $('<img>')
-                .attr('src', $('#scr_' + name).attr('src')),
+                .attr('src', $('#' + name).attr('src')),
                 .css('position', 'absolute'),
                 .appendTo($root);
         }

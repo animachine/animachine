@@ -13,14 +13,14 @@ function CssParamGroup (opt) {
 
     this._params = [];
     this._merged = false;
-    this._collapsed = true;
-
-
-    CssParam.call(this, opt);
+    this._collapsed = false;
 
     this.borrowChildInputsOnCollapse = opt.borrowChildInputsOnCollapse;
+
+    CssParam.call(this, opt);
     
     this.keyLine.keyLooks.circle = undefined;
+    
 
     this._refreshHeights();
 }
@@ -341,6 +341,8 @@ p._createOptions = function (opt) {
         indent: 0,
         hasSubcontainer: true,
     }, opt));
+
+    this.optionLine.buttons.tgglChildren.setToggle(true);
 };
 
 p._createKeyline = function () {

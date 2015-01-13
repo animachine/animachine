@@ -1,5 +1,7 @@
 'use strict';
 
+var domready = require('domready');
+
 var amgui;
 
 module.exports = function (_amgui) {
@@ -19,7 +21,8 @@ function createDialog(opt) {
         deContentCont, deButtonsCont, deButtonsEnd, buttons = [];
 
     de = document.createElement('dialog');
-    (opt.parent || document.body).appendChild(de);
+
+    domready(() => (opt.parent || document.body).appendChild(de));
 
     de.style.background = 'none';
     de.style.border = 'none';

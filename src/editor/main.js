@@ -39,6 +39,7 @@ var am = window.am = module.exports = _.extend(new EventEmitter(), {
         this.trackTypes[type] = Track;
     }
 });
+am.setMaxListeners(1234);
 
 am.throwHandler = function (handler) {
 

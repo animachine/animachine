@@ -42,9 +42,9 @@ gulp.task('vendor', function () {
       paths.bower + 'mustache/mustache.js',
       paths.bower + 'codemirror/lib/codemirror.js',
       paths.bower + 'codemirror/mode/javascript/javascript.js',
-      paths.bower + 'colorPicker/colors.js',
-      paths.bower + 'colorPicker/colorPicker.data.js',
-      paths.bower + 'colorPicker/colorPicker.js',
+      // paths.bower + 'colorPicker/colors.js',
+      // paths.bower + 'colorPicker/colorPicker.data.js',
+      // paths.bower + 'colorPicker/colorPicker.js',
       paths.bower + 'mousetrap/mousetrap.min.js',
       paths.bower + 'mousetrap/plugins/record/mousetrap-record.js',
       paths.bower + 'typeahead.js/dist/typeahead.bundle.js'

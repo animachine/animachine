@@ -7,7 +7,7 @@ $(function () {
         });
     });
 
-    $('#sheak').click(function () {
+    $('#shake').click(function () {
 
         this.src = this.src.replace(/zomb(\d)/, function (match, p1) {
             return 'zomb' + parseInt(3 * Math.ramdom());

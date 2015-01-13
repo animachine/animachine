@@ -32,7 +32,7 @@ function createInput(opt) {
     if ('flex' in opt) inp.style.flex = opt.flex;
 
     if (opt.onChange) {
-        inp.addEventListener('change', opt.onChange);
+        inp.addEventListener('input', opt.onChange);
     }
     
     inp.addEventListener('mousedown', e => e.stopPropagation());

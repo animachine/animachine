@@ -44,7 +44,7 @@ function CssTrack(opt) {
     this._animPlay = this._animPlay.bind(this);
 
     this._paramGroup = new CssParamGroup({
-        name: this._name,
+        name: '',
         optionLine: {
             tgglMerge: false,
             title: {

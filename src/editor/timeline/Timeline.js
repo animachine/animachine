@@ -426,14 +426,11 @@ p.getInputPaths = function (maxLevel = 4) {
 
         Object.keys(obj).forEach(key => {
 
-            if (_.isPlainObject(obj[key])) {
+            ret.push(path + key);
 
-                ret.push(path + key);
+            if (_.isPlainObject(obj[key]) && level <= maxLevel) {
 
-                if (level <= maxLevel) {
-
-                    step(obj[key], path + key + '.', level + 1);
-                }
+                step(obj[key], path + key + '.', level + 1);
             }
         });
     }
@@ -545,10 +542,6 @@ p._onSelectNewTrack = function (e) {
 
         case 'css':
             addTrack('css_track_type');
-            break;
-
-        case 'js':
-            addTrack('js_track_type');
             break;
 
         default:

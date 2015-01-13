@@ -2,24 +2,31 @@ $(function () {
 
     $('.setter').click(function () {
 
-        this.src = this.src.replace(/zomb(\d)/, function (match, p1) {
-            return 'zomb' + ((p1+1)%3);
+        this.src = this.src.replace(/zombie(\d)/, function (match, p1) {
+            return 'zombie' + ((p1+1)%3);
         });
     });
 
-    $('#shake').click(function () {
+    $('#shake')
+        .click(function () {
 
-        this.src = this.src.replace(/zomb(\d)/, function (match, p1) {
-            return 'zomb' + parseInt(3 * Math.ramdom());
+            this.src = this.src.replace(/zombie(\d)/, function (match, p1) {
+                return 'zombie' + parseInt(3 * Math.random());
+            });
         });
-    });
 
     $('#release').click(releaseZombie);
     releaseZombie();
 
     function releaseZombie() {
 
-        var $zombie = $('<div>').css('position', 'absolute'),
+        var $zombie = $('<div>')
+                .css({
+                    position: 'absolute',
+                    width: '100px',
+                    height: '100px',
+                })
+                .appendTo('body'),
             $root = $('<div>').css('position', 'absolute').appendTo($zombie),
             $lfoot = create('lfoot');
             $rfoot = create('rfoot');
@@ -28,26 +35,49 @@ $(function () {
             $lshoulder = create('lshoulder');
             $rshoulder = create('rshoulder');
             $head = create('head');
+        
+        if (true) { //edit
+            am.open('save.json');
+            am.timeline.setInputs({
+                root: $root,
+                lfoot: $lfoot,
+                rfoot: $rfoot,
+                lhand: $lhand,
+                rhand: $rhand,
+                lshoulder: $lshoulder,
+                rshoulder: $rshoulder,
+                head: $head,
+            });
+            $zombie.css({
+                left: '50%',
+                top: '50%',
+                border: '1px tomato solid'
+            });
+            $('#base').remove();
+        }
+        else {
+            var anim = am.anims.amsave.create({
+                root: $root,
+                lfoot: $lfoot,
+                rfoot: $rfoot,
+                lhand: $lhand,
+                rhand: $rhand,
+                lshoulder: $lshoulder,
+                rshoulder: $rshoulder,
+                head: $head,
+            }).repeat(-1).play();
 
-        var anim = am.anims.walk.create({
-            root: $root,
-            lfoot: $lfoot,
-            rfoot: $rfoot,
-            lhand: $lhand,
-            rhand: $rhand,
-            lshoulder: $lshoulder,
-            rshoulder: $rshoulder,
-            head: $head,
-        }).play();
+            TweenMax.set($zombie, getRandomPos());
+            sendZombie($zombie);
+        }
 
-        TweenMax.set($zombie, getRandomPos());
-        sendZombie($zombie);
+
 
         function create(name) {
 
             return $('<img>')
-                .attr('src', $('#' + name).attr('src')),
-                .css('position', 'absolute'),
+                .attr('src', $('#' + name).attr('src'))
+                .css('position', 'absolute')
                 .appendTo($root);
         }
     };
@@ -60,12 +90,15 @@ $(function () {
             dy = target.y - gst.y,
             d = Math.sqrt(dx*dx + dy*dy);
 
-        TweenMax.to($zombie, 0.034, {rotation: Math.atan2(dy, dx) / Math.PI * 180}); 
+        TweenMax.to($zombie, 0.34, {
+            rotation: ((Math.atan2(dy, dx) / Math.PI * 180) + 90) + '_short',
+        }); 
 
         TweenMax.to($zombie, d/123, {
             x: target.x, 
             y: target.y,
             onComplete: sendZombie.bind(null, $zombie),
+            ease: Linear.easeNone,
         });
     }
 

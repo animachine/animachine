@@ -113,23 +113,22 @@ p._createBase = function () {
 
 p._createTarget = function (data) {
 
-    var target = {data};
+    var target = {data}, inputPaths = [];
 
     var height = amgui.LINE_HEIGHT;
 
     target.domElem = document.createElement('div');
     target.domElem.style.display = 'flex';
     target.domElem.style.height = height + 'px';
-    target.domElem.style.paddingLeft = '2px';
     target.domElem.style.margin = '1px 0';
     target.domElem.style.background = amgui.color.bg2;
 
     var deHighlight = document.createElement('div');
     deHighlight.style.display = 'inline-block';
     deHighlight.style.width = '2px';
-    deHighlight.style.height = this._lineH + 'px';
-    deHighlight.style.background = target.data === 'css' ? amgui.purple : amgui.blue;
-    deHighlight.style.opacity = 0;
+    deHighlight.style.height = height + 'px';
+    deHighlight.style.marginRight = '2px';
+    deHighlight.style.background = data.type === 'css' ? amgui.color.purple : amgui.color.blue;
     target.domElem.appendChild(deHighlight);
 
     var inp = new StringInput({
@@ -137,17 +136,26 @@ p._createTarget = function (data) {
         placeholder: 'type here',
         value: target.data.value,
         onChange: () => {
+
             target.data.value = inp.value;
             this.emit('change');
+
+            if (data.type === 'input') {
+                inp.domElem.style.color = inputPaths.indexOf(inp.value) === -1 ? amgui.color.text : amgui.color.aqua;
+            }
         }
     });
     inp.domElem.style.width = '245px';
     inp.domElem.style.height = height + 'px';
     inp.domElem.style.fontSize = '14px';
+    inp.domElem.style.flex = '1';
+
+    inp.focus();
 
     var refreshSuggestions = () => {
 
-        inp.setSuggestions(am.timeline.getInputNames());
+        inputPaths = am.timeline.getInputPaths();
+        inp.setSuggestions(inputPaths);
     }
 
     if (target.data.type === 'input') {
@@ -179,11 +187,11 @@ p._createTarget = function (data) {
     btnDel.style.visibility = 'hidden';
 
     target.domElem.addEventListener('mouseenter', function () {
-        btnPick.style.visibility = 'visible';
+        if (btnPick) btnPick.style.visibility = 'visible';
         btnDel.style.visibility = 'visible';
     });
     target.domElem.addEventListener('mouseleave', function () {
-        btnPick.style.visibility = 'hidden';
+        if (btnPick) btnPick.style.visibility = 'hidden';
         btnDel.style.visibility = 'hidden';
     });
 

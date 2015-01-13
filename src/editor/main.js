@@ -27,7 +27,7 @@ var externalStylesheets = [
 var isInited = false, handlerBuff = [];
 
 
-var am = window.am = module.exports = _.extend(new EventEmitter(), {
+var am = window.am = module.exports = _.extend(new EventEmitter(), window.am, {
 
     trackTypes: {},
 

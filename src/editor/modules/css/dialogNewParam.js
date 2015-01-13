@@ -40,15 +40,20 @@ function createContent() {
     inited = true;
 
     var suggestions = getCssParams().map(function (suggestion) {
-      return {value: suggestion.property};
+      return {value: camelCase(suggestion.property)};
     });
+
+    function camelCase(input) { 
+      return input.toLowerCase().replace(/-(.)/g, function(match, group1) {
+          return group1.toUpperCase();
+      });
+    }
 
     inpParamName = new StringInput({
         parent: dialog.deContent,
         placeholder: 'css parameter name',
         suggestions: suggestions
     });
-window.inpParamName = inpParamName;
 }
 
 

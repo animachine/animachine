@@ -1,14 +1,15 @@
-function (opt) {
+function (inputs) {
     
     var timelines = {{{timelines}}},
-        animTargets = {{{animTargets}}},
-        rootTl = TimelineMax();
+        selectors = {{{selectors}}},
+        animTargets = getAnimTargets(),
+        rootTl = new TimelineMax();
 
     timelines.forEach(function (timeline) {
 
         var prevTime = 0;
 
-        var tl = TimelineMax();
+        var tl = new TimelineMax();
         rootTl.add(tl);
         
         timeline.forEach(function (key, idx) {
@@ -18,4 +19,34 @@ function (opt) {
     });
 
     return rootTl;
+    
+
+
+    function getAnimTargets() {
+
+        var list = [];
+
+        selectors.forEach(function (selector) {
+
+            if (selector.type === 'css') {
+
+                list.push(selector.value);
+            }
+            else if (inputs && selector.type === 'input') {
+
+                var parent = inputs;
+
+                selector.value.split('.').every(function (name) {
+
+                    return parent = parent[name];
+                });
+
+                if (parent) {
+                    list.push(parent);
+                }
+            }
+        });
+
+        return list;
+    };
 }

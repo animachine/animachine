@@ -25,11 +25,13 @@ img {
 
 #artist img {
   right: 0px;
-  width: 234px;
+  width: 123px;
 }
 
-#shake {left: -25px; top: -77px;}
-#release {left: -49px; top: 107px;}
+.setter {cursor: pointer;}
+
+#shake {left: -25px; top: -77px; cursor: pointer;}
+#release {left: -49px; top: 107px; cursor: pointer;}
 #lfoot {left: -29px; top: -5px;}
 #rfoot {left: 89px; top: -5px;}
 #lhand {left: -72px; top: 3px;}

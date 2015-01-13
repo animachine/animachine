@@ -66,7 +66,27 @@ p.reset = function () {
     this.value = this._defaultValue;
 };
 
+p.focus = function () {
+
+    setTimeout(() => $(this._input).focus(),123);
+};
+
+p.blur = function () {
+
+    setTimeout(() => $(this._input).blur(),123);
+};
+
 p.setSuggestions = function (suggestions) {
+
+    suggestions = suggestions.map((suggestion, idx) => {
+
+        if (typeof suggestion !== 'object') {
+            return {value: suggestion};
+        }
+        else {
+            return suggestion;
+        }
+    });
 
     if (this._suggestionEngine) {
 
@@ -113,6 +133,9 @@ p._createBase = function () {
         flex: 1,
         onChange: this._onChangeInput,
     });
+
+    this.domElem.style.color = this._input.style.color;
+    this._input.style.color = 'inherit';
 
     // this._input.style.textAlign =  'right';
     this._input.style.paddingRight =  '2px';

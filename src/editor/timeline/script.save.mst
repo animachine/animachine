@@ -9,17 +9,17 @@
     var trackPlayerGens = [{{{trackPlayerGens}}}];
 
     root.am = root.am || {};
-    root.am.pageScripts = root.am.pageScripts || {};
+    root.am.anims = root.am.anims || {};
 
-    var reg = root.am.pageScripts.{{name}} = {
+    var reg = root.am.anims.{{name}} = {
         
-        createPlayer: function (opt) {
+        create: function (inputs) {
 
             var tl = new TimelineMax({paused: true});
 
             trackPlayerGens.forEach(function (create) {
 
-                tl.add(create(opt), 0);
+                tl.add(create(inputs), 0);
             });
 
             return tl;
@@ -31,24 +31,12 @@
     };
 
 
+
+    //-- CJS --//
     if (typeof exports === 'object') {
         
         module.exports = reg;
     }
-
-
-    {{#autoPlay}}
-    if (document.readyState == 'interactive' || document.readyState == 'complete') {
-
-        reg.createPlayer().play();
-    }
-    else {
-        document.addEventListener('DOMContentLoaded', function () {
-
-            reg.createPlayer().play();
-        });
-    }
-    {{/autoPlay}}
 
     //-- AMD --//
     if (typeof define === 'function' && define.amd) {
@@ -57,6 +45,19 @@
             return reg;
         });
     }
+
+    {{#autoPlay}}
+    if (document.readyState == 'interactive' || document.readyState == 'complete') {
+
+        reg.create().play();
+    }
+    else {
+        document.addEventListener('DOMContentLoaded', function () {
+
+            reg.create().play();
+        });
+    }
+    {{/autoPlay}}
     
 }(this));
 

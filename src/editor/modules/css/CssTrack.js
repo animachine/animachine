@@ -44,7 +44,7 @@ function CssTrack(opt) {
     this._animPlay = this._animPlay.bind(this);
 
     this._paramGroup = new CssParamGroup({
-        name: '',
+        name: this._name,
         optionLine: {
             tgglMerge: false,
             title: {
@@ -344,7 +344,7 @@ p.getScript = function () {
 
     code = Mustache.render(mstPlayer, {
         timelines: timelines,
-        animTargets: selectors,
+        selectors: selectors,
     });
 
     return code;
@@ -1064,6 +1064,9 @@ p._refreshSelectedElems = function () {
             var items = am.deRoot.querySelectorAll(item);
             items = Array.prototype.slice.call(items);
             list = list.concat(items);
+        }
+        else if (window.jQuery && item instanceof window.jQuery) {
+            list = list.concat(item.toArray());
         }
         else {
             list.push(item);

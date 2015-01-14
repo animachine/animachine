@@ -43,6 +43,10 @@ function createLabel(opt) {
         de.innerHTML = text || '';
     }
 
+    de.getText = function () {
+        return de.innerHTML;
+    }
+
     opt.text = opt.text || opt.caption;//TODO: change caption sets to text
     de.setText(opt.text);
     

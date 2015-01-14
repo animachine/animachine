@@ -23,7 +23,7 @@ function Timeline(opt) {
 
     this._onSelectTrack = this._onSelectTrack.bind(this);
     this._onChangeTrack = this._onChangeTrack.bind(this);
-    this._onDeleteTrack = this._onDeleteTrack.bind(this);
+    this._onRemoveTrack = this._onRemoveTrack.bind(this);
     this._onMoveTrack = this._onMoveTrack.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
     this._onChangeTape = this._onChangeTape.bind(this);
@@ -280,7 +280,7 @@ p.addTrack = function (track, skipHistory) {
 
     track.on('select', this._onSelectTrack);
     track.on('change', this._onChangeTrack);
-    track.on('delete', this._onDeleteTrack);
+    track.on('remove', this._onRemoveTrack);
     track.on('move', this._onMoveTrack);
     track.on('changeHeight', this._onChangeTrackHeight);
 
@@ -322,7 +322,7 @@ p.removeTrack = function (track, skipHistory) {
 
     track.removeListener('select', this._onSelectTrack);
     track.removeListener('change', this._onChangeTrack);
-    track.removeListener('delete', this._onDeleteTrack);
+    track.removeListener('remove', this._onRemoveTrack);
     track.removeListener('move', this._onMoveTrack);
     track.removeListener('changeHeight', this._onChangeTrackHeight);
 
@@ -477,7 +477,7 @@ p._onChangeTrack = function() {
     this._refreshMagnetPoints();
 };
 
-p._onDeleteTrack = function (track) {
+p._onRemoveTrack = function (track) {
 
     this.removeTrack(track);
 };

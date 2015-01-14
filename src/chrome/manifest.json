@@ -5,8 +5,7 @@
   "description": "An animation tool for HTML and JS projects.",
   "homepage_url": "https://github.com/animachine/animachine",
   "icons": {
-    "16": "icons/icon16.png",
-    "19": "icons/icon19.png",
+    "36": "icons/icon36.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },

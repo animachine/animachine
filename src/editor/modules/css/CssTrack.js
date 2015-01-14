@@ -19,7 +19,6 @@ function CssTrack(opt) {
 
     this._selectors = [];
     this._endParams = [];
-    this._name = 'unnamed';
 
     this._selectedElems = [];
     this._isHidingSelectedElems = false;
@@ -96,6 +95,8 @@ function CssTrack(opt) {
     this.deKeyLine.addEventListener('click', this._onSelectClick);
 
     this._paramGroup.on('changeHeight', this._onChangeHeight);
+    this._paramGroup.on('move', (param, way) => this.emit('move', this, way));
+    this._paramGroup.on('remove', () => this.emit('remove'));
     am.timeline.on('changeTime', this._onChangeTime);
     am.on('selectTrack', this._onSelectTrack);
     am.on('deselectTrack', this._onDeselectTrack);
@@ -130,14 +131,11 @@ Object.defineProperties(p, {
     name: {
         set: function (v) {
 
-            if (v === this._name) return;
-
-            this._name = v;
             this._paramGroup.optionLine.title = this._name;
         },
         get: function () {
 
-            return this._name;
+            return this._paramGroup.optionLine.title;
         }
     }
 });
@@ -150,7 +148,6 @@ Object.defineProperties(p, {
 p.getSave = function () {
 
     var save = {
-        name: this.name,
         selectors: _.clone(this._selectors),
         paramTree: {children: [], save: this._paramGroup.getSave()},
     };
@@ -183,8 +180,6 @@ p.useSave = function (save) {
     }
 
     this._selectors = save.selectors || [];
-
-    if ('name' in save) this.name = save.name;
 
     var loadChildren = (children, path) => {
 

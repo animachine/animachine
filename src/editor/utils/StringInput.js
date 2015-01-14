@@ -163,7 +163,7 @@ p._prepareSuggestions = function (suggestions) {
         $(this._input).typeahead({
                 hint: true,
                 highlight: true,
-                minLength: 0
+                minLength: 0,
             },{
                 name: 'states',
                 displayKey: 'value',

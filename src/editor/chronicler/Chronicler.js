@@ -136,7 +136,7 @@ p.getRecords = function () {
     function add(name, idx) {
 
         items.push({
-            name: name || 'unnamed redord',
+            name: name || 'unnamed record',
             idx: idx,
             executed: idx <= pointer
         });

@@ -143,6 +143,9 @@ Object.defineProperties(p, {
         set: function (v) {
             this._deTitle.setText(v);
         },
+        get: function (v) {
+            this._deTitle.getText(v);
+        },
     },
     highlight: {
         set: function (v) {

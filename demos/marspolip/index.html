@@ -41,9 +41,12 @@
     <script>
       $(function () {
         
-        var amp = am.open('save.json');
-        amp.then(function () {
+        am.open('save.json')
+          .then(function () {
             am.timeline.play();
+          })
+          .catch(function (e) {
+            console.log(e);
           });
       });
     </script>

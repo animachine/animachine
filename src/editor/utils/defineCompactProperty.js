@@ -75,6 +75,8 @@ module.exports = function defineCompactProperty(that, opt) {
             case 'boolean': v = !!v; break;
             case 'string': v = '' + v; break;
         }
+
+        return v;
     }
 
     function isInvalidValue(v) {

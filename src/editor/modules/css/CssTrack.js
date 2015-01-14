@@ -29,7 +29,6 @@ function CssTrack(opt) {
     this._onMoveParameter = this._onMoveParameter.bind(this);
     this._onClickTgglKey = this._onClickTgglKey.bind(this);
     this._onClickTgglHide = this._onClickTgglHide.bind(this);
-    this._onClickName = this._onClickName.bind(this);
     this._onChangeHeight = this._onChangeHeight.bind(this);
     this._onChangeHandler = this._onChangeHandler.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
@@ -47,8 +46,14 @@ function CssTrack(opt) {
         optionLine: {
             tgglMerge: false,
             title: {
-                onClick: this._onClickName, 
+                onClick: () => this._showSettings(), 
             },
+            contextMenuOptions: [
+                {text: 'options', onSelect: () => this._showSettings()},
+                {text: 'move up', onSelect: () => this.emit('move', this, -1)},
+                {text: 'move down', onSelect: () => this.emit('move', this, 1)},
+                {text: 'delete', onSelect: () => this.emit('remove')},
+            ],
         },
     });
 
@@ -95,8 +100,6 @@ function CssTrack(opt) {
     this.deKeyLine.addEventListener('click', this._onSelectClick);
 
     this._paramGroup.on('changeHeight', this._onChangeHeight);
-    this._paramGroup.on('move', (param, way) => this.emit('move', this, way));
-    this._paramGroup.on('remove', () => this.emit('remove'));
     am.timeline.on('changeTime', this._onChangeTime);
     am.on('selectTrack', this._onSelectTrack);
     am.on('deselectTrack', this._onDeselectTrack);
@@ -126,16 +129,6 @@ Object.defineProperties(p, {
         get: function () {
 
             return this._paramGroup.height;
-        }
-    },
-    name: {
-        set: function (v) {
-
-            this._paramGroup.optionLine.title = this._name;
-        },
-        get: function () {
-
-            return this._paramGroup.optionLine.title;
         }
     }
 });
@@ -649,14 +642,15 @@ p._blurHandler = function () {
     }
 };
 
+p._showSettings = function () {
 
-
-
-
-
-
-
-
+    dialogTrackOptions.show({
+        name: this._paramGroup.name,
+        selectors: this._selectors,
+        onChangeName: this._onChangeName,
+        onChangeSelectors: this._onChangeSelectors,
+    });
+};
 
 p._animPlay = function () {
 
@@ -942,19 +936,9 @@ p._onClickTgglHide = function () {
     }
 };
 
-p._onClickName = function () {
-
-    dialogTrackOptions.show({
-        name: this.name,
-        selectors: this._selectors,
-        onChangeName: this._onChangeName,
-        onChangeSelectors: this._onChangeSelectors,
-    });
-};
-
 p._onChangeName = function (name) {
 
-    this.name = name;
+    this._paramGroup.name = name;
 };
 
 p._onChangeSelectors = function (selectors) {

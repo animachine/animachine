@@ -36,12 +36,14 @@ function OptionLine(opt) {
 
     if (opt.contextMenuOptions) {
 
+        this.dropdown = amgui.createDropdown({
+            options: opt.contextMenuOptions,
+        });
+
         amgui.bindDropdown({
             asContextMenu: true,
             deTarget: this._deHeadCont,
-            deMenu: amgui.createDropdown({
-                options: opt.contextMenuOptions,
-            }),
+            deMenu: this.dropdown,
         });
     }
 

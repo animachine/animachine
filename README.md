@@ -1,10 +1,10 @@
-<img src="http://s9.postimg.org/mqolutoxb/amheader.png">
-
 ![](https://img.shields.io/badge/stability-experimental-orange.svg?style=flat-square)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/animachine/animachine?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-The animachine is a GUI for GSAP. 
-It lets you to create code driven animation using traditional animation tools (timeline, transformtool, etc.).
+<img src="http://s9.postimg.org/mqolutoxb/amheader.png">
+
+The animachine is a GUI for GSAP.  
+It lets you to create code driven animation using traditional animation tools (timeline, transformtool, etc.).  
 You don't need to add any change to your project for using animachine, just hit on the [chrome plugin][extension] or embed like any other js library and start animating.
 
 ###Why is this needed?

@@ -33,6 +33,14 @@ module.exports = function defineCompactProperty(that, opt) {
         refreshInput();
     }
 
+    return {
+        name: name,
+        evtName: evtName,
+    };
+
+
+    ///////////////////////////////////////////////////////////////
+
     function set(v, skipHistory) {
 
         v = fixType(v);
@@ -83,9 +91,4 @@ module.exports = function defineCompactProperty(that, opt) {
 
         return ((opt.type === 'float' || opt.type === 'int') && !_.isFinite(v));
     }
-
-    return {
-        name: name,
-        evtName: evtName,
-    };
 };

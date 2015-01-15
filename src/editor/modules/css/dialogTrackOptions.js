@@ -19,19 +19,6 @@ createContent();
 dialog.addButton('ok', 'hide');
 
 
-
-dialog.addProperty({name: 'name', startValue: 'Track'});
-dialog.addProperty({
-    name: 'selectors',
-    set: v => targetsInput.value = v,
-    get: () => targetsInput.value,
-});
-dialog.addProperty({name: 'repeat', startValue: 0});
-dialog.addProperty({name: 'repeatDelay', startValue: 0});
-dialog.addProperty({name: 'yoyo', startValue: false});
-dialog.addProperty({name: 'keyStretch', startValue: 1});
-
-
 function createContent() {
 
     var optName = new OptionLine({
@@ -137,4 +124,11 @@ function createContent() {
     function showWIPDialog() {
         am.dialogs.WIP.show();
     }
+
+    dialog.addProperty({name: 'name', startValue: 'Track'});
+    dialog.addProperty({name: 'selectors', startValue: [], input: targetsInput});
+    dialog.addProperty({name: 'repeat', startValue: 0});
+    dialog.addProperty({name: 'repeatDelay', startValue: 0});
+    dialog.addProperty({name: 'yoyo', startValue: false});
+    dialog.addProperty({name: 'keyStretch', startValue: 1});
 }

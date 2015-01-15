@@ -23,8 +23,8 @@ function generate(de, root) {
 
             if (deCurr.parentNode === rootCurr) {
 
-                qsCurr = '> ' + deCurr.tagName + ':nth-child(' +
-                    (Array.prototype.indexOf.call(rootCurr.childNodes, deCurr) + 1) + ')';
+                qsCurr = '> :nth-child(' +
+                    (Array.prototype.indexOf.call(rootCurr.children, deCurr) + 1) + ')';
             }
             else {
                 return; //can't find unique query selector

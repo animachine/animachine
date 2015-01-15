@@ -35,7 +35,7 @@ gulp.task('vendor', function () {
   return gulp.src([
       paths.assets + 'js/webfont.js',
       paths.node + 'css.escape/css.escape.js',
-      paths.node + 'fetch/fetch.js',
+      paths.node + 'whatwg-fetch/fetch.js',
       paths.bower + 'lodash/dist/lodash.min.js',
       paths.bower + 'gsap/src/minified/TweenMax.min.js',
       paths.bower + 'jquery/dist/jquery.js',

@@ -1,4 +1,4 @@
-<img src="http://s27.postimg.org/3o4y4m45f/animachine_logo_tipo.png">
+<img src="http://s9.postimg.org/mqolutoxb/amheader.png">
 
 ![](https://img.shields.io/badge/stability-experimental-orange.svg?style=flat-square)
 

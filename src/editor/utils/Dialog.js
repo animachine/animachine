@@ -14,6 +14,7 @@ function Dialog (opt) {
     this._setupProperties = [];
     this._offsetX = 0;
     this._offsetY = 0;
+    this._offOnHideListeners = [];
 
     this._createDialog();
     
@@ -68,6 +69,10 @@ p.show = function (opt) {
 
         if (onOpt in opt) {
 
+            this._offOnHideListeners.push({
+                evtName: propData.evtName,
+                callback: opt[onOpt],
+            });
             this.on(propData.evtName, opt[onOpt]);
         }
     }, this);
@@ -86,10 +91,9 @@ p.hide = function () {
 
     this.domElem.close();
 
-    this._setupProperties.forEach(function (propData) {
-
-        this.removeAllListeners(propData.evtName);
-    }, this);
+    this._offOnHideListeners.forEach(reg => {
+        this.off(reg.evtName, reg.callback);
+    });
 
     this.emit('hide');
 

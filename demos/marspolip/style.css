@@ -26,8 +26,8 @@
 }
 .space .mars .tentacle {
   position: absolute;
-  top: -60px;
-  right: -80px;
+  top: -50px;
+  right: -60px;
   z-index: 1;
   height: 70px;
   width: 70px;

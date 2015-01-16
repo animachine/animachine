@@ -100,7 +100,7 @@ Object.defineProperties(p, {
 
             if (v === this._parentGroup) return;
             
-            this._parentGroup = v
+            this._parentGroup = v;
         },
         get: function () {
 
@@ -232,7 +232,7 @@ p.getValue = function (time) {
             bv = parseFloat(bv);
             
             return (bv + ((av - bv) * p)) + aUnit;
-        };
+        }
 
         var avs = _.compact(av.split(' ')),
             bvs = _.compact(bv.split(' ')),
@@ -345,7 +345,9 @@ p.getNextKey = function (time) {
 
 p.gotoPrevKey = function (time) {
 
-    var key = this.getPrevKey(am.timeline.currTime);
+    if (time === undefined) time = am.timeline.currTime;
+
+    var key = this.getPrevKey(time);
 
     if (key) {
         am.timeline.currTime = key.time;
@@ -354,7 +356,9 @@ p.gotoPrevKey = function (time) {
 
 p.gotoNextKey = function (time) {
 
-    var key = this.getNextKey(am.timeline.currTime);
+    if (time === undefined) time = am.timeline.currTime;
+
+    var key = this.getNextKey(time);
 
     if (key) {
         am.timeline.currTime = key.time;

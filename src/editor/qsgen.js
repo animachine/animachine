@@ -51,7 +51,7 @@ function gen(de, root) {
     var singles, selectors, matches = [];
 
     singles = selectors = possibleIds(de).concat(
-        [de.tagName],
+        [de.tagName.toLowerCase()],
         possibleClasses(de, i),
         possibleAttributes(de, i)
     );

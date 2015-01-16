@@ -117,7 +117,7 @@ p.getScriptKeys = function () {
 p._refreshCheckTimeline = function () {
 
     var time = 0,
-        tl = new TimelineMax();
+     tl = new window.TimelineMax();
 
     if (this._checkTimeline) this._checkTimeline.kill();
     this._checkTimeline = tl;
@@ -264,7 +264,7 @@ p._focusTransformer = function (de) {
                     anchorStroke: 'deepskyblue',
                     handleFill: 'navajowhite', 
                     handleStroke: 'deepskyblue', 
-                }
+                };
             }
             
             points.push(srcKey);

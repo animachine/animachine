@@ -4,7 +4,7 @@ var CssTrack = require('./CssTrack');
 var ParamsTab = require('./paramsTab/ParamsTab');
 var qsgen = require('../../qsgen');
 
-var iconNew, paramsTab;
+var paramsTab;
 
 exports.init = function () {
 

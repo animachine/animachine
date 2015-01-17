@@ -22,7 +22,7 @@ We're working for reach the beta state where you can start to use it in your pro
 ###Demos: [1][demo1], ...(wip)
 ###Tours:  ...(wip)
 
-<img src="http://s28.postimg.org/t8949v9sd/Animachine_css_mars_polip_demo.png">
+<img src="http://s29.postimg.org/m5m0pevhj/Animachine_css_mars_polip_demo_3.png">
 
 ###Milestones
 **1,**  

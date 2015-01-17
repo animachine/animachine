@@ -288,7 +288,6 @@ p.addKey = function (opt, skipHistory) {
         }
     }
     else {
-
         key = new Key(opt);
         key.value = 'value' in opt ? opt.value : this.getValue(opt.time);
 
@@ -299,7 +298,7 @@ p.addKey = function (opt, skipHistory) {
             am.history.save([this.removeKey, this, opt.time, true], [this.addKey, this, opt, true], 'add key');
         }
         
-        this.emit('addKey');
+        this.emit('addKey', key);
     }
 
     this._refreshInputs();

@@ -289,11 +289,11 @@ p._onChangeSubparamHeight = function () {
     this._refreshHeights();
 };
 
-p._onAddKeySubparam = function () {
+p._onAddKeySubparam = function (key) {
 
     if (this._merged) {
     
-        this.addKeyAll();
+        this.addKeyAll(key.time);
     }
 };
 

@@ -4,7 +4,7 @@
 <img src="http://s9.postimg.org/mqolutoxb/amheader.png">
 
 The animachine is a GUI for GSAP.  
-It lets you to create code driven animation using traditional animation tools (timeline, transformtool, etc.).  
+It lets you to create code driven animation using traditional animation tools (like timeline, transformtool, etc.).  
 You don't need to add any change to your project for using animachine, just hit on the [chrome plugin][extension] or embed like any other js library and start animating.
 
 ###Why is this needed?
@@ -16,11 +16,13 @@ Then you can pick elements from your page and start animating them.
 When it's done, you can save your animation as a .js file an include it in your page.  
 If later you want to change your animation, just open the animachine, load that .js file and you can continue where you stoped.  
 
-###What the state of this?
-We're working for reach the beta state, so you can start to use it in you projects, but currently it's in alpha, so things changing day from day, many of the basic features are just draft, the save files from last week probably don't gonna work in the next week. Although you're wellcomed to play with the [extension], the demos and take the in app tours.
+###What is the state of this?
+We're working for reach the beta state where you can start to use it in your projects, but currently it's in alpha, so things are changing day from day, many of the basic features are just draft and the save files from last week probably don't gonna work in the next week. Although you're wellcomed to play with the [extension], the demos and take the in app tours.
 
 ###Demos: [1][demo1], ...(wip)
 ###Tours:  ...(wip)
+
+<img src="http://s28.postimg.org/t8949v9sd/Animachine_css_mars_polip_demo.png">
 
 ###Milestones
 **1,**  

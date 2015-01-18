@@ -193,7 +193,7 @@ p.useSave = function (save) {
     };
     if ('paramTree' in save) {
 
-        loadChildren(save.paramTree.children, []);
+        if (save.paramTree.children) loadChildren(save.paramTree.children, []);
         if ('save' in save.paramTree) this._paramGroup.useSave(save.paramTree.save);
     }
 

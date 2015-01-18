@@ -290,7 +290,7 @@ p.addKey = function (opt, skipHistory) {
     else {
         key = new Key(opt);
         key.value = 'value' in opt ? opt.value : this.getValue(opt.time);
-
+if (opt.time === 8153 && !this.hidden) debugger;
         this.keyLine.addKey(key);
 
         if (!skipHistory) {
@@ -298,7 +298,7 @@ p.addKey = function (opt, skipHistory) {
             am.history.save([this.removeKey, this, opt.time, true], [this.addKey, this, opt, true], 'add key');
         }
         
-        this.emit('addKey', key);
+        this.emit('addKey', key, this);
     }
 
     this._refreshInputs();

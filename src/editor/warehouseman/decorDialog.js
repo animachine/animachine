@@ -463,7 +463,7 @@ function decorDialog(whm) {
         deOptions.style.height = '100%';
         dialog.deContent.appendChild(deOptions);
 
-        amgui.createButton({
+        amgui.createBtn({
             text: 'add trigger',
             icon: 'plus',
             onClick: function () {am.dialogs.WIP.show()},
@@ -473,7 +473,7 @@ function decorDialog(whm) {
         var checkSave = createCheckbox('include save', true);
         var checkMinify = createCheckbox('minify');
         var checkAuto = createCheckbox('auto play', true);
-        var checkAuto = createCheckbox('debug', true);
+        var checkDebug = createCheckbox('debug', true);
 
         deOptions.getOptions = function () {
 
@@ -489,6 +489,7 @@ function decorDialog(whm) {
             checkSave.checked = opt.includeSave;
             checkMinify.checked = opt.minify;
             checkAuto.checked = opt.autoPlay;
+            checkDebug.checked = opt.debug;
         };
 
         deOptions.toggle = function () {

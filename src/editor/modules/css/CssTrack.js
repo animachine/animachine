@@ -590,15 +590,17 @@ p.focusHandler = function (de) {
     this.emit('focusHandler');
 
     var handOpt = {
-        type: 'transformer',
-        base: {
-            x: de.offsetLeft,
-            y: de.offsetTop,
-            w: de.offsetWidth,
-            h: de.offsetHeight,
+            type: 'transformer',
+            base: {
+                x: de.offsetLeft,
+                y: de.offsetTop,
+                w: de.offsetWidth,
+                h: de.offsetHeight,
+            },
+            params: {},
         },
-        params: {}
-    };
+        xPercent = 0,
+        yPercent = 0;
 
     var p = handOpt.params;
     this._endParams.forEach(function (param) {
@@ -616,6 +618,8 @@ p.focusHandler = function (de) {
                 p.tx = parseFloat(value.x);
                 p.ty = parseFloat(value.y);
             break;
+            case 'xPercent': xPercent = parseFloat(param.getValue()); break;
+            case 'yPercent': yPercent = parseFloat(param.getValue()); break;
         }
     });
     
@@ -986,18 +990,6 @@ p._isAllParamsHaveKey = function (time) {
         return param.getKey(time) || !param.isValid();
     });
 };
-
-
-
-
-
-
-// am.anims.myAnim.create({
-//     targets: {
-//         head: maci.$head,
-//         floor: '#ground2',
-//     }
-// });
 
 
 

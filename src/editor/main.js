@@ -16,7 +16,7 @@ var dialogWIP = require('./commonDialogs/dialogWIP');
 var dialogFeedback = require('./commonDialogs/dialogFeedback');
 var modules = {
     css: require('./modules/css'),
-    js: require('./modules/javascript'),
+    // js: require('./modules/javascript'),
     domTree: require('./modules/am-domtree'),
 };
 var externalStylesheets = [

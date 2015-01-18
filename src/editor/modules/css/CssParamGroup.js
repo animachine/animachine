@@ -201,7 +201,9 @@ p._makeKeyLinesSymmetric = function (time) {
     console.time('_makeKeyLinesSymmetric');
     var times = [];
 
-    this._params.forEach(function (param) {
+    this._params.forEach(param => {
+
+        if (param.hidden) return;
         
         [].push.apply(times, param.getKeyTimes());
     });
@@ -215,7 +217,9 @@ p.addKeyAll = function (time) {
 
     time = time === undefined ? am.timeline.currTime : time;
 
-    this._params.forEach(function (param) {
+    this._params.forEach(param => {
+
+        if (param.hidden) return;
 
         if (param instanceof CssParamGroup) {
 
@@ -231,7 +235,9 @@ p.removeKeyAll = function (time) {
 
     time = time || am.timeline.currTime;
 
-    this._params.forEach(function (param) {
+    this._params.forEach(param => {
+
+        if (param.hidden) return;
 
         var key = param.getKey(time);
         if (key) {
@@ -245,7 +251,9 @@ p.removeKeyAll = function (time) {
 
 p._isKeySet = function (time) {
 
-    return this._params.every(p => p._isKeySet(time));
+    //empty groups returns true except if this is the root paramGroup
+    return (this.parentGroup || this._params.length !== 0) && 
+        this._params.every(p => p._isKeySet(time));
 };
 
 
@@ -289,9 +297,9 @@ p._onChangeSubparamHeight = function () {
     this._refreshHeights();
 };
 
-p._onAddKeySubparam = function (key) {
+p._onAddKeySubparam = function (key, param) {
 
-    if (this._merged) {
+    if (this._merged && !param.hidden) {
     
         this.addKeyAll(key.time);
     }

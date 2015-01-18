@@ -1,5 +1,6 @@
 body {
   background: darkcyan;
+  overflow: hidden;
 }
 
 img {

@@ -111,6 +111,7 @@ am._init = function () {
     am.tour = new Tour();
 
     am.domElem = createAmRoot();
+    am.dePickLayer = createAmLayer();
     am.deHandlerCont = createAmLayer();
     am.deGuiCont = createAmLayer();
     am.deDialogCont = createAmLayer();
@@ -158,17 +159,10 @@ am._init = function () {
         }
     });
 
-
-
-    // am.timeline.domElem.style.position = 'fixed';
-    am.timeline.domElem.style.width = '100%';
-    am.timeline.domElem.style.height = '100%';
-    // am.timeline.domElem.style.bottom = '0px';
     am.workspace.fillTab('timeline', am.timeline.domElem);
 
     addToggleGui();
-
-    window.addEventListener('click', onClickRoot);
+    initPickerLayer();
 
     Object.keys(modules).forEach( moduleName => {
 
@@ -358,34 +352,70 @@ function getMaxZIndex() {
 }
 
 
+function initPickerLayer() {
 
+    am.dePickLayer.style.pointerEvents = 'auto';
 
+    var isActive = true;
 
-
-
-
-
-
-
-
-
-
-
-
-function onClickRoot(e) {
-
-    if (am.isPickableDomElem(e.target)) {
-        
-        if (e.target !== am.selectedDomElem) {//hack!
-            
-            am.domPicker.focusElem(e.target);
+    var btn = amgui.createToggleIconBtn({
+        tooltip: 'toggle dom picking mode',
+        iconOn: 'target', 
+        iconOff: 'cursor',
+        defaultToggle: true,
+        size: am.timeline.toolbar.height,
+        display: 'inline-block',
+        onClick: function () {
+            setActive(!isActive);
         }
-    }
-    else if (e.target === document.body || e.target.parentNode === document) {
+    });
 
-        am.deselectDomElem();
+    am.timeline.toolbar.addIcon({
+        deIcon: btn,
+    });
+
+    function setActive(v) {
+
+        if (isActive === v) return;
+        isActive = v;
+
+        am.dePickLayer.style.pointerEvents = isActive ? 'auto' : 'none';
+        btn.setToggle(isActive);
     }
+
+    am.dePickLayer.addEventListener('click', function (e) {
+
+        am.dePickLayer.style.pointerEvents = 'none';
+        var de = document.elementFromPoint(e.x, e.y);
+        am.dePickLayer.style.pointerEvents = 'auto';
+
+        if (am.isPickableDomElem(de)) {
+            
+            if (de !== am.selectedDomElem) {//hack!
+                
+                am.domPicker.focusElem(de);
+            }
+        }
+        else if (de === document.body || de.parentNode === document) {
+
+            am.deselectDomElem();
+        }
+    });
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function onSelectWithDomPicker(de) {
 

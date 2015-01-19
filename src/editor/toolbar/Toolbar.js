@@ -34,6 +34,16 @@ var p = Toolbar.prototype;
 module.exports = Toolbar;
 
 
+
+Object.defineProperties(p, {
+    height: {
+        get: function () {
+            return this._height;
+        }
+    }
+});
+
+
 p.addIcon = function (opt) {
 
     var deIcon = opt.deIcon || amgui.createIconBtn({

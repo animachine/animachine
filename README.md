@@ -3,15 +3,15 @@
 
 <img src="http://s9.postimg.org/mqolutoxb/amheader.png">
 
-The animachine is a GUI for GSAP.  
+The animachine is a GUI for [GSAP].  
 It lets you to create code driven animation using traditional animation tools (like timeline, transformtool, etc.).  
-You don't need to add any change to your project for using animachine, just hit on the [chrome plugin][extension] or embed like any other js library and start animating.
+You don't need to add any change to your project to use animachine, just hit on the [chrome plugin][extension] or embed it like any other js library and start animating.
 
 ###Why is this needed?
-You have great tools to make animations for the web (like Adobe Edge, Google Webdesigner or Animatron) but all of these are only for making sandboxed animations and embed that boxes in somewhere (usually in an iframe). If you need to animate some inner part of your project (ex. when a dialog appears or a game character jumps and walks) it's has to be coded by a programmer. When this animations have to be long, artistic or just done by somebody how is not a skilled programmer this work can be tedious or almost impossible, so this can prevent us from seeing more fine and shopisticated animations on the web.
+You have great tools to make animations for the web (like Adobe Edge, Google Webdesigner or Animatron) but all of these are only for making sandboxed animations and embed that boxes in somewhere (usually in an iframe). If you need to animate some inner part of your project (ex. when a dialog appears or a game character jumps and walks) it has to be coded by a programmer. When this animations have to be long, artistic or just done by somebody how is not a skilled programmer this work can be tedious or almost impossible, so this can prevent us from seeing more fine and shopisticated animations on the web.
 
 ###How is this working?
-In a nuteshell, when you click on the extension you'll have an overlay on your page with the animation tools witch you'll be familiar with if you ever made animations with prgrams like Anime Studio, Adobe Edge, Affter Effects etc.  
+In a nuteshell, when you click on the extension you'll have an overlay on your page with the animation tools which you'll be familiar with if you ever made animations with prgrams like Anime Studio, Adobe Edge, Affter Effects etc.  
 Then you can pick elements from your page and start animating them.  
 When it's done, you can save your animation as a .js file an include it in your page.  
 If later you want to change your animation, just open the animachine, load that .js file and you can continue where you stoped.  
@@ -37,8 +37,8 @@ Css Transform3D support.
 **2,**  
 Extended support for svg animation. (paths, filters, etc.)  
 Pixi.js, Easel.js, Raphael.js, Kinetic.js, support.  
-Resource handling and content creating.  
-Animating with skeletons.  
+Add resource handling and content creating feuteres.  
+Animate with skeletons.  
 Support sprite sheets.  
 Video file export.  
 
@@ -49,3 +49,4 @@ Create online playground.
 
 [extension]: https://chrome.google.com/webstore/detail/animachine/gpnfomkfgajaojpakbkikiekmajeojgd
 [demo1]: http://animachine.github.io/animachine/demos/marspolip/
+[GSAP]: http://greensock.com/

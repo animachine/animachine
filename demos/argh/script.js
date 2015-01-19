@@ -36,7 +36,7 @@ $(function () {
             $rshoulder = create('rshoulder');
             $head = create('head');
         
-        if (true) { //edit
+        if (false) { //edit
             am.open('save.json');
             am.timeline.setInputs({
                 root: $root,

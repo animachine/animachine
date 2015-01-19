@@ -15,7 +15,7 @@ function UnitInput(opt) {
 
     this._createBase();
 
-    this.units = opt.units || [''];
+    this.units = opt.units && opt.units.length ? opt.units : [''];
     this.min = opt.min;
     this.max = opt.max;
     this._amount = undefined;

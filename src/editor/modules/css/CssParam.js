@@ -265,7 +265,7 @@ p.getValue = function (time) {
 
         function getUnit(v) {
 
-            var m = /([a-z]+)$/.exec(v);
+            var m = /([a-z%]+)$/.exec(v);
 
             return m && m[1];
         }
@@ -290,7 +290,7 @@ p.addKey = function (opt, skipHistory) {
     else {
         key = new Key(opt);
         key.value = 'value' in opt ? opt.value : this.getValue(opt.time);
-if (opt.time === 8153 && !this.hidden) debugger;
+
         this.keyLine.addKey(key);
 
         if (!skipHistory) {
@@ -422,7 +422,9 @@ p._isKeySet = function (time) {
 
 p._onChangeInput = function (value) {
     
-    if (String(value) === String(this.getValue())) {
+    var oldValue = this.getValue();
+
+    if (String(value) === String(oldValue)) {
         return;
     }
     

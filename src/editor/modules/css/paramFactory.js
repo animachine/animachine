@@ -66,6 +66,13 @@ module.exports = {
                 input.precision = 2;
                 break;
 
+            case 'xPercent':
+            case 'yPercent': 
+                input.units = []; 
+                input.dragSpeed = 1; 
+                input.precision = 1;
+                break;
+
             case 'color':
             case 'borderColorTop':
             case 'borderColorRight':

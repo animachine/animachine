@@ -56,7 +56,7 @@ Object.defineProperties(p, {
 
             if (!Number.isFinite(v) || this._timescale === v) return;
 
-            this._timescale = Math.min(1, Math.max(0.0001, v));
+            this._timescale = Math.min(3, Math.max(0.0001, v));
             this._renderTape();
             this.emit('changeTape');
             this.emit('changeTimescale');

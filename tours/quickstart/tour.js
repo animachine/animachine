@@ -79,12 +79,11 @@ $(function () {
                     }
                     if (!tour.isChecked(1)) {
 
-                        am.timeline._tracks.forEach(function (track) {
-                            track._params.forEach(function (param) {
-                                if (param._keys.length > 1) {
-                                    tour.checkIn(1);
-                                }
-                            });
+                        var save = JSON.parse(am.timeline.getSave());
+
+                        walkObj(save, function (value, key, obj) {
+
+                            return key === 'keys' && value.length > 1;
                         });
                     }
                 }
@@ -157,6 +156,23 @@ $(function () {
     }
 
 });
+
+function walkObj(obj, cb) {
+
+    return Object.keys(obj).some(function (key) {
+
+        var value = obj[key];
+        
+        if (cb(value, key, obj)) {
+            return true;
+        }
+
+        if (typeof(value) === 'object') {
+
+            return walkObj(obj, cb)
+        }
+    });
+};
 
 
 function getStep0Content() {

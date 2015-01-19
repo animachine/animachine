@@ -15,6 +15,8 @@ function InlineEaseEditor(opt) {
     
     this._points = [0, 0, 1, 1];
 
+    this._render = amgui.delayWithRAF(this._render, this);
+
     this._createBase();
     this.hide();
 }
@@ -41,10 +43,11 @@ p.show = function (opt) {
     this._eases.forEach(ease => {
 
         ease.on('change', this._onChangeEase, this);
-        am.timeline.on(['changeTape', 'changeTimescale'], this._render, this);
     });
 
     this._render();
+
+    this._startAutoRefresh();
 
     this.domElem.style.display = '';
 };
@@ -56,9 +59,10 @@ p.hide = function () {
         this._eases.forEach(ease => {
 
             ease.off('change', this._onChangeEase, this);
-            am.timeline.off(['changeTape', 'changeTimescale'], this._render, this);
         });
     }
+
+    this._stopAutoRefresh();
 
     window.removeEventListener('click', this._onClickWindow);
 
@@ -68,7 +72,24 @@ p.hide = function () {
 
 
 
+p._startAutoRefresh = function () {
 
+    var refresh = () => {
+
+        window.cancelAnimationFrame(this.__rafIdAutoRefresh);
+
+        this.__rafIdAutoRefresh = window.requestAnimationFrame(refresh);
+
+        this._render();
+    };
+
+    refresh();
+};
+
+p._stopAutoRefresh = function () {
+
+    window.cancelAnimationFrame(this.__rafIdAutoRefresh);
+};
 
 p._render = function() {
 

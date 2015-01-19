@@ -5,7 +5,7 @@ var amgui = require('../amgui');
 
 function decorTimebarNavigator (timebar) {
 
-    var deNav, deLeftHand, deRightHand, dragMode;
+    var deNav, deColor, deLeftHand, deRightHand, dragMode;
     
     createBase();
     timebar.domElem.appendChild(deNav);
@@ -54,7 +54,8 @@ function decorTimebarNavigator (timebar) {
         },
         onEnter: function () {
 
-            deNav.style.transform = 'scaleY(1)';
+            deColor.style.transform = 'scaleY(1)';
+            deColor.style.background = amgui.color.selected;
         },
         onLeave: onMLeave
     });
@@ -73,7 +74,8 @@ function decorTimebarNavigator (timebar) {
     function onMLeave() {
 
         if (!dragMode) {
-            deNav.style.transform = 'scaleY(0.4)';
+            deColor.style.transform = 'scaleY(0.4)';
+            deColor.style.background = amgui.color.bg2;
         }
     }
 
@@ -84,8 +86,15 @@ function decorTimebarNavigator (timebar) {
         deNav.style.top = '0px';
         deNav.style.height = '7px';
         deNav.style.cursor = 'move';
-        deNav.style.transformOrigin = 'center top';
-        deNav.style.background = amgui.color.bg2;
+
+        deColor = document.createElement('div');
+        deColor.style.position = 'absolute';
+        deColor.style.top = '0px';
+        deColor.style.left = '0px';
+        deColor.style.width = '100%';
+        deColor.style.height = '100%';
+        deColor.style.transformOrigin = 'center top';
+        deNav.appendChild(deColor);
 
         deRightHand = createHandler('right');
         deLeftHand = createHandler('left');

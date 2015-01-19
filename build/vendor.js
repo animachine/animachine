@@ -331,7 +331,7 @@ $.prototype.v=function(a,b){var c=this.d.id,d=this.c.u,e=this;c?(d.__webfontfont
           headers: headers(xhr),
           url: xhr.responseURL || xhr.getResponseHeader('X-Request-URL')
         }
-        resolve(new Response(blobSupport ? xhr.response: xhr.responseText, options))
+        resolve(new Response(blobSupport ? xhr.response : xhr.responseText, options))
       }
 
       xhr.onerror = function() {

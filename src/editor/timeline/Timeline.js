@@ -652,6 +652,8 @@ p._createBase = function () {
     this.domElem = document.createElement('div');
     this.domElem.style.backgroundColor = amgui.color.bg0; 
     this.domElem.style.display = 'flex'; 
+    this.domElem.style.width = '100%'; 
+    this.domElem.style.height = '100%'; 
     this.domElem.style.pointerEvents = 'auto'; 
 
     this._deLeft = document.createElement('div');
@@ -748,7 +750,6 @@ p._createSettingsHead = function () {
         tooltip: 'add new track',
         icon: 'plus-squared',
         size: this._headerH,
-        // parent: this._deSettingsHead,
         display: 'inline-block',
     });
     this.toolbar.addIcon({deIcon: this._btnNewTrack});
@@ -766,7 +767,6 @@ p._createSettingsHead = function () {
         tooltip: 'set timeline triggers',
         icon: 'flash', 
         size: this._headerH,
-        // parent: this._deSettingsHead,
         display: 'inline-block',
         onClick: () => this.triggerMap.showEditor(),
     });
@@ -780,7 +780,6 @@ p._createSettingsHead = function () {
         iconOn: 'pause', 
         iconOff: 'play',
         size: this._headerH,
-        // parent: this._deSettingsHead,
         display: 'inline-block',
         onClick: this._onTogglePlayPause
     });

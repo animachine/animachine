@@ -4,7 +4,8 @@ $(function () {
     am.open();
     setupWorkspace();
 
-    var deCookiejar = document.querySelector('#cookie')
+    var deCookiejar = document.querySelector('#cookie'),
+        numberOfSavesAtStart = getNumberOfSaves();
 
     am.tour.setup({
 
@@ -104,7 +105,7 @@ $(function () {
                 },
                 runningLoop: function (tour) {
 
-                    if (!tour.isChecked(0) && am.storage.dialog.isOpened) {
+                    if (!tour.isChecked(0) && am.storage.dialog && am.storage.dialog.isOpened) {
 
                         tour.checkIn(0);
                     }
@@ -112,21 +113,18 @@ $(function () {
 
                         tour.checkIn(1);
                     }
-                    if (!tour.isChecked(2) && isSaved()) {
+                    if (!tour.isChecked(2) && getNumberOfSaves() > numberOfSavesAtStart) {
 
                         tour.checkIn(2);
 
-                        window.localStorage.amQuickTourSavedFlag = true;
+                        window.localStorage.amQuickTourSavedFlag = +new Date();
                     }
 
                     function isSaved() {
 
-                        return Object.keys(localStorage).some(function (key) {
-                        
-                            return key.indexOf('_webstorageman/') === 0;
-                        });
+                        return 
                     }
-                }
+                },
             },
             {
                 title: 'Load it!',
@@ -139,27 +137,52 @@ $(function () {
                 },
                 runningLoop: function (tour) {
 
-                    if (!tour.isChecked(0) && am.storage.dialog.isOpened) {
+                    if (!tour.isChecked(0) && am.storage.dialog && am.storage.dialog.isOpened) {
 
                         tour.checkIn(0);
                     }
-                    if (!tour.isChecked(2) && 'isAnimLoaded') {
+                    if (!tour.isChecked(1) && am.timeline._tracks.length) {
 
-                        tour.checkIn(2);
+                        tour.checkIn(1);
 
-                        window.localStorage.amQuickTourSavedFlag = false;
+                        window.localStorage.amQuickTourSavedFlag = '';
                     }
+                }
+            },
+            {
+                title: 'Done!)',
+                content: getStep6Content(),
+                checklist: [
+                ],
+                onReady: function (tour) {
+                },
+                runningLoop: function (tour) {
                 }
             },
         ],
     });
-
-    if (window.localStorage.amQuickTourSavedFlag) {
-
-        // am.tour.goto(5);
+    
+    var saved = window.localStorage.amQuickTourSavedFlag;
+    if (saved && saved - (+new Date()) < 1000*60*5) {
+        am.tour.goto(5);
     }
 
 });
+
+function getNumberOfSaves() {
+
+    var count = 0;
+
+    Object.keys(localStorage).forEach(function (key) {
+    
+        if (key.indexOf('_webstorageman/') === 0) {
+
+            ++count;
+        } 
+    });
+
+    return count;
+}
 
 function walkObj(obj, cb) {
 
@@ -173,7 +196,7 @@ function walkObj(obj, cb) {
 
         if (typeof(value) === 'object') {
 
-            return walkObj(value, cb)
+            return walkObj(value, cb);
         }
     });
 };
@@ -190,7 +213,7 @@ function getStep0Content() {
 function getStep1Content() {
 
     return '<img src="http://zippy.gfycat.com/PoshHighlevelFalcon.gif" style="width:100%;">'
-    + '<p>First select the cookie jar on the screen by click on it.</p>'
+    + '<p>First select the cookie jar on the screen by clicking on it.</p>'
     + '<p> Than click on the <span class="icon-plus"></span> in the right-left corner of the <a>Dom Picker.<a/></p>';
 }
 
@@ -210,36 +233,33 @@ function getStep3Content() {
 function getStep4Content() {
 
     return '<img src="http://zippy.gfycat.com/ImpureSplendidHyracotherium.gif" style="width:100%;">'
-    + '<p>To save you animation:</p>'
-    + '<p> -click ont the menu in the toolbar</p>'
-    + '<p> -select the save option</p>'
-    + '<p> -select the web storage<span class="play"></span></p> on the right</p>'
-    + '<p> -give some name to it and save.</p>'
-    + '<p>Now your animation is saved in your browser. You can refresh the browser and continue with the last step.</p>';
+    + '<p>To save your animation:</p>'
+    + '<ul style="list-style-type:disc">'
+    + '<li>click ont the floppy (<span class="icon-floppy"></span>) in the toolbar</li>'
+    + '<li>select the save option</li>'
+    + '<li>select the web storage (<span class="icon-bullseye"></span>) on the right of the opened dialog</li>'
+    + '<li>than give some name to it and save.</li>'
+    + '</ul>'
+    + '<p>Now your animation is saved in your browser. You can refresh the page and continue with the last step.</p>';
 }
 
 function getStep5Content() {
 
     return '<img src="http://zippy.gfycat.com/ImpureSplendidHyracotherium.gif" style="width:100%;">'
-    + '<p>To open you animation:</p>'
-    + '<p> -click ont the menu in the toolbar</p>'
-    + '<p> -select the open option</p>'
-    + '<p> -select the web storage<span class="play"></span></p> on the right</p>'
-    + '<p> -if the animation is saved, you\'ll find it in the list. Select it and click on the open.</p>'
+    + '<p>To open your animation:</p>'
+    + '<ul style="list-style-type:disc">'
+    + '<li>click ont the floppy (<span class="icon-floppy"></span>) in the toolbar</li>'
+    + '<li>select the open option</li>'
+    + '<li>select the web storage (<span class="icon-bullseye"></span>) on the right</li>'
+    + '<li>if the animation is saved, you\'ll find it in the list. Select it and click on the open.</li>'
+    + '</ul>'
     + '<p>Now you can play it again and continue the editing</p>'
-    + '<p>You can find more tours <a href="">here</a></p>';
 }
 
 function getStep6Content() {
 
     return '<img src="http://zippy.gfycat.com/ImpureSplendidHyracotherium.gif" style="width:100%;">'
-    + '<p>Thanks for</p>'
-    + '<p> -click ont the menu in the toolbar</p>'
-    + '<p> -select the open option</p>'
-    + '<p> -select the web storage<span class="play"></span></p> on the right</p>'
-    + '<p> -if the animation is saved, you\'ll find it in the list. Select it and click on the open.</p>'
-    + '<p>Now you can play it again and continue the editing</p>'
-    + '<p>You can find more tours <a href="">here</a></p>';
+    + '<p>Thanks for trying out the Animachine(alpha)! For more information check out the project page on <a href="https://github.com/animachine/animachine">github</a></p>';
 }
 
 function setupWorkspace() {

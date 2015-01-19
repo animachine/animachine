@@ -220,8 +220,10 @@ p._refreshChecklist = function () {
 
     if (!this._currStep) return;
 
-    var allChecked =  _.every(this._currStep.checklist, 'value');
-    this._btnDone.style.visibility = allChecked ? '' : 'hidden';
+    var allChecked =  _.every(this._currStep.checklist, 'value'),
+        isLast = _.last(this._steps) === this._currStep;
+
+    this._btnDone.style.visibility = allChecked && !isLast ? '' : 'hidden';
 }
 
 

@@ -125,8 +125,8 @@ am._init = function () {
     am.deRoot = document.body;
     
     am.history = new Chronicler();
-    shortcuts.on('undo', am.history.undo.bind(am.history));
-    shortcuts.on('redo', am.history.redo.bind(am.history));
+    shortcuts.on('undo', () => am.history.undo());
+    shortcuts.on('redo', () => am.history.redo());
     
     am.historyTab = new HistoryTab();
     am.timeline = new Timeline();
@@ -140,13 +140,13 @@ am._init = function () {
     am.timeline.toolbar.addIcon({
         tooltip: 'undo',
         icon: 'ccw',
-        onClick: am.history.undo.bind(am.history)
+        onClick: () => am.dialog.WIP.show(),
     });
 
     am.timeline.toolbar.addIcon({
         tooltip: 'redo',
         icon: 'cw',
-        onClick: am.history.redo.bind(am.history)
+        onClick: () => am.dialog.WIP.show(),
     });
 
 

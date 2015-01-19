@@ -56,7 +56,7 @@ $(function () {
                     if (!tour.isChecked(0)) {
 
                         var save = am.timeline.getSave();
-                        if(/translate|scale|rotation/.test(save)) {
+                        if(/"translate"|"scale"|"rotation"/.test(save)) {
                             tour.checkIn(0);
                         }
                     }
@@ -83,7 +83,11 @@ $(function () {
 
                         walkObj(save, function (value, key, obj) {
 
-                            return key === 'keys' && value.length > 1;
+                            if (key === 'keys' && value.length > 1) {
+
+                                tour.checkIn(1);
+                                return true;
+                            }
                         });
                     }
                 }
@@ -169,7 +173,7 @@ function walkObj(obj, cb) {
 
         if (typeof(value) === 'object') {
 
-            return walkObj(obj, cb)
+            return walkObj(value, cb)
         }
     });
 };

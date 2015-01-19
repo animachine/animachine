@@ -3,6 +3,7 @@
 var EventEmitter = require('eventman');
 var inherits = require('inherits');
 var amgui = require('../amgui');
+var CheckboxInput = require('../utils/CheckboxInput');
 
 var cssAmgui = require('../assets/fontello/css/amgui.css');
 
@@ -36,15 +37,29 @@ p.init = function () {
 
 p.setup = function (data) {
 
+
+    var createCheck = (tooltip) => {
+
+        var cb = new CheckboxInput({
+            parent: this._deCheckboxCont,
+            tooltip: tooltip,
+        });
+
+        cb.domElem.style.display = 'none';
+
+        return cb;
+    }
+
     this.init();
 
     window.addEventListener('click', this._callRunningLoop);
+
 
     data.steps.forEach(function (step) {
 
         step.domElem = document.createElement('div');
         step.domElem.innerHTML = step.content;
-        step._checklist = [];
+        step.checklist = step.checklist ? step.checklist.map(createCheck) : [];
 
         this._steps.push(step);
     }, this);
@@ -78,11 +93,14 @@ p.goto = function (idx) {
         
             this._currStep.onClose(this);
         }
-        this._deStepCont.removeChild(this._currStep.domElem);
+        this._deStepContent.removeChild(this._currStep.domElem);
+        this._currStep.checklist.forEach(cb => cb.domElem.style.display = 'none');
     }
 
     this._currStep = this._steps[idx];
-    this._deStepCont.appendChild(this._currStep.domElem);
+
+    this._deStepContent.appendChild(this._currStep.domElem);
+    this._currStep.checklist.forEach(cb => cb.domElem.style.display = 'inline-block');
     
     if (typeof(this._currStep.onReady) === 'function') {
         
@@ -114,7 +132,7 @@ p._check = function (idx, step, val) {
     step = step || this._currStep;
     if (!step) return;
 
-    step._checklist[idx] = val;
+    step.checklist[idx].value = !!val;
 
     this._refreshChecklist();
 };
@@ -124,7 +142,7 @@ p.isChecked = function (idx, step) {
     step = step || this._currStep;
     if (!step) return;
 
-    return step._checklist[idx]; 
+    return step.checklist[idx].value; 
 };
 
 p.addPointer = function (opt) {
@@ -202,25 +220,7 @@ p._refreshChecklist = function () {
 
     if (!this._currStep) return;
 
-    var i = 0;
-
-    for (i = 0; i < this._currStep.checklistLength; ++i) {
-
-        if (!this._deCheckboxes[i]) {
-
-            this._deCheckboxes.push(this._createCheckbox());
-        }
-
-        this._deCheckboxes[i].setToggle(!!this._currStep._checklist[i]);
-        this._deCheckboxes[i].style.display = 'inline-block';
-    }
-
-    for (; i < this._deCheckboxes.length; ++i) {
-
-        this._deCheckboxes[i].style.display = 'none';
-    }
-
-    var allChecked =  this._currStep._checklist.every(v => !!v);
+    var allChecked =  _.every(this._currStep.checklist, 'value');
     this._btnDone.style.visibility = allChecked ? '' : 'hidden';
 }
 
@@ -263,7 +263,11 @@ p._createBase = function () {
         color: amgui.color.bg0,
         background: amgui.color.green,
         parent: this._deStepCont,
+        onClick: () => this.next(),
     });
+
+    this._btnDone.style.float = 'right';
+    this._btnDone.style.marginRight = '2px';
 
     var style = document.createElement('style');
     style.innerHTML = cssAmgui;
@@ -305,21 +309,6 @@ p._createBase = function () {
         icon: 'angle-right',
         onClick: this.next.bind(this)
     });
-}
-
-p._createCheckbox = function () {
-
-    var de = amgui.createToggleIconBtn({
-        parent: this._deCheckboxCont,
-        iconOn: 'circle',
-        iconOff: 'circle-thin',
-        changeColor: true,
-        colorOn: amgui.color.lime,
-    });
-
-    de.style.pointerEvents = 'none';
-
-    return de;
 }
 
 p._createTriangle = function () {

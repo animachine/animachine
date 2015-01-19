@@ -55,13 +55,10 @@ $(function () {
 
                     if (!tour.isChecked(0)) {
 
-                        am.timeline._tracks.forEach(function (track) {
-                            track._params.forEach(function (param) {
-                                if (['x','y','scaleX','scaleY','rotateZ'].indexOf(param.name) !== -1) {
-                                    tour.checkIn(0);
-                                }
-                            });
-                        });
+                        var save = am.timeline.getSave();
+                        if(/translate|scale|rotation/.test(save)) {
+                            tour.checkIn(0);
+                        }
                     }
                 }
             },
@@ -165,7 +162,7 @@ $(function () {
 function getStep0Content() {
 
     return '<img src="http://zippy.gfycat.com/MelodicPerfectAlpinegoat.gif" style="width:100%;">'
-    + '<p>Hi! We\'ve made a quick tour to show how to use Animachine Beta.</p>'
+    + '<p>Hi! We\'ve made a quick tour to show how to use Animachine.</p>'
     + '<p>If you want to be quick, you can just watch the gif animations and do what you see, but you\'ll always find the detailed instructions under here.</p>'
     + '<p>Click on the <span class="icon-angle-right"></span> for the first step.</p>';
 }
@@ -173,14 +170,14 @@ function getStep0Content() {
 function getStep1Content() {
 
     return '<img src="http://zippy.gfycat.com/PoshHighlevelFalcon.gif" style="width:100%;">'
-    + '<p>First, select the cookie jar on the screen by click on it</p>'
-    + '<p> Than, click on the <span class="icon-ellipsis-vert"></span> in the right-left corner of the <a>Dom Picker<a/> and select the "new css track" menu.</p>';
+    + '<p>First select the cookie jar on the screen by click on it.</p>'
+    + '<p> Than click on the <span class="icon-plus"></span> in the right-left corner of the <a>Dom Picker.<a/></p>';
 }
 
 function getStep2Content() {
 
     return '<img src="http://zippy.gfycat.com/IndolentBowedBustard.gif" style="width:100%;">'
-    + '<p>Now, you can move, rotate and scale the cookie jar with the green transform tool around it.</p>';
+    + '<p>Now you can move, rotate and scale the cookie jar with the green transform tool around it.</p>';
 }
 
 function getStep3Content() {

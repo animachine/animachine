@@ -1,6 +1,6 @@
 {
   "name": "Animachine (alpha)",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "manifest_version": 2,
   "description": "An animation tool for HTML and JS projects.",
   "homepage_url": "https://github.com/animachine/animachine",

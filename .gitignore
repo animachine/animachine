@@ -2,5 +2,7 @@ node_modules
 bower_components
 *.sublime-workspace
 *.sublime-project
-*.zip
 *.log
+*.zip
+*.crx
+*.pem

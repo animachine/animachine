@@ -1,22 +1,26 @@
 $(function () {
 
-    $('.setter').click(function () {
-
-        this.src = this.src.replace(/zombie(\d)/, function (match, p1) {
-            return 'zombie' + ((p1+1)%3);
+    $('.setter')
+        .click(function () {
+            this.src = this.src.replace(/zombie(\d)/, function (match, p1) {
+                return 'zombie' + ((p1+1)%3);
+            });
         });
-    });
 
     $('#shake')
         .click(function () {
+            'lfoot,rfoot,lhand,rhand,lshoulder,rshoulder,head'.split(',').forEach(function (id) {
 
-            this.src = this.src.replace(/zombie(\d)/, function (match, p1) {
-                return 'zombie' + parseInt(3 * Math.random());
+                $piece = $('#'+id);
+                $piece.attr('src',  $piece.attr('src').replace(/zombie(\d)/, function (match, p1) {
+                    return 'zombie' + parseInt(3 * Math.random());
+                }));
             });
         });
 
     $('#release').click(releaseZombie);
     releaseZombie();
+    $('#shake').click();
 
     function releaseZombie() {
 

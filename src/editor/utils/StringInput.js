@@ -12,8 +12,8 @@ function StringInput(opt) {
 
     this._createBase();
 
-    this._value = opt.value || '';
     this._defaultValue = opt.defaultValue || '';
+    this._value = opt.value || this._defaultValue;
 
     if (opt.placeholder) {
 

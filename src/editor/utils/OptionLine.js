@@ -76,6 +76,8 @@ function OptionLine(opt) {
             parent: this._deHeadCont,
         });
 
+        this._deTitle.style.marginRight = '3px';
+
         if (opt.title.onClick) {
 
             this._deTitle.addEventListener('click', opt.title.onClick);

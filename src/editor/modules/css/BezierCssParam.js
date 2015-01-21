@@ -47,15 +47,15 @@ Object.defineProperties(p, {
         set: function (v) {
 
             if (this._parentTrack) {
-                this._parentTrack.off('focusHandler', this._focusTransformer, this);
-                this._parentTrack.off('blurHandler', this._blurTransformer, this);
+                this._parentTrack.off('focusTransformer', this._focusTransformer, this);
+                this._parentTrack.off('blurTransformer', this._blurTransformer, this);
             }
 
             this._parentTrack = v;
 
             if (this._parentTrack) {
-                this._parentTrack.on('focusHandler', this._focusTransformer, this);
-                this._parentTrack.on('blurHandler', this._blurTransformer, this);
+                this._parentTrack.on('focusTransformer', this._focusTransformer, this);
+                this._parentTrack.on('blurTransformer', this._blurTransformer, this);
             }
         },
         get: function () {

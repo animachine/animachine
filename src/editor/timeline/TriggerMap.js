@@ -64,7 +64,7 @@ p.addTrigger = function (trigger) {
 
     this._triggers.push(trigger);
 
-    return tirgger;
+    return trigger;
 
     this.emit('change');
 };
@@ -115,17 +115,6 @@ p._createEditDialog = function () {
         onClick: () => selectTrigger(this.addTrigger()),
     });
 
-    var olName = new OptionLine({
-        title: 'name:',
-        parent: deCont,
-        inputs: [{
-            name: 'name',
-            type: 'string',
-            placeholder: 'name of the trigger',
-            onChange: v => currTrigger.name = v,
-        }]
-    });
-
     var refreshTriggerList = () => deTriggerList.setItems(_.pluck(this._triggers, name));
     var deTriggerList = amgui.createDropdown({
         parent: deCont,
@@ -134,43 +123,60 @@ p._createEditDialog = function () {
     refreshTriggerList();
     this.on('change', refreshTriggerList);
 
-    amgui.createLabel({parent: deCont, text: 'name:'});
-    var inpName = new StringInput({
+    var optName = new OptionLine({
+        title: 'name:',
         parent: deCont,
-        defaultValue: 'myTrigger',
-        onChange: v => currTrigger.name = v,
+        inputs: [{
+            placeholder: 'the name of the trigger',
+            defaultValue: 'myTrigger',
+            onChange: v => currTrigger.name = v,
+            type: 'string',
+            name: 'input',
+        }],
     });
 
-
-    amgui.createLabel({parent: deCont, text: 'event:'});
-    var inpEvent = new StringInput({
+    var optEvent = new OptionLine({
+        title: 'event:',
         parent: deCont,
-        defaultValue: 'click',
-        suggestions: 'click,mousedown,mouseup,mouseover,mouseout,ready,mouseenter,mouseleave,change'.split(','),
-        onChange: v => currTrigger.events[0] = v,
+        inputs: [{
+            placeholder: 'the name of the event',
+            defaultValue: 'click',
+            suggestions: 'click,mousedown,mouseup,mouseover,mouseout,ready,mouseenter,mouseleave,change'.split(','),
+            onChange: v => currTrigger.events[0] = v,
+            type: 'string',
+            name: 'input',
+        }],
     });
 
-    amgui.createLabel({parent: deCont, text: 'selector:'});
-    var inpSelector = new StringInput({
+    var optSelector = new OptionLine({
+        title: 'selector:',
         parent: deCont,
-        defaultValue: '#selector',
-        onChange: v => currTrigger.targets[0] = v,
+        inputs: [{
+            placeholder: 'the GSAP TimelineMax method name',
+            defaultValue: '#selector',
+            onChange: v => currTrigger.targets[0] = v,
+            type: 'string',
+            name: 'input',
+        }],
     });
 
-    amgui.createLabel({parent: deCont, text: 'action:'});
-    var inpMethod = new StringInput({
+    var optMethod = new OptionLine({
+        title: 'action:',
         parent: deCont,
-        defaultValue: 'play',
-        suggestions: _.pluck(ACTIONS, 'method'),
-        onChange: v => currTrigger.actions[0].method = v,
+        inputs: [{
+            placeholder: 'the GSAP TimelineMax method name',
+            defaultValue: 'play',
+            suggestions: _.pluck(ACTIONS, 'method'),
+            onChange: v => currTrigger.actions[0].method = v,
+            type: 'string',
+            name: 'name',
+        },{
+            placeholder: 'comma selected arguments',
+            defaultValue: '0',
+            onChange: v => currTrigger.actions[0].arguments[0] = v,
+            name: 'arguments',
+        }],
     });
-    amgui.createLabel({parent: deCont, text: '('});
-    var inpArguments = new StringInput({
-        parent: deCont,
-        defaultValue: '',
-        onChange: v => currTrigger.actions[0].arguments[0] = v,
-    });
-    amgui.createLabel({parent: deCont, text: ')'});
 
     amgui.createBtn({
         parent: deCont,

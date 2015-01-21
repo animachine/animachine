@@ -135,7 +135,7 @@ am._init = function () {
     am.workspace.fillTab('History', am.historyTab.domElem);
 
     am.deHandlerCont.appendChild(am.domPicker.domElem);
-    am.domPicker.on('pick', onSelectWithDomPicker);
+    am.domPicker.on('pick', de => am.selectDomElem(de));
 
     am.timeline.toolbar.addIcon({
         tooltip: 'undo',
@@ -239,6 +239,31 @@ am.isPickableDomElem = function (deTest) {
         }
     }
 };
+
+am.toPickingMode = function (opt) {
+
+    am.deGuiCont.style.display = 'none';
+    am.deDialogCont.style.display = 'none';
+
+    am.domPicker.on('add', function (e) {
+
+        e.demand(-1).than(() => {
+
+            if (opt.onPick) opt.onPick(e.target);
+
+            close();
+        });
+    });
+
+    shortcuts.on('esc', close);
+
+    function close() {
+
+        if (opt.onClose) opt.onClose();
+
+        shortcuts.off('esc', close);
+    }
+}
 
 
 
@@ -383,6 +408,20 @@ function initPickerLayer() {
         btn.setToggle(isActive);
     }
 
+    setTimeout(() => {//TODO hack!!! (need to wat until the font loads)
+
+        am.dePickLayer.style.cursor = amgui.createCursorFromText({
+            icon: 'target',
+            color: amgui.color.text,
+            width: 16,
+            height: 16,
+            hotspotX: 8,
+            hotspotY: 8,
+            stroke: {color:'black', width: 2},
+            debug: false,
+        });
+    });
+
     am.dePickLayer.addEventListener('click', function (e) {
 
         am.dePickLayer.style.pointerEvents = 'none';
@@ -409,18 +448,6 @@ function initPickerLayer() {
 
 
 
-
-
-
-
-
-
-
-
-function onSelectWithDomPicker(de) {
-
-    am.selectDomElem(de);
-}
 
 
 

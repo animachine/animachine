@@ -10,7 +10,7 @@ function (inputs) {
         var prevTime = 0;
 
         var tl = new TimelineMax();
-        rootTl.add(tl);
+        rootTl.add(tl, 0);
         
         timeline.forEach(function (key, idx) {
 

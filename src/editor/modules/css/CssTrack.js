@@ -273,13 +273,12 @@ p.getPlayer = function () {
     scriptParams.forEach(function (param) {
 
         var tl = new TimelineMax();
+        rootTl.add(tl, 0);
 
         param.forEach(function (key) {
 
             tl.to(selectedElems, key.duration, key.options);
         });
-
-        rootTl.add(tl, 0);
     });
 
     return rootTl;
@@ -509,11 +508,11 @@ p.select = function (opt) {
     this._isSelected = true;
 
 
-    if (!this._handler) {
-        this._handler = new Transhand();
+    if (!this._transformer) {
+        this._transformer = new Transhand();
     }
 
-    this._handler.on('change', this._onChangeHandler);
+    this._transformer.on('change', this._onChangeHandler);
     window.addEventListener('resize', this._onWindowResize);
     window.addEventListener('scroll', this._onWindowScroll);
 
@@ -521,7 +520,7 @@ p.select = function (opt) {
 
     if (this._selectedElems.length) {
 
-        this.focusHandler(opt.focusElem || this._selectedElems[0]);
+        this.focusTransformer(opt.focusElem || this._selectedElems[0]);
     }
 
     this._paramGroup.optionLine.highlight = true;
@@ -534,16 +533,16 @@ p.deselect = function () {
     if (!this._isSelected) return;
     this._isSelected = false;
 
-    this._blurHandler();
+    this._blurTransformer();
 
     this._paramGroup.optionLine.highlight = false;
 
     window.removeEventListener('resize', this._onWindowResize);
     window.removeEventListener('scroll', this._onWindowScroll);
 
-    if (this._handler) {
+    if (this._transformer) {
 
-        this._handler.removeListener('change', this._onChangeHandler);
+        this._transformer.removeListener('change', this._onChangeHandler);
     }
 };
 
@@ -580,14 +579,14 @@ p.getMagnetPoints = function () {
     return this._paramGroup.keyLine.getKeyTimes();
 };
 
-p.focusHandler = function (de) {
+p.focusTransformer = function (de) {
 
     de = de || this._currHandledDe;
     this._currHandledDe = de;
 
-    if (!this._currHandledDe) return this._blurHandler();
+    if (!this._currHandledDe) return this._blurTransformer();
 
-    this.emit('focusHandler');
+    this.emit('focusTransformer');
 
     var handOpt = {
             type: 'transformer',
@@ -624,25 +623,25 @@ p.focusHandler = function (de) {
     });
     
 
-    this._handler.setLocalRoot(de.parentNode);
-    this._handler.setup({
+    this._transformer.setLocalRoot(de.parentNode);
+    this._transformer.setup({
         hand: handOpt,
     });
-    this._handler.activate();
+    this._transformer.activate();
 
-    am.deHandlerCont.appendChild(this._handler.domElem);
+    am.deHandlerCont.appendChild(this._transformer.domElem);
 };
 
-p._blurHandler = function () {
+p._blurTransformer = function () {
 
     this._currHandledDe = undefined;
 
-    this.emit('blurHandler');
+    this.emit('blurTransformer');
 
-    if (this._handler && this._handler.domElem && this._handler.domElem.parentNode) {
+    if (this._transformer && this._transformer.domElem && this._transformer.domElem.parentNode) {
 
-        this._handler.deactivate();
-        this._handler.domElem.parentNode.removeChild(this._handler.domElem);
+        this._transformer.deactivate();
+        this._transformer.domElem.parentNode.removeChild(this._transformer.domElem);
     }
 };
 
@@ -729,7 +728,7 @@ p._switchFromTranslateToBezier = function () {
     this._paramGroup.getParam('translate').hidden = true;
     bezierParam.hidden = false;
     
-    this.focusHandler();
+    this._transformer();
 };
 
 p._switchFromBezierToTranslate = function () {
@@ -771,7 +770,7 @@ p._switchFromBezierToTranslate = function () {
     this._paramGroup.getParam('translate').hidden = false;
     bezierParam.hidden = true;
 
-    this.focusHandler();
+    this.focusTransformer();
 };
 
 
@@ -876,26 +875,26 @@ p._onChangeTime = function (time) {
     }
 
     this.renderTime(time);
-    this.focusHandler();
+    this.focusTransformer();
 };
 
 p._onChangeParameter = function () {
     
     this._refreshPlayer();
     this.renderTime();
-    this.focusHandler();
+    this.focusTransformer();
 
     this.emit('change');
 };
 
 p._onWindowResize = function () {
 
-    this.focusHandler();
+    this.focusTransformer();
 };
 
 p._onWindowScroll = function () {
 
-    this.focusHandler();
+    this.focusTransformer();
 };
 
 p._onDeleteParameter = function (param) {
@@ -958,7 +957,7 @@ p._onChangeSelectors = function (selectors) {
         this._currHandledDe = undefined;
     }
 
-    this.focusHandler(this._currHandledDe || this._selectedElems[0]);
+    this.focusTransformer(this._currHandledDe || this._selectedElems[0]);
 };
 
 p._onChangeHeight = function (selectors) {

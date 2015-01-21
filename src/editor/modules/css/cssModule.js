@@ -16,14 +16,13 @@ exports.init = function () {
 
     am.workspace.fillTab('Css Style', paramsTab.domElem);
 
-    am.domPicker.setRightLeftBtn({
-        icon: 'plus',
-        tooltip: 'create a new css track with this element',
-        onClick: function () {
+    am.domPicker.on('add', function (e) {
+
+        e.demand(10).than(() => {
 
             am.domPicker.hide();
 
-            var selector = qsgen(am.selectedDomElem);
+            var selector = qsgen(e.target);
             console.log('selector:', selector);
 
             var track = new CssTrack({
@@ -34,7 +33,7 @@ exports.init = function () {
             am.timeline.addTrack(track);
 
             am.selectTrack(track);
-        }
+        });
     });
 };
 
@@ -47,7 +46,7 @@ function onSelectDomElem(de) {
             if (track.isOwnedDomElem(de)) {
 
                 am.selectTrack(track);
-                track.focusHandler(de);
+                track.focusTransformer(de);
                 am.domPicker.hide();
             }
             else {

@@ -19,6 +19,39 @@ function DomPicker() {
     am.on('selectTrack', this.hide, this);
 
     this._createBase();
+
+    this.setRightLeftBtn({
+        icon: 'plus',
+        tooltip: 'create a new css track with this element',
+        onClick:  () => {
+
+            var winner, winnerPrior, done = false;
+            
+            this.emit('add', {
+                target: target,
+                demand: prior => {
+
+                    return new Promise((resolve, reject) => {
+
+                        if (done) return reject();                      
+
+                        if (winnerPrior === undefined || prior < winnerPrior) {
+
+                            winnerPrior = prior;
+                            if (winer) winer.reject();
+                            winer = {resolve, reject};
+                        }
+                        else {
+                            reject();
+                        }
+                    });
+                }
+            });
+
+            done = true;
+            if (winer) winer.resolve();
+        },
+    });
 }
 
 inherits(DomPicker, EventEmitter);

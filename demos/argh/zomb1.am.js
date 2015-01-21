@@ -2,392 +2,409 @@
     'use strict';
 
     /**@amsave*/
-    var SAVEJSON = '{"timebar":{"currTime":660,"timescale":0.12,"length":816.6666666666665},"sequences":[{"type":"css_sequ_type","data":{"name":"#head","fill":"forward","iterations":1,"selectors":["#head"],"parameters":[{"name":"transform","keys":[{"value":{"tx":12,"ty":-3.9999999999999982,"tz":0,"rx":0,"ry":0,"rz":0,"sx":1,"sy":1,"sz":1,"skewX":0,"skewY":0,"perspective":0},"time":0,"ease":"ease-in-out"},{"value":{"tx":12,"ty":-3.9999999999999982,"tz":0,"rx":0,"ry":0,"rz":0,"sx":1,"sy":1,"sz":1,"skewX":0,"skewY":0,"perspective":0},"time":800,"ease":"linear"},{"value":{"tx":12,"ty":-12.999999999999998,"tz":0,"rx":0,"ry":0,"rz":-0.044687862938096234,"sx":1,"sy":1,"sz":1,"skewX":0,"skewY":0,"perspective":0},"time":350,"ease":"ease-in-out"}],"showing3d":false},{"name":"transform-origin","keys":[{"value":"48.65% 62.64%","time":0,"ease":"linear"}]},{"keys":[]}],"isShowingParams":true}},{"type":"css_sequ_type","data":{"name":"#rshoulder","fill":"forward","iterations":1,"selectors":["#rshoulder"],"parameters":[{"name":"transform","keys":[{"value":{"tx":57.999999999999986,"ty":32,"tz":0,"rx":0,"ry":0,"rz":0,"sx":1,"sy":1,"sz":1,"skewX":0,"skewY":0,"perspective":0},"time":0,"ease":"ease-in-out"},{"value":{"tx":57.999999999999986,"ty":32,"tz":0,"rx":0,"ry":0,"rz":0,"sx":1,"sy":1,"sz":1,"skewX":0,"skewY":0,"perspective":0},"time":800,"ease":"linear"},{"value":{"tx":57.999999999999986,"ty":32,"tz":0,"rx":0,"ry":0,"rz":-0.25968231446012213,"sx":1,"sy":1,"sz":1,"skewX":0,"skewY":0,"perspective":0},"time":291,"ease":"ease-in-out"}],"showing3d":false},{"name":"transform-origin","keys":[{"value":"25.53% 52.86%","time":0,"ease":"linear"}]},{"keys":[]}],"isShowingParams":false}},{"type":"css_sequ_type","data":{"name":"#lshoulder","fill":"forward","iterations":1,"selectors":["#lshoulder"],"parameters":[{"name":"transform","keys":[{"value":{"tx":-5.999999999999993,"ty":34,"tz":0,"rx":0,"ry":0,"rz":0,"sx":1,"sy":1,"sz":1,"skewX":0,"skewY":0,"perspective":0},"time":0,"ease":"ease-in-out"},{"value":{"tx":-5.999999999999993,"ty":34,"tz":0,"rx":0,"ry":0,"rz":0,"sx":1,"sy":1,"sz":1,"skewX":0,"skewY":0,"perspective":0},"time":800,"ease":"linear"},{"value":{"tx":-5.999999999999993,"ty":34,"tz":0,"rx":0,"ry":0,"rz":0.2787647371163926,"sx":1,"sy":1,"sz":1,"skewX":0,"skewY":0,"perspective":0},"time":308,"ease":"ease-in-out"}],"showing3d":false},{"name":"transform-origin","keys":[{"value":"70.21% 55.71%","time":0,"ease":"linear"}]},{"keys":[]}],"isShowingParams":false}},{"type":"css_sequ_type","data":{"name":"#rhand","fill":"forward","iterations":1,"selectors":["#rhand"],"parameters":[{"name":"transform","keys":[{"value":{"tx":77,"ty":-45.999999999999986,"tz":0,"rx":0,"ry":0,"rz":0,"sx":1,"sy":1,"sz":1,"skewX":0,"skewY":0,"perspective":0},"time":0,"ease":"ease-in-out"},{"value":{"tx":77,"ty":-45.999999999999986,"tz":0,"rx":0,"ry":0,"rz":0,"sx":1,"sy":1,"sz":1,"skewX":0,"skewY":0,"perspective":0},"time":800,"ease":"linear"},{"value":{"tx":72,"ty":-53.999999999999986,"tz":0,"rx":0,"ry":0,"rz":-0.16728852982993225,"sx":1,"sy":1,"sz":1,"skewX":0,"skewY":0,"perspective":0},"time":291,"ease":"ease-in-out"}],"showing3d":false},{"name":"transform-origin","keys":[{"value":"48.65% 87.50%","time":0,"ease":"linear"}]},{"keys":[]}],"isShowingParams":false}},{"type":"css_sequ_type","data":{"name":"#lhand","fill":"forward","iterations":1,"selectors":["#lhand"],"parameters":[{"name":"transform","keys":[{"value":{"tx":-18,"ty":-45.99999999999994,"tz":0,"rx":0,"ry":0,"rz":0.01889773251816429,"sx":1,"sy":1,"sz":1,"skewX":0,"skewY":0,"perspective":0},"time":0,"ease":"ease-in-out"},{"value":{"tx":-18,"ty":-45.99999999999994,"tz":0,"rx":0,"ry":0,"rz":0.01889773251816429,"sx":1,"sy":1,"sz":1,"skewX":0,"skewY":0,"perspective":0},"time":800,"ease":"linear"},{"value":{"tx":-14,"ty":-51.99999999999994,"tz":0,"rx":0,"ry":0,"rz":0.21434860915395326,"sx":1,"sy":1,"sz":1,"skewX":0,"skewY":0,"perspective":0},"time":291,"ease":"ease-in-out"}],"showing3d":false},{"name":"transform-origin","keys":[{"value":"52.38% 86.45%","time":0,"ease":"linear"}]},{"keys":[]}],"isShowingParams":false}},{"type":"css_sequ_type","data":{"name":"#rfoot","fill":"forward","iterations":1,"selectors":["#rfoot"],"parameters":[{"name":"transform","keys":[{"value":{"tx":44,"ty":33.00000000000001,"tz":0,"rx":0,"ry":0,"rz":0.1742096512819481,"sx":1,"sy":1,"sz":1,"skewX":0,"skewY":0,"perspective":0},"time":0,"ease":"ease-in-out"},{"value":{"tx":44,"ty":33.00000000000001,"tz":0,"rx":0,"ry":0,"rz":0.1742096512819481,"sx":1,"sy":1,"sz":1,"skewX":0,"skewY":0,"perspective":0},"time":800,"ease":"linear"},{"value":{"tx":52,"ty":-22.999999999999993,"tz":0,"rx":0,"ry":0,"rz":-0.03653758506419469,"sx":1,"sy":1,"sz":1,"skewX":0,"skewY":0,"perspective":0},"time":400,"ease":"ease-in-out"}],"showing3d":false},{"name":"transform-origin","keys":[{"value":"42.50% 73.08%","time":0,"ease":"linear"}]},{"keys":[]}],"isShowingParams":false}},{"type":"css_sequ_type","data":{"name":"#lfoot","fill":"forward","iterations":1,"selectors":["#lfoot"],"parameters":[{"name":"transform","keys":[{"value":{"tx":-2,"ty":-18.999999999999986,"tz":0,"rx":0,"ry":0,"rz":0,"sx":1,"sy":1,"sz":1,"skewX":0,"skewY":0,"perspective":0},"time":0,"ease":"ease-in-out"},{"value":{"tx":-2,"ty":-18.999999999999986,"tz":0,"rx":0,"ry":0,"rz":0,"sx":1,"sy":1,"sz":1,"skewX":0,"skewY":0,"perspective":0},"time":800,"ease":"linear"},{"value":{"tx":13,"ty":37.000000000000014,"tz":0,"rx":0,"ry":0,"rz":-0.21557443118453357,"sx":1,"sy":1,"sz":1,"skewX":0,"skewY":0,"perspective":0},"time":400,"ease":"ease-in-out"}],"showing3d":false},{"name":"transform-origin","keys":[{"value":"52.50% 68.46%","time":0,"ease":"linear"}]},{"keys":[]}],"isShowingParams":false}}]}';
+    var SAVEJSON = '{"timebar":{"currTime":1050,"timescale":0.12,"length":1016},"tracks":[{"type":"css_track_type","data":{"selectors":[{"type":"input","value":"head"}],"paramTree":{"children":[{"save":{"name":"translate","hidden":false,"merged":true,"collapsed":true},"children":[{"save":{"name":"x","hidden":false,"keys":[{"value":"48.81380883923264px","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"48.81380883923264px","time":1016,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"y","hidden":false,"keys":[{"value":"51.544239978998704px","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"51.544239978998704px","time":1016,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"z","hidden":true,"keys":[{"value":"0px","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"0px","time":125,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"0px","time":1000,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"0px","time":483,"ease":{"type":"bezier","points":[0,0,1,1]}}]}}]},{"save":{"name":"xPercent","hidden":false,"keys":[{"value":"-50","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"yPercent","hidden":false,"keys":[{"value":"-50","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"rotation","hidden":false,"merged":true,"collapsed":true},"children":[{"save":{"name":"rotationX","hidden":true,"keys":[]}},{"save":{"name":"rotationY","hidden":true,"keys":[]}},{"save":{"name":"rotationZ","hidden":false,"keys":[{"value":"6.503749516007274deg","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"6.503749516007274deg","time":1016,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"-8.367957924764315deg","time":500,"ease":{"type":"bezier","points":[0,0,1,1]}}]}}]}],"save":{"name":"head","hidden":false,"merged":false,"collapsed":true}}}},{"type":"css_track_type","data":{"selectors":[{"type":"input","value":"lfoot"}],"paramTree":{"children":[{"save":{"name":"translate","hidden":false,"merged":true,"collapsed":true},"children":[{"save":{"name":"x","hidden":false,"keys":[{"value":"-3.0603277518102345px","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"3.406884106820005px","time":500,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"-3px","time":1016,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"y","hidden":false,"keys":[{"value":"4.890528774113327px","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"35.60317294436844px","time":500,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"5px","time":1016,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"z","hidden":true,"keys":[]}}]},{"save":{"name":"transformOrigin","hidden":false,"merged":true,"collapsed":true},"children":[{"save":{"name":"transformOriginX","hidden":false,"keys":[{"value":"57.21463414634147%","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"transformOriginY","hidden":false,"keys":[{"value":"68.91846153846154%","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}}]}}]},{"save":{"name":"rotation","hidden":false,"merged":true,"collapsed":true},"children":[{"save":{"name":"rotationX","hidden":true,"keys":[]}},{"save":{"name":"rotationY","hidden":true,"keys":[]}},{"save":{"name":"rotationZ","hidden":false,"keys":[{"value":"4.6324143574826495deg","time":1016,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"4.6324143574826495deg","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"-9.802339932271543deg","time":500,"ease":{"type":"bezier","points":[0,0,1,1]}}]}}]}],"save":{"name":"left foot","hidden":false,"merged":false,"collapsed":false}}}},{"type":"css_track_type","data":{"selectors":[{"type":"input","value":"rfoot"}],"paramTree":{"children":[{"save":{"name":"translate","hidden":false,"merged":true,"collapsed":true},"children":[{"save":{"name":"x","hidden":false,"keys":[{"value":"47.84535954122299px","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"47.84535954122299px","time":1016,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"47.694395569935494px","time":500,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"y","hidden":false,"keys":[{"value":"36.69917358876696px","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"36.69917358876696px","time":1016,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"-12.074244726804444px","time":500,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"z","hidden":true,"keys":[]}}]},{"save":{"name":"transformOrigin","hidden":false,"merged":true,"collapsed":true},"children":[{"save":{"name":"transformOriginX","hidden":false,"keys":[{"value":"42.03170731707317%","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"transformOriginY","hidden":false,"keys":[{"value":"70.4923076923077%","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}}]}}]},{"save":{"name":"rotation","hidden":false,"merged":true,"collapsed":true},"children":[{"save":{"name":"rotationX","hidden":true,"keys":[]}},{"save":{"name":"rotationY","hidden":true,"keys":[]}},{"save":{"name":"rotationZ","hidden":false,"keys":[{"value":"-0.11477882210390997deg","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"-0.11477882210390997deg","time":1016,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"-7.89094079663782deg","time":500,"ease":{"type":"bezier","points":[0,0,1,1]}}]}}]},{"save":{"name":"scale","hidden":false,"merged":true,"collapsed":true},"children":[{"save":{"name":"scaleX","hidden":false,"keys":[{"value":0.9869912641360928,"time":0,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"scaleY","hidden":false,"keys":[{"value":1,"time":0,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"scaleZ","hidden":true,"keys":[]}}]}],"save":{"name":"right foot","hidden":false,"merged":false,"collapsed":true}}}},{"type":"css_track_type","data":{"selectors":[{"type":"input","value":"lshoulder"}],"paramTree":{"children":[{"save":{"name":"translate","hidden":false,"merged":true,"collapsed":true},"children":[{"save":{"name":"x","hidden":false,"keys":[{"value":"-10.316775148110711px","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"-10.316775148110711px","time":1016,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"-10.349307047280133px","time":500,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"y","hidden":false,"keys":[{"value":"47.14001706299763px","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"47.14001706299763px","time":1016,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"43.136600758066656px","time":500,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"z","hidden":true,"keys":[]}}]},{"save":{"name":"transformOrigin","hidden":false,"merged":true,"collapsed":true},"children":[{"save":{"name":"transformOriginX","hidden":false,"keys":[{"value":"72.22553191489361%","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"transformOriginY","hidden":false,"keys":[{"value":"45.248571428571424%","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}}]}}]},{"save":{"name":"rotation","hidden":false,"merged":true,"collapsed":true},"children":[{"save":{"name":"rotationX","hidden":true,"keys":[]}},{"save":{"name":"rotationY","hidden":true,"keys":[]}},{"save":{"name":"rotationZ","hidden":false,"keys":[{"value":"-7.5520559242824445deg","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"-7.5520559242824445deg","time":1016,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"15.803818612218933deg","time":500,"ease":{"type":"bezier","points":[0,0,1,1]}}]}}]}],"save":{"name":"left shoulder","hidden":false,"merged":false,"collapsed":true}}}},{"type":"css_track_type","data":{"selectors":[{"type":"input","value":"rshoulder"}],"paramTree":{"children":[{"save":{"name":"translate","hidden":false,"merged":true,"collapsed":true},"children":[{"save":{"name":"x","hidden":false,"keys":[{"value":"57.189949507180884px","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"57.189949507180884px","time":1016,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"57.20086141158889px","time":500,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"y","hidden":false,"keys":[{"value":"40.56356429644879px","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"40.56356429644879px","time":1016,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"47.85167932649217px","time":500,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"z","hidden":true,"keys":[]}}]},{"save":{"name":"transformOrigin","hidden":false,"merged":true,"collapsed":true},"children":[{"save":{"name":"transformOriginX","hidden":false,"keys":[{"value":"24.27021276595745%","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"transformOriginY","hidden":false,"keys":[{"value":"52.19142857142857%","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}}]}}]},{"save":{"name":"rotation","hidden":false,"merged":true,"collapsed":true},"children":[{"save":{"name":"rotationX","hidden":true,"keys":[]}},{"save":{"name":"rotationY","hidden":true,"keys":[]}},{"save":{"name":"rotationZ","hidden":false,"keys":[{"value":"-5.66248247307562deg","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"-5.66248247307562deg","time":1016,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"8.470525864484326deg","time":500,"ease":{"type":"bezier","points":[0,0,1,1]}}]}}]}],"save":{"name":"right shoulder","hidden":false,"merged":false,"collapsed":true}}}},{"type":"css_track_type","data":{"selectors":[{"type":"input","value":"lhand"}],"paramTree":{"children":[{"save":{"name":"translate","hidden":false,"merged":true,"collapsed":true},"children":[{"save":{"name":"x","hidden":false,"keys":[{"value":"-23.22663699891993px","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"-23.22663699891993px","time":1016,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"-23.226897003265684px","time":500,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"y","hidden":false,"keys":[{"value":"-31.846980928490133px","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"-31.846980928490133px","time":1016,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"-35.88336224231378px","time":500,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"z","hidden":true,"keys":[]}}]},{"save":{"name":"transformOrigin","hidden":false,"merged":true,"collapsed":true},"children":[{"save":{"name":"transformOriginX","hidden":false,"keys":[{"value":"58.62954545454545%","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"transformOriginY","hidden":false,"keys":[{"value":"91.29245283018868%","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}}]}}]},{"save":{"name":"rotation","hidden":false,"merged":true,"collapsed":true},"children":[{"save":{"name":"rotationX","hidden":true,"keys":[]}},{"save":{"name":"rotationY","hidden":true,"keys":[]}},{"save":{"name":"rotationZ","hidden":false,"keys":[{"value":"7.323247428277786deg","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"7.323247428277786deg","time":1016,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"-4.0209041357497295deg","time":500,"ease":{"type":"bezier","points":[0,0,1,1]}}]}}]}],"save":{"name":"left hand","hidden":false,"merged":false,"collapsed":true}}}},{"type":"css_track_type","data":{"selectors":[{"type":"input","value":"rhand"}],"paramTree":{"children":[{"save":{"name":"translate","hidden":false,"merged":true,"collapsed":true},"children":[{"save":{"name":"x","hidden":false,"keys":[{"value":"72.65006851277644px","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"72.65006851277644px","time":1016,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"66.42755263195728px","time":500,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"y","hidden":false,"keys":[{"value":"-38.48839147622226px","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"-38.48839147622226px","time":1016,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"-34.80314598616237px","time":500,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"z","hidden":true,"keys":[]}}]},{"save":{"name":"transformOrigin","hidden":false,"merged":true,"collapsed":true},"children":[{"save":{"name":"transformOriginX","hidden":false,"keys":[{"value":"32.051162790697674%","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}}]}},{"save":{"name":"transformOriginY","hidden":false,"keys":[{"value":"85.62169811320754%","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}}]}}]},{"save":{"name":"rotation","hidden":false,"merged":true,"collapsed":true},"children":[{"save":{"name":"rotationX","hidden":true,"keys":[]}},{"save":{"name":"rotationY","hidden":true,"keys":[]}},{"save":{"name":"rotationZ","hidden":false,"keys":[{"value":"-15.398312439977248deg","time":0,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"-15.398312439977248deg","time":1016,"ease":{"type":"bezier","points":[0,0,1,1]}},{"value":"14.726796164899143deg","time":500,"ease":{"type":"bezier","points":[0,0,1,1]}}]}}]}],"save":{"name":"right hand","hidden":false,"merged":false,"collapsed":true}}}}],"easeMap":{},"triggerMap":{}}';
 
-    var sequPlayerGens = [function () {
+    var trackPlayerGens = [function (inputs) {
+    
+    var timelines = [[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"x":"48.81380883923264px"},"duration":0},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"x":"48.81380883923264px"},"duration":1.016}],[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"y":"51.544239978998704px"},"duration":0},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"y":"51.544239978998704px"},"duration":1.016}],[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"xPercent":"-50"},"duration":0}],[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"yPercent":"-50"},"duration":0}],[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"rotationZ":"6.503749516007274deg"},"duration":0},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"rotationZ":"-8.367957924764315deg"},"duration":0.5},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"rotationZ":"6.503749516007274deg"},"duration":0.516}]],
+        selectors = [{"type":"input","value":"head"}],
+        animTargets = getAnimTargets(),
+        rootTl = new TimelineMax();
 
-    var player,
-        animation,
-        isInited = false,
-        animations = [],
-        paramKeys = [[{"offset":0,"transform":"translate(12px,-3.9999999999999982px) ","easing":"ease-in-out"},{"offset":0.42857142857142866,"transform":"translate(12px,-12.999999999999998px) rotate(-0.044687862938096234rad) ","easing":"ease-in-out"},{"offset":0.9795918367346941,"transform":"translate(12px,-3.9999999999999982px) "}],[{"offset":0,"transform-origin":"48.65% 62.64%"}],[]],
-        options = {"direction":"normal","duration":816.6666666666665,"iterations":1,"fill":"forward"},
-        elems = document.querySelectorAll('#head');
+    timelines.forEach(function (timeline) {
 
-    for (var i = 0; i < elems.length; ++i) {
-        for (var j = 0; j < paramKeys.length; ++j) {
+        var prevTime = 0;
 
-            animations.push(new Animation(elems[i], paramKeys[j], options));
-        }
-    }
+        var tl = new TimelineMax();
+        rootTl.add(tl, 0);
+        
+        timeline.forEach(function (key, idx) {
 
-    animation = new AnimationGroup(animations);
+            tl.to(animTargets, key.duration, key.options);
+        });
+    });
 
-    return {
+    return rootTl;
+    
 
-        play: function () {
 
-            if (!isInited) {
+    function getAnimTargets() {
 
-                player = document.timeline.play(animation);
-                isInited = true;
+        var list = [];
+
+        selectors.forEach(function (selector) {
+
+            if (selector.type === 'css') {
+
+                list.push(selector.value);
             }
-            else {
-                player.play();
+            else if (inputs && selector.type === 'input') {
+
+                var parent = inputs;
+
+                selector.value.split('.').every(function (name) {
+
+                    return parent = parent[name];
+                });
+
+                if (parent) {
+                    list.push(parent);
+                }
             }
-        },
-        pause: function () {
+        });
 
-            if (!player) {
-                return;
-            }
-
-            player.pause();
-        },
-        seek: function (time) {
-
-            if (!player) {
-                return;
-            }
-
-            player.currentTime = time;
-        }
+        return list;
     };
-},
-function () {
+}
+,
+function (inputs) {
+    
+    var timelines = [[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"x":"-3.0603277518102345px"},"duration":0},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"x":"3.406884106820005px"},"duration":0.5},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"x":"-3px"},"duration":0.516}],[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"y":"4.890528774113327px"},"duration":0},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"y":"35.60317294436844px"},"duration":0.5},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"y":"5px"},"duration":0.516}],[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"rotationZ":"4.6324143574826495deg"},"duration":0},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"rotationZ":"-9.802339932271543deg"},"duration":0.5},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"rotationZ":"4.6324143574826495deg"},"duration":0.516}],[{"duration":0,"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"transformOrigin":"57.21463414634147% 68.91846153846154% "}}]],
+        selectors = [{"type":"input","value":"lfoot"}],
+        animTargets = getAnimTargets(),
+        rootTl = new TimelineMax();
 
-    var player,
-        animation,
-        isInited = false,
-        animations = [],
-        paramKeys = [[{"offset":0,"transform":"translate(57.999999999999986px,32px) ","easing":"ease-in-out"},{"offset":0.35632653061224495,"transform":"translate(57.999999999999986px,32px) rotate(-0.25968231446012213rad) ","easing":"ease-in-out"},{"offset":0.9795918367346941,"transform":"translate(57.999999999999986px,32px) "}],[{"offset":0,"transform-origin":"25.53% 52.86%"}],[]],
-        options = {"direction":"normal","duration":816.6666666666665,"iterations":1,"fill":"forward"},
-        elems = document.querySelectorAll('#rshoulder');
+    timelines.forEach(function (timeline) {
 
-    for (var i = 0; i < elems.length; ++i) {
-        for (var j = 0; j < paramKeys.length; ++j) {
+        var prevTime = 0;
 
-            animations.push(new Animation(elems[i], paramKeys[j], options));
-        }
-    }
+        var tl = new TimelineMax();
+        rootTl.add(tl, 0);
+        
+        timeline.forEach(function (key, idx) {
 
-    animation = new AnimationGroup(animations);
+            tl.to(animTargets, key.duration, key.options);
+        });
+    });
 
-    return {
+    return rootTl;
+    
 
-        play: function () {
 
-            if (!isInited) {
+    function getAnimTargets() {
 
-                player = document.timeline.play(animation);
-                isInited = true;
+        var list = [];
+
+        selectors.forEach(function (selector) {
+
+            if (selector.type === 'css') {
+
+                list.push(selector.value);
             }
-            else {
-                player.play();
+            else if (inputs && selector.type === 'input') {
+
+                var parent = inputs;
+
+                selector.value.split('.').every(function (name) {
+
+                    return parent = parent[name];
+                });
+
+                if (parent) {
+                    list.push(parent);
+                }
             }
-        },
-        pause: function () {
+        });
 
-            if (!player) {
-                return;
-            }
-
-            player.pause();
-        },
-        seek: function (time) {
-
-            if (!player) {
-                return;
-            }
-
-            player.currentTime = time;
-        }
+        return list;
     };
-},
-function () {
+}
+,
+function (inputs) {
+    
+    var timelines = [[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"x":"47.84535954122299px"},"duration":0},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"x":"47.694395569935494px"},"duration":0.5},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"x":"47.84535954122299px"},"duration":0.516}],[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"y":"36.69917358876696px"},"duration":0},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"y":"-12.074244726804444px"},"duration":0.5},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"y":"36.69917358876696px"},"duration":0.516}],[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"rotationZ":"-0.11477882210390997deg"},"duration":0},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"rotationZ":"-7.89094079663782deg"},"duration":0.5},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"rotationZ":"-0.11477882210390997deg"},"duration":0.516}],[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"scaleX":0.9869912641360928},"duration":0}],[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"scaleY":1},"duration":0}],[{"duration":0,"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"transformOrigin":"42.03170731707317% 70.4923076923077% "}}]],
+        selectors = [{"type":"input","value":"rfoot"}],
+        animTargets = getAnimTargets(),
+        rootTl = new TimelineMax();
 
-    var player,
-        animation,
-        isInited = false,
-        animations = [],
-        paramKeys = [[{"offset":0,"transform":"translate(-5.999999999999993px,34px) ","easing":"ease-in-out"},{"offset":0.3771428571428572,"transform":"translate(-5.999999999999993px,34px) rotate(0.2787647371163926rad) ","easing":"ease-in-out"},{"offset":0.9795918367346941,"transform":"translate(-5.999999999999993px,34px) "}],[{"offset":0,"transform-origin":"70.21% 55.71%"}],[]],
-        options = {"direction":"normal","duration":816.6666666666665,"iterations":1,"fill":"forward"},
-        elems = document.querySelectorAll('#lshoulder');
+    timelines.forEach(function (timeline) {
 
-    for (var i = 0; i < elems.length; ++i) {
-        for (var j = 0; j < paramKeys.length; ++j) {
+        var prevTime = 0;
 
-            animations.push(new Animation(elems[i], paramKeys[j], options));
-        }
-    }
+        var tl = new TimelineMax();
+        rootTl.add(tl, 0);
+        
+        timeline.forEach(function (key, idx) {
 
-    animation = new AnimationGroup(animations);
+            tl.to(animTargets, key.duration, key.options);
+        });
+    });
 
-    return {
+    return rootTl;
+    
 
-        play: function () {
 
-            if (!isInited) {
+    function getAnimTargets() {
 
-                player = document.timeline.play(animation);
-                isInited = true;
+        var list = [];
+
+        selectors.forEach(function (selector) {
+
+            if (selector.type === 'css') {
+
+                list.push(selector.value);
             }
-            else {
-                player.play();
+            else if (inputs && selector.type === 'input') {
+
+                var parent = inputs;
+
+                selector.value.split('.').every(function (name) {
+
+                    return parent = parent[name];
+                });
+
+                if (parent) {
+                    list.push(parent);
+                }
             }
-        },
-        pause: function () {
+        });
 
-            if (!player) {
-                return;
-            }
-
-            player.pause();
-        },
-        seek: function (time) {
-
-            if (!player) {
-                return;
-            }
-
-            player.currentTime = time;
-        }
+        return list;
     };
-},
-function () {
+}
+,
+function (inputs) {
+    
+    var timelines = [[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"x":"-10.316775148110711px"},"duration":0},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"x":"-10.349307047280133px"},"duration":0.5},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"x":"-10.316775148110711px"},"duration":0.516}],[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"y":"47.14001706299763px"},"duration":0},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"y":"43.136600758066656px"},"duration":0.5},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"y":"47.14001706299763px"},"duration":0.516}],[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"rotationZ":"-7.5520559242824445deg"},"duration":0},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"rotationZ":"15.803818612218933deg"},"duration":0.5},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"rotationZ":"-7.5520559242824445deg"},"duration":0.516}],[{"duration":0,"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"transformOrigin":"72.22553191489361% 45.248571428571424% "}}]],
+        selectors = [{"type":"input","value":"lshoulder"}],
+        animTargets = getAnimTargets(),
+        rootTl = new TimelineMax();
 
-    var player,
-        animation,
-        isInited = false,
-        animations = [],
-        paramKeys = [[{"offset":0,"transform":"translate(77px,-45.999999999999986px) ","easing":"ease-in-out"},{"offset":0.35632653061224495,"transform":"translate(72px,-53.999999999999986px) rotate(-0.16728852982993225rad) ","easing":"ease-in-out"},{"offset":0.9795918367346941,"transform":"translate(77px,-45.999999999999986px) "}],[{"offset":0,"transform-origin":"48.65% 87.50%"}],[]],
-        options = {"direction":"normal","duration":816.6666666666665,"iterations":1,"fill":"forward"},
-        elems = document.querySelectorAll('#rhand');
+    timelines.forEach(function (timeline) {
 
-    for (var i = 0; i < elems.length; ++i) {
-        for (var j = 0; j < paramKeys.length; ++j) {
+        var prevTime = 0;
 
-            animations.push(new Animation(elems[i], paramKeys[j], options));
-        }
-    }
+        var tl = new TimelineMax();
+        rootTl.add(tl, 0);
+        
+        timeline.forEach(function (key, idx) {
 
-    animation = new AnimationGroup(animations);
+            tl.to(animTargets, key.duration, key.options);
+        });
+    });
 
-    return {
+    return rootTl;
+    
 
-        play: function () {
 
-            if (!isInited) {
+    function getAnimTargets() {
 
-                player = document.timeline.play(animation);
-                isInited = true;
+        var list = [];
+
+        selectors.forEach(function (selector) {
+
+            if (selector.type === 'css') {
+
+                list.push(selector.value);
             }
-            else {
-                player.play();
+            else if (inputs && selector.type === 'input') {
+
+                var parent = inputs;
+
+                selector.value.split('.').every(function (name) {
+
+                    return parent = parent[name];
+                });
+
+                if (parent) {
+                    list.push(parent);
+                }
             }
-        },
-        pause: function () {
+        });
 
-            if (!player) {
-                return;
-            }
-
-            player.pause();
-        },
-        seek: function (time) {
-
-            if (!player) {
-                return;
-            }
-
-            player.currentTime = time;
-        }
+        return list;
     };
-},
-function () {
+}
+,
+function (inputs) {
+    
+    var timelines = [[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"x":"57.189949507180884px"},"duration":0},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"x":"57.20086141158889px"},"duration":0.5},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"x":"57.189949507180884px"},"duration":0.516}],[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"y":"40.56356429644879px"},"duration":0},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"y":"47.85167932649217px"},"duration":0.5},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"y":"40.56356429644879px"},"duration":0.516}],[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"rotationZ":"-5.66248247307562deg"},"duration":0},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"rotationZ":"8.470525864484326deg"},"duration":0.5},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"rotationZ":"-5.66248247307562deg"},"duration":0.516}],[{"duration":0,"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"transformOrigin":"24.27021276595745% 52.19142857142857% "}}]],
+        selectors = [{"type":"input","value":"rshoulder"}],
+        animTargets = getAnimTargets(),
+        rootTl = new TimelineMax();
 
-    var player,
-        animation,
-        isInited = false,
-        animations = [],
-        paramKeys = [[{"offset":0,"transform":"translate(-18px,-45.99999999999994px) rotate(0.01889773251816429rad) ","easing":"ease-in-out"},{"offset":0.35632653061224495,"transform":"translate(-14px,-51.99999999999994px) rotate(0.21434860915395326rad) ","easing":"ease-in-out"},{"offset":0.9795918367346941,"transform":"translate(-18px,-45.99999999999994px) rotate(0.01889773251816429rad) "}],[{"offset":0,"transform-origin":"52.38% 86.45%"}],[]],
-        options = {"direction":"normal","duration":816.6666666666665,"iterations":1,"fill":"forward"},
-        elems = document.querySelectorAll('#lhand');
+    timelines.forEach(function (timeline) {
 
-    for (var i = 0; i < elems.length; ++i) {
-        for (var j = 0; j < paramKeys.length; ++j) {
+        var prevTime = 0;
 
-            animations.push(new Animation(elems[i], paramKeys[j], options));
-        }
-    }
+        var tl = new TimelineMax();
+        rootTl.add(tl, 0);
+        
+        timeline.forEach(function (key, idx) {
 
-    animation = new AnimationGroup(animations);
+            tl.to(animTargets, key.duration, key.options);
+        });
+    });
 
-    return {
+    return rootTl;
+    
 
-        play: function () {
 
-            if (!isInited) {
+    function getAnimTargets() {
 
-                player = document.timeline.play(animation);
-                isInited = true;
+        var list = [];
+
+        selectors.forEach(function (selector) {
+
+            if (selector.type === 'css') {
+
+                list.push(selector.value);
             }
-            else {
-                player.play();
+            else if (inputs && selector.type === 'input') {
+
+                var parent = inputs;
+
+                selector.value.split('.').every(function (name) {
+
+                    return parent = parent[name];
+                });
+
+                if (parent) {
+                    list.push(parent);
+                }
             }
-        },
-        pause: function () {
+        });
 
-            if (!player) {
-                return;
-            }
-
-            player.pause();
-        },
-        seek: function (time) {
-
-            if (!player) {
-                return;
-            }
-
-            player.currentTime = time;
-        }
+        return list;
     };
-},
-function () {
+}
+,
+function (inputs) {
+    
+    var timelines = [[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"x":"-23.22663699891993px"},"duration":0},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"x":"-23.226897003265684px"},"duration":0.5},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"x":"-23.22663699891993px"},"duration":0.516}],[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"y":"-31.846980928490133px"},"duration":0},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"y":"-35.88336224231378px"},"duration":0.5},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"y":"-31.846980928490133px"},"duration":0.516}],[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"rotationZ":"7.323247428277786deg"},"duration":0},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"rotationZ":"-4.0209041357497295deg"},"duration":0.5},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"rotationZ":"7.323247428277786deg"},"duration":0.516}],[{"duration":0,"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"transformOrigin":"58.62954545454545% 91.29245283018868% "}}]],
+        selectors = [{"type":"input","value":"lhand"}],
+        animTargets = getAnimTargets(),
+        rootTl = new TimelineMax();
 
-    var player,
-        animation,
-        isInited = false,
-        animations = [],
-        paramKeys = [[{"offset":0,"transform":"translate(44px,33.00000000000001px) rotate(0.1742096512819481rad) ","easing":"ease-in-out"},{"offset":0.48979591836734704,"transform":"translate(52px,-22.999999999999993px) rotate(-0.03653758506419469rad) ","easing":"ease-in-out"},{"offset":0.9795918367346941,"transform":"translate(44px,33.00000000000001px) rotate(0.1742096512819481rad) "}],[{"offset":0,"transform-origin":"42.50% 73.08%"}],[]],
-        options = {"direction":"normal","duration":816.6666666666665,"iterations":1,"fill":"forward"},
-        elems = document.querySelectorAll('#rfoot');
+    timelines.forEach(function (timeline) {
 
-    for (var i = 0; i < elems.length; ++i) {
-        for (var j = 0; j < paramKeys.length; ++j) {
+        var prevTime = 0;
 
-            animations.push(new Animation(elems[i], paramKeys[j], options));
-        }
-    }
+        var tl = new TimelineMax();
+        rootTl.add(tl, 0);
+        
+        timeline.forEach(function (key, idx) {
 
-    animation = new AnimationGroup(animations);
+            tl.to(animTargets, key.duration, key.options);
+        });
+    });
 
-    return {
+    return rootTl;
+    
 
-        play: function () {
 
-            if (!isInited) {
+    function getAnimTargets() {
 
-                player = document.timeline.play(animation);
-                isInited = true;
+        var list = [];
+
+        selectors.forEach(function (selector) {
+
+            if (selector.type === 'css') {
+
+                list.push(selector.value);
             }
-            else {
-                player.play();
+            else if (inputs && selector.type === 'input') {
+
+                var parent = inputs;
+
+                selector.value.split('.').every(function (name) {
+
+                    return parent = parent[name];
+                });
+
+                if (parent) {
+                    list.push(parent);
+                }
             }
-        },
-        pause: function () {
+        });
 
-            if (!player) {
-                return;
-            }
-
-            player.pause();
-        },
-        seek: function (time) {
-
-            if (!player) {
-                return;
-            }
-
-            player.currentTime = time;
-        }
+        return list;
     };
-},
-function () {
+}
+,
+function (inputs) {
+    
+    var timelines = [[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"x":"72.65006851277644px"},"duration":0},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"x":"66.42755263195728px"},"duration":0.5},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"x":"72.65006851277644px"},"duration":0.516}],[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"y":"-38.48839147622226px"},"duration":0},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"y":"-34.80314598616237px"},"duration":0.5},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"y":"-38.48839147622226px"},"duration":0.516}],[{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"rotationZ":"-15.398312439977248deg"},"duration":0},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"rotationZ":"14.726796164899143deg"},"duration":0.5},{"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"rotationZ":"-15.398312439977248deg"},"duration":0.516}],[{"duration":0,"options":{"ease":{"_type":0,"_power":0,"_params":[0.9689922480620154,0,1,1]},"transformOrigin":"32.051162790697674% 85.62169811320754% "}}]],
+        selectors = [{"type":"input","value":"rhand"}],
+        animTargets = getAnimTargets(),
+        rootTl = new TimelineMax();
 
-    var player,
-        animation,
-        isInited = false,
-        animations = [],
-        paramKeys = [[{"offset":0,"transform":"translate(-2px,-18.999999999999986px) ","easing":"ease-in-out"},{"offset":0.48979591836734704,"transform":"translate(13px,37.000000000000014px) rotate(-0.21557443118453357rad) ","easing":"ease-in-out"},{"offset":0.9795918367346941,"transform":"translate(-2px,-18.999999999999986px) "}],[{"offset":0,"transform-origin":"52.50% 68.46%"}],[]],
-        options = {"direction":"normal","duration":816.6666666666665,"iterations":1,"fill":"forward"},
-        elems = document.querySelectorAll('#lfoot');
+    timelines.forEach(function (timeline) {
 
-    for (var i = 0; i < elems.length; ++i) {
-        for (var j = 0; j < paramKeys.length; ++j) {
+        var prevTime = 0;
 
-            animations.push(new Animation(elems[i], paramKeys[j], options));
-        }
-    }
+        var tl = new TimelineMax();
+        rootTl.add(tl, 0);
+        
+        timeline.forEach(function (key, idx) {
 
-    animation = new AnimationGroup(animations);
+            tl.to(animTargets, key.duration, key.options);
+        });
+    });
 
-    return {
+    return rootTl;
+    
 
-        play: function () {
 
-            if (!isInited) {
+    function getAnimTargets() {
 
-                player = document.timeline.play(animation);
-                isInited = true;
+        var list = [];
+
+        selectors.forEach(function (selector) {
+
+            if (selector.type === 'css') {
+
+                list.push(selector.value);
             }
-            else {
-                player.play();
+            else if (inputs && selector.type === 'input') {
+
+                var parent = inputs;
+
+                selector.value.split('.').every(function (name) {
+
+                    return parent = parent[name];
+                });
+
+                if (parent) {
+                    list.push(parent);
+                }
             }
-        },
-        pause: function () {
+        });
 
-            if (!player) {
-                return;
-            }
-
-            player.pause();
-        },
-        seek: function (time) {
-
-            if (!player) {
-                return;
-            }
-
-            player.currentTime = time;
-        }
+        return list;
     };
-}];
+}
+];
 
     root.am = root.am || {};
-    root.am.pageScripts = root.am.pageScripts || {};
+    root.am.anims = root.am.anims || {};
 
-    var reg = root.am.pageScripts.amsave = {
+    var reg = root.am.anims.amsave = {
         
-        createPlayer: function (opt) {
+        create: function (inputs) {
 
-            var sequencePlayers = [];
+            var tl = new TimelineMax({paused: true});
 
-            sequPlayerGens.forEach(function (create) {
+            trackPlayerGens.forEach(function (create) {
 
-                sequencePlayers.push(create(opt))   ;
+                tl.add(create(inputs), 0);
             });
 
-            return {
-                play: callPlayers.bind(null, 'play'),
-                pause: callPlayers.bind(null, 'pause'),
-                seek: callPlayers.bind(null, 'seek'),
-            };
-
-            function callPlayers(fnName, arg1) {
-
-                sequencePlayers.forEach(function (sequencePlayer) {
-
-                    sequencePlayer[fnName].call(null, arg1);
-                });
-            }
+            return tl;
         },
         
         saveJson: SAVEJSON,
     };
 
 
+
+    //-- CJS --//
+    if (typeof exports === 'object') {
+        
+        module.exports = reg;
+    }
+
+    //-- AMD --//
     if (typeof define === 'function' && define.amd) {
         
         define(function () {
@@ -395,8 +412,35 @@ function () {
         });
     }
 
-    if (typeof exports === 'object') {
-        
-        module.exports = reg;
+    if (document.readyState == 'interactive' || document.readyState == 'complete') {
+
+        reg.create().play();
     }
+    else {
+        document.addEventListener('DOMContentLoaded', function () {
+
+            reg.create().play();
+        });
+    }
+    
 }(this));
+
+
+
+
+
+
+
+
+
+/**
+ * BezierEasing - use bezier curve for transition easing function
+ * by Gaëtan Renaudeau 2014 – MIT License
+ *
+ * Credits: is based on Firefox's nsSMILKeySpline.cpp
+ * Usage:
+ * var spline = BezierEasing(0.25, 0.1, 0.25, 1.0)
+ * spline(x) => returns the easing value | x must be in [0, 1] range
+ *
+ */
+!function(a){window.BezierEasing=a()}(function(){function i(a,i,j,k){function n(a,b){return 1-3*b+3*a}function o(a,b){return 3*b-6*a}function p(a){return 3*a}function q(a,b,c){return((n(b,c)*a+o(b,c))*a+p(b))*a}function r(a,b,c){return 3*n(b,c)*a*a+2*o(b,c)*a+p(b)}function s(c,d){for(var e=0;b>e;++e){var f=r(d,a,j);if(0===f)return d;var g=q(d,a,j)-c;d-=g/f}return d}function t(){for(var b=0;f>b;++b)m[b]=q(b*g,a,j)}function u(b,c,f){var g,h,i=0;do h=c+(f-c)/2,g=q(h,a,j)-b,g>0?f=h:c=h;while(Math.abs(g)>d&&++i<e);return h}function v(b){for(var d=0,e=1,h=f-1;e!=h&&m[e]<=b;++e)d+=g;--e;var i=(b-m[e])/(m[e+1]-m[e]),k=d+i*g,l=r(k,a,j);return l>=c?s(b,k):0===l?k:u(b,d,d+g)}function x(){w=!0,(a!=i||j!=k)&&t()}if(4!==arguments.length)throw new Error("BezierEasing requires 4 arguments.");for(var l=0;4>l;++l)if("number"!=typeof arguments[l]||isNaN(arguments[l])||!isFinite(arguments[l]))throw new Error("BezierEasing arguments should be integers.");if(0>a||a>1||0>j||j>1)throw new Error("BezierEasing x values must be in [0, 1] range.");var m=h?new Float32Array(f):new Array(f),w=!1,y=function(b){return w||x(),a===i&&j===k?b:0===b?0:1===b?1:q(v(b),i,k)};y.getControlPoints=function(){return[{x:a,y:i},{x:j,y:k}]};var z=[a,i,j,k],A="BezierEasing("+z+")";y.toString=function(){return A};var B="cubic-bezier("+z+")";return y.toCSS=function(){return B},y}var a=this,b=4,c=.001,d=1e-7,e=10,f=11,g=1/(f-1),h="Float32Array"in a;return i.css={ease:i(.25,.1,.25,1),linear:i(0,0,1,1),"ease-in":i(.42,0,1,1),"ease-out":i(0,0,.58,1),"ease-in-out":i(.42,0,.58,1)},i});

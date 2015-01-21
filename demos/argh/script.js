@@ -40,7 +40,7 @@ $(function () {
             $rshoulder = create('rshoulder');
             $head = create('head');
         
-        if (false) { //edit
+        if (true) { //edit
             am.open('save.json');
             am.timeline.setInputs({
                 root: $root,

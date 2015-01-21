@@ -28,7 +28,7 @@ function DomPicker() {
             var winner, winnerPrior, done = false;
             
             this.emit('add', {
-                target: target,
+                target: this._deTarget,
                 demand: prior => {
 
                     return new Promise((resolve, reject) => {
@@ -38,8 +38,8 @@ function DomPicker() {
                         if (winnerPrior === undefined || prior < winnerPrior) {
 
                             winnerPrior = prior;
-                            if (winer) winer.reject();
-                            winer = {resolve, reject};
+                            if (winner) winner.reject();
+                            winner = {resolve, reject};
                         }
                         else {
                             reject();
@@ -49,7 +49,7 @@ function DomPicker() {
             });
 
             done = true;
-            if (winer) winer.resolve();
+            if (winner) winner.resolve();
         },
     });
 }

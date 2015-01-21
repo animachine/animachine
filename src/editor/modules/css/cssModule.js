@@ -18,7 +18,7 @@ exports.init = function () {
 
     am.domPicker.on('add', function (e) {
 
-        e.demand(10).than(() => {
+        e.demand(10).then(() => {
 
             am.domPicker.hide();
 

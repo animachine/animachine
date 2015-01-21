@@ -247,7 +247,7 @@ am.toPickingMode = function (opt) {
 
     am.domPicker.on('add', function (e) {
 
-        e.demand(-1).than(() => {
+        e.demand(-1).then(() => {
 
             if (opt.onPick) opt.onPick(e.target);
 
@@ -413,14 +413,14 @@ function initPickerLayer() {
         am.dePickLayer.style.cursor = amgui.createCursorFromText({
             icon: 'target',
             color: amgui.color.text,
-            width: 16,
-            height: 16,
-            hotspotX: 8,
-            hotspotY: 8,
+            width: 22,
+            height: 22,
+            hotspotX: 11,
+            hotspotY: 11,
             stroke: {color:'black', width: 2},
             debug: false,
         });
-    });
+    }, 2345);
 
     am.dePickLayer.addEventListener('click', function (e) {
 

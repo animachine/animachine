@@ -417,6 +417,7 @@ function initPickerLayer() {
             height: 22,
             hotspotX: 11,
             hotspotY: 11,
+            textX: 2,
             stroke: {color:'black', width: 2},
             debug: false,
         });

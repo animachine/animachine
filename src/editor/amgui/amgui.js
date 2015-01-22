@@ -7,16 +7,28 @@ WebFont.load({
     google: {
       families: ['Open+Sans:300,400,600,700,800:latin,latin-ext']
     },
-    fontloading: (() => {
+    custom: {
+        families: ['amgui'],
+        urls: ['../assets/fontello/amgui.css'],
+    },
+    fontactive: (() => {
 
-        var fName = 'Open Sans',
-            variants = ['v3', 'v4', 'v6', 'v7', 'v8'];
+        var variants = [
+            'amgui:n4', 
+            'Open Sans:n3', 
+            'Open Sans:n4', 
+            'Open Sans:n6', 
+            'Open Sans:n7', 
+            'Open Sans:n8'
+        ];
 
         return (familyName, fvd) => {
 
-            if (familyName === fName && variants.indexOf(fvd) !== -1) {
+            var variant = familyName + ':' + fvd;
+console.log(variant, variants)
+            if (variants.indexOf(variant) !== -1) {
 
-                variants.splice(variants.indexOf(fvd), 1);
+                variants.splice(variants.indexOf(variant), 1);
 
                 if (variants.length === 0) {
 
@@ -26,7 +38,7 @@ WebFont.load({
             }
         }
         
-    })
+    })(),
 });
 
 var amgui = window.amgui = new EventEmitter();

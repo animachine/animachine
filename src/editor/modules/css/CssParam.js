@@ -140,7 +140,7 @@ p.useSave = function(save) {
     }
 };
 
-p.getScriptKeys = function (runnable) {
+p.getScriptKeys = function (opt = {}) {
 
     var keys = [];
 
@@ -149,7 +149,7 @@ p.getScriptKeys = function (runnable) {
         var k = {
             time: key.time,
             options: {
-                ease: runnable ? key.ease.getEaser() : key.ease.getScript(),
+                ease: opt.runnable ? key.ease.getEaser() : key.ease.getScript(),
             }
         };
         k.options[this.name] = key.value;

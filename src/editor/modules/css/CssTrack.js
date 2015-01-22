@@ -267,7 +267,7 @@ p._getScriptParams = function (opt) {
 p.getPlayer = function () {
 
     var rootTl = new TimelineMax().pause(),
-        scriptParams = this._getScriptParams(true),
+        scriptParams = this._getScriptParams({runnable: true}),
         selectedElems = this._selectedElems;
 
     scriptParams.forEach(function (param) {
@@ -286,13 +286,9 @@ p.getPlayer = function () {
 
 p.getScript = function () {
 
-    var timelines = [], code = '', optionLine, selectors,
-        scriptParams = this._getScriptParams(false);
+    var code = '', optionLine, selectors,
+        timelines = this._getScriptParams({runnable: false});
 
-    scriptParams.forEach(function (param) {
-
-        timelines.push(param);
-    });
 
     //TODO: merge timelines if it's possible
     // for (var i = 0; i < timelines.length; ++i) {
@@ -327,7 +323,7 @@ p.getScript = function () {
     timelines = JSON.stringify(timelines);
     //remove quotes around the Ease constructor calls
     //TODO: do this somehow nicer
-    timelines = timelines.replace(/"ease":"(.*?)"/, '"ease":$1');
+    timelines = timelines.replace(/"ease":"(.*?)"/g, '"ease":$1');
 
     code = Mustache.render(mstPlayer, {
         timelines: timelines,

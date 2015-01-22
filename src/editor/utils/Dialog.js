@@ -16,9 +16,13 @@ function Dialog (opt) {
     this._offsetY = 0;
     this._offOnHideListeners = [];
 
-    this._createDialog();
+    this._createDomElem();
     
-    this.title = opt.title || 'Dialog';
+    this._options = {
+        deContent: this.deContent,
+        buttons: [],
+        title: opt.title || 'Dialog',
+    }
 }
 
 inherits(Dialog, EventEmitter);
@@ -30,14 +34,13 @@ Object.defineProperties(p, {
     title: {
         set: function (v) {
 
-            if (!v || this._title === v) return;
+            if (!v || this._options._title === v) return;
 
-            this._title = v;
-            this.domElem.setTitle(this._title);
+            this._options._title = v;
         },
         get: function () {
 
-            return this._title;
+            return this._options._title;
         },
     },
     isOpened: {
@@ -55,8 +58,6 @@ p.show = function (opt) {
     this._isOpened = true;
 
     opt = opt || {};
-
-    am.deDialogCont.appendChild(this.domElem);
 
     this._setupProperties.forEach(function (propData) {
 
@@ -79,7 +80,7 @@ p.show = function (opt) {
 
     this.emit('show');
 
-    this.domElem.showModal();
+    am.workspace.dialogs.showDialog(this._options);
 
     return this;
 };
@@ -89,7 +90,7 @@ p.hide = function () {
     if (!this._isOpened) return;
     this._isOpened = false;
 
-    this.domElem.close();
+    am.workspace.dialogs.hideDialog(this._options);
 
     this._offOnHideListeners.forEach(reg => {
         this.off(reg.evtName, reg.callback);
@@ -107,45 +108,40 @@ p.addProperty = function (opt) {
     return this;
 };
 
-p.addButton = function (text, handler) {
+p.addButton = function (text, onClick) {
 
-    if (handler === 'hide') {
-
-        handler = this.hide.bind(this);
+    if (onClick === 'hide') {
+        onClick = () => this.hide();
     }
 
-    this.domElem.addButton(text, handler);
+    this._options.buttons.push({text, onClick});
 
     return this;
 };
 
 p.hideButton = function (text) {
 
-    this.domElem.hideButton(text);
+    var btn = _.find(this._options.buttons, {text});
+
+    if (btn) btn.hidden = true;
 
     return this;
 };
 
 p.showButton = function (text) {
 
-    this.domElem.showButton(text);
+    var btn = _.find(this._options.buttons, {text});
 
-    return this;
-};
-
-p.move = function (x, y) {
-
-    this._offsetX = x;
-    this._offsetY = y;
-
-    this.domElem.style.transform = 'translate('+x+'px,'+y+'px)';
+    if (btn) btn.hidden = false;
 
     return this;
 };
 
 
 
-p._createDialog = function () {
+
+
+p._createDomElem = function () {
 
     if (this._isDialogCreated) return;
     this._isDialogCreated = true;
@@ -153,63 +149,6 @@ p._createDialog = function () {
     this.deContent = document.createElement('div');
     this.deContent.style.width = '330px';
     this.deContent.style.padding = '30px 12px';
-    this.deContent.setAttribute('deContent', 1);
-
-    
-    this.domElem = amgui.createDialog({
-        title: this.title,
-        content: this.deContent,
-        // parent: am.deDialogCont,
-        buttons: [],
-    });
-
-    amgui.makeDraggable({
-        deTarget: this.domElem,
-        thisArg: this,
-        onDown: function () {
-
-            return {
-                offsetX: this._offsetX,
-                offsetY: this._offsetY,
-            }
-        },
-        onDrag: function (md) {
-
-            this.move(md.offsetX + md.dx, md.offsetY + md.dy);
-        }
-    });
-
-    this.domElem.addEventListener('click_ok', this._onClickOk);
-
-
-
-
-    var onMDown = (e) => {
-        if (isInside(e)) {
-            this.domElem.addEventListener('mouseup', onMUp);
-        }
-    }
-
-    var onMUp = (e) => {
-        if (isInside(e)) {
-            this.hide();
-        }
-        offBgClickTest();
-    }
-
-    var offBgClickTest = ()  => {
-        this.domElem.removeEventListener('mouseup', onMUp);
-    }
-
-    var isInside = (e) => {
-
-        var rect = this.domElem.getBoundingClientRect();
-    
-        return (rect.left > e.x || rect.right < e.x ||
-            rect.top > e.y || rect.bottom < e.y);
-    }
-
-    this.domElem.addEventListener('click', onMDown);
 };
 
 

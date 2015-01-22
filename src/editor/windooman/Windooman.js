@@ -1,6 +1,7 @@
 'use strict';
 
 var Container = require('./Container');
+var Dialogs = require('./Dialogs');
 
 function Windooman() {
 
@@ -9,6 +10,9 @@ function Windooman() {
 
     this._createDomElem();
     this._initResize();
+
+    this.dialogs = new Dialogs();
+    this.domElem.appendChild(this.dialogs.domElem);
 }
 
 var p = Windooman.prototype;
@@ -37,8 +41,8 @@ p.load = function (name, workspace) {
 
     this._root = new Container(map);
     
-    this.domElem.innerHTML = '';
-    this.domElem.appendChild(this._root.domElem);
+    this._deCont.innerHTML = '';
+    this._deCont.appendChild(this._root.domElem);
 
     Object.keys(this._tabMap).forEach(function (name) {
 
@@ -62,6 +66,9 @@ p.fillTab = function (name, content) {
 
     if (tab) {
         tab.setContent(content);
+    }
+    else {
+
     }
 };
 
@@ -94,6 +101,12 @@ p._createDomElem = function () {
     this.domElem.style.width = '100%';
     this.domElem.style.height = '100%';
     this.domElem.style.display = 'flex';
+
+    this._deCont = document.createElement('div');
+    this._deCont.style.width = '100%';
+    this._deCont.style.height = '100%';
+    this._deCont.style.display = 'flex';
+    this.domElem.appendChild(this._deCont);
 };
 
 module.exports = Windooman;

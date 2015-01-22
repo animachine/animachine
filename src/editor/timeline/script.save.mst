@@ -57,7 +57,53 @@
             reg.create().play();
         });
     }
-    {{/autoPlay}}
+    {{/autoPlay}}//
+
+    {{#triggerMap}}
+    (function () {
+
+        var tl;
+
+        triggerMap.forEach(function (trigger) {
+
+            $(getAnimTargets(trigger.selectors)).on(trigger.events, function () {
+
+                if (!tl) tl = reg.create();
+
+                tl[trigger.method].apply(tl, trigger.arguments.split(','))
+            });
+        });
+    })
+    {{/triggerMap}}//
+
+    //utils
+    function getAnimTargets(selectors) {
+
+        var list = [];
+
+        selectors.forEach(function (selector) {
+
+            if (selector.type === 'css') {
+
+                list.push(selector.value);
+            }
+            else if (inputs && selector.type === 'input') {
+
+                var parent = inputs;
+
+                selector.value.split('.').every(function (name) {
+
+                    return parent = parent[name];
+                });
+
+                if (parent) {
+                    list.push(parent);
+                }
+            }
+        });
+
+        return list;
+    };
     
 }(this));
 

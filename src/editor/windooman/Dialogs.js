@@ -10,7 +10,8 @@ function Dialogs() {
     this._createDomElem();
     this._createFrame();
 
-    this.domElem.addEventListener('click', () => this.hideDialog());
+    this._offsetX = 0;
+    this._offsetY = 0;
 }
 
 inherits(Dialogs, EventEmitter);
@@ -23,6 +24,8 @@ p.showDialog = function (popup) {
 
         this.hideDialog(this._currPopup);
     }
+
+    this.move(0, 0);
 
     this._currPopup = popup;
 
@@ -45,7 +48,7 @@ p.move = function (x, y) {
     this._offsetX = x;
     this._offsetY = y;
 
-    this.domElem.style.transform = 'translate('+x+'px,'+y+'px)';
+    this._deFrame.style.transform = 'translate('+x+'px,'+y+'px)';
 
     return this;
 };
@@ -67,12 +70,18 @@ p._createDomElem = function () {
 
     this.domElem = document.createElement('div');
     this.domElem.style.position = 'absolute';
-    this.domElem.style.display = 'block';
-    this.domElem.style.top = '0';
-    this.domElem.style.left = '0';
+    this.domElem.style.display = 'none';
+    this.domElem.style.pointerEvents = 'auto';
+    this.domElem.style.top = '0px';
+    this.domElem.style.left = '0px';
     this.domElem.style.width = '100%';
     this.domElem.style.height = '100%';
-    this.domElem.style.display = 'none';
+    this.domElem.style.background = 'rgba(255,255,255,.3)';
+
+    this.domElem.addEventListener('click', e => {
+
+        if (e.target === e.currentTarget) this.hideDialog();
+    });
 };
 
 p._createFrame = function() {
@@ -86,6 +95,12 @@ p._createFrame = function() {
     de.style.right = '0';
     de.style.top = '0';
     de.style.bottom = '0';
+    de.style.width = '-webkit-fit-content';
+    de.style.height = '-webkit-fit-content';
+    de.style.width = '-moz-fit-content';
+    de.style.height = '-moz-fit-content';
+    de.style.width = 'fit-content';
+    de.style.height = 'fit-content';
     de.style.margin = 'auto';
     de.style.pointerEvents = 'auto';
     de.style.fontFamily = amgui.FONT_FAMILY;
@@ -154,16 +169,16 @@ p._createFrame = function() {
         deContentCont.appendChild(deContent);
     };
 
-    de.setButtons = function (buttons) {
+    de.setButtons = function (btnDataList) {
 
         if (!buttons) {
             return;
         }
 
-        buttons.length = [];
+        buttons.length = 0;
         deButtonsCont.innerHTML = '';
 
-        buttons.forEach(function (btnData) {
+        btnDataList.forEach(function (btnData) {
             
             if (typeof(btnData) === 'string') {
                 de.addButton(btnData);

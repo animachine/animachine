@@ -5,8 +5,28 @@ var fontelloConf = require('../assets/fontello/config.json');
 
 WebFont.load({
     google: {
-      families: ['Open+Sans:400,700,300,600,800:latin,latin-ext']
-    }
+      families: ['Open+Sans:300,400,600,700,800:latin,latin-ext']
+    },
+    fontloading: (() => {
+
+        var fName = 'Open Sans',
+            variants = ['v3', 'v4', 'v6', 'v7', 'v8'];
+
+        return (familyName, fvd) => {
+
+            if (familyName === fName && variants.indexOf(fvd) !== -1) {
+
+                variants.splice(variants.indexOf(fvd), 1);
+
+                if (variants.length === 0) {
+
+                    amgui.flag('fontLoaded');
+                    amgui.emit('fontLoaded');
+                }
+            }
+        }
+        
+    })
 });
 
 var amgui = window.amgui = new EventEmitter();

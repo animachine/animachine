@@ -408,7 +408,7 @@ function initPickerLayer() {
         btn.setToggle(isActive);
     }
 
-    setTimeout(() => {//TODO hack!!! (need to wat until the font loads)
+    amgui.on('fontLoaded', () => {
 
         am.dePickLayer.style.cursor = amgui.createCursorFromText({
             icon: 'target',
@@ -420,7 +420,7 @@ function initPickerLayer() {
             stroke: {color:'black', width: 2},
             debug: false,
         });
-    }, 2345);
+    });
 
     am.dePickLayer.addEventListener('click', function (e) {
 

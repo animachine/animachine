@@ -175,7 +175,7 @@ function decorDialog(whm) {
             whm.cd(e.detail.selection.value);
         });
 
-        dialog.on('changeSelectedPath', refresh);
+        dialog.on('change.selectedPath', refresh);
 
         function refresh () {
 
@@ -249,7 +249,7 @@ function decorDialog(whm) {
             dialog.selectedName = inpName.value;
         });
 
-        dialog.on('changeSelectedName', function () {
+        dialog.on('change.selectedName', function () {
 
             if (inpName.value !== dialog.selectedName) {
 
@@ -270,9 +270,9 @@ function decorDialog(whm) {
 
         var deItems = [], overItem, currItem;
 
-        dialog.on('changeSelectedPath', refresh);
+        dialog.on('change.selectedPath', refresh);
         whm.on('changeSelectedStorage', refresh);
-        dialog.on('changeSelectedName', function () {
+        dialog.on('change.selectedName', function () {
 
             currItem = _.find(deItems, {name: dialog.selectedName});
         });

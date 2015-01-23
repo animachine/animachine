@@ -19,6 +19,9 @@ createContent();
 dialog.addButton('ok', 'hide');
 
 
+dialog.on('change.name', name => dialog.title = name);
+
+
 function createContent() {
 
     var optName = new OptionLine({
@@ -27,21 +30,13 @@ function createContent() {
         inputs: [{
             type: 'string',
             name: 'name',
-            onChange: v => dialog.name = v,
         }],
     });
-    dialog.on('changeName', function () {
-        optName.inputs.name.value = dialog.name;
-        dialog.title = dialog.name;
-    });
-
 
     amgui.createLabel({
         caption: 'Selectors:',
-        // fontSize: '18px',
-        // height: '25px',
         display: 'block',
-        parent: dialog.deContent
+        parent: dialog.deContent,
     });
 
     targetsInput = new TargetsInput({
@@ -59,15 +54,8 @@ function createContent() {
             name: 'repeat',
             min: -1,
             units: ['x'],
-            onChange: function (v) {
-                dialog.repeat = v;
-            }
         }],
     });
-    dialog.on('changeRepeat', function () {
-        optRepeat.inputs.repeat.value = dialog.repeat;
-    });
-    $(optRepeat.domElem).one('mousedown', showWIPDialog);
 
     var optRepeatDelay = new OptionLine({
         title: 'repeat delay',
@@ -79,15 +67,8 @@ function createContent() {
             precision: 3,
             dragSpeed: 0.001,
             units: ['sec'],
-            onChange: function (v) {
-                dialog.repeatDelay = v;
-            }
         }],
     });
-    dialog.on('changeRepeatDelay', function () {
-        optRepeatDelay.inputs.repeatDelay.value = dialog.repeatDelay;
-    });
-    $(optRepeatDelay.domElem).one('mousedown', showWIPDialog);
 
     var optKeyStretch = new OptionLine({
         title: 'key stretch',
@@ -99,36 +80,52 @@ function createContent() {
             dragSpeed: 0.01,
             precision: 3,
             units: ['x'],
-            onChange: function (v) {
-                dialog.keyStretch = v;
-            }
         }],
     });
-    dialog.on('changeKeyStretch', function () {
-        optKeyStretch.inputs.keyStretch.value = dialog.keyStretch;
-    });
-    $(optKeyStretch.domElem).one('mousedown', showWIPDialog);
 
-    var cbYoyo = amgui.createCheckbox({
-        text: 'yoyo',
-        onChange: function (e) {
-            dialog.yoyo = e.detail.checked;
-        },
+    var optYoyo = new OptionLine({
+        title: 'yoyo',
         parent: dialog.deContent,
+        inputs: [{
+            type: 'checkbox',
+            name: 'yoyo',
+        }],
     });
-    dialog.on('changeYoyo', function () {
-        cbYoyo.checked = dialog.yoyo;
+
+
+    $(optRepeat).one('mousedown', () => am.dialogs.WIP.show());
+    $(optRepeatDelay).one('mousedown', () => am.dialogs.WIP.show());
+    $(optKeyStretch).one('mousedown', () => am.dialogs.WIP.show());
+    $(optYoyo).one('mousedown', () => am.dialogs.WIP.show());
+
+    dialog.addProperty({
+        name: 'name', 
+        startValue: 'Track',
+        input: optName.inputs.name
     });
-    $(cbYoyo).one('click', showWIPDialog);
-
-    function showWIPDialog() {
-        am.dialogs.WIP.show();
-    }
-
-    dialog.addProperty({name: 'name', startValue: 'Track'});
-    dialog.addProperty({name: 'selectors', startValue: [], input: targetsInput});
-    dialog.addProperty({name: 'repeat', startValue: 0});
-    dialog.addProperty({name: 'repeatDelay', startValue: 0});
-    dialog.addProperty({name: 'yoyo', startValue: false});
-    dialog.addProperty({name: 'keyStretch', startValue: 1});
+    dialog.addProperty({
+        name: 'selectors', 
+        startValue: [],
+        input: targetsInput,
+    });
+    dialog.addProperty({
+        name: 'repeat', 
+        startValue: 0,
+        input: optRepeat.inputs.repeat,
+    });
+    dialog.addProperty({
+        name: 'repeatDelay', 
+        startValue: 0,
+        input: optRepeatDelay.inputs.repeatDelay,
+    });
+    dialog.addProperty({
+        name: 'keyStretch', 
+        startValue: 1,
+        input: optKeyStretch.inputs.keyStretch,
+    });
+    dialog.addProperty({
+        name: 'yoyo', 
+        startValue: false,
+        input: optYoyo.inputs.yoyo,
+    });
 }

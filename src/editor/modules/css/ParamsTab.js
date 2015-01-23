@@ -1,8 +1,7 @@
 'use strict';
 
-var amgui = require('../../../amgui');
-var Input = require('./Input');
-var OptionLine = require('../../../utils/OptionLine');
+var amgui = require('../../amgui');
+var OptionLine = require('../../utils/OptionLine');
 
 function ParamsTab() {
 

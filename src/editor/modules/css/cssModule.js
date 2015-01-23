@@ -1,7 +1,7 @@
 'use strict';
 
 var CssTrack = require('./CssTrack');
-var ParamsTab = require('./paramsTab/ParamsTab');
+var ParamsTab = require('./ParamsTab');
 var qsgen = require('../../qsgen');
 
 var paramsTab;

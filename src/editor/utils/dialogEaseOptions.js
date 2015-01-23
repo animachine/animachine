@@ -53,8 +53,6 @@ function createContent() {
     });
 
     beizerEditor = amgui.createBezierEditor({
-        // width: 330,
-        // height: 330,
         parent: dialog.deContent,
         onChange: onChangeBezier
     });
@@ -96,7 +94,7 @@ function createContent() {
             name: 'input',
             min: 0,
             dragSpeed: 1,
-            precision: 0
+            precision: 0,
         }],
     });
 

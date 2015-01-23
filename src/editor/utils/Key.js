@@ -4,6 +4,7 @@ var EventEmitter = require('eventman');
 var inherits = require('inherits');
 var amgui = require('../amgui');
 var Ease = require('./Ease');
+var defineCompactProperty = require('./defineCompactProperty');
 
 function Key(opt) {
 
@@ -24,7 +25,7 @@ function Key(opt) {
     this._onTranslateSelectedKeys = this._onTranslateSelectedKeys.bind(this);
 
     this._deDropdown = amgui.createDropdown({
-        options: ['ease', 'delete'],
+        options: ['ease', 'delete', 'randomise'],
         onSelect: this._onSelectDropdown,
     });
 
@@ -80,40 +81,16 @@ inherits(Key, EventEmitter);
 var p = Key.prototype;
 module.exports = Key;
 
-Object.defineProperties(p, {
 
+defineCompactProperty(p, {
     time: {
-        set: function (v) {
-
-            v = Math.max(0, v);
-
-            if (!Number.isFinite(v) || this._time === v) return;
-
-            this._time = parseInt(v);
-
-            this.emit('change.time', this);
-        },
-        get: function () {
-         
-            return this._time;
-        }
+        type: 'int',
+        history: true,
     },
     value: {
-        set: function (v) {
-
-            if (this._value === v) return;
-
-            this._value = v;
-        },
-        get: function () {
-         
-            return this._value;
-        }
+        history: true,
     },
 });
-
-
-
 
 
 
@@ -273,6 +250,10 @@ p._onSelectDropdown = function (e) {
     else if (selection === 'delete') {
 
         this.remove();
+    }
+    else if (selection === 'randomise') {
+
+        am.dialogs.WIP.show();
     }
 };
 

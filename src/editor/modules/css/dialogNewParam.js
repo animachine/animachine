@@ -31,7 +31,7 @@ dialog.on('show', function () {
 
 
 
-dialog.addProperty({name: 'track'});
+dialog.addProperty({name: 'track', input: inpParamName});
 
 
 function createContent() {
@@ -55,6 +55,14 @@ function createContent() {
         suggestions: suggestions
     });
 }
+
+
+
+
+
+
+
+
 
 
 // https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_values_syntax

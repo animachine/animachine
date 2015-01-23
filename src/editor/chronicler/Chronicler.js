@@ -10,11 +10,21 @@ function Chronicler() {
     this._stack = [], 
     this._pointer = -1;
     this._chains = [];
+    this._saveSuspended = false;
 }
 
 inherits(Chronicler, EventEmitter);
 module.exports = Chronicler;
 var p = Chronicler.prototype;
+
+Object.defineProperty(p, 'saveSuspended', {
+    set: function (v) {
+        this._saveSuspended = !!v;
+    },
+    get: function (v) {
+        return this._saveSuspended;
+    }
+})
 
 p.undo = function() {
 
@@ -76,6 +86,8 @@ p.redo = function() {
 
 function call(reg) {
 
+    this.saveSuspended = true;
+
     if (typeof reg === 'function') {
 
         reg();
@@ -83,11 +95,26 @@ function call(reg) {
     else {
         reg[0].apply(reg[1], reg.slice(2));
     }
+
+    this.saveSuspended = false;
 }
 
-p.save = function (undo, redo, name) {
+p.save = function (...args) {
 
-    var reg = {undo: undo, redo: redo, name: name};
+    if (this.saveSuspended) return;
+
+    if (args.length === 0) throw Error;
+
+    var reg = args[0];
+
+    if (args.length !== 1) {
+
+        reg = {
+            undo: args[0],
+            redo: args[1],
+            name: args[2],
+        }
+    }
 
     this._saveReg(reg);
     

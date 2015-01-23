@@ -8,13 +8,16 @@ module.exports = function defineCompactProperty(that, opt) {
         return;
     }
 
-    var value = opt.startValue, 
+    var value = opt.startValue,
         name = opt.name,
         history = opt.history,
-        chainId = Symbol(),
-        evtName = opt.evtName || 'change' + name.charAt(0).toUpperCase() + name.slice(1);
+        evtName = opt.evtName || 'change.' + 'name';
 
-    if (history && typeof(history) !== 'object') history = {};
+    if (history) {
+        if (typeof(history) !== 'object') history = {};
+        if (!history.hasOwnProperty('tag')) history.tag = 'change ' + name;
+        if (!history.hasOwnProperty('chainId')) history.chainId = Symbol();
+    }
 
     Object.defineProperty(that, name, {
 
@@ -41,7 +44,7 @@ module.exports = function defineCompactProperty(that, opt) {
 
     ///////////////////////////////////////////////////////////////
 
-    function set(v, skipHistory) {
+    function set(v) {
 
         v = fixType(v);
 
@@ -49,7 +52,7 @@ module.exports = function defineCompactProperty(that, opt) {
             return;
         }
 
-        if (!skipHistory) save(value, v);
+        save(value, v);
 
         value = v;
 
@@ -62,9 +65,7 @@ module.exports = function defineCompactProperty(that, opt) {
 
         if (!history) return;
 
-        var tag = history.tag || 'change ' + name;
-
-        am.history.saveChain(chainId, [set, oldValue, true], [set, newValue, true], tag, 789);
+        am.history.saveChain(history.chainId, [set, oldValue], [set, newValue], history.tag, 312);
     }
 
     function refreshInput() {

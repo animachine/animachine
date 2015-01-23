@@ -12,8 +12,11 @@ var DomPicker = require('./dom-picker');
 var i18n = require('./i18n');
 var Tour = require('./tour');
 var Mouse = require('./mouse');
+var Project = require('./project/Project');
+var ProjectTab = require('./project/ProjectTab');
 var dialogWIP = require('./commonDialogs/dialogWIP');
 var dialogFeedback = require('./commonDialogs/dialogFeedback');
+var mineSave = require('./mineSave');
 var modules = {
     css: require('./modules/css'),
     // js: require('./modules/javascript'),
@@ -70,20 +73,36 @@ am.open = function (save) {
                 if (save.indexOf('{') === -1) {
 
                     fetch(save)
-                        .then(response => response.json(), reject)
-                        .then(json => useSave(json), reject);
+                        .then(response => response.text(), reject)
+                        .then(response => useSave(response), reject);
                 }
                 else {
-                    useSave(JSON.parse(save));
+                    useSave(save);
                 }
             }
         }
 
         function useSave(save) {
 
+            if (typeof(save) === 'string') {
+
+                try {
+                    save = JSON.parse(save);
+                }
+                catch (e) {
+                    save = mineSave(save);
+                }
+            }
+
+            if (!save) {
+                throw Error('Can\'t use this save');
+            }
+
             am.timeline.useSave(save);
             fulfill();
         }
+    }).catch(err => {
+        console.log(err.stack);
     });
 
     return promise;
@@ -160,6 +179,10 @@ am._init = function () {
     });
 
     am.workspace.fillTab('timeline', am.timeline.domElem);
+
+    am.projectTab = new ProjectTab();
+    am.workspace.fillTab('project tab', am.projectTab.domElem);
+
 
     addToggleGui();
     initPickerLayer();

@@ -6,7 +6,6 @@ var Timebar = require('./Timebar');
 var EaseMap = require('./EaseMap');
 var TriggerMap = require('./TriggerMap');
 var amgui = require('../amgui');
-var mineSave = require('./mineSave');
 var UglifyJS = require('uglify-js');
 var mstSaveScript = require('./script.save.mst');
 var InlineEaseEditor = require('./InlineEaseEditor');
@@ -151,12 +150,6 @@ p.getSave = function () {
 
 p.useSave = function (save) {
 
-    save = mineSave(save);
-
-    if (!save) {
-        alert('Can\'t use this save');
-    }
-
     this.clear();
 
     save = _.extend({
@@ -258,14 +251,13 @@ p.clear = function () {
     }
 };
 
-p.addTrack = function (track, skipHistory) {
+p.addTrack = function (track) {
 
-    if (!skipHistory) {
-        am.history.save(
-            [this.removeTrack, this, track, true],
-            [this.addTrack, this, track, true],
-            'add track');
-    }
+    am.history.save({
+        undo: () => this.removeTrack(track),
+        redo: () => this.addTrack(track),
+        name: 'add track',
+    });
     
     this._tracks.push(track);
 
@@ -298,20 +290,17 @@ p.addTrack = function (track, skipHistory) {
 
 p.removeTrack = function (track, skipHistory) {
 
-    if (!skipHistory) {
-        am.history.save(
-            [this.addTrack, this, track, true],
-            [this.removeTrack, this, track, true],
-            'remove track');
-    }
-
-    var idx = this._tracks.indexOf(track);
-
-    if (idx === -1) {
+    if (!_.contains(this._tracks, track)) {
         return;
     }
 
-    this._tracks.splice(idx, 1);
+    am.history.save({
+        undo: () => this.addTrack(track),
+        redo: () => this.removeTrack(track),
+        name: 'remove track',
+    });
+
+    _.pull(this._tracks, track);
 
     var trackData = this._mapTrackDatas.get(track);
     $(trackData.deContOpt).remove();

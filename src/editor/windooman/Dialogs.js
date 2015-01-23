@@ -34,13 +34,21 @@ p.showDialog = function (popup) {
     this._deFrame.setButtons(popup.buttons);
 
     this.domElem.style.display = 'block';
+
+    if (popup.onShow) popup.onShow();
 }
 
 p.hideDialog = function (popup) {
 
+    popup = popup || this._currPopup;
+
+    if (!popup) return;
+
     this._currPopup = undefined;
     
     this.domElem.style.display = 'none';
+
+    if (popup.onHide) popup.onHide();
 };
 
 p.move = function (x, y) {
@@ -143,7 +151,7 @@ p._createFrame = function() {
 
     de.setTitle = function (title) {
 
-        if (typeof(title) === 'object') {
+        if (typeof(title) !== 'object') {
             title = {text: title};
         }
 

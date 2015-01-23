@@ -22,6 +22,7 @@ function Dialog (opt) {
         deContent: this.deContent,
         buttons: [],
         title: opt.title || 'Dialog',
+        onHide: () => this._onHide(),
     }
 }
 
@@ -87,19 +88,22 @@ p.show = function (opt) {
 
 p.hide = function () {
     
+    am.workspace.dialogs.hideDialog(this._options);
+
+    return this;
+};
+
+p._onHide = function () {
+    
     if (!this._isOpened) return;
     this._isOpened = false;
-
-    am.workspace.dialogs.hideDialog(this._options);
 
     this._offOnHideListeners.forEach(reg => {
         this.off(reg.evtName, reg.callback);
     });
 
     this.emit('hide');
-
-    return this;
-};
+}
 
 p.addProperty = function (opt) {
 

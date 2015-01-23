@@ -90,7 +90,7 @@ p._createTrigger = function () {
 
 p._createEditDialog = function () {
 
-    var dialog = new Dialog({title: 'TriggerMap'})
+    var dialog = new Dialog({title: 'TriggerMap (WIP)'})
             .addButton('ok', 'hide'),
         deCont = dialog.deContent,
         currTrigger;

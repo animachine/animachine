@@ -77,7 +77,7 @@
     {{/triggerMap}}//
 
     //utils
-    function getAnimTargets(selectors) {
+    function getAnimTargets(selectors, inputs) {
 
         var list = [];
 

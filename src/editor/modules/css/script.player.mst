@@ -2,7 +2,7 @@ function (inputs) {
     
     var timelines = {{{timelines}}},
         selectors = {{{selectors}}},
-        animTargets = getAnimTargets(selectors),
+        animTargets = getAnimTargets(selectors, inputs),
         rootTl = new TimelineMax();
 
     timelines.forEach(function (timeline) {

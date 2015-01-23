@@ -9,7 +9,7 @@ WebFont.load({
     },
     custom: {
         families: ['amgui'],
-        urls: ['../assets/fontello/amgui.css'],
+        // urls: ['../assets/fontello/amgui.css'],
     },
     fontactive: (() => {
 
@@ -25,7 +25,7 @@ WebFont.load({
         return (familyName, fvd) => {
 
             var variant = familyName + ':' + fvd;
-console.log(variant, variants)
+            
             if (variants.indexOf(variant) !== -1) {
 
                 variants.splice(variants.indexOf(variant), 1);

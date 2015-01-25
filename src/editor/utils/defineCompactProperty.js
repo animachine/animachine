@@ -11,7 +11,7 @@ module.exports = function defineCompactProperty(that, opt) {
     var value = opt.startValue,
         name = opt.name,
         history = opt.history,
-        evtName = opt.evtName || 'change.' + 'name';
+        evtName = opt.evtName || 'change.' + name;
 
     if (history) {
         if (typeof(history) !== 'object') history = {};
@@ -27,7 +27,7 @@ module.exports = function defineCompactProperty(that, opt) {
 
 
     if (opt.input) {
-
+console.warn('deprecated')
         opt.input.on('change', function (v) {
 
             that[name] = v;
@@ -58,7 +58,7 @@ module.exports = function defineCompactProperty(that, opt) {
 
         refreshInput();
 
-        that.emit(evtName, value);
+        this.emit(evtName, value);
     }
 
     function save(oldValue, newValue) {

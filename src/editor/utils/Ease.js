@@ -150,12 +150,14 @@ p.showOptionsDialog = function () {
 
     dialogEaseOptions.show({
         ease: this,
-        onChangeRoughEase: function (v) {this.roughEase = v}.bind(this),
-        onChangeRoughStrength: function (v) {this.roughStrength = v}.bind(this),
-        onChangeRoughPoints: function (v) {this.roughPoints = v}.bind(this),
-        onChangeRoughClamp: function (v) {this.roughClamp = v}.bind(this),
-        onChangeRoughRandomise: function (v) {this.roughRandomise = v}.bind(this),
-        onChangeRoughTaper: function (v) {this.roughTaper = v}.bind(this),
+        on: {
+            'change.roughEase': v => this.roughEase = v,
+            'change.roughStrength': v => this.roughStrength = v,
+            'change.roughPoints': v => this.roughPoints = v,
+            'change.roughClamp': v => this.roughClamp = v,
+            'change.roughRandomise': v => this.roughRandomise = v,
+            'change.roughTaper': v => this.roughTaper = v,
+        }
     });
 };
 

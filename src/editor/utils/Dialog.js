@@ -60,6 +60,19 @@ p.show = function (opt) {
 
     opt = opt || {};
 
+    if (opt.on) {
+
+        Object.keys(opt.on).forEach(evtName => {
+
+            this.on(evtName, opt.on[evtName]);
+
+            this._offOnHideListeners.push({
+                evtName: evtName,
+                callback: opt.on[evtName],
+            });
+        });
+    }
+
     this._setupProperties.forEach(function (propData) {
 
         if (propData.name in opt) {

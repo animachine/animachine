@@ -1,14 +1,14 @@
 'use strict';
 
-module.exports = function defineCompactProperty(that, opt) {
+module.exports = function defineCompactProperty(proto, opt) {
 
     if (_.isArray(opt)) {
 
-        opt.forEach(o => defineCompactProperty(that, o));
+        opt.forEach(o => defineCompactProperty(proto, o));
         return;
     }
 
-    var value = opt.startValue,
+    var valMap = new WeakMap(),
         name = opt.name,
         history = opt.history,
         evtName = opt.evtName || 'change.' + name;
@@ -19,11 +19,7 @@ module.exports = function defineCompactProperty(that, opt) {
         if (!history.hasOwnProperty('chainId')) history.chainId = Symbol();
     }
 
-    Object.defineProperty(that, name, {
-
-        set: set,
-        get: () => value,
-    });
+    Object.defineProperty(proto, name, {set: set, get: get});
 
     return {
         name: name,
@@ -33,9 +29,14 @@ module.exports = function defineCompactProperty(that, opt) {
 
     ///////////////////////////////////////////////////////////////
 
+    function get() {
+        return valMap.has(this) ? valMap.get(this) : opt.startValue;
+    }
+
     function set(v) {
 
         v = fixType(v);
+        var value = get.call(this);
 
         if (v === value || isInvalidValue(v)) {
             return;
@@ -44,6 +45,8 @@ module.exports = function defineCompactProperty(that, opt) {
         save(value, v);
 
         value = v;
+
+        valMap.set(this, value);
 
         this.emit(evtName, value);
     }

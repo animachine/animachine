@@ -30,9 +30,14 @@ dialog.addProperty({name: 'roughTaper', input: optRoughTaper.inputs.input});
 
 
 
-dialog.show = function (opt) {
+dialog.show = function (opt={}) {
 
-    opt = opt || {};
+    opt.roughEase = opt.ease.roughEase;
+    opt.roughStrengh = opt.ease.roughStrengh;
+    opt.roughPoints = opt.ease.roughPoints;
+    opt.roughClamp = opt.ease.roughClamp;
+    opt.roughRandomise = opt.ease.roughRandomise;
+    opt.roughTaper = opt.ease.roughTaper;
 
     Dialog.prototype.show.call(this, opt);
 
@@ -60,6 +65,7 @@ function createContent() {
     optRoughEase = new OptionLine({
         title: 'rough ease',
         parent: dialog.deContent,
+        defaultValue: true,
         inputs: [{
             type: 'checkbox',
             name: 'input',

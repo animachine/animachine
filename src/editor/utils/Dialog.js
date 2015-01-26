@@ -83,7 +83,7 @@ p.show = function (opt) {
         var onOpt = 'on' + propData.evtName.charAt(0).toUpperCase() + propData.evtName.slice(1);
 
         if (onOpt in opt) {
-
+            console.warn('deprecated, use opt.on to bind listeners!')
             this._offOnHideListeners.push({
                 evtName: propData.evtName,
                 callback: opt[onOpt],
@@ -127,7 +127,7 @@ p.addProperty = function (opt) {
     if (opt.input) {
 
         opt.input.value = this[reg.name];
-        opt.input.on('change', v => this[name] = v);
+        opt.input.on('change', v => this[reg.name] = v);
         this.on(reg.evtName, v => opt.input.value = v);
     }
     

@@ -754,7 +754,7 @@ p._createSettingsHead = function () {
     
     this._btnEditTriggers = amgui.createIconBtn({
         tooltip: 'set timeline triggers',
-        icon: 'flash', 
+        icon: 'gamepad', 
         size: this._headerH,
         display: 'inline-block',
         onClick: () => this.triggerMap.showEditor(),

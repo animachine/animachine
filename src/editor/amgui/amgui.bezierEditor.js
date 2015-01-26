@@ -181,7 +181,7 @@ function createBezierEditor(opt) {
       
         amgui.makeDraggable({
             deTarget: deCp,
-            onDown: function () {
+            onDown: function (e) {
 
                 deCp.style.cursor = 'grabbing';
 

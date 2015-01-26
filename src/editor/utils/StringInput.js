@@ -1,14 +1,12 @@
 'use strict';
 
-var EventEmitter = require('eventman');
+var Input = require('./Input');
 var inherits = require('inherits');
 var amgui = require('../amgui');
 
-function StringInput(opt) {
+function StringInput(opt={}) {
 
-    EventEmitter.call(this);
-
-    this._onChangeInput = this._onChangeInput.bind(this);
+    Input.call(this, opt);
 
     this._createBase();
 
@@ -23,14 +21,11 @@ function StringInput(opt) {
     if (opt.suggestions) {
         this._prepareSuggestions(opt.suggestions, opt.typeaheadOptions, opt.datasetOptions);
     };
-    if ('flex' in opt) this.domElem.style.flex = opt.flex;
-    if ('parent' in opt) opt.parent.appendChild(this.domElem);
-    if (opt.onChange) this.on('change', opt.onChange);
 
     this._refreshInput();
 }
 
-inherits(StringInput, EventEmitter);
+inherits(StringInput, Input);
 var p = StringInput.prototype;
 module.exports = StringInput;
 
@@ -58,23 +53,6 @@ Object.defineProperties(p, {
 
 
 
-
-
-
-p.reset = function () {
-
-    this.value = this._defaultValue;
-};
-
-p.focus = function () {
-
-    setTimeout(() => $(this._input).focus(),123);
-};
-
-p.blur = function () {
-
-    setTimeout(() => $(this._input).blur(),123);
-};
 
 p.setSuggestions = function (suggestions) {
 
@@ -131,7 +109,7 @@ p._createBase = function () {
     this._input = amgui.createInput({
         parent: this.domElem,
         flex: 1,
-        onChange: this._onChangeInput,
+        onChange: v => this._onChangeInput(v),
     });
 
     this.domElem.style.color = this._input.style.color;

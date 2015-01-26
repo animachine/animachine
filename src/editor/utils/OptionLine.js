@@ -145,10 +145,10 @@ Object.defineProperties(p, {
 
     title: {
         set: function (v) {
-            this._deTitle.setText(v);
+            this._deTitle.text = v;
         },
-        get: function (v) {
-            this._deTitle.getText(v);
+        get: function () {
+            this._deTitle.text;
         },
     },
     highlight: {
@@ -165,7 +165,7 @@ Object.defineProperties(p, {
             this._indent = v;
             this._deIndent.style.width = this._indent * 6 + 'px';
         },
-        get: function (v) {
+        get: function () {
             return this._indent;
         },
     },

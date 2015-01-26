@@ -1,12 +1,12 @@
 'use strict';
 
-var EventEmitter = require('eventman');
+var Input = require('./Input');
 var inherits = require('inherits');
 var amgui = require('../amgui');
 
-function UnitInput(opt) {
+function UnitInput(opt={}) {
 
-    EventEmitter.call(this);
+    Input.call(this, opt);
 
     this._rxAmount = /^\s*([\+-]?\d*\.?\d*)/;
     this._rxUnit;
@@ -27,13 +27,9 @@ function UnitInput(opt) {
     this._setValueParts(opt.amount || 0, this._units[0]);
 
     this.converters = opt.converters;
-
-    if ('flex' in opt) this.domElem.style.flex = opt.flex;
-    if ('parent' in opt) opt.parent.appendChild(this.domElem);
-    if (opt.onChange) this.on('change', opt.onChange);
 }
 
-inherits(UnitInput, EventEmitter);
+inherits(UnitInput, Input);
 var p = UnitInput.prototype;
 module.exports = UnitInput;
 
@@ -115,16 +111,6 @@ Object.defineProperties(p, {
 
 
 
-p.reset = function () {
-
-    this.value = this._defaultValue;
-};
-
-
-
-
-
-
 p._setValueParts = function (amount, unit) {
 
     amount = parseFloat(amount) || 0;
@@ -146,7 +132,7 @@ p._setValueParts = function (amount, unit) {
     if (this._unit !== unit && this._units.indexOf(unit) !== -1) {
 
         this._unit = unit;
-        this._deUnit.setText(unit);
+        this._deUnit.text = unit;
     } 
 
     this.emit('change', this.value);
@@ -184,7 +170,7 @@ p._onChangeInputAmount = function () {
 p.refreshDisplay = function () {
 
     this._inpAmount.value = this._getFixedValue();
-    this._deUnit.setText(v);
+    this._deUnit.text = v;
 };
 
 

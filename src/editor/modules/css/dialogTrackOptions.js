@@ -34,7 +34,7 @@ function createContent() {
     });
 
     amgui.createLabel({
-        caption: 'Selectors:',
+        text: 'Selectors:',
         display: 'block',
         parent: dialog.deContent,
     });

@@ -39,7 +39,7 @@ dialog.show = function (opt) {
     if (!('ease' in opt)) throw('opt.ease must be set');
 
     currEase = opt.ease;
-    beizerEditor.setPoints(currEase.points);
+    beizerEditor.setEase(currEase);
 };
 
 function createContent() {
@@ -54,7 +54,6 @@ function createContent() {
 
     beizerEditor = amgui.createBezierEditor({
         parent: dialog.deContent,
-        onChange: onChangeBezier
     });
 
 

@@ -19,7 +19,8 @@ function createBezierEditor(opt) {
     var p0 = {x: 0.3, y: 0.3},
         p1 = {x: 0.7, y: 0.7},
         w = opt.width || 312,
-        h = opt.height || 312;
+        h = opt.height || 312,
+        currEase;
 
     var de = document.createElement('div');
     de.style.position = 'relative';
@@ -41,7 +42,7 @@ function createBezierEditor(opt) {
         return [p0.x, p0.y, p1.x, p1.y];
     };
 
-    de.setPoints = function (points) {
+    function setPoints(points) {
 
         p0.x = points[0];
         p0.y = points[1];
@@ -50,12 +51,23 @@ function createBezierEditor(opt) {
         
         render();
     };
+
+    de.setEase = function (ease) {
+
+        if (currEase) {
+            ease.off('change', onChangeEase);
+        }
+
+        currEase = ease;
+
+        if (currEase) {
+            ease.on('change', onChangeEase);
+            onChangeEase();
+        }
+
+    }
     
     render();
-
-    if (opt.onChange) {
-        de.addEventListener('change', opt.onChange);
-    }
 
     if (opt.parent) {
         opt.parent.appendChild(de);
@@ -65,11 +77,43 @@ function createBezierEditor(opt) {
   
 
   
-  
+    function onChangeEase() {
+        
+        setPoints(currEase.points);
 
-    function render() {
+        render();
+    }
+
+    function render () {
 
         ctx.clearRect(0, 0, w, h);
+
+        renderEase();
+        renderGuides();
+      
+        deCp0.refreshPosition();
+        deCp1.refreshPosition();
+    }
+
+    function renderEase() {
+
+        if (!currEase) return;
+
+        ctx.beginPath();
+        ctx.moveTo(x(0), y(currEase.getRatio(0)));
+
+        for (var i = 0; i < w; ++i) {
+            let _x = x(i/w), _y = y(currEase.getRatio(i/w)), _r = currEase.getRatio(i/w);
+            ctx.lineTo(x(i/w), y(currEase.getRatio(i/w)));
+        }
+
+        ctx.strokeStyle = amgui.color.aqua;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+    }
+
+    function renderGuides() {
+
         ctx.beginPath();
         ctx.moveTo(x(p0.x), y(p0.y));
         ctx.lineTo(0, y(0));
@@ -88,9 +132,6 @@ function createBezierEditor(opt) {
         ctx.strokeStyle = '#fff';
         ctx.lineWidth = 1;
         ctx.stroke();
-      
-        deCp0.refreshPosition();
-        deCp1.refreshPosition();
     }
 
     function x (p) {
@@ -114,6 +155,13 @@ function createBezierEditor(opt) {
     function maxY() {
     
         return Math.max(1, p0.y, p1.y);
+    }
+
+    function refreshEase() {
+
+        if (!currEase) return;
+
+        currEase.points = de.getValue();
     }
 
     function createCp(point) {
@@ -155,7 +203,7 @@ function createBezierEditor(opt) {
 
                 render();
               
-                de.dispatchEvent(new CustomEvent('change', {detail: {points: de.getValue()}}));
+                refreshEase();
             },
             onUp: function () {
 

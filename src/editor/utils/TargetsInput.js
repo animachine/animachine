@@ -1,28 +1,22 @@
 'use strict';
 
-var EventEmitter = require('eventman');
+var Input = require('./Input');
 var inherits = require('inherits');
 var amgui = require('../amgui');
-var StringInput = require('../utils/StringInput');
+var StringInput = require('./StringInput');
 
-function TargetsInput(opt) {
+function TargetsInput(opt={}) {
 
-    EventEmitter.call(this);
-
-    this._onChangeInput = this._onChangeInput.bind(this);
+    Input.call(this, opt);
 
     this._createBase();
 
     this._value = opt.value || [];
     this._defaultValue = opt.defaultValue || [];
     this._targets = [];
-
-    if ('flex' in opt) this.domElem.style.flex = opt.flex;
-    if ('parent' in opt) opt.parent.appendChild(this.domElem);
-    if (opt.onChange) this.on('change', opt.onChange);
 }
 
-inherits(TargetsInput, EventEmitter);
+inherits(TargetsInput, Input);
 var p = TargetsInput.prototype;
 module.exports = TargetsInput;
 
@@ -66,23 +60,9 @@ p.removeTarget = function (target) {
     target.dispose();
 };
 
-p.reset = function () {
-
-    this.value = this._defaultValue;
-};
 
 
 
-
-
-
-
-
-
-p._onChangeInput = function () {
-
-    this.value = this._input.value;
-};
 
 
 

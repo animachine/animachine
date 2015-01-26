@@ -40,5 +40,15 @@
     "vinyl-source-stream": "^0.1.1",
     "watchify": "^1.0.1",
     "whatwg-fetch": "^0.6.0"
+  },
+  "devDependencies": {
+    "phantomjs": "^1.9.13",
+    "mocha-phantomjs": "^3.5.3",
+    "mocha": "^2.1.0",
+    "chai": "^1.10.0",
+    "es6-shim": "^0.22.2",
+    "es5-shim": "^4.0.5",
+    "http-server": "^0.7.4",
+    "chai-as-promised": "^4.1.1"
   }
 }

@@ -41,7 +41,7 @@ function createDrawer(opt) {
     });
 
     var labelTitle = amgui.createLabel({
-        caption: opt.text || 'drawer',
+        text: opt.text || 'drawer',
         parent: de.deHead,
         display: 'inline-block'
     });

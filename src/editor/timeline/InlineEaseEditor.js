@@ -8,8 +8,6 @@ function InlineEaseEditor(opt) {
 
     EventEmitter.call(this);
 
-    this._onClickWindow = this._onClickWindow.bind(this);
-
     this._height = amgui.LINE_HEIGHT;
     this._color = '#00BFFF';
     
@@ -49,6 +47,8 @@ p.show = function (opt) {
 
     this._startAutoRefresh();
 
+    window.addEventListener('click', this._onClickWindow, this);
+
     this.domElem.style.display = '';
 };
 
@@ -64,7 +64,7 @@ p.hide = function () {
 
     this._stopAutoRefresh();
 
-    window.removeEventListener('click', this._onClickWindow);
+    window.removeEventListener('click', this._onClickWindow, this);
 
     this.domElem.style.display = 'none';
 };
@@ -101,7 +101,8 @@ p._render = function() {
         x = am.timeline.timeToScreenX(prevKey ? prevKey.time : 0),
         w = am.timeline.timeToScreenX(key.time) - x,
         h = this._height,
-        d = '';
+        d = '',
+        ease = this._eases[0];
 
     this._width = w;
 
@@ -114,6 +115,16 @@ p._render = function() {
     d += (w*p[2]) + ',' + (h*p[3]) + ' ';
     d += w + ',' + h + ' ';
     d += 'L' + (w*p[2]) + ',' + (h*p[3]);
+
+    if (ease) {
+        
+        d += 'M0,0 ';
+
+        for (let i = 0; i < w; ++i) {
+
+            d += 'L' + i + ',' + (h*ease.getRatio(i/w));
+        }
+    }
     
     this._path.setAttribute('d', d);
   

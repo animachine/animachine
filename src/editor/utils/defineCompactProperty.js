@@ -25,17 +25,6 @@ module.exports = function defineCompactProperty(that, opt) {
         get: () => value,
     });
 
-
-    if (opt.input) {
-console.warn('deprecated')
-        opt.input.on('change', function (v) {
-
-            that[name] = v;
-        }.bind(that));
-
-        refreshInput();
-    }
-
     return {
         name: name,
         evtName: evtName,
@@ -56,8 +45,6 @@ console.warn('deprecated')
 
         value = v;
 
-        refreshInput();
-
         this.emit(evtName, value);
     }
 
@@ -66,14 +53,6 @@ console.warn('deprecated')
         if (!history) return;
 
         am.history.saveChain(history.chainId, [set, oldValue], [set, newValue], history.tag, 312);
-    }
-
-    function refreshInput() {
-
-        if (opt.input && opt.input.value !== value) {
-
-            opt.input.value = value;
-        }
     }
 
     function fixType(v) {

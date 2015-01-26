@@ -1,32 +1,22 @@
 'use strict';
 
-var EventEmitter = require('eventman');
+var Input = require('./Input');
 var inherits = require('inherits');
 var amgui = require('../amgui');
 
 var colorPicker;
 
-function ColorInput(opt) {
+function ColorInput(opt={}) {
 
-    EventEmitter.call(this);
-
-    this._onChangeInput = this._onChangeInput.bind(this);
-    this._onChangePicker = this._onChangePicker.bind(this);
-    this._onClickShowPicker = this._onClickShowPicker.bind(this);
+    Input.call(this, opt);
 
     this._createBase();
 
     this._value = opt.value || '';
     this._defaultValue = opt.defaultValue || '#000000';
-
-    // ColorInput.initColorPicker();
-
-    if ('flex' in opt) this.domElem.style.flex = opt.flex;
-    if ('parent' in opt) opt.parent.appendChild(this.domElem);
-    if (opt.onChange) this.on('change', opt.onChange);
 }
 
-inherits(ColorInput, EventEmitter);
+inherits(ColorInput, Input);
 var p = ColorInput.prototype;
 module.exports = ColorInput;
 
@@ -52,26 +42,6 @@ Object.defineProperties(p, {
     },
 });
 
-
-
-
-
-
-p.reset = function () {
-
-    this.value = this._defaultValue;
-};
-
-
-
-
-
-
-
-p._onChangeInput = function () {
-
-    this.value = this._input.value;
-};
 
 p._onChangePicker = function () {
 
@@ -107,7 +77,7 @@ p._createBase = function () {
 
     this._input = amgui.createInput({
         parent: this.domElem,
-        onChange: this._onChangeInput,
+        onChange: v => this._onChangeInput(),
         flex: 1, 
     });
     this._input.style.textAlign =  'right';

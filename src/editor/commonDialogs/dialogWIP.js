@@ -14,7 +14,7 @@ createContent();
 function createContent() {
 
     amgui.createLabel({
-        caption: 'This feature doesn\'t ready yet. (But we are on it!)',
+        text: 'This feature doesn\'t ready yet. (But we are on it!)',
         fontSize: '18px',
         height: 'auto',
         display: 'block',

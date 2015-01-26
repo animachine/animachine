@@ -1,26 +1,22 @@
 'use strict';
 
-var EventEmitter = require('eventman');
+var Input = require('./Input');
 var inherits = require('inherits');
 var amgui = require('../amgui');
 
-function CheckboxInput(opt) {
+function CheckboxInput(opt={}) {
 
-    EventEmitter.call(this);
+    Input.call(this, opt);
 
     this._onChangeInput = this._onChangeInput.bind(this);
 
     this._createBase();
 
-    this._value = opt.value || '';
-    this._defaultValue = opt.defaultValue || '';
-
-    if ('flex' in opt) this.domElem.style.flex = opt.flex;
-    if ('parent' in opt) opt.parent.appendChild(this.domElem);
-    if (opt.onChange) this.on('change', opt.onChange);
+    this._value = opt.value || false;
+    this._defaultValue = opt.defaultValue || false;
 }
 
-inherits(CheckboxInput, EventEmitter);
+inherits(CheckboxInput, Input);
 var p = CheckboxInput.prototype;
 module.exports = CheckboxInput;
 
@@ -45,16 +41,6 @@ Object.defineProperties(p, {
         }
     },
 });
-
-
-
-
-
-
-p.reset = function () {
-
-    this.value = this._defaultValue;
-};
 
 
 

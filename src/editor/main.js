@@ -50,7 +50,7 @@ am.throwHandler = function (handler) {
 };
 
 am.open = function (save) {
-
+am.track({evtName: 'open', 'value': 1});
     var promise = new Promise((fulfill, reject) => {
 
 
@@ -101,7 +101,11 @@ am.open = function (save) {
             am.timeline.useSave(save);
             fulfill();
         }
-    }).catch(err => {
+    })
+    .then(() => {
+        am.track({evtName: 'open', 'value': 1});
+    })
+    .catch(err => {
         console.log(err.stack);
     });
 
@@ -168,14 +172,18 @@ am._init = function () {
         onClick: () => am.dialog.WIP.show(),
     });
 
+    am.timeline.toolbar.addIcon({
+        tooltip: "feedback",
+        icon: "megaphone",
+        separator: "rest",
+        onClick: () => am.dialogs.feedback.show(),
+    });
 
     am.timeline.toolbar.addIcon({
-        tooltip: 'feedback',
-        icon: 'megaphone',
-        separator: 'rest',
-        onClick: function () {
-            am.dialogs.feedback.show();
-        }
+        tooltip: "view on github",
+        icon: "github",
+        separator: "rest",
+        onClick: () => window.open("https://github.com/animachine/animachine"),
     });
 
     am.workspace.fillTab('timeline', am.timeline.domElem);
@@ -288,6 +296,26 @@ am.toPickingMode = function (opt) {
     }
 }
 
+am.track = function (opt) {
+
+    if (am.isExtension()) {
+
+        chrome.runtime.sendMessage({
+                subject: 'track',
+                evtName: opt.evtName,
+                value: opt.value, 
+            }, 
+            function(response) {
+                console.log(response.farewell);
+            }
+        );
+    }
+};
+
+am.isExtension = function () {
+
+    return location.protocol === 'chrome-extension:';
+};
 
 
 
@@ -633,7 +661,7 @@ function getBaseWorkspace() {
 function createStatusLabel() {
 
     var deTitle = amgui.createLabel({
-        caption: 'Animachine (alpha)',
+        text: 'Animachine (alpha)',
         parent: am.deDialogCont,
         position: 'fixed',
         fontSize: '18px'

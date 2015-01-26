@@ -120,7 +120,16 @@ p._onHide = function () {
 
 p.addProperty = function (opt) {
 
-    this._setupProperties.push(defineCompactProperty(this, opt));
+    var reg = defineCompactProperty(this, opt);
+
+    this._setupProperties.push(reg);
+
+    if (opt.input) {
+
+        opt.input.value = this[reg.name];
+        opt.input.on('change', v => this[name] = v);
+        this.on(reg.evtName, v => opt.input.value = v);
+    }
     
     return this;
 };

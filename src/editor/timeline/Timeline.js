@@ -507,6 +507,8 @@ p._onWindowResize = function () {
 
 p._onTogglePlayPause = function () {
 
+    am.track({evtName: '_onTogglePlayPause', value: 2})
+
     if (this._isPlaying) {
 
         this.pause();
@@ -776,7 +778,7 @@ p._createSettingsHead = function () {
     });
 
     this._deCurrTime = amgui.createLabel({
-        caption: '',
+        text: '',
         parent: this._deSettingsHead
     });
     this._deCurrTime.style.flex = '1';

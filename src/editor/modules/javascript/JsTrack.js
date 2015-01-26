@@ -566,7 +566,7 @@ p._createHeadOptions = function (){
         parent: de
     });
 
-    this._deName = amgui.createLabel({caption: this._name, parent: de});
+    this._deName = amgui.createLabel({text: this._name, parent: de});
     this._deName.style.height = this._baseH  + 'px';
     this._deName.style.cursor = 'pointer';
     this._deName.addEventListener('click', this._onClickName);

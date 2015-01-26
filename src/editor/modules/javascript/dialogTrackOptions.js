@@ -94,7 +94,7 @@ p._createContent = function () {
     this._deContent.style.padding = '30px 12px';
 
     amgui.createLabel({
-        caption: 'Name',
+        text: 'Name',
         fontSize: '18px',
         display: 'block',
         parent: this._deContent

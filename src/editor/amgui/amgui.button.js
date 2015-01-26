@@ -30,7 +30,12 @@ function createLinebreak(opt) {
 
 function createLabel(opt) {
 
-    var de = amgui.createDiv(opt);
+    var de = amgui.createDiv(opt),
+        deIcon,
+        deText = amgui.createDiv({
+            parent: de,
+            display: 'inline'
+        });
 
     de.style.height = opt.height || amgui.LINE_HEIGHT + 'px';
     de.style.fontSize = opt.fontSize || amgui.FONT_SIZE;
@@ -39,19 +44,44 @@ function createLabel(opt) {
     if ('position' in opt) de.style.position = opt.position;
     if ('color' in opt) de.style.color = opt.color;
 
-    de.setText = function (text) {
-        de.innerHTML = text || '';
-    }
 
-    de.getText = function () {
-        return de.innerHTML;
-    }
+    Object.defineProperties(de, {
+        text: {
+            set: function (v) {
+                deText.innerHTML = v || '';
+            },
+            get: function () {
+                return deText.innerHTML;
+            }
+        },
+        icon: {
+            set: function (v) {
+                if (!v && !deIcon) return;
+                if (!deIcon) {
+                    deIcon  = amgui.createIcon({});
+                    de.appendBefore(deIcon, deText);
+                }
+                deIcon.setIcon(v);
+                deIcon.style.display = v ? 'inline' : 'none';
+            }
+        }
+    });
 
-    opt.text = opt.text || opt.caption;//TODO: change caption sets to text
-    de.setText(opt.text);
+    if (opt.caption) {
+        opt.text = opt.caption;
+        console.warn('opt.caption is deprecated');
+    }
     
-    if (opt.parent) {
-        opt.parent.appendChild(de);
+    de.text = opt.text;
+    de.icon = opt.icon;
+
+    de.setText = function (text) {
+        console.warn('setText() is deprecated');
+        de.text = text;
+    }
+    de.getText = function () {
+        console.warn('getText() is deprecated');
+        return de.text;
     }
 
     return de;

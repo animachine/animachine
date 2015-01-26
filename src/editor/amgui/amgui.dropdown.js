@@ -54,17 +54,23 @@ function createDropdown(opt) {
         });
         de.appendChild(li);
 
-        li.addEventListener('mouseenter', function () {
-            
-            li.style.background = amgui.color.bgInverse;
-        });
+        var onEnter = () => li.style.background = amgui.color.bgInverse,
+            onLeave = () => li.style.background = amgui.color.overlayInverse;
 
-        li.addEventListener('mouseleave', function () {
-            
-            li.style.background = amgui.color.overlayInverse;
-        });
+        li.addEventListener('mouseenter', onEnter);
+        li.addEventListener('mouseleave', onLeave);
+        li.addEventListener('mouseclick', onLeave);
 
         items.push(li);
+
+        if (optItem.children) {
+
+            bindDropdown({
+                deTarget: li,
+                deDropdown: createDropdown(optItem.children),
+            });
+        }
+
         return li;
     };
 
@@ -104,7 +110,7 @@ function bindDropdown(opt) {
 
     var isOpened = false;
     var deBtn = opt.deTarget;
-    var deDropdown = opt.deMenu;
+    var deDropdown = opt.deDropdown || opt.deMenu;
 
     if (opt.asContextMenu) {
 

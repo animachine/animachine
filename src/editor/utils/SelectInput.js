@@ -1,12 +1,12 @@
 'use strict';
 
-var EventEmitter = require('eventman');
+var Input = require('./Input');
 var inherits = require('inherits');
 var amgui = require('../amgui');
 
-function SelectInput(opt) {
+function SelectInput(opt={}) {
 
-    EventEmitter.call(this);
+    Input.call(this, opt);
 
     this._onSelect = this._onSelect.bind(this);
 
@@ -15,13 +15,9 @@ function SelectInput(opt) {
     this._options = opt.options || [];
     this.value = opt.value || this._options[0] || '';
     this._defaultValue = opt.defaultValue || this._options[0] || '';
-
-    if ('flex' in opt) this.domElem.style.flex = opt.flex;
-    if ('parent' in opt) opt.parent.appendChild(this.domElem);
-    if (opt.onChange) this.on('change', opt.onChange);
 }
 
-inherits(SelectInput, EventEmitter);
+inherits(SelectInput, Input);
 var p = SelectInput.prototype;
 module.exports = SelectInput;
 
@@ -36,7 +32,7 @@ Object.defineProperties(p, {
 
             this._value = v;
 
-            this._deValue.setText(v);
+            this._deValue.text = v;
 
             this.emit('change', this._value);
         },
@@ -46,16 +42,6 @@ Object.defineProperties(p, {
         }
     },
 });
-
-
-
-
-
-
-p.reset = function () {
-
-    this.value = this._defaultValue;
-};
 
 
 
@@ -86,10 +72,10 @@ p._createBase = function () {
 
     amgui.bindDropdown({
         deTarget: this._deValue,
-        onSelect: this._onSelect,
+        onSelect: e => this._onSelect(e),
         deMenu: amgui.createDropdown({
             options: this._options,
-        })
+        }),
     });
 };
 

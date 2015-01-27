@@ -36,7 +36,7 @@ p.showDialog = function (popup) {
     this.domElem.style.display = 'block';
 
     if (popup.onShow) popup.onShow();
-}
+};
 
 p.hideDialog = function (popup) {
 
@@ -60,6 +60,15 @@ p.move = function (x, y) {
 
     return this;
 };
+
+p.setTitle = function (title) {
+
+    if (this._currPopup) {
+        this._currPopup.title = title;
+    }
+
+    this._deFrame.setTitle(title);
+}
 
 
 

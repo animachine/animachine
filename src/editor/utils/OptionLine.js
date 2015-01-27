@@ -78,18 +78,18 @@ function OptionLine(opt) {
 
         this._deTitle.style.marginRight = '3px';
 
-        if (opt.title.onClick) {
+        // if (opt.title.onClick) {
 
-            this._deTitle.addEventListener('click', opt.title.onClick);
+        //     this._deTitle.addEventListener('click', opt.title.onClick);
 
-            var deNameIcon = amgui.createIcon({
-                icon: 'pencil',
-                parent: this._deHeadCont,
-            });
-            deNameIcon.style.display = 'none';
-            this._deTitle.addEventListener('mouseenter', () => deNameIcon.style.display = 'inline-block');
-            this._deTitle.addEventListener('mouseleave', () => deNameIcon.style.display = 'none');
-        }
+        //     var deNameIcon = amgui.createIcon({
+        //         icon: 'pencil',
+        //         parent: this._deHeadCont,
+        //     });
+        //     deNameIcon.style.display = 'none';
+        //     this._deTitle.addEventListener('mouseenter', () => deNameIcon.style.display = 'inline-block');
+        //     this._deTitle.addEventListener('mouseleave', () => deNameIcon.style.display = 'none');
+        // }
     }
 
     this._inputCont = amgui.createDiv({
@@ -130,6 +130,11 @@ function OptionLine(opt) {
             }),
             name: 'key',
         });
+    }
+
+    if (opt.onDblClick) {
+
+        this.domElem.addEventListener('dblclick', opt.onDblClick);
     }
 }
 

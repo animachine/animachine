@@ -35,9 +35,11 @@ Object.defineProperties(p, {
     title: {
         set: function (v) {
 
-            if (!v || this._options._title === v) return;
+            if (!v || this._options.title === v) return;
 
-            this._options._title = v;
+            this._options.title = v;
+
+            am.workspace.dialogs.setTitle(v);
         },
         get: function () {
 

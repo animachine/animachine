@@ -51,7 +51,8 @@ am.throwHandler = function (handler) {
 
 am.open = function (save) {
 am.track({evtName: 'open', 'value': 1});
-    var promise = new Promise((fulfill, reject) => {
+
+    var promiseBody = (fulfill, reject) => {
 
 
         if (!window.chrome) {
@@ -101,13 +102,20 @@ am.track({evtName: 'open', 'value': 1});
             am.timeline.useSave(save);
             fulfill();
         }
-    })
-    .then(() => {
-        am.track({evtName: 'open', 'value': 1});
-    })
-    .catch(err => {
-        console.log(err.stack);
-    });
+    };
+
+    if (false) {
+        console.warn('am.open is in debug mode!')
+        promiseBody(); //debug
+    }
+
+    var promise = new Promise(promiseBody)
+        .then(() => {
+            am.track({evtName: 'open', 'value': 1});
+        })
+        .catch(err => {
+            console.log(err.stack);
+        });
 
     return promise;
 };
@@ -160,40 +168,17 @@ am._init = function () {
     am.deHandlerCont.appendChild(am.domPicker.domElem);
     am.domPicker.on('pick', de => am.selectDomElem(de));
 
-    am.timeline.toolbar.addIcon({
-        tooltip: 'undo',
-        icon: 'ccw',
-        onClick: () => am.dialog.WIP.show(),
-    });
-
-    am.timeline.toolbar.addIcon({
-        tooltip: 'redo',
-        icon: 'cw',
-        onClick: () => am.dialog.WIP.show(),
-    });
-
-    am.timeline.toolbar.addIcon({
-        tooltip: "feedback",
-        icon: "megaphone",
-        separator: "rest",
-        onClick: () => am.dialogs.feedback.show(),
-    });
-
-    am.timeline.toolbar.addIcon({
-        tooltip: "view on github",
-        icon: "github",
-        separator: "rest",
-        onClick: () => window.open("https://github.com/animachine/animachine"),
-    });
 
     am.workspace.fillTab('timeline', am.timeline.domElem);
 
     am.projectTab = new ProjectTab();
     am.workspace.fillTab('project tab', am.projectTab.domElem);
 
-
+    createMenu();
+    createFileMenu();
     addToggleGui();
     initPickerLayer();
+    createStatusLabel();
 
     Object.keys(modules).forEach( moduleName => {
 
@@ -202,8 +187,6 @@ am._init = function () {
         modules[moduleName].init(am);
     });
 
-    createMenu();
-    createStatusLabel();
 };
 
 am.selectTrack = function (track) {
@@ -565,7 +548,7 @@ function createAmLayer() {
     return de;
 }
 
-function createMenu() {
+function createFileMenu() {
     
     var iconMenu = am.timeline.toolbar.addIcon({
         tooltip: 'file',
@@ -575,7 +558,7 @@ function createMenu() {
 
     amgui.bindDropdown({
         deTarget: iconMenu,
-        deMenu: amgui.createDropdown({
+        deDropdown: amgui.createDropdown({
             options: [
                 {text: 'new', onSelect: onSelectNew},
                 {text: 'save', onSelect: onSelectSave},
@@ -616,6 +599,45 @@ function createMenu() {
             }
         });
     }
+}
+
+
+
+function createMenu() {
+
+    var deMenuIcon = am.timeline.toolbar.addIcon({
+        tooltip: 'menu',
+        icon: 'menu',
+    });
+
+    am.menuDropdown = amgui.createDropdown({
+        options: [
+            {
+                text: 'undo',
+                icon: 'ccw',
+                onClick: () => am.dialog.WIP.show(),
+            }, {
+                text: 'redo',
+                icon: 'cw',
+                onClick: () => am.dialog.WIP.show(),
+            }, {
+                text: "feedback",
+                icon: "megaphone",
+                separator: "rest",
+                onClick: () => am.dialogs.feedback.show(),
+            }, {
+                text: "view on github",
+                icon: "github",
+                separator: "rest",
+                onClick: () => window.open("https://github.com/animachine/animachine"),
+            }   
+        ]
+    });
+
+    amgui.bindDropdown({
+        deTarget: deMenuIcon,
+        deDropdown: am.menuDropdown,
+    });
 }
 
 

@@ -58,7 +58,10 @@ function createLabel(opt) {
             set: function (v) {
                 if (!v && !deIcon) return;
                 if (!deIcon) {
-                    deIcon  = amgui.createIcon({});
+                    deIcon  = amgui.createIcon({
+                        color: opt.color,
+                    });
+                    deIcon.style.marginRight = '3px';
                     de.insertBefore(deIcon, deText);
                 }
                 deIcon.setIcon(v);

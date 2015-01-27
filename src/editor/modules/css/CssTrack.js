@@ -52,8 +52,8 @@ function CssTrack(opt) {
                 {text: 'move down', onSelect: () => this.emit('move', this, 1)},
                 {text: 'delete', onSelect: () => this.emit('remove')},
             ],
+            onDblclick: () => this._showSettings(),
         },
-        onDblClick: () => this._showSettings(),
     });
 
     //test hack

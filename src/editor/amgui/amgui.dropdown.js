@@ -33,19 +33,18 @@ function createDropdown(opt) {
         }
 
         var li = document.createElement('li');
-        li.textContent = optItem.text;
         li.style.textAlign = 'left';
         li.style.fontFamily = amgui.FONT_FAMILY;
         li.style.fontSize = '14px';
         li.style.padding = '0 3px';
         li.style.cursor = 'pointer';
-        li.style.color = amgui.color.textInverse;
         li.style.background = amgui.color.overlayInverse;
 
         optItem.label = amgui.createLabel({
             text: optItem.text,
             icon: optItem.icon,
             parent: li,
+            color: amgui.color.textInverse,
         });
 
         li.addEventListener('click', function (e) {

@@ -610,10 +610,12 @@ p._refreshPointerLine = function () {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     var left = (this._timebar.start + this.currTime) * this.timescale;
+    left = parseInt(left) + 0.5;
     
     ctx.strokeStyle = amgui.color.red;
     ctx.moveTo(left, 0);
     ctx.lineTo(left, canvas.height);
+    ctx.stroke();
 
     // this._dePointerLine.style.transform = 'translateX(' + left + 'px)';
     // this._dePointerLine.style.visibility = left < 0 ? 'hidden' : '';

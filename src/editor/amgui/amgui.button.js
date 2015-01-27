@@ -59,7 +59,7 @@ function createLabel(opt) {
                 if (!v && !deIcon) return;
                 if (!deIcon) {
                     deIcon  = amgui.createIcon({});
-                    de.appendBefore(deIcon, deText);
+                    de.insertBefore(deIcon, deText);
                 }
                 deIcon.setIcon(v);
                 deIcon.style.display = v ? 'inline' : 'none';

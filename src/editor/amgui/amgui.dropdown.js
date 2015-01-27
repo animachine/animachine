@@ -42,13 +42,18 @@ function createDropdown(opt) {
         li.style.color = amgui.color.textInverse;
         li.style.background = amgui.color.overlayInverse;
 
+        optItem.label = amgui.createLabel({
+            text: optItem.text,
+            icon: optItem.icon,
+            parent: li,
+        });
+
         li.addEventListener('click', function (e) {
 
             e.stopPropagation();
 
-            if (optItem.onSelect) {
-                optItem.onSelect();
-            }
+            if (optItem.onSelect) optItem.onSelect();//deprecated
+            if (optItem.onClick) optItem.onClick();
 
             de.dispatchEvent(new CustomEvent('select', {detail: {selection: optItem.text}}));
         });

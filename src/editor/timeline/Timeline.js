@@ -476,7 +476,7 @@ p._onMoveTrack = function (track, way) {
 
 p._onChangeTime = function () {
 
-    this._refreshDePointer();
+    this._refreshPointerLine();
 
     this._refreshDeCurrTime();
 };
@@ -488,7 +488,7 @@ p._onChangeTape = function () {
     // this._deKeyLineCont.style.left = left + 'px';
     // this._deKeyLineCont.style.width = 'calc(100% + ' + (-left) + 'px)';
 
-    this._refreshDePointer();
+    this._refreshPointerLine();
 };
 
 p._onChangeTrackHeight = function (track) {
@@ -600,11 +600,23 @@ p._refreshTimebarWidth = function () {
     this._timebar.width = this._deRight.offsetWidth;
 };
 
-p._refreshDePointer = function () {
+p._refreshPointerLine = function () {
+
+    var canvas = this._dePointerLine,
+        ctx = this._dePointerLineCtx;
+
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     var left = (this._timebar.start + this.currTime) * this.timescale;
-    this._dePointerLine.style.transform = 'translateX(' + left + 'px)';
-    this._dePointerLine.style.visibility = left < 0 ? 'hidden' : '';
+    
+    ctx.strokeStyle = amgui.color.red;
+    ctx.moveTo(left, 0);
+    ctx.lineTo(left, canvas.height);
+
+    // this._dePointerLine.style.transform = 'translateX(' + left + 'px)';
+    // this._dePointerLine.style.visibility = left < 0 ? 'hidden' : '';
 };
 
 p._refreshDeCurrTime = function () {
@@ -833,12 +845,14 @@ p._createDividerHandler = function () {
 
 p._createPointerLine = function () {
 
-    this._dePointerLine = document.createElement('div');
+    this._dePointerLine = document.createElement('canvas');
     this._dePointerLine.style.top = this._headerH + 'px';
-    this._dePointerLine.style.width = '0px';
+    this._dePointerLine.style.left = '0px';
+    this._dePointerLine.style.width = '100%';
+    this._dePointerLine.style.height = '100%';
     this._dePointerLine.style.position = 'absolute';
     this._dePointerLine.style.pointerEvents = 'none';
-    this._dePointerLine.style.height = '100%';
-    this._dePointerLine.style.borderLeft = '1px solid red';
     this._deRight.appendChild(this._dePointerLine);
+
+    this._dePointerLineCtx = this._dePointerLine.getContext('2d');
 };

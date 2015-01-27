@@ -417,7 +417,7 @@ p._createPointer = function () {
     pointer.style.left = -radius + 'px';
     pointer.style.width = 2*radius + 'px';
     pointer.style.height = 2*radius + 'px';
-    pointer.style.border = 'solid red 1px';
+    pointer.style.border = 'solid '+amgui.color.red+' 1px';
     pointer.style.borderRadius = radius + 'px';
     this._dePointer.appendChild(pointer); 
     this.domElem.appendChild(this._dePointer); 

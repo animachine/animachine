@@ -12,8 +12,7 @@ var DomPicker = require('./dom-picker');
 var i18n = require('./i18n');
 var Tour = require('./tour');
 var Mouse = require('./mouse');
-var Project = require('./project/Project');
-var ProjectTab = require('./project/ProjectTab');
+var ProjectMap = require('./project/ProjectMap');
 var dialogWIP = require('./commonDialogs/dialogWIP');
 var dialogFeedback = require('./commonDialogs/dialogFeedback');
 var mineSave = require('./mineSave');
@@ -50,7 +49,8 @@ am.throwHandler = function (handler) {
 };
 
 am.open = function (save) {
-am.track({evtName: 'open', 'value': 1});
+
+    am.report({evtName: 'open', 'value': 1});
 
     var promiseBody = (fulfill, reject) => {
 
@@ -111,7 +111,7 @@ am.track({evtName: 'open', 'value': 1});
 
     var promise = new Promise(promiseBody)
         .then(() => {
-            am.track({evtName: 'open', 'value': 1});
+            am.report({evtName: 'open', 'value': 1});
         })
         .catch(err => {
             console.log(err.stack);
@@ -171,11 +171,7 @@ am._init = function () {
 
     am.workspace.fillTab('timeline', am.timeline.domElem);
 
-    am.projectTab = new ProjectTab();
-    am.workspace.fillTab('project tab', am.projectTab.domElem);
-
     createMenu();
-    createFileMenu();
     addToggleGui();
     initPickerLayer();
     createStatusLabel();
@@ -279,7 +275,7 @@ am.toPickingMode = function (opt) {
     }
 }
 
-am.track = function (opt) {
+am.report = function (opt) {
 
     if (am.isExtension()) {
 
@@ -548,24 +544,52 @@ function createAmLayer() {
     return de;
 }
 
-function createFileMenu() {
-    
-    var iconMenu = am.timeline.toolbar.addIcon({
-        tooltip: 'file',
-        icon: 'floppy',
-        separator: 'global',
+
+
+function createMenu() {
+
+    var deMenuIcon = am.timeline.toolbar.addIcon({
+        tooltip: 'menu',
+        icon: 'menu',
+    });
+
+    am.menuDropdown = amgui.createDropdown({
+        options: [
+            {
+                text: 'file',
+                icon: 'floppy',
+                children: [
+                    {text: 'new', onSelect: onSelectNew},
+                    {text: 'save', onSelect: onSelectSave},
+                    {text: 'saveAs', onSelect: onSelectSave},
+                    {text: 'open', onSelect: onSelectOpen},
+                ]
+            },
+            {
+                text: 'undo',
+                icon: 'ccw',
+                onClick: () => am.dialog.WIP.show(),
+            }, {
+                text: 'redo',
+                icon: 'cw',
+                onClick: () => am.dialog.WIP.show(),
+            }, {
+                text: "feedback",
+                icon: "megaphone",
+                separator: "rest",
+                onClick: () => am.dialogs.feedback.show(),
+            }, {
+                text: "view on github",
+                icon: "github",
+                separator: "rest",
+                onClick: () => window.open("https://github.com/animachine/animachine"),
+            }   
+        ]
     });
 
     amgui.bindDropdown({
-        deTarget: iconMenu,
-        deDropdown: amgui.createDropdown({
-            options: [
-                {text: 'new', onSelect: onSelectNew},
-                {text: 'save', onSelect: onSelectSave},
-                {text: 'saveAs', onSelect: onSelectSave},
-                {text: 'open', onSelect: onSelectOpen},
-            ]
-        })
+        deTarget: deMenuIcon,
+        deDropdown: am.menuDropdown,
     });
 
     function onSelectNew() {
@@ -602,45 +626,6 @@ function createFileMenu() {
 }
 
 
-
-function createMenu() {
-
-    var deMenuIcon = am.timeline.toolbar.addIcon({
-        tooltip: 'menu',
-        icon: 'menu',
-    });
-
-    am.menuDropdown = amgui.createDropdown({
-        options: [
-            {
-                text: 'undo',
-                icon: 'ccw',
-                onClick: () => am.dialog.WIP.show(),
-            }, {
-                text: 'redo',
-                icon: 'cw',
-                onClick: () => am.dialog.WIP.show(),
-            }, {
-                text: "feedback",
-                icon: "megaphone",
-                separator: "rest",
-                onClick: () => am.dialogs.feedback.show(),
-            }, {
-                text: "view on github",
-                icon: "github",
-                separator: "rest",
-                onClick: () => window.open("https://github.com/animachine/animachine"),
-            }   
-        ]
-    });
-
-    amgui.bindDropdown({
-        deTarget: deMenuIcon,
-        deDropdown: am.menuDropdown,
-    });
-}
-
-
 function getBaseWorkspace() {
 
     return {
@@ -658,6 +643,7 @@ function getBaseWorkspace() {
                         size: 1,
                         scaleMode: 'flex',
                         tabs: [
+                            {name: 'Project'},
                             {name: 'Css Style'},
                             {name: 'Dom Tree'},
                             {name: 'History'},

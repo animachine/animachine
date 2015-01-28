@@ -1,11 +1,11 @@
 'use strict';
 
-var amgui = require('../../amgui');
-var Dialog = require('../../utils/Dialog');
-var UnitInput = require('../../utils/UnitInput');
-var TargetsInput = require('../../utils/TargetsInput');
-var StringInput = require('../../utils/StringInput');
-var OptionLine = require('../../utils/OptionLine');
+var amgui = require('../amgui');
+var Dialog = require('../utils/Dialog');
+var UnitInput = require('../utils/UnitInput');
+var TargetsInput = require('../utils/TargetsInput');
+var StringInput = require('../utils/StringInput');
+var OptionLine = require('../utils/OptionLine');
 
 var targetsInput,
     deSelectorCont,

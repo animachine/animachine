@@ -2,18 +2,16 @@
 
 var EventEmitter = require('eventman');
 var inherits = require('inherits');
-var uncalc = require('./uncalc');
-var Key = require('../../utils/Key');
-var OptionLine = require('../../utils/OptionLine');
-var KeyLine = require('../../utils/KeyLine');
-var amgui = require('../../amgui');
+var Key = require('../utils/Key');
+var OptionLine = require('../utils/OptionLine');
+var KeyLine = require('../utils/KeyLine');
+var amgui = require('../amgui');
 
-function Param (opt) {
-
-    opt = opt || {};
+function Param (opt={}) {
 
     EventEmitter.call(this);
-
+console.log('create param')
+// debugger;
     this._lineH =  amgui.LINE_HEIGHT;
     this._inputs = [];
     this._hidden = false;
@@ -211,15 +209,79 @@ p.getValue = function (time) {
     }
     
     return ret === undefined ? this._defaultValue : ret;
+
+
+
+
+
+    function createCalc(av, bv, p) {
+
+        if (!isNaN(av) && !isNaN(bv)) {
+
+            return parseFloat(bv) + ((av - bv) * p);
+        }
+
+        var aUnit = getUnit(av);
+        var bUnit = getUnit(bv);
+        
+        if (aUnit === bUnit) {
+
+            av = parseFloat(av);
+            bv = parseFloat(bv);
+            
+            return (bv + ((av - bv) * p)) + aUnit;
+        }
+
+        var avs = _.compact(av.split(' ')),
+            bvs = _.compact(bv.split(' ')),
+            avl = avs.length,
+            bvl = bvs.length,
+            ret = [];
+
+        if (avl !== bvl) {
+
+            if (avl < bvl) {
+
+                avs = avs.concat(bvs.slice(avl));
+            }
+            else {
+                bvs = bvs.concat(avs.slice(bvl));
+            }         
+        }
+
+        avs.forEach(function (a, idx) {
+
+            ret.push(calc(a, bvs[idx]));
+        });
+
+        return ret.join(' ');
+
+        function calc(a, b) {
+
+            return 'calc(' + b + ' + (' + a + ' - ' + b + ')*' + p + ')';
+        }
+
+        function getUnit(v) {
+
+            var m = /([a-z%]+)$/.exec(v);
+
+            return m && m[1];
+        }
+    }
 };
 
-p.addKey = function (opt) {
+p.addKey = function (opt, skipHistory) {
     
     var key = this.getKey(opt.time);
 
     if (key) {
 
         if ('value' in opt) {
+
+            if (!skipHistory) {
+                am.history.saveChain(key, [this.addKey, this, key, true], [this.addKey, this, opt, true], 'edit key');
+            }
+
             key.value = opt.value;
         }
     }
@@ -229,7 +291,10 @@ p.addKey = function (opt) {
 
         this.keyLine.addKey(key);
 
-        am.history.save([this.removeKey, this, opt.time, true], [this.addKey, this, opt, true], 'add key');
+        if (!skipHistory) {
+            am.history.closeChain(key);
+            am.history.save([this.removeKey, this, opt.time, true], [this.addKey, this, opt, true], 'add key');
+        }
         
         this.emit('addKey', key, this);
     }
@@ -242,15 +307,18 @@ p.addKey = function (opt) {
     return key;
 };
 
-p.removeKey = function (key) {
+p.removeKey = function (key, skipHistory) {
 
     if (!this.keyLine.removeKey(key)) {
 
         return;
     }
+
     
-    am.history.save([this.addKey, this, key, true],
-        [this.removeKey, this, key, true], 'remove key');
+    if (!skipHistory) {
+        am.history.save([this.addKey, this, key, true],
+            [this.removeKey, this, key, true], 'remove key');
+    }
 
     this._refreshTgglKey();
 

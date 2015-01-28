@@ -45,7 +45,7 @@ p.addTimeline = function (timeline) {
     }
 
     //avoid to add twice
-    if (_.contains(this._timelines, timeline)) {
+    if (_.includes(this._timelines, timeline)) {
         return;
     }
 
@@ -62,7 +62,7 @@ p.addTimeline = function (timeline) {
 
 p.removeTimeline = function (timeline) {
 
-    if (!_.contains(this._timelines, timeline)) {
+    if (!_.includes(this._timelines, timeline)) {
         return;
     }
 
@@ -75,4 +75,17 @@ p.removeTimeline = function (timeline) {
     _.pull(this._timelines, timeline);
 
     this.emit('removeTimeline');
+};
+
+p.focus = function () {
+
+};
+
+p.blur = function () {
+
+};
+
+p.dispose = function () {
+
+    _.invoke(this._timelines, 'dispose');
 };

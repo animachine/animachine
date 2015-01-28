@@ -3,7 +3,7 @@
 var amgui = require('../../amgui');
 var OptionLine = require('../../utils/OptionLine');
 
-function ParamsTab() {
+function CssParamsTab() {
 
     this._paramOptionLines = [];
 
@@ -20,7 +20,7 @@ function ParamsTab() {
     am.timeline.on('changeTime', this._onChangeTime);
 }
 
-var p = ParamsTab.prototype;
+var p = CssParamsTab.prototype;
 
 
 
@@ -380,4 +380,4 @@ p._createBase = function () {
     }
 };
 
-module.exports = ParamsTab;
+module.exports = CssParamsTab;

@@ -14,7 +14,7 @@ var Toolbar = require('../toolbar');
 function Timeline(opt) {
 
     EventEmitter.call(this);
-    this.setMaxListeners(1100);
+    this.setMaxListeners(11111);
 
     this.inputs = {};
     
@@ -290,7 +290,7 @@ p.addTrack = function (track) {
 
 p.removeTrack = function (track, skipHistory) {
 
-    if (!_.contains(this._tracks, track)) {
+    if (!_.includes(this._tracks, track)) {
         return;
     }
 
@@ -507,7 +507,7 @@ p._onWindowResize = function () {
 
 p._onTogglePlayPause = function () {
 
-    am.track({evtName: '_onTogglePlayPause', value: 2})
+    am.report({evtName: '_onTogglePlayPause', value: 2})
 
     if (this._isPlaying) {
 

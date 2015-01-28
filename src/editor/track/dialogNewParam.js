@@ -1,8 +1,8 @@
 'use strict';
 
-var amgui = require('../../amgui');
-var Dialog = require('../../utils/Dialog');
-var StringInput = require('../../utils/StringInput');
+var amgui = require('../amgui');
+var Dialog = require('../utils/Dialog');
+var StringInput = require('../utils/StringInput');
 
 var inited = false,
     inpParamName,

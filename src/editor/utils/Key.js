@@ -193,6 +193,16 @@ p.renderToLine = function (ctx) {
         ctx.restore();
     }
 
+    if (am.timeline.currTime === this.time) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.strokeStyle = amgui.color.red;
+        ctx.lineWidth = 1;
+        ctx.arc(keyPos, height/2, 6, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.restore();
+    }
+
     this.emit('postrender', ctx, this);
 };
 

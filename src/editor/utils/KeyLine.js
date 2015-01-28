@@ -19,8 +19,6 @@ function KeyLine (opt) {
         circle: {}
     };
 
-    this._onChangeKey = this._onChangeKey.bind(this);
-    this._onKeyNeedsRemove = this._onKeyNeedsRemove.bind(this);
     this._onDblClick = this._onDblClick.bind(this);
     this._onMouseDown = this._onMouseDown.bind(this);
 
@@ -100,10 +98,11 @@ p.addKey = function (key) {
     this._keys.push(key);
     key.parentKeyLine = this;
 
-    key.on('change', this._onChangeKey);
-    key.on('select', this._onChangeKey);
-    key.on('deselect', this._onChangeKey);
-    key.on('needsRemove', this._onKeyNeedsRemove);
+    key.on('change', this._onChangeKey, this);
+    key.on('select', this._onChangeKey, this);
+    key.on('deselect', this._onChangeKey, this);
+    key.on('needsRemove', this._onKeyNeedsRemove, this);
+    key.on('needsRender', this._render, this);
     
     this._render();
     this.emit('change');
@@ -120,10 +119,11 @@ p.removeKey = function (key) {
     this._keys.splice(idx, 1);
     key.parentKeyLine = undefined;
     
-    key.removeListener('change', this._onChangeKey);
-    key.removeListener('select', this._onChangeKey);
-    key.removeListener('deselect', this._onChangeKey);
-    key.removeListener('needsRemove', this._onKeyNeedsRemove);
+    key.off('change', this._onChangeKey, this);
+    key.off('select', this._onChangeKey, this);
+    key.off('deselect', this._onChangeKey, this);
+    key.off('needsRemove', this._onKeyNeedsRemove, this);
+    key.off('needsRender', this._render, this);
 
     key.dispose();
 

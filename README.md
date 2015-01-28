@@ -1,5 +1,6 @@
 ![](https://img.shields.io/badge/stability-experimental-orange.svg?style=flat-square)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/animachine/animachine?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://travis-ci.org/animachine/animachine.svg)](https://travis-ci.org/animachine/animachine)
 
 <img src="http://s9.postimg.org/mqolutoxb/amheader.png">
 

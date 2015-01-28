@@ -35,7 +35,6 @@ function Track(opt) {
     this._onChangeHandler = this._onChangeHandler.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
     this._onChangeParameter = this._onChangeParameter.bind(this);
-    this._onChangeName = this._onChangeName.bind(this);
     this._onChangeSelectors = this._onChangeSelectors.bind(this);
     this._onWindowResize = this._onWindowResize.bind(this);
     this._onWindowScroll = this._onWindowScroll.bind(this);
@@ -646,8 +645,10 @@ p._showSettings = function () {
     dialogTrackOptions.show({
         name: this._paramGroup.name,
         selectors: this._selectors,
-        onChangeName: this._onChangeName,
-        onChangeSelectors: this._onChangeSelectors,
+        on: {
+            changeName: name => this._paramGroup.name = name,
+            changeSelectors: this._onChangeSelectors,
+        }
     });
 };
 
@@ -933,11 +934,6 @@ p._onClickTgglHide = function () {
     else {
         this._hideSelectedElems();
     }
-};
-
-p._onChangeName = function (name) {
-
-    this._paramGroup.name = name;
 };
 
 p._onChangeSelectors = function (selectors) {

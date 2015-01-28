@@ -67,7 +67,7 @@ function decorTimebarNavigator (timebar) {
 
         var scale = timebar.width / timebar.length;
 
-        deNav.style.left = (-timebar.start * scale) + 'px';
+        deNav.style.left = ((-timebar.start * scale) + timebar._startMargin) + 'px';
         deNav.style.width = (timebar.visibleTime * scale) + 'px';
     }
 

@@ -406,7 +406,7 @@ p._createBase = function () {
 
 p._createPointer = function () {
 
-    var radius = 5.5;
+    var radius = 5;
     this._dePointer = document.createElement('div');
     this._dePointer.style.position = 'absolute';
     this._dePointer.style.bottom = 2*radius + 'px';

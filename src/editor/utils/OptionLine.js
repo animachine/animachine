@@ -132,9 +132,9 @@ function OptionLine(opt) {
         });
     }
 
-    if (opt.onDblClick) {
+    if (opt.onDblclick) {
 
-        this.domElem.addEventListener('dblclick', opt.onDblClick);
+        this.domElem.addEventListener('dblclick', opt.onDblclick);
     }
 }
 

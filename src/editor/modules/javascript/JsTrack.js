@@ -40,7 +40,7 @@ function JsTrack(opt) {
     this._deHeadKeyline = amgui.createKeyline({});
     this.deKeys.appendChild(this._deHeadKeyline);
 
-    am.timeline.on('changeTime', this._onChangeTime);
+    this.timeline.on('changeTime', this._onChangeTime);
     this.deOptions.addEventListener('click', this._onSelectClick);
     this.deKeys.addEventListener('click', this._onSelectClick);
 
@@ -369,7 +369,7 @@ p._animPlay = function () {
 
     this._animPlayRafid = window.requestAnimationFrame(this._animPlay);
     
-    var currTime = am.timeline.currTime, 
+    var currTime = this.timeline.currTime, 
         prevTime = this.prevRenderTime;
 
     this._momentScripts.forEach(function (momentScript) {
@@ -449,7 +449,7 @@ p._onMoveIntervalScript = function (intervalScript, way) {
 
 p._onClickTgglMomentScript = function () {
 
-    var time = am.timeline.currTime,
+    var time = this.timeline.currTime,
         momentScript = this.getMomentScript(time);
     
     if (momentScript) {
@@ -465,7 +465,7 @@ p._onClickTgglMomentScript = function () {
 
 p._onClickEditMomentScript = function () {
 
-    var momentScript = this.getMomentScript(am.timeline.currTime);
+    var momentScript = this.getMomentScript(this.timeline.currTime);
 
     if (momentScript) {
 
@@ -515,7 +515,7 @@ p._onChangeName = function (name) {
 
 p._refreshTgglMomentScript = function () {
 
-    var momentScript = this.getMomentScript(am.timeline.currTime);
+    var momentScript = this.getMomentScript(this.timeline.currTime);
 
     this._tgglMomentScript.setToggle(!!momentScript);
     this._tgglEditMomentScript.setToggle(!!momentScript);
@@ -633,7 +633,7 @@ p.isOwnedDomElem = function () {
 
 p.dispose = function () {
 
-    am.timeline.removeListener('changeTime', this._onChangeTime);
+    this.timeline.removeListener('changeTime', this._onChangeTime);
 
     //TODO
 };

@@ -134,14 +134,14 @@ p._createTarget = function (data) {
 
     var refreshSuggestions = () => {
 
-        inputPaths = am.timeline.getInputPaths();
+        inputPaths = am.projectMap.getCurrentProject().getInputPaths();
         inp.setSuggestions(inputPaths);
     }
 
     if (target.data.type === 'input') {
 
         refreshSuggestions();
-        am.timeline.on('change.inputs', refreshSuggestions);
+        // this.timeline.on('change.inputs', refreshSuggestions);
     } 
 
     if (target.data.type === 'css') {
@@ -177,7 +177,7 @@ p._createTarget = function (data) {
 
     target.dispose = function () {
 
-        am.timeline.off('change.inputs', refreshSuggestions);
+        // this.timeline.off('change.inputs', refreshSuggestions);
     }
 
     return target;

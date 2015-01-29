@@ -30,7 +30,7 @@ exports.init = function () {
                 paramTree: {save: {name: selector}},
             });
 
-            am.timeline.addTrack(track);
+            am.currTimeline.addTrack(track);
 
             am.selectTrack(track);
         });
@@ -39,7 +39,7 @@ exports.init = function () {
 
 function onSelectDomElem(de) {
 
-    am.timeline.tracks.forEach(function (track) {
+    am.currTimeline.tracks.forEach(function (track) {
 
         if (track instanceof CssTrack) {
 

@@ -10,6 +10,7 @@ var UglifyJS = require('uglify-js');
 var mstSaveScript = require('./script.save.mst');
 var InlineEaseEditor = require('./InlineEaseEditor');
 var Toolbar = require('../toolbar');
+var defineCompactProperty = require('../utils/defineCompactProperty');
 
 function Timeline(opt) {
 
@@ -50,7 +51,7 @@ function Timeline(opt) {
     this._createBase();
     this._createPointerLine();
 
-    this.inlineEaseEditor = new InlineEaseEditor();
+    this.inlineEaseEditor = new InlineEaseEditor({timeline: this});
     this.domElem.appendChild(this.inlineEaseEditor.domElem);
 
     this._refreshTimebarWidth();
@@ -121,8 +122,10 @@ Object.defineProperties(p, {
         get: function () {
             return this._timebar.start;
         }
-    },
+    }
 });
+
+defineCompactProperty(p, {name: 'parentProject', eventName: 'parentSet'});
 
 p.getSave = function () {
 
@@ -253,6 +256,8 @@ p.clear = function () {
 
 p.addTrack = function (track) {
 
+    if (_.includes(this._tracks, track)) return;
+
     am.history.save({
         undo: () => this.removeTrack(track),
         redo: () => this.addTrack(track),
@@ -260,6 +265,8 @@ p.addTrack = function (track) {
     });
     
     this._tracks.push(track);
+
+    track.parentTimeline = this;
 
     this._mapTrackDatas.set(track, {
         deContOpt: createCont(track.deOptionLine, this._deOptionLineCont),
@@ -280,7 +287,6 @@ p.addTrack = function (track) {
         de.style.width = '100%';
         de.style.height = track.height + 'px';
         de.style.overflow = 'hidden';
-        de.style.transform = 'height 0.12 easeOut';
         de.appendChild(content);
         parent.appendChild(de);
 
@@ -290,15 +296,15 @@ p.addTrack = function (track) {
 
 p.removeTrack = function (track, skipHistory) {
 
-    if (!_.includes(this._tracks, track)) {
-        return;
-    }
+    if (!_.includes(this._tracks, track)) return;
 
     am.history.save({
         undo: () => this.addTrack(track),
         redo: () => this.removeTrack(track),
         name: 'remove track',
     });
+
+    track.parentTimeline = undefined;
 
     _.pull(this._tracks, track);
 
@@ -307,11 +313,11 @@ p.removeTrack = function (track, skipHistory) {
     $(trackData.deContKf).remove();
     this._mapTrackDatas.delete(track);
 
-    track.removeListener('select', this._onSelectTrack);
-    track.removeListener('change', this._onChangeTrack);
-    track.removeListener('remove', this._onRemoveTrack);
-    track.removeListener('move', this._onMoveTrack);
-    track.removeListener('changeHeight', this._onChangeTrackHeight);
+    track.off('select', this._onSelectTrack);
+    track.off('change', this._onChangeTrack);
+    track.off('remove', this._onRemoveTrack);
+    track.off('move', this._onMoveTrack);
+    track.off('changeHeight', this._onChangeTrackHeight);
 
     track.dispose();
 };
@@ -360,71 +366,12 @@ p.screenXToTime = function (screenX) {
 
 p.timeToRenderPos = function (time) {
 
-    return (time + am.timeline.start) * am.timeline.timescale;
+    return (time + this.start) * this.timescale;
 };
 
 p.timeToScreenX = function (time) {
 
     return this._timebar.domElem.getBoundingClientRect().left + this.timeToRenderPos(time);
-};
-
-p.addInput = function (path, value) {
-
-    var obj = this.inputs;
-
-    if (typeof(path) !== 'string') {
-        //TODO: throw a detailed error
-        throw Error();
-    }
-
-    path = path.split('.');
-
-    path.forEach(function (name, idx, arr) {
-
-        if (idx === arr.length-1) {
-
-            obj[name] = value;
-        }
-        else {
-            obj = _.isPlainObject(obj[name]) ? obj[name] : {};
-        }
-    });
-
-    this.emit('change.inputs');
-};
-
-p.setInputs = function (inputs) {
-
-    if (!_.isPlainObject(inputs)) {
-        //TODO: throw a detailed error
-        throw Error();
-    }
-
-    this.inputs = inputs;
-
-    this.emit('change.inputs');
-};
-
-p.getInputPaths = function (maxLevel = 4) {
-
-    var ret = [];
-
-    var step = (obj, path, level) => {
-
-        Object.keys(obj).forEach(key => {
-
-            ret.push(path + key);
-
-            if (_.isPlainObject(obj[key]) && level <= maxLevel) {
-
-                step(obj[key], path + key + '.', level + 1);
-            }
-        });
-    }
-
-    step(this.inputs, '', 0);
-
-    return ret;
 };
 
 

@@ -46,11 +46,28 @@ Object.defineProperties(p, {
 
 p.addIcon = function (opt) {
 
-    var deIcon = opt.deIcon || amgui.createIconBtn({
-        size: this._height,
-        icon: opt.icon,
-        onClick: opt.onClick
-    });
+    if (_.isArray(opt)) {
+
+        return opt.map(o => this.addIcon(o));
+    }
+
+    var deIcon;
+
+    if (_.isElement(opt)) {
+        
+        deIcon = opt;
+    } 
+    else if (_.isElement(opt.deIcon)) {
+        
+        deIcon = opt.deIcon;
+    } 
+    else {
+        deIcon = amgui.createIconBtn({
+            size: this._height,
+            icon: opt.icon,
+            onClick: opt.onClick
+        });
+    }
 
     if (opt.tooltip) {
         

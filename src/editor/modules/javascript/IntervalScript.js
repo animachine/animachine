@@ -204,7 +204,7 @@ p._onDblclickKeyline = function () {
 
 p.onSelectAddInterval = function () {
 
-    var time = am.timeline.screenXToTime(am.mouse.screenX),
+    var time = this.timeline.screenXToTime(am.mouse.screenX),
         nextStart = time - 500, 
         prevEnd = time + 500;
 

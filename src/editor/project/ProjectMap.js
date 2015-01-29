@@ -2,14 +2,8 @@
 
 var EventEmitter = require('eventman');
 var inherits = require('inherits');
-var Dialog = require('../utils/Dialog');
-var OptionLine = require('../utils/OptionLine');
-var StringInput = require('../utils/StringInput');
-
-var ACTIONS = [{
-    method: 'play',
-    arguments: [{type: 'number'}, {}],
-}];
+var ProjectTab = require('./ProjectTab');
+var Project = require('./Project');
 
 function ProjectMap(opt) {
 
@@ -18,36 +12,15 @@ function ProjectMap(opt) {
     this._projects = [];
 
     this.projectTab = new ProjectTab();
-    am.workspace.fillTab('project tab', am.projectTab.domElem);
+    am.workspace.fillTab('project tab', this.projectTab.domElem);
 }
 
 inherits(ProjectMap, EventEmitter);
 var p = ProjectMap.prototype;
 module.exports = ProjectMap;
 
-p.getSave = function () {
-
-    var save = {
-        projects: this._projects.map(p => p.getSave()),
-    };
-
-    return save;
-};
-
-p.useSave = function (save) {
-
-    if (!save) throw Error;
-
-    if (save.projects) {
-
-        this.clear();
-
-        save.projects.forEach(p => p._loadProject(p));
-    }
-};
-
-p._loadProject = function (project) {
-
+p.load = function (project) {
+    
     if (!(project instanceof Project)) {
 
         project = new Project(project);
@@ -55,30 +28,52 @@ p._loadProject = function (project) {
 
     if (!_.include(this._projects, project)) {
 
-        this.project.push(project);
-    }
-}
+        this._projects.push(project);
 
-p.openProject = function (project) {
-
-    project = this._loadProject(project);
-
-    if (am.currProject) {
-
-        am.currProject.blur();
+        project.on('focus.timeline', this._onFocusTimeline, this);
     }
 
-    am.currProject = project;
-    am.currProject.focus();
+    return project;
 };
 
-p.closeProject = function (project) {
+p.unload = function (project) {
 
-    this._projects.pull(project);
+    _.pull(this._projects, project);
     project.dispose();
-}
 
-p.clear = function() {
+    project.off('focus.timeline', this._onFocusTimeline, this);
+};
+
+p.focus = function (project) {
+
+    project = this.load(project);
+
+    if (this._currProject) {
+
+        this._currProject.blur();
+    }
+
+    this._currProject = project;
+    this._currProject.focus();
+
+    this.emit('open', this._currProject);
+};
+
+p.blur = function () {
+
+};
+
+p.clear = function () {
 
     this._projects.slice().forEach(p => this.closeProject(p));
+};
+
+p.getCurrProject = function () {
+
+    return this._currProject;
+};
+
+p._onFocusTimeline = function (timeline) {
+
+    this.emit('change.timeline', timeline);
 };

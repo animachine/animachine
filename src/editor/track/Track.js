@@ -2,6 +2,7 @@
 
 var EventEmitter = require('eventman');
 var inherits = require('inherits');
+var defineCompactProperty = require('../utils/defineCompactProperty');
 var amgui = require('../amgui');
 var ParamFactory = require('./ParamFactory');
 var Transhand = require('transhand');
@@ -43,6 +44,7 @@ function Track(opt) {
     this._animPlay = this._animPlay.bind(this);
 
     this._paramGroup = new ParamGroup({
+        parentTrack: this,
         name: '',
         optionLine: {
             tgglMerge: false,
@@ -100,7 +102,6 @@ function Track(opt) {
     this.deKeyLine.addEventListener('click', this._onSelectClick);
 
     this._paramGroup.on('changeHeight', this._onChangeHeight);
-    am.timeline.on('changeTime', this._onChangeTime);
     am.on('selectTrack', this._onSelectTrack);
     am.on('deselectTrack', this._onDeselectTrack);
 
@@ -109,6 +110,10 @@ function Track(opt) {
     if (opt) {
         this.useSave(opt);
     }
+
+    this.once('parentSet', () => {
+        this.timeline.on('changeTime', this._onChangeTime);
+    });
 }
 
 inherits(Track, EventEmitter);
@@ -130,10 +135,15 @@ Object.defineProperties(p, {
 
             return this._paramGroup.height;
         }
+    },
+    timeline: {
+        get: function () {
+            return this.parentTimeline;
+        }
     }
 });
 
-
+defineCompactProperty(p, {name: 'parentTimeline', eventName: 'parentSet'});
 
 
 
@@ -354,8 +364,6 @@ p.addParam = function (opt, skipHistory) {
     else {
         param = this._paramFactory.create(opt);
 
-        param.parentTrack = this;
-
         //TODO history.flag();
 
         if (!skipHistory) {
@@ -544,7 +552,7 @@ p.deselect = function () {
 p.renderTime = function (time) {
 
     if (time === undefined) {
-        time = am.timeline.currTime;
+        time = this.timeline.currTime;
     }
 
     if (this._selectors.length === 0) {
@@ -656,7 +664,7 @@ p._animPlay = function () {
 
     this._animPlayRafid = window.requestAnimationFrame(this._animPlay);
 
-    this.renderTime(am.timeline.currTime);
+    this.renderTime(this.timeline.currTime);
 };
 
 p._hideSelectedElems = function () {
@@ -799,7 +807,7 @@ p._onSelectClick = function () {
 
 p._onChangeHandler = function(params, type) {
 
-    var time = am.timeline.currTime;
+    var time = this.timeline.currTime;
 
     var add = function (name, value) {
 
@@ -906,7 +914,7 @@ p._onMoveParameter = function (param, way) {
 
 p._onClickTgglKey = function () {
 
-    var time = am.timeline.currTime,
+    var time = this.timeline.currTime,
         allHaveKey = this._isAllParamsHaveKey(time),
         flag = am.history.startFlag('toggle keys');
 
@@ -1004,7 +1012,7 @@ p._refreshSelectedElems = function () {
         }
         else if (selector.type === 'input') {
 
-            var parent = am.timeline.inputs;
+            var parent = this.timeline.inputs;
 
             selector.value.split('.').every(function (name) {
 
@@ -1038,7 +1046,7 @@ p._refreshSelectedElems = function () {
 
 p.dispose = function () {
 
-    am.timeline.removeListener('changeTime', this._onChangeTime);
+    this.timeline.removeListener('changeTime', this._onChangeTime);
 
     //TODO
 };

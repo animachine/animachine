@@ -2,6 +2,7 @@
 
 var EventEmitter = require('eventman');
 var inherits = require('inherits');
+var defineCompactProperty = require('../utils/defineCompactProperty');
 var Key = require('../utils/Key');
 var OptionLine = require('../utils/OptionLine');
 var KeyLine = require('../utils/KeyLine');
@@ -10,8 +11,7 @@ var amgui = require('../amgui');
 function Param (opt={}) {
 
     EventEmitter.call(this);
-console.log('create param')
-// debugger;
+
     this._lineH =  amgui.LINE_HEIGHT;
     this._inputs = [];
     this._hidden = false;
@@ -28,16 +28,21 @@ console.log('create param')
     this._createKeyline(opt.keyLine);
     this._createOptions(opt.optionLine);
 
+    opt.keyLine.parentParam = this;
+
     this.deOptionLine = this.optionLine.domElem;
     this.deKeyLine = this.keyLine.domElem;
-
-    am.timeline.on('changeTime', this._onChangeTime);
 
     this.setMaxListeners(1234);
 
     if (opt) {
         this.useSave(opt);
     }
+
+    this.once('paramSet', () => {
+
+        this.timeline.on('changeTime', this._onChangeTime);
+    });
 }
 
 inherits(Param, EventEmitter);
@@ -92,22 +97,17 @@ Object.defineProperties(p, {
             return this._hidden;
         }
     },
-    parentGroup: {
-
-        set: function (v) {
-
-            if (v === this._parentGroup) return;
-            
-            this._parentGroup = v;
-        },
+    timeline: {
         get: function () {
-
-            return this._parentGroup;
+            return (this.parentTrack || this.parentGroup).timeline;
         }
-    },
+    }
 });
 
-
+defineCompactProperty(p, [
+    {name: 'parentGroup', eventName: 'parentSet'},
+    {name: 'parentTrack', eventName: 'parentSet'},
+]);
 
 
 
@@ -160,7 +160,7 @@ p.getScriptKeys = function (opt = {}) {
 p.getValue = function (time) {
 
     if (!_.isNumber(time)) {
-        time = am.timeline.currTime;
+        time = this.timeline.currTime;
     }
 
     var ret, before, after, same;
@@ -342,23 +342,23 @@ p.getNextKey = function (time) {
 
 p.gotoPrevKey = function (time) {
 
-    if (time === undefined) time = am.timeline.currTime;
+    if (time === undefined) time = this.timeline.currTime;
 
     var key = this.getPrevKey(time);
 
     if (key) {
-        am.timeline.currTime = key.time;
+        this.timeline.currTime = key.time;
     }
 };
 
 p.gotoNextKey = function (time) {
 
-    if (time === undefined) time = am.timeline.currTime;
+    if (time === undefined) time = this.timeline.currTime;
 
     var key = this.getNextKey(time);
 
     if (key) {
-        am.timeline.currTime = key.time;
+        this.timeline.currTime = key.time;
     }
 };
 
@@ -369,13 +369,13 @@ p.getKeyTimes = function () {
 
 p.toggleKey = function () {
 
-    var key = this.getKey(am.timeline.currTime);
+    var key = this.getKey(this.timeline.currTime);
 
     if (key) {
         this.removeKey(key);
     }
     else {
-        this.addKey({time: am.timeline.currTime});
+        this.addKey({time: this.timeline.currTime});
     }
 };
 
@@ -427,7 +427,7 @@ p._onChangeInput = function (value) {
     }
     
     this.addKey({
-        time: am.timeline.currTime,
+        time: this.timeline.currTime,
         value: value
     });
 
@@ -487,7 +487,7 @@ p._refreshInputs = function () {
 
 p._refreshTgglKey = function () {
 
-    var time = am.timeline.currTime;
+    var time = this.timeline.currTime;
     
     this.optionLine.buttons.key.setHighlight(this._isKeySet(time));
     this.optionLine.buttons.key.setSteppers(!!this.getPrevKey(time), !!this.getNextKey(time));

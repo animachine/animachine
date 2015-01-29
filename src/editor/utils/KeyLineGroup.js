@@ -107,7 +107,7 @@ p._onChangeKeyLine = function (key) {
 
 p._onDblClick = function (e) {
 
-    var time = am.timeline.screenXToTime(e.screenX),
+    var time = this.timeline.screenXToTime(e.screenX),
         key = this.getNextKey(time),
         eases = [];
 
@@ -115,7 +115,7 @@ p._onDblClick = function (e) {
 
     if (key) {
 
-        am.timeline.inlineEaseEditor.show({key, eases});
+        this.timeline.inlineEaseEditor.show({key, eases});
     }
 
 

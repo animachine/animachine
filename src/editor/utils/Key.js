@@ -4,7 +4,7 @@ var EventEmitter = require('eventman');
 var inherits = require('inherits');
 var amgui = require('../amgui');
 var Ease = require('./Ease');
-var defineCompactProperty = require('./defineCompactProperty');
+var defineCompactProperty = require('../utils/defineCompactProperty');
 
 function Key(opt) {
 
@@ -29,52 +29,56 @@ function Key(opt) {
         onSelect: this._onSelectDropdown,
     });
 
-    am.timeline.on('deselectAllKeys', this._onDeselectAllKeys);
-    am.timeline.on('translateSelectedKeys', this._onTranslateSelectedKeys);
 
     if (this.ease) {
         this.ease.on('change', this._onChangeEase);
     }
 
-    this._dragger = amgui.makeDraggable({
-        deTarget: this.domElem,
-        thisArg: this,
-        onDown: e => {
+    this.once('paramSet', () => {
 
-            if (!e.shiftKey && !e.ctrlKey) {
-                am.timeline.emit('deselectAllKeys');
-            }
+        this.timeline.on('deselectAllKeys', this._onDeselectAllKeys);
+        this.timeline.on('translateSelectedKeys', this._onTranslateSelectedKeys);
 
-            //TODO shift+select (if an other key(s) selected in this line its should select thoes are between them) 
-            if (e.shiftKey || e.ctrlKey) {
-                if (this._isSelected) {
-                    this.select();
+        this._dragger = amgui.makeDraggable({
+            deTarget: this.domElem,
+            thisArg: this,
+            onDown: e => {
+
+                if (!e.shiftKey && !e.ctrlKey) {
+                    this.timeline.emit('deselectAllKeys');
+                }
+
+                //TODO shift+select (if an other key(s) selected in this line its should select thoes are between them) 
+                if (e.shiftKey || e.ctrlKey) {
+                    if (this._isSelected) {
+                        this.select();
+                    }
+                    else {
+                        this.deselect();
+                    }
                 }
                 else {
-                    this.deselect();
+                    this.select();
                 }
-            }
-            else {
-                this.select();
-            }
-            
-            return {
-                dragged: 0,
-            };
-        },
-        onMove: md => {
-
-            var diffTime = (md.dx / am.timeline.timescale) - md.dragged;
                 
-            md.dragged += diffTime;
+                return {
+                    dragged: 0,
+                };
+            },
+            onMove: md => {
 
-            am.timeline.emit('translateSelectedKeys', diffTime);
+                var diffTime = (md.dx / this.timeline.timescale) - md.dragged;
+                    
+                md.dragged += diffTime;
+
+                this.timeline.emit('translateSelectedKeys', diffTime);
+            }
+        });
+
+        if (opt) {
+            this.useSave(opt);
         }
     });
-
-    if (opt) {
-        this.useSave(opt);
-    }
 }
 
 inherits(Key, EventEmitter);
@@ -82,15 +86,11 @@ var p = Key.prototype;
 module.exports = Key;
 
 
-defineCompactProperty(p, {
-    time: {
-        type: 'int',
-        history: true,
-    },
-    value: {
-        history: true,
-    },
-});
+defineCompactProperty(p, [
+    {name: 'time', type: 'int', history: true},
+    {name: 'value', history: true},
+    {name: 'parentParam', eventName: 'parentSet'},
+]);
 
 
 
@@ -155,9 +155,9 @@ p.renderToLine = function (ctx) {
 
     var looks = this.looks || this.parentKeyLine.keyLooks,
         height = this._height,
-        keyPos = ~~am.timeline.timeToRenderPos(this.time) + 0.5,
+        keyPos = ~~this.timeline.timeToRenderPos(this.time) + 0.5,
         prevKey = this.getPrevKey(),
-        prevKeyPos = am.timeline.timeToRenderPos(prevKey ? prevKey.time : 0),
+        prevKeyPos = this.timeline.timeToRenderPos(prevKey ? prevKey.time : 0),
         line = looks.line,
         circle = looks.circle,
         r = 2,
@@ -193,7 +193,7 @@ p.renderToLine = function (ctx) {
         ctx.restore();
     }
 
-    if (am.timeline.currTime === this.time) {
+    if (this.timeline.currTime === this.time) {
         ctx.save();
         ctx.beginPath();
         ctx.strokeStyle = amgui.color.red;
@@ -215,9 +215,9 @@ p.renderEaseToLine = function (ctx) {
     var ease = this.ease,
         color = (looks.ease && looks.ease.color) || 'rgba(225,225,225,.23)',
         height = this._height,
-        keyPos = am.timeline.timeToRenderPos(this.time),
+        keyPos = this.timeline.timeToRenderPos(this.time),
         prevKey = this.getPrevKey(),
-        prevKeyPos = am.timeline.timeToRenderPos(prevKey ? prevKey.time : 0),
+        prevKeyPos = this.timeline.timeToRenderPos(prevKey ? prevKey.time : 0),
         width = keyPos - prevKeyPos;
 
     if (width === 0) return;
@@ -301,9 +301,9 @@ p._onTranslateSelectedKeys = function (offset) {
 p.dispose = function () {
 
     this._deDropdown.removeEventListener('select', this._onSelectDropdown);
-    am.timeline.removeListener('changeTape', this._onChangeTape);
-    am.timeline.removeListener('deselectAllKeys', this._onDeselectAllKeys);
-    am.timeline.removeListener('translateSelectedKeys', this._onTranslateSelectedKeys);
+    this.timeline.removeListener('changeTape', this._onChangeTape);
+    this.timeline.removeListener('deselectAllKeys', this._onDeselectAllKeys);
+    this.timeline.removeListener('translateSelectedKeys', this._onTranslateSelectedKeys);
 
     if (this._deDropdown.parentNode) this._deDropdown.parentNode.removeChild(this._deDropdown); 
 };

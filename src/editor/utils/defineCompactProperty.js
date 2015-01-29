@@ -8,6 +8,8 @@ module.exports = function defineCompactProperty(proto, opt) {
         return;
     }
 
+    if (!_.has(opt, 'name')) throw Error;
+
     var valMap = new WeakMap(),
         name = opt.name,
         history = opt.history,

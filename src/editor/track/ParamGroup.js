@@ -1,6 +1,7 @@
 'use strict';
 
 var inherits = require('inherits');
+var defineCompactProperty = require('../utils/defineCompactProperty');
 var OptionLine = require('../utils/OptionLine');
 var KeyLineGroup = require('../utils/KeyLineGroup');
 var Param = require('./Param');
@@ -94,7 +95,7 @@ Object.defineProperties(p, {
 
             return this._collapsed;
         }
-    },
+    }
 });
 
 
@@ -181,7 +182,7 @@ p.moveParam = function () {
 
 p.toggleKey = function (time) {
 
-    time = time || am.timeline.currTime;
+    time = time || this.timeline.currTime;
 
     var hasKey = this._params.some(function (param) {
 
@@ -215,7 +216,7 @@ p._makeKeyLinesSymmetric = function (time) {
 
 p.addKeyAll = function (time) {
 
-    time = time === undefined ? am.timeline.currTime : time;
+    time = time === undefined ? this.timeline.currTime : time;
 
     this._params.forEach(param => {
 
@@ -233,7 +234,7 @@ p.addKeyAll = function (time) {
 
 p.removeKeyAll = function (time) {
 
-    time = time || am.timeline.currTime;
+    time = time || this.timeline.currTime;
 
     this._params.forEach(param => {
 

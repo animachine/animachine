@@ -19,7 +19,7 @@ function MomentScript(opt) {
     this._onDblclickKey = this._onDblclickKey.bind(this);
 
     this.domElem = this._deKeyline.addKey({
-        timescale: am.timeline.timescale,
+        timescale: this.timeline.timescale,
         time: this.time,
         ease: 'none'
     });
@@ -31,7 +31,7 @@ function MomentScript(opt) {
     this._deMenu.addEventListener('select', this._onSelectDropdown);
 
     this.domElem.addEventListener('changeTime', this._onChangeDeTime);
-    am.timeline.on('changeTape', this._onChangeTape);
+    this.timeline.on('changeTape', this._onChangeTape);
 
     amgui.bindDropdown({
         deTarget: this.domElem,
@@ -139,7 +139,7 @@ p._onSelectDropdown = function (e) {
 
 p._onChangeTape = function () {
 
-    this.domElem.setTimescale(am.timeline.timescale);
+    this.domElem.setTimescale(this.timeline.timescale);
 };
 
 p._onDblclickKey = function () {
@@ -154,7 +154,7 @@ p.dispose = function () {
 
     this.domElem.removeEventListener('changeTime', this._onChangeDeTime);
     this._deMenu.removeEventListener('select', this._onSelectDropdown);
-    am.timeline.removeListener('changeTape', this._onChangeTape);
+    this.timeline.removeListener('changeTape', this._onChangeTape);
 
     this.domElem.remove();
     if (this._deMenu.parentNode) this._deMenu.parentNode.removeChild(this._deMenu); 

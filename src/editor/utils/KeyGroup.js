@@ -14,8 +14,10 @@ function KeyGroup(opt) {
 
     Key.call(this, opt);
 
-    am.timeline.removeListener('deselectAllKeys', this._onDeselectAllKeys);
-    am.timeline.removeListener('translateSelectedKeys', this._onTranslateSelectedKeys);
+    this.once('parentSet', () => {
+        this.timeline.removeListener('deselectAllKeys', this._onDeselectAllKeys);
+        this.timeline.removeListener('translateSelectedKeys', this._onTranslateSelectedKeys);
+    });
 }
 
 inherits(KeyGroup, Key);
@@ -155,9 +157,9 @@ p._refreshSelected = function () {
 p.dispose = function () {
 
     this._deDropdown.removeEventListener('select', this._onSelectDropdown);
-    am.timeline.removeListener('changeTape', this._onChangeTape);
-    am.timeline.removeListener('deselectAllKeys', this._onDeselectAllKeys);
-    am.timeline.removeListener('translateSelectedKeys', this._onTranslateSelectedKeys);
+    this.timeline.removeListener('changeTape', this._onChangeTape);
+    this.timeline.removeListener('deselectAllKeys', this._onDeselectAllKeys);
+    this.timeline.removeListener('translateSelectedKeys', this._onTranslateSelectedKeys);
 
     if (this._deDropdown.parentNode) this._deDropdown.parentNode.removeChild(this._deDropdown); 
 };

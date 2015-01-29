@@ -2,7 +2,6 @@
 
 var amgui = require('./amgui');
 var EventEmitter = require('eventman');
-var Timeline = require('./timeline');
 var Windooman = require('./windooman');
 var HistoryTab = require('./historyTab');
 var Warehouseman = require('./warehouseman');
@@ -33,6 +32,8 @@ var am = window.am = module.exports = _.extend(new EventEmitter(), window.am, {
 
     trackTypes: {},
 
+    _staticToolbarIcons: [],
+
     selectedDomElem: undefined,
     selectedTrack: undefined,
 
@@ -52,14 +53,13 @@ am.open = function (save) {
 
     am.report({evtName: 'open', 'value': 1});
 
+    if (!window.chrome) {
+        
+        reject();
+        return alertUnsupportedBrowsers();
+    }
+
     var promiseBody = (fulfill, reject) => {
-
-
-        if (!window.chrome) {
-            
-            reject();
-            return alertUnsupportedBrowsers();
-        }
         
         am._init();
 
@@ -82,6 +82,9 @@ am.open = function (save) {
                 }
             }
         }
+        else {
+            am.openNewProject();
+        }
 
         function useSave(save) {
 
@@ -95,11 +98,11 @@ am.open = function (save) {
                 }
             }
 
-            if (!save) {
+            if (!save || !save.project) {
                 throw Error('Can\'t use this save');
             }
 
-            am.timeline.useSave(save);
+            am.projectMap.focus(save.project);
             fulfill();
         }
     };
@@ -124,22 +127,7 @@ am._init = function () {
 
     if (isInited) return;
 
-    am.i18n = i18n;
-    
-    am.dialogs = {
-        WIP: dialogWIP,
-        feedback: dialogFeedback,
-    };
-
-    am.workspace = new Windooman();
-    am.workspace.loadWorkspace('base', getBaseWorkspace());
-    am.workspace.load('base');
-
-    am.mouse = new Mouse();
-
-    am.storage = new Warehouseman();
-
-    am.tour = new Tour();
+    am.deRoot = document.body;
 
     am.domElem = createAmRoot();
     am.dePickLayer = createAmLayer();
@@ -147,34 +135,44 @@ am._init = function () {
     am.deGuiCont = createAmLayer();
     am.deDialogCont = createAmLayer();
 
-    inspectHandlerCont(am.deHandlerCont);
-
     amgui.deOverlayCont = am.deDialogCont;
-
-    am.deGuiCont.appendChild(am.workspace.domElem);
-
-    am.deRoot = document.body;
     
+    am.i18n = i18n;
+
+    am.workspace = new Windooman();
+    am.deGuiCont.appendChild(am.workspace.domElem);
+    am.workspace.loadWorkspace('base', getBaseWorkspace());
+    am.workspace.load('base');
+
+    am.projectMap = new ProjectMap();
+
+    am.mouse = new Mouse();
+
+    am.storage = new Warehouseman();
+
+    am.tour = new Tour();
+
     am.history = new Chronicler();
     shortcuts.on('undo', () => am.history.undo());
     shortcuts.on('redo', () => am.history.redo());
     
     am.historyTab = new HistoryTab();
-    am.timeline = new Timeline();
-    am.domPicker = new DomPicker();
-
     am.workspace.fillTab('History', am.historyTab.domElem);
 
+    am.domPicker = new DomPicker();
     am.deHandlerCont.appendChild(am.domPicker.domElem);
     am.domPicker.on('pick', de => am.selectDomElem(de));
 
-
-    am.workspace.fillTab('timeline', am.timeline.domElem);
-
+    inspectHandlerCont(am.deHandlerCont);
     createMenu();
     addToggleGui();
     initPickerLayer();
     createStatusLabel();
+    
+    am.dialogs = {
+        WIP: dialogWIP,
+        feedback: dialogFeedback,
+    };
 
     Object.keys(modules).forEach( moduleName => {
 
@@ -183,7 +181,21 @@ am._init = function () {
         modules[moduleName].init(am);
     });
 
+    am.projectMap.on('focus.timeline', timeline => {
+
+        timeline.toolbar.addIcon(am._staticToolbarIcons);
+
+        am.currTimeline = timeline;
+    });
 };
+
+am.openNewProject = function () {
+
+    am.projectMap.focus({
+        name: 'new project',
+        timelines: [{}],
+    });
+}
 
 am.selectTrack = function (track) {
 
@@ -328,7 +340,7 @@ function addToggleGui() {
 
     var isHidden = false;   
 
-    am.timeline.toolbar.addIcon({
+    am._staticToolbarIcons.push({
         tooltip: 'show/hide editor',
         icon: 'resize-small',
         separator: 'first',
@@ -418,16 +430,14 @@ function initPickerLayer() {
         iconOn: 'target', 
         iconOff: 'cursor',
         defaultToggle: true,
-        size: am.timeline.toolbar.height,
+        size: 24,
         display: 'inline-block',
         onClick: function () {
             setActive(!isActive);
         }
     });
 
-    am.timeline.toolbar.addIcon({
-        deIcon: btn,
-    });
+    am._staticToolbarIcons.push(btn);
 
     function setActive(v) {
 
@@ -548,10 +558,13 @@ function createAmLayer() {
 
 function createMenu() {
 
-    var deMenuIcon = am.timeline.toolbar.addIcon({
+    var deMenuIcon = amgui.createIconBtn({
         tooltip: 'menu',
         icon: 'menu',
+        size: 24,
     });
+
+    am._staticToolbarIcons.push(deMenuIcon);
 
     am.menuDropdown = amgui.createDropdown({
         options: [
@@ -559,9 +572,9 @@ function createMenu() {
                 text: 'file',
                 icon: 'floppy',
                 children: [
-                    {text: 'new', onSelect: onSelectNew},
+                    {text: 'new', onSelect: () => am.openNewProject()},
                     {text: 'save', onSelect: onSelectSave},
-                    {text: 'saveAs', onSelect: onSelectSave},
+                    // {text: 'saveAs', onSelect: onSelectSave},
                     {text: 'open', onSelect: onSelectOpen},
                 ]
             },
@@ -592,11 +605,6 @@ function createMenu() {
         deDropdown: am.menuDropdown,
     });
 
-    function onSelectNew() {
-
-        am.timeline.clear();
-    }
-
     function onSelectSave() {
 
         am.storage.showSaveDialog({
@@ -605,7 +613,7 @@ function createMenu() {
                 
                 var opt = am.storage.getSaveOptions();
 
-                return am.timeline.getScript(opt);
+                return am.projectMap.getCurrentProject().getScript(opt);
             }
         });
     }
@@ -616,10 +624,7 @@ function createMenu() {
 
             onOpen: function (save) {
 
-                console.log(save);
-
-                am.timeline.clear();
-                am.timeline.useSave(save);
+                am.projectMap.open(save.project);
             }
         });
     }

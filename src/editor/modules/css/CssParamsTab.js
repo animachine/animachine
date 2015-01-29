@@ -17,7 +17,7 @@ function CssParamsTab() {
 
     am.on('selectTrack', this._onSelectTrack);
     am.on('deselectTrack', this._onDeselectTrack);
-    am.timeline.on('changeTime', this._onChangeTime);
+    // this.timeline.on('changeTime', this._onChangeTime); //TODO
 }
 
 var p = CssParamsTab.prototype;
@@ -311,7 +311,7 @@ p._createBase = function () {
 
                     paramNames.forEach(function (paramName) {
 
-                        var time = am.timeline.currTime,
+                        var time = this.timeline.currTime,
                             param = this._currTrack.getParam(paramName);
 
                         if (param && param.getKey(time)) {

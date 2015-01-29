@@ -10,7 +10,7 @@ function Interval(opt) {
 
     this._lineH =  21;
     this._start = 0;
-    this._end = am.timeline.length;
+    this._end = this.timeline.length;
 
     this._onDragResize = this._onDragResize.bind(this);
     this._onFinishResize = this._onFinishResize.bind(this);
@@ -20,7 +20,7 @@ function Interval(opt) {
     this._createDomElem();
     this._refreshDomElem();
 
-    am.timeline.on('changeTime', this._onChangeTime);
+    this.timeline.on('changeTime', this._onChangeTime);
 
     if (opt) {
         this.useSave(opt);
@@ -160,7 +160,7 @@ p._onChangeTime = function () {
 p._onDragResize = function (md, mx) {
 
     var neighbour, 
-        timePos = am.timeline.screenXToTime(mx);
+        timePos = this.timeline.screenXToTime(mx);
 
     if (md.side === 'left') {
 
@@ -214,7 +214,7 @@ p._onFinishResize = function (md) {
 
 p._onDragMove = function (md, mx) {
 
-    var timePos = am.timeline.screenXToTime(mx),
+    var timePos = this.timeline.screenXToTime(mx),
         move = timePos - md.timePos,
         nextInterval = this._nextInterval(),
         prevInterval = this._prevInterval();
@@ -247,8 +247,8 @@ p._onDragMove = function (md, mx) {
 
 p._refreshDomElem = function () {
 
-    this.domElem.style.left = this.start * am.timeline.timescale + 'px';
-    this.domElem.style.width = (this.end - this.start) * am.timeline.timescale + 'px';
+    this.domElem.style.left = this.start * this.timeline.timescale + 'px';
+    this.domElem.style.width = (this.end - this.start) * this.timeline.timescale + 'px';
 };
 
 
@@ -278,7 +278,7 @@ p._createDomElem = function () {
             return {
                 start: this.start,
                 end: this.end,
-                timePos: am.timeline.screenXToTime(e.screenX)
+                timePos: this.timeline.screenXToTime(e.screenX)
             };
         },
         onMove: this._onDragMove,

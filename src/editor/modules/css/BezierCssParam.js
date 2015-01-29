@@ -133,7 +133,7 @@ p._refreshCheckTimeline = function () {
 p.getValue = function (time) {
 
     if (!_.isNumber(time)) {
-        time = am.timeline.currTime;
+        time = this.timeline.currTime;
     }
 
     if (!this._checkTimeline) {
@@ -360,8 +360,8 @@ p._onChangeTransformer = function (changes) {
 p._onKeyPrerender = function (ctx, key) {
 
     var prevKey = key.getPrevKey(),
-        start = am.timeline.timeToRenderPos(prevKey ? prevKey.time : 0),
-        width = am.timeline.timeToRenderPos(key.time) - start,
+        start = this.timeline.timeToRenderPos(prevKey ? prevKey.time : 0),
+        width = this.timeline.timeToRenderPos(key.time) - start,
         step = width / key.value.length;
 
     for (var i = 0; i < key.value.length - 1; ++i) {

@@ -3,6 +3,7 @@
 var EventEmitter = require('eventman');
 var inherits = require('inherits');
 var amgui = require('../amgui');
+var defineCompactProperty = require('../utils/defineCompactProperty');
 
 function KeyLine (opt) {
 
@@ -28,8 +29,6 @@ function KeyLine (opt) {
 
     amgui.callOnAdded(this.domElem, this._render.bind(this));
 
-    am.timeline.on(['changeTimescale', 'changeTape'], this._render, this);
-
     var dropdownBinding = amgui.bindDropdown({
         deTarget: this._canvas,
         asContextMenu: true,
@@ -46,6 +45,11 @@ function KeyLine (opt) {
                 return false;
             }
         }.bind(this),
+    });
+
+    this.once('paramSet', () => {
+
+        this.timeline.on(['changeTimescale', 'changeTape'], this._render, this);
     });
 }
 
@@ -87,7 +91,7 @@ Object.defineProperties(p, {
     }
 });
 
-
+defineCompactProperty(p, {name: 'parentParam', eventName: 'parentSet'});
 
 
 
@@ -193,10 +197,10 @@ p.getClosestKey = function (time) {
 
 p.getKeyUnderPos = function (x) {
 
-    var time = am.timeline.screenXToTime(x),
+    var time = this.timeline.screenXToTime(x),
         key = this.getClosestKey(time);
 
-    if (key && (Math.abs(time - key.time) * am.timeline.timescale) < 4) {
+    if (key && (Math.abs(time - key.time) * this.timeline.timescale) < 4) {
 
         return key;
     }
@@ -222,7 +226,7 @@ p._render = function () {
     var canvas = this._canvas,
         ctx = this._ctx;
 
-    canvas.width = am.timeline.width;
+    canvas.width = this.timeline.width;
     canvas.height = this._height;
 
     _.sortBy(this._keys, 'time').forEach(key => key.renderToLine(ctx));
@@ -248,11 +252,11 @@ p._onKeyNeedsRemove = function (key) {
 
 p._onDblClick = function (e) {
 
-    var time = am.timeline.screenXToTime(e.screenX),
+    var time = this.timeline.screenXToTime(e.screenX),
         key = this.getNextKey(time);
 
     if (key) {
-        am.timeline.inlineEaseEditor.show({key});
+        this.timeline.inlineEaseEditor.show({key});
     }
 };
 

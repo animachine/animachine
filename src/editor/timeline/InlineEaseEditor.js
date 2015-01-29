@@ -10,6 +10,8 @@ function InlineEaseEditor(opt) {
 
     this._height = amgui.LINE_HEIGHT;
     this._color = '#00BFFF';
+
+    this.timeline = opt.timeline;
     
     this._points = [0, 0, 1, 1];
 
@@ -98,8 +100,8 @@ p._render = function() {
         brKeyLine = key.parentKeyLine.domElem.getBoundingClientRect(),
         brParent = this.domElem.parentNode.getBoundingClientRect(),
         p = this._points,
-        x = am.timeline.timeToScreenX(prevKey ? prevKey.time : 0),
-        w = am.timeline.timeToScreenX(key.time) - x,
+        x = this.timeline.timeToScreenX(prevKey ? prevKey.time : 0),
+        w = this.timeline.timeToScreenX(key.time) - x,
         h = this._height,
         d = '',
         ease = this._eases[0];

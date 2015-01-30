@@ -125,7 +125,7 @@ Object.defineProperties(p, {
     }
 });
 
-defineCompactProperty(p, {name: 'parentProject', eventName: 'parentSet'});
+defineCompactProperty(p, {name: 'parentProject', event: 'added'});
 
 p.getSave = function () {
 
@@ -170,7 +170,7 @@ p.useSave = function (save) {
     save.tracks.forEach(function (trackData) {
 
         var TrackClass = am.trackTypes[trackData.type],
-            track = new TrackClass(trackData.data);
+            track = new TrackClass(trackData.data, this);
 
         this.addTrack(track);
     }, this);
@@ -256,7 +256,7 @@ p.clear = function () {
 
 p.addTrack = function (track) {
 
-    if (_.includes(this._tracks, track)) return;
+    if (_.include(this._tracks, track)) return;
 
     am.history.save({
         undo: () => this.removeTrack(track),
@@ -296,7 +296,7 @@ p.addTrack = function (track) {
 
 p.removeTrack = function (track, skipHistory) {
 
-    if (!_.includes(this._tracks, track)) return;
+    if (!_.include(this._tracks, track)) return;
 
     am.history.save({
         undo: () => this.addTrack(track),

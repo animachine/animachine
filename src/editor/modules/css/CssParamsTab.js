@@ -7,17 +7,10 @@ function CssParamsTab() {
 
     this._paramOptionLines = [];
 
-    this._onSelectTrack = this._onSelectTrack.bind(this);
-    this._onDeselectTrack = this._onDeselectTrack.bind(this);
-    this._onTrackAddParam = this._onTrackAddParam.bind(this);
-    this._onChangeTime = this._onChangeTime.bind(this);
-    this._onChangeParam = this._onChangeParam.bind(this);
-
     this._createBase();
 
-    am.on('selectTrack', this._onSelectTrack);
-    am.on('deselectTrack', this._onDeselectTrack);
-    // this.timeline.on('changeTime', this._onChangeTime); //TODO
+    am.on('selectTrack', this._onSelectTrack, this);
+    am.on('deselectTrack', this._onDeselectTrack, this);
 }
 
 var p = CssParamsTab.prototype;
@@ -80,7 +73,7 @@ p._unlisten = function () {
 
     this._showHideNoTrackMsg(true);
 
-    this._currTrack.removeListener('addParam', this._onTrackAddParam);
+    this._currTrack.off('addParam', this._onTrackAddParam, this);
 
     this._forEachInput(function (input, paramName) {
 
@@ -88,7 +81,7 @@ p._unlisten = function () {
 
         if (param) {
 
-            param.removeListener('change', this._onChangeParam);
+            param.off('change', this._onChangeParam, this);
             param.detachInput(input);
             input.reset();
         }
@@ -97,7 +90,8 @@ p._unlisten = function () {
 
 p._listen = function () {
 
-    this._currTrack.on('addParam', this._onTrackAddParam);
+    this._currTrack.on('addParam', this._onTrackAddParam, this);
+    this._currTrack.timeline.on('changeTime', this._onChangeTime, this);
     
     this._showHideNoTrackMsg(false);
 
@@ -109,7 +103,7 @@ p._listen = function () {
 
             input.value = param.getValue();
             param.attachInput(input);
-            param.on('change', this._onChangeParam);
+            param.on('change', this._onChangeParam, this);
         }
     }, this);
 };

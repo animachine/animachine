@@ -3,7 +3,9 @@
 var Param = require('./Param');
 var ParamGroup = require('./ParamGroup');
 
-function ParamFactory() {
+function ParamFactory(opt, timeline) {
+
+    this.timeline = timeline;
 
     this.groups = {
         // groupname: {subgoupname: ['members']}
@@ -16,14 +18,14 @@ var p = ParamFactory.prototype;
 
 p.create = function (opt={}) {
 
-    param = new Param(opt);
+    param = new Param(opt, this.timeline);
 
     return param;
 };
 
 p.createGroup = function (opt) {
     
-    var paramGroup = new ParamGroup(opt);
+    var paramGroup = new ParamGroup(opt, this.timeline);
 
     return paramGroup;
 };
@@ -80,9 +82,15 @@ p.ifit = function (str) {
     var ret = {
         is: (cases, cb) => {
 
-            if (cases.match(rx)) {
+            try {
 
-                cb();
+                if (cases.match(rx)) {
+
+                    cb();
+                }
+            }
+            catch (e) {
+                debugger;
             }
 
             return ret;

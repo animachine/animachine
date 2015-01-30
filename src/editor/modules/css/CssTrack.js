@@ -4,11 +4,11 @@ var Track = require('../../track/Track');
 var inherits = require('inherits');
 var CssParamFactory = require('./CssParamFactory');
 
-function CssTrack (opt={}) {
+function CssTrack (opt={}, timeline) {
 
-    this._paramFactory = new CssParamFactory();
+    this._paramFactory = new CssParamFactory({}, timeline);
 
-    Track.call(this, opt);
+    Track.apply(this, arguments);
 }
 
 inherits(CssTrack, Track);

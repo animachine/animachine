@@ -9,11 +9,12 @@ module.exports = function defineCompactProperty(proto, opt) {
     }
 
     if (!_.has(opt, 'name')) throw Error;
+    if (_.has(opt, 'eventName')) throw Error;
 
     var valMap = new WeakMap(),
         name = opt.name,
         history = opt.history,
-        evtName = opt.evtName || 'change.' + name;
+        evtName = opt.event || opt.evtName || 'change.' + name;
 
     if (history) {
         if (typeof(history) !== 'object') history = {};

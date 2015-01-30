@@ -110,6 +110,7 @@ am.open = function (save) {
     if (false) {
         console.warn('am.open is in debug mode!')
         promiseBody(); //debug
+        return
     }
 
     var promise = new Promise(promiseBody)

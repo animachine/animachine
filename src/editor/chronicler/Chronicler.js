@@ -239,6 +239,8 @@ p.wrap = function (fn, ctx) {
 
 p.saveChain = function (id, undo, redo, name, delay) {
 
+    if (this.saveSuspended) return;
+
     var chain = this.getChain(id);
 
     if (chain) {

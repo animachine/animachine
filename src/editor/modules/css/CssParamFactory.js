@@ -12,7 +12,7 @@ var defaultHidden = 'z,rotationX,rotationY,scaleZ,perspectiveOriginX,transformOr
 
 function CssParamFactory() {
 
-    ParamFactory.call(this);
+    ParamFactory.apply(this, arguments);
 
     this.groups = {
         padding: ['paddingTop',  'paddingRight',  'paddingBottom',  'paddingLeft'],
@@ -131,10 +131,10 @@ p.create = function (opt={}) {
 
     if (opt.name === 'bezier') {
 
-        param = new BezierCssParam(paramOpt);
+        param = new BezierCssParam(paramOpt, this.timeline);
     }
     else {
-        param = new CssParam(paramOpt);
+        param = new CssParam(paramOpt, this.timeline);
     }
 
     return param;
@@ -153,7 +153,7 @@ p.createGroup = function (opt={}) {
         },
     };
     
-    var paramGroup = new CssParamGroup(pgOpt);
+    var paramGroup = new CssParamGroup(pgOpt, this.timeline);
 
     if (opt.name === 'translate') {
 

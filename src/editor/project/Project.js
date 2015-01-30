@@ -28,7 +28,7 @@ p.useSave = function (save = {}) {
 
     if (_.isArray(save.timelines)) {
 
-        save.timelines.forEach(tl => this.addTimeline(save));
+        save.timelines.forEach(tl => this.addTimeline(tl));
     }
     
     if (_.has(save, 'currTimelineIdx')) {
@@ -85,7 +85,7 @@ p.addTimeline = function (timeline) {
 
 p.removeTimeline = function (timeline) {
 
-    if (!_.includes(this._timelines, timeline)) {
+    if (!_.include(this._timelines, timeline)) {
         return;
     }
 

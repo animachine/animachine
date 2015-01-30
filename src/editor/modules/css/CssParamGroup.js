@@ -5,7 +5,7 @@ var inherits = require('inherits');
 
 function CssParamGroup (opt={}) {
 
-    ParamGroup.call(this, opt);
+    ParamGroup.apply(this, arguments);
 }
 
 inherits(CssParamGroup, ParamGroup);

@@ -3,14 +3,16 @@
 var EventEmitter = require('eventman');
 var inherits = require('inherits');
 var defineCompactProperty = require('../utils/defineCompactProperty');
-var Key = require('../utils/Key');
 var OptionLine = require('../utils/OptionLine');
-var KeyLine = require('../utils/KeyLine');
+var Key = require('./Key');
+var KeyLine = require('./KeyLine');
 var amgui = require('../amgui');
 
-function Param (opt={}) {
+function Param (opt={}, timeline) {
 
     EventEmitter.call(this);
+
+    this.timeline = timeline;
 
     this._lineH =  amgui.LINE_HEIGHT;
     this._inputs = [];
@@ -28,21 +30,19 @@ function Param (opt={}) {
     this._createKeyline(opt.keyLine);
     this._createOptions(opt.optionLine);
 
-    opt.keyLine.parentParam = this;
+    this.keyLine.parentParam = this;
 
     this.deOptionLine = this.optionLine.domElem;
     this.deKeyLine = this.keyLine.domElem;
 
     this.setMaxListeners(1234);
 
+
     if (opt) {
         this.useSave(opt);
     }
-
-    this.once('paramSet', () => {
-
-        this.timeline.on('changeTime', this._onChangeTime);
-    });
+    
+    this.timeline.on('changeTime', this._onChangeTime);
 }
 
 inherits(Param, EventEmitter);
@@ -96,18 +96,8 @@ Object.defineProperties(p, {
 
             return this._hidden;
         }
-    },
-    timeline: {
-        get: function () {
-            return (this.parentTrack || this.parentGroup).timeline;
-        }
     }
 });
-
-defineCompactProperty(p, [
-    {name: 'parentGroup', eventName: 'parentSet'},
-    {name: 'parentTrack', eventName: 'parentSet'},
-]);
 
 
 
@@ -286,7 +276,7 @@ p.addKey = function (opt, skipHistory) {
         }
     }
     else {
-        key = new Key(opt);
+        key = new Key(opt, this.timeline);
         key.value = 'value' in opt ? opt.value : this.getValue(opt.time);
 
         this.keyLine.addKey(key);
@@ -531,7 +521,7 @@ p._createOptions = function (opt) {
 
 p._createKeyline = function () {
 
-    this.keyLine = new KeyLine();
+    this.keyLine = new KeyLine({}, this.timeline);
     this.keyLine.on('change', this._onChangeKeyLine);
     this.keyLine.on('keyNeedsRemove', this._onKeyNeedsRemove);
 };

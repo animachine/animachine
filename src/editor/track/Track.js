@@ -6,7 +6,7 @@ var defineCompactProperty = require('../utils/defineCompactProperty');
 var amgui = require('../amgui');
 var ParamFactory = require('./ParamFactory');
 var Transhand = require('transhand');
-var KeyLineGroup = require('../utils/KeyLineGroup');
+var KeyLineGroup = require('./KeyLineGroup');
 var OptionLine = require('../utils/OptionLine');
 var ParamGroup = require('./ParamGroup');
 var dialogTrackOptions = require('./dialogTrackOptions');
@@ -14,9 +14,11 @@ var dialogNewParam = require('./dialogNewParam');
 var mstPlayer = require('./script.player.mst');
 
 
-function Track(opt) {
+function Track(opt, timeline) {
 
     EventEmitter.call(this);
+
+    this.timeline = timeline;
 
     this._selectors = [];
     this._endParams = [];
@@ -25,7 +27,7 @@ function Track(opt) {
     this._isHidingSelectedElems = false;
     this._isPlaying = false;
 
-    if (!this._paramFactory) this._paramFactory = new ParamFactory();
+    if (!this._paramFactory) this._paramFactory = new ParamFactory({}, this.timeline);
 
     this._onSelectClick = this._onSelectClick.bind(this);
     this._onDeleteParameter = this._onDeleteParameter.bind(this);
@@ -44,7 +46,6 @@ function Track(opt) {
     this._animPlay = this._animPlay.bind(this);
 
     this._paramGroup = new ParamGroup({
-        parentTrack: this,
         name: '',
         optionLine: {
             tgglMerge: false,
@@ -55,9 +56,9 @@ function Track(opt) {
                 {text: 'move down', onSelect: () => this.emit('move', this, 1)},
                 {text: 'delete', onSelect: () => this.emit('remove')},
             ],
+            onDblClick: () => this._showSettings(),
         },
-        onDblClick: () => this._showSettings(),
-    });
+    }, this.timeline);
 
     //test hack
     this._paramGroup.optionLine._deTitle.style.fontWeight = 'bold';
@@ -111,9 +112,7 @@ function Track(opt) {
         this.useSave(opt);
     }
 
-    this.once('parentSet', () => {
-        this.timeline.on('changeTime', this._onChangeTime);
-    });
+    this.timeline.on('changeTime', this._onChangeTime);
 }
 
 inherits(Track, EventEmitter);
@@ -135,15 +134,8 @@ Object.defineProperties(p, {
 
             return this._paramGroup.height;
         }
-    },
-    timeline: {
-        get: function () {
-            return this.parentTimeline;
-        }
     }
 });
-
-defineCompactProperty(p, {name: 'parentTimeline', eventName: 'parentSet'});
 
 
 
@@ -552,7 +544,7 @@ p.deselect = function () {
 p.renderTime = function (time) {
 
     if (time === undefined) {
-        time = this.timeline.currTime;
+        time = this.timeline ? this.timeline.currTime : 0;
     }
 
     if (this._selectors.length === 0) {

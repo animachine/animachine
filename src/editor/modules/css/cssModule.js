@@ -28,7 +28,7 @@ exports.init = function () {
             var track = new CssTrack({
                 selectors: [{type: 'css', value: selector}],
                 paramTree: {save: {name: selector}},
-            });
+            }, am.currTimeline);
 
             am.currTimeline.addTrack(track);
 

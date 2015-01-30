@@ -7,7 +7,7 @@ var amgui = require('../amgui');
 
 function KeyLineGroup (opt) {
 
-    KeyLine.call(this);
+    KeyLine.apply(this, arguments);
 
     this._keyLines = [];
 
@@ -171,7 +171,7 @@ p._refreshHeadKeyline = function () {
 
     while (times.length > this._keys.length) {
 
-        this.addKey(new KeyGroup({}));
+        this.addKey(new KeyGroup({}, this.timeline));
     }
 
 

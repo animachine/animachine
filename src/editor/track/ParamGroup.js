@@ -3,7 +3,7 @@
 var inherits = require('inherits');
 var defineCompactProperty = require('../utils/defineCompactProperty');
 var OptionLine = require('../utils/OptionLine');
-var KeyLineGroup = require('../utils/KeyLineGroup');
+var KeyLineGroup = require('./KeyLineGroup');
 var Param = require('./Param');
 var amgui = require('../amgui');
 
@@ -18,7 +18,7 @@ function ParamGroup (opt={}) {
 
     this.borrowChildInputsOnCollapse = opt.borrowChildInputsOnCollapse;
 
-    Param.call(this, opt);
+    Param.apply(this, arguments);
     
     this.keyLine.keyLooks.circle = undefined;
     
@@ -356,7 +356,7 @@ p._createOptions = function (opt) {
 
 p._createKeyline = function () {
 
-    this.keyLine = new KeyLineGroup();
+    this.keyLine = new KeyLineGroup({}, this.timeline);
     this.keyLine.on('keyNeedsRemove', this._onKeyNeedsRemove);
 };
 

@@ -2,7 +2,7 @@
 
 var inherits = require('inherits');
 var CssParam = require('./CssParam');
-var Key = require('../../utils/Key');
+var Key = require('../../track/Key');
 var amgui = require('../../amgui');
 var Transhand = require('transhand');
 
@@ -19,7 +19,7 @@ function BezierCssParam (opt) {
     this._checkTimeline = undefined;
     this._checkObj = {x: 0, y: 0};
 
-    CssParam.call(this, opt);
+    CssParam.apply(this, arguments);
 
     this.on('change', this._refreshCheckTimeline, this);
     this._refreshCheckTimeline();
@@ -176,7 +176,7 @@ p.addKey = function (opt, skipHistory) {
             }];
         }
 
-        key = new Key(opt);
+        key = new Key(opt, this.timeline);
 
         key.on('prerender', this._onKeyPrerender, this);
 

@@ -2,8 +2,8 @@
 
 var inherits = require('inherits');
 var amgui = require('../amgui');
-var Dialog = require('./Dialog');
-var OptionLine = require('./OptionLine');
+var Dialog = require('../utils/Dialog');
+var OptionLine = require('../utils/OptionLine');
 
 var currEase, 
     beizerEditor,

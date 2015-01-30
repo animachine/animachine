@@ -5,9 +5,11 @@ var inherits = require('inherits');
 var amgui = require('../amgui');
 var defineCompactProperty = require('../utils/defineCompactProperty');
 
-function KeyLine (opt) {
+function KeyLine (opt, timeline) {
 
     EventEmitter.call(this);
+
+    this.timeline = timeline;
 
     this._keys = [];
     this._height = amgui.LINE_HEIGHT;
@@ -27,8 +29,6 @@ function KeyLine (opt) {
     
     this._createDomElem();
 
-    amgui.callOnAdded(this.domElem, this._render.bind(this));
-
     var dropdownBinding = amgui.bindDropdown({
         deTarget: this._canvas,
         asContextMenu: true,
@@ -47,17 +47,14 @@ function KeyLine (opt) {
         }.bind(this),
     });
 
-    this.once('paramSet', () => {
+    amgui.callOnAdded(this.domElem, () => this._render());
 
-        this.timeline.on(['changeTimescale', 'changeTape'], this._render, this);
-    });
+    this.timeline.on(['changeTimescale', 'changeTape'], this._render, this);
 }
 
 inherits(KeyLine, EventEmitter);
 var p = KeyLine.prototype;
 module.exports = KeyLine;
-
-
 
 
 
@@ -88,10 +85,8 @@ Object.defineProperties(p, {
 
             return this._hidden;
         }
-    }
+    },
 });
-
-defineCompactProperty(p, {name: 'parentParam', eventName: 'parentSet'});
 
 
 
@@ -221,7 +216,7 @@ p.getKeyTimes = function () {
 
 p._render = function () {
 
-    if (this._skipRender || this.hidden) return;
+    if (this._skipRender || this.hidden || !this.timeline) return;
 
     var canvas = this._canvas,
         ctx = this._ctx;

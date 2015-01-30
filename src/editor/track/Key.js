@@ -6,9 +6,11 @@ var amgui = require('../amgui');
 var Ease = require('./Ease');
 var defineCompactProperty = require('../utils/defineCompactProperty');
 
-function Key(opt) {
+function Key(opt, timeline) {
 
     EventEmitter.call(this);
+
+    this.timeline = timeline;
     
     this._time =  0;
     this._value =  '';
@@ -34,51 +36,48 @@ function Key(opt) {
         this.ease.on('change', this._onChangeEase);
     }
 
-    this.once('paramSet', () => {
+    this._dragger = amgui.makeDraggable({
+        deTarget: this.domElem,
+        thisArg: this,
+        onDown: e => {
 
-        this.timeline.on('deselectAllKeys', this._onDeselectAllKeys);
-        this.timeline.on('translateSelectedKeys', this._onTranslateSelectedKeys);
+            if (!e.shiftKey && !e.ctrlKey) {
+                this.timeline.emit('deselectAllKeys');
+            }
 
-        this._dragger = amgui.makeDraggable({
-            deTarget: this.domElem,
-            thisArg: this,
-            onDown: e => {
-
-                if (!e.shiftKey && !e.ctrlKey) {
-                    this.timeline.emit('deselectAllKeys');
-                }
-
-                //TODO shift+select (if an other key(s) selected in this line its should select thoes are between them) 
-                if (e.shiftKey || e.ctrlKey) {
-                    if (this._isSelected) {
-                        this.select();
-                    }
-                    else {
-                        this.deselect();
-                    }
-                }
-                else {
+            //TODO shift+select (if an other key(s) selected in this line its should select thoes are between them) 
+            if (e.shiftKey || e.ctrlKey) {
+                if (this._isSelected) {
                     this.select();
                 }
-                
-                return {
-                    dragged: 0,
-                };
-            },
-            onMove: md => {
-
-                var diffTime = (md.dx / this.timeline.timescale) - md.dragged;
-                    
-                md.dragged += diffTime;
-
-                this.timeline.emit('translateSelectedKeys', diffTime);
+                else {
+                    this.deselect();
+                }
             }
-        });
+            else {
+                this.select();
+            }
+            
+            return {
+                dragged: 0,
+            };
+        },
+        onMove: md => {
 
-        if (opt) {
-            this.useSave(opt);
+            var diffTime = (md.dx / this.timeline.timescale) - md.dragged;
+                
+            md.dragged += diffTime;
+
+            this.timeline.emit('translateSelectedKeys', diffTime);
         }
     });
+
+    if (opt) {
+        this.useSave(opt);
+    }
+
+    this.timeline.on('deselectAllKeys', this._onDeselectAllKeys);
+    this.timeline.on('translateSelectedKeys', this._onTranslateSelectedKeys);
 }
 
 inherits(Key, EventEmitter);
@@ -89,7 +88,7 @@ module.exports = Key;
 defineCompactProperty(p, [
     {name: 'time', type: 'int', history: true},
     {name: 'value', history: true},
-    {name: 'parentParam', eventName: 'parentSet'},
+    {name: 'parentKeyLine', event: 'added'},
 ]);
 
 

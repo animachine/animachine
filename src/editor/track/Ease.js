@@ -3,7 +3,7 @@
 var EventEmitter = require('eventman');
 var inherits = require('inherits');
 var BezierEasing = require('bezier-easing');
-var defineCompactProperty = require('./defineCompactProperty');
+var defineCompactProperty = require('../utils/defineCompactProperty');
 var dialogEaseOptions = require('./dialogEaseOptions');
 var debugId = 0
 function Ease(opt) {

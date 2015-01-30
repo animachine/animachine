@@ -2,9 +2,6 @@
 
 var Key = require('./Key');
 var inherits = require('inherits');
-var dialogEaseOptions = require('./dialogEaseOptions');
-var amgui = require('../amgui');
-var Ease = require('./Ease');
 
 function KeyGroup(opt) {
 
@@ -12,12 +9,10 @@ function KeyGroup(opt) {
 
     this._subkeys = [];
 
-    Key.call(this, opt);
+    Key.apply(this, arguments);
 
-    this.once('parentSet', () => {
-        this.timeline.removeListener('deselectAllKeys', this._onDeselectAllKeys);
-        this.timeline.removeListener('translateSelectedKeys', this._onTranslateSelectedKeys);
-    });
+    this.timeline.removeListener('deselectAllKeys', this._onDeselectAllKeys);
+    this.timeline.removeListener('translateSelectedKeys', this._onTranslateSelectedKeys);
 }
 
 inherits(KeyGroup, Key);

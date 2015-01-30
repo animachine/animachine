@@ -424,9 +424,22 @@ function initPickerLayer() {
 
     am.dePickLayer.style.pointerEvents = 'auto';
 
-    var isActive = true;
+    var mode = 'interact';
 
-    var btn = amgui.createToggleIconBtn({
+    var cursors = {
+        interact: 'auto',
+        pick: 'auto',
+        move: '-webkit-grab',
+    }
+
+    function selectMode(m) {
+
+        if (m === mode) return;
+
+
+    }
+
+    var btn = amgui.createIconBtn({
         tooltip: 'toggle dom picking mode',
         iconOn: 'target', 
         iconOff: 'cursor',
@@ -440,6 +453,16 @@ function initPickerLayer() {
 
     am._staticToolbarIcons.push(btn);
 
+    var dropdown = amgui.createDropdown({
+        options: [
+            {text: 'normal page interact', icon: 'cursor'},
+            {text: 'dom picking mode', icon: 'target'},
+            {text: 'drag ', icon: 'move'},
+        ],
+    });
+
+    amgui.bindDropdown({deTarget: btn, deDropdown: dropdown});
+
     function setActive(v) {
 
         if (isActive === v) return;
@@ -451,7 +474,7 @@ function initPickerLayer() {
 
     amgui.on('fontLoaded', () => {
 
-        am.dePickLayer.style.cursor = amgui.createCursorFromText({
+        cursors.pick = amgui.createCursorFromText({
             icon: 'target',
             color: amgui.color.text,
             width: 22,
@@ -462,6 +485,8 @@ function initPickerLayer() {
             stroke: {color:'black', width: 2},
             debug: false,
         });
+
+        am.dePickLayer.style.cursor = cursors.pick;
     });
 
     am.dePickLayer.addEventListener('click', function (e) {
@@ -480,6 +505,17 @@ function initPickerLayer() {
         else if (de === document.body || de.parentNode === document) {
 
             am.deselectDomElem();
+        }
+    });
+
+    amgui.makeDraggable({
+        deTarget: am.dePickLayer,
+        onDown: e => {
+            if (mode !== 'move') return false;
+        },
+        onDrag: e => {
+            document.body.style.transform = `translate(${e.dx}px, ${e.dy}px)`;
+            am.deRoot = `translate(${-e.dx}px, ${-e.dy}px)`;
         }
     });
 }

@@ -17,12 +17,10 @@ function CssParamFactory() {
     this.groups = {
         padding: ['paddingTop',  'paddingRight',  'paddingBottom',  'paddingLeft'],
         margin: ['marginTop',  'marginRight',  'marginBottom',  'marginLeft'],
-        border: {
-            width: ['borderTopWidth',  'borderRightWidth',  'borderBottomWidth',  'borderLeftWidth'],
-            radius: ['borderTopLeftRadius', 'borderTopRightRadius', 'borderBottomLeftRadius', 'borderBottomRightRadius'],
-            color: ['borderTopColor','borderRightColor','borderBottomColor','borderLeftColor'],
-            style: ['borderTopStyle','borderRightStyle','borderBottomStyle','borderLeftStyle'],
-        },
+        borderWidth: ['borderTopWidth',  'borderRightWidth',  'borderBottomWidth',  'borderLeftWidth'],
+        borderRadius: ['borderTopLeftRadius', 'borderTopRightRadius', 'borderBottomLeftRadius', 'borderBottomRightRadius'],
+        borderColor: ['borderTopColor','borderRightColor','borderBottomColor','borderLeftColor'],
+        borderStyle: ['borderTopStyle','borderRightStyle','borderBottomStyle','borderLeftStyle'],
         backgroundPosition: ['backgroundPositionX', 'backgroundPositionY'],
         textShadow: ['textShadowX', 'textShadowY', 'textShadowBlur'],
         translate: ['x', 'y', 'z'],

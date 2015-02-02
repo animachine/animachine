@@ -29,7 +29,7 @@ gulp.task('clean', function(cb) {
   return gulp.src(['./build/**/*.*'])
   // return gulp.src(['./build/**/*.*', './build_chrome/**/*.*'])
     .pipe(rimraf());
-});
+}); 
 
 gulp.task('vendor', function () {
   return gulp.src([
@@ -37,18 +37,15 @@ gulp.task('vendor', function () {
       paths.node + 'css.escape/css.escape.js',
       paths.node + 'whatwg-fetch/fetch.js',
       paths.node + 'array.prototype.find/index.js',
-      paths.bower + 'lodash/dist/lodash.min.js',
-      paths.bower + 'gsap/src/minified/TweenMax.min.js',
-      paths.bower + 'jquery/dist/jquery.js',
-      paths.bower + 'mustache/mustache.js',
-      paths.bower + 'codemirror/lib/codemirror.js',
-      paths.bower + 'codemirror/mode/javascript/javascript.js',
-      // paths.bower + 'colorPicker/colors.js',
-      // paths.bower + 'colorPicker/colorPicker.data.js',
-      // paths.bower + 'colorPicker/colorPicker.js',
-      paths.bower + 'mousetrap/mousetrap.min.js',
-      paths.bower + 'mousetrap/plugins/record/mousetrap-record.js',
-      paths.bower + 'typeahead.js/dist/typeahead.bundle.js'
+      paths.node + 'lodash/dist/lodash.min.js',
+      paths.node + 'gsap/src/minified/TweenMax.min.js',
+      paths.node + 'jquery/dist/jquery.js',
+      paths.node + 'mustache/mustache.js',
+      paths.node + 'codemirror/lib/codemirror.js',
+      paths.node + 'codemirror/mode/javascript/javascript.js',
+      paths.node + 'mousetrap/mousetrap.min.js',
+      paths.node + 'mousetrap/plugins/record/mousetrap-record.js',
+      paths.node + 'typeahead.js/dist/typeahead.bundle.js'
     ])
     .pipe(concat('vendor.js'))
     // .pipe(uglify())

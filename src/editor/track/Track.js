@@ -480,7 +480,6 @@ p.removeGroup = function (path) {
 
         parent.removeParam(parentGroup);
     }
-
 };
 
 

@@ -118,8 +118,6 @@ p.save = function (...args) {
     }
 
     this._saveReg(reg);
-    
-    this.emit('change');
 
     return reg;
 };
@@ -127,9 +125,11 @@ p.save = function (...args) {
 
 p._saveReg = function (reg) {
 
-    if (!this.isBlocked) return;
+    if (this.isBlocked) return;
 
     this._stack.splice(++this._pointer, this._stack.length, reg);
+    
+    this.emit('change');
 };
 
 
@@ -198,7 +198,7 @@ p.goto = function (idx) {
 
 Object.defineProperty(p, 'isBlocked', {
     get: function () {
-        return this._blocks.length !== 0;
+        return this._blocks.size !== 0;
     }
 });
 
@@ -212,7 +212,6 @@ p.blockSaving = function () {
 
 p.releaseBlock = function (block) {
 
-    var block = Symbol();
     this._blocks.delete(block);
 };
 

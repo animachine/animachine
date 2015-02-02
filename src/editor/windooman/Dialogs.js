@@ -10,6 +10,8 @@ function Dialogs() {
     this._createDomElem();
     this._createFrame();
 
+    this._dialogStack = [];
+
     this._offsetX = 0;
     this._offsetY = 0;
 }
@@ -22,7 +24,7 @@ p.showDialog = function (popup) {
 
     if (this._currPopup) {
 
-        this.hideDialog(this._currPopup);
+        this._dialogStack.push(this._currPopup);
     }
 
     this.move(0, 0);
@@ -44,11 +46,23 @@ p.hideDialog = function (popup) {
 
     if (!popup) return;
 
-    this._currPopup = undefined;
-    
     this.domElem.style.display = 'none';
 
     if (popup.onHide) popup.onHide();
+
+    if (_.has(this._dilaogStack, popup)) {
+
+        _.pull(this._dilaogStack, popup);
+    }
+    else if (popup === this._currPopup) {
+
+        this._currPopup = undefined;
+
+        if (this._dialogStack.length) {
+
+            this.showDialog(this._dialogStack.pop());   
+        }
+    }
 };
 
 p.move = function (x, y) {

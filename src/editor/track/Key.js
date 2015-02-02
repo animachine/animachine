@@ -12,8 +12,6 @@ function Key(opt, timeline) {
 
     this.timeline = timeline;
     
-    this._time =  0;
-    this._value =  '';
     this.ease = new Ease();
     this._isSelected = false;
     this._height = amgui.LINE_HEIGHT;
@@ -73,7 +71,7 @@ function Key(opt, timeline) {
     });
 
     if (opt) {
-        this.useSave(opt);
+        am.history.dontSave(() => this.useSave(opt));
     }
 
     this.timeline.on('deselectAllKeys', this._onDeselectAllKeys);

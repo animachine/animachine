@@ -21,7 +21,7 @@ defineCompactProperty(p, {name: 'name', type: 'string'});
 
 p.useSave = function (save = {}) {
 
-    am.history.saveSuspended = true;
+    var block = am.history.blockSaving();
     
     if (_.has(save, 'name')) {
         this.name = save.name;
@@ -36,7 +36,7 @@ p.useSave = function (save = {}) {
         this.selectTimeline(save.currTimelineIdx);
     }
 
-    am.history.saveSuspended = false;
+    am.history.releaseBlock(block);
 };
 
 p.getSave = function () {

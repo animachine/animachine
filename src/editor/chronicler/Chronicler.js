@@ -10,21 +10,12 @@ function Chronicler() {
     this._stack = [], 
     this._pointer = -1;
     this._chains = [];
-    this._saveSuspended = false;
+    this._blocks = new Set();
 }
 
 inherits(Chronicler, EventEmitter);
 module.exports = Chronicler;
 var p = Chronicler.prototype;
-
-Object.defineProperty(p, 'saveSuspended', {
-    set: function (v) {
-        this._saveSuspended = !!v;
-    },
-    get: function (v) {
-        return this._saveSuspended;
-    }
-})
 
 p.undo = function() {
 
@@ -94,8 +85,7 @@ p.redo = function() {
 
 p._call = function (reg) {
 
-    var ssSave = this.saveSuspended;//TODO replace this with something
-    this.saveSuspended = true;
+    var block = this.blockSaving();
 
     if (typeof reg === 'function') {
 
@@ -105,14 +95,14 @@ p._call = function (reg) {
         reg[0].apply(reg[1], reg.slice(2));
     }
 
-    this.saveSuspended = ssSave;
+    this.releaseBlock(block);
 }
 
 p.save = function (...args) {
 
+    if (this.isBlocked) return;
 
-
-    if (this.saveSuspended) return;
+    console.log('save', args);
 
     if (args.length === 0) throw Error;
 
@@ -136,6 +126,8 @@ p.save = function (...args) {
 
 
 p._saveReg = function (reg) {
+
+    if (!this.isBlocked) return;
 
     this._stack.splice(++this._pointer, this._stack.length, reg);
 };
@@ -204,13 +196,44 @@ p.goto = function (idx) {
 
 
 
+Object.defineProperty(p, 'isBlocked', {
+    get: function () {
+        return this._blocks.length !== 0;
+    }
+});
+
+p.blockSaving = function () {
+
+    var block = Symbol();
+    this._blocks.add(block);
+
+    return block;
+};
+
+p.releaseBlock = function (block) {
+
+    var block = Symbol();
+    this._blocks.delete(block);
+};
+
+p.dontSave = function (fn) {
+
+    var block = this.blockSaving();
+    fn();
+    this.releaseBlock(block);
+}
 
 
 
+
+
+
+var debugFlagId = 0
 function Flag(name, pair) {
 
     this.name = name;
     this.pair = pair || new Flag(name, this);
+    this.id = ++debugFlagId;
     
     Object.freeze(this);
 }
@@ -218,6 +241,7 @@ function Flag(name, pair) {
 p.startFlag = function (name) {
 
     var flag = new Flag(name);
+    console.log('startFlag', name, flag.id)
 
     this._saveReg(flag);
 
@@ -226,6 +250,7 @@ p.startFlag = function (name) {
 
 p.endFlag = function (flag) {
 
+    console.log('closeFlag', flag.name, flag.id)
     this._saveReg(flag);
 };
 
@@ -250,7 +275,8 @@ p.wrap = function (fn, ctx) {
 
 p.saveChain = function (opt) {
 
-    if (this.saveSuspended) return;
+    if (this.isBlocked) return;
+    console.log('saveChain', opt.name);
 
     var chain = this.getChain(opt.id);
 

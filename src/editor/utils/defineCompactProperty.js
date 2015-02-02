@@ -44,7 +44,7 @@ module.exports = function defineCompactProperty(proto, opt) {
         if (v === value || isInvalidValue(v)) {
             return;
         }
-
+        
         save.call(this, value, v);
 
         value = v;

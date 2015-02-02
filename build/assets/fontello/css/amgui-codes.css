@@ -111,3 +111,6 @@
 .icon-list-bullet:before { content: '\e86b'; } /* '' */
 .icon-block:before { content: '\e86c'; } /* '' */
 .icon-language:before { content: '\e86d'; } /* '' */
+.icon-lightbulb:before { content: '\e86e'; } /* '' */
+.icon-zoom-in:before { content: '\e86f'; } /* '' */
+.icon-zoom-out:before { content: '\e870'; } /* '' */

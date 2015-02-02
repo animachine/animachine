@@ -46,7 +46,7 @@ function Track(opt, timeline) {
     this._animPlay = this._animPlay.bind(this);
 
     this._paramGroup = new ParamGroup({
-        name: '',
+        name: 'new track',
         optionLine: {
             tgglMerge: false,
             title: '-',

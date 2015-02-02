@@ -2,6 +2,7 @@
 
 var Key = require('./Key');
 var inherits = require('inherits');
+var defineCompactProperty = require('../utils/defineCompactProperty');
 
 function KeyGroup(opt) {
 
@@ -34,6 +35,11 @@ Object.defineProperties(p, {
         }
     }
 });
+
+defineCompactProperty(p, [
+    {name: 'time', type: 'int', history: false},
+    {name: 'value', history: false},
+]);
 
 
 

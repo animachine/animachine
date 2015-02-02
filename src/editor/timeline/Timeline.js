@@ -471,7 +471,7 @@ p._onSelectNewTrack = function (e) {
 
         var TrackClass = am.trackTypes[type];
 
-        this.addTrack(new TrackClass());
+        this.addTrack(new TrackClass({}, this));
     }.bind(this);
 
     switch (e.detail.selection) {

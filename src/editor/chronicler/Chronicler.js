@@ -43,14 +43,14 @@ p.undo = function() {
 
             while (this._pointer !== startFlagIdx) {
 
-                call(this._stack[this._pointer--].undo);
+                this._call(this._stack[this._pointer--].undo);
             }
 
             this._pointer--;
         }
     }
     else {
-        call(rec.undo);
+        this._call(rec.undo);
     }
 
     this.emit('change');
@@ -73,19 +73,20 @@ p.redo = function() {
 
             while (++this._pointer !== endFlagIdx) {
 
-                call(this._stack[this._pointer].redo);
+                this._call(this._stack[this._pointer].redo);
             }
         }
     }
     else {
-        call(rec.redo);
+        this._call(rec.redo);
     }
 
     this.emit('change');
 };
 
-function call(reg) {
+p._call = function (reg) {
 
+    var ssSave = this.saveSuspended;//TODO replace this with something
     this.saveSuspended = true;
 
     if (typeof reg === 'function') {
@@ -96,7 +97,7 @@ function call(reg) {
         reg[0].apply(reg[1], reg.slice(2));
     }
 
-    this.saveSuspended = false;
+    this.saveSuspended = ssSave;
 }
 
 p.save = function (...args) {

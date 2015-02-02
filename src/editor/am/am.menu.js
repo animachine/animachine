@@ -25,11 +25,11 @@ module.exports = function createMenu(am) {
             {
                 text: 'undo',
                 icon: 'ccw',
-                onClick: () => am.dialog.WIP.show(),
+                onClick: () => am.history.undo(),
             }, {
                 text: 'redo',
                 icon: 'cw',
-                onClick: () => am.dialog.WIP.show(),
+                onClick: () => am.history.redo(),
             }, {
                 text: "feedback",
                 icon: "megaphone",

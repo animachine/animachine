@@ -75,5 +75,5 @@ p.getCurrProject = function () {
 
 p._onFocusTimeline = function (timeline) {
 
-    this.emit('change.timeline', timeline);
+    this.emit('focus.timeline', timeline);
 };

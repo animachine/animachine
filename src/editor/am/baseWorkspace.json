@@ -1,0 +1,32 @@
+{
+    "type": "container",
+    "direction": "column",
+    "children": [{
+        "type": "container",
+        "direction": "row",
+        "size": 2.7,
+        "scaleMode": "flex",
+        "children": [{
+            "type": "panel",
+            "size": 1,
+            "scaleMode": "flex",
+            "tabs": [
+                {"name": "Project"}, 
+                {"name": "Css Style"}, 
+                {"name": "Dom Tree"}, 
+                {"name": "History"}
+            ]
+        }, {
+            "type": "panel",
+            "empty": true,
+            "size": 2.7,
+            "scaleMode": "flex"
+        }]
+    }, {
+        "type": "panel",
+        "size": 1,
+        "scaleMode": "flex",
+        "noHead": true,
+        "tabs": [{"name": "timeline"}]
+    }]
+}

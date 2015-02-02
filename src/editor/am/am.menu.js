@@ -1,0 +1,75 @@
+var amgui = require('../amgui');
+
+module.exports = function createMenu(am) {
+
+    var deMenuIcon = amgui.createIconBtn({
+        tooltip: 'menu',
+        icon: 'menu',
+        size: 24,
+    });
+
+    am._staticToolbarIcons.push(deMenuIcon);
+
+    am.menuDropdown = amgui.createDropdown({
+        options: [
+            {
+                text: 'file',
+                icon: 'floppy',
+                children: [
+                    {text: 'new', onSelect: () => am.openNewProject()},
+                    {text: 'save', onSelect: onSelectSave},
+                    // {text: 'saveAs', onSelect: onSelectSave},
+                    {text: 'open', onSelect: onSelectOpen},
+                ]
+            },
+            {
+                text: 'undo',
+                icon: 'ccw',
+                onClick: () => am.dialog.WIP.show(),
+            }, {
+                text: 'redo',
+                icon: 'cw',
+                onClick: () => am.dialog.WIP.show(),
+            }, {
+                text: "feedback",
+                icon: "megaphone",
+                separator: "rest",
+                onClick: () => am.dialogs.feedback.show(),
+            }, {
+                text: "view on github",
+                icon: "github",
+                separator: "rest",
+                onClick: () => window.open("https://github.com/animachine/animachine"),
+            }   
+        ]
+    });
+
+    amgui.bindDropdown({
+        deTarget: deMenuIcon,
+        deDropdown: am.menuDropdown,
+    });
+
+    function onSelectSave() {
+
+        am.storage.showSaveDialog({
+
+            getSave: function () {
+                
+                var opt = am.storage.getSaveOptions();
+
+                return am.projectMap.getCurrentProject().getScript(opt);
+            }
+        });
+    }
+
+    function onSelectOpen() {
+
+        am.storage.showOpenDialog({
+
+            onOpen: function (save) {
+
+                am.projectMap.open(save.project);
+            }
+        });
+    }
+};

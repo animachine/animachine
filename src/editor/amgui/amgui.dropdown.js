@@ -127,7 +127,6 @@ function bindDropdown(opt) {
         });
     }
     else {
-        
         deBtn.addEventListener('click', function (e) {
 
             // e.stopPropagation();

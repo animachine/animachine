@@ -18,20 +18,17 @@ module.exports = function tools (am) {
             text: 'normal page interact',
             icon: 'cursor',
             cursor: 'auto', 
-        },
-        {
+        }, {
             type: 'pick',
             text: 'dom picking mode',
             icon: 'target',
             cursor: 'auto', 
-        },
-        {
+        }, {
             type: 'move',
             text: 'drag ',
             icon: 'move',
             cursor: '-webkit-grab', 
-        },
-        {
+        }, {
             type: 'zoom',
             text: 'zoom ',
             icon: 'zoom-in',
@@ -125,7 +122,7 @@ module.exports = function tools (am) {
         },
         onDrag: e => {
             document.body.style.transform = `translate(${e.dx}px, ${e.dy}px)`;
-            am.deRoot.style.transform = `translate(${-e.dx}px, ${-e.dy}px)`;
+            am.rootElem.style.transform = `translate(${-e.dx}px, ${-e.dy}px)`;
         }
     });
 };

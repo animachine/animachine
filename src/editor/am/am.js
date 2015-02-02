@@ -134,7 +134,7 @@ am._init = function () {
 
     am.deRoot = document.body;
 
-    am.domElem = createAmRoot();
+    createAmRoot();
     am.dePickLayer = createAmLayer();
     am.deHandlerCont = createAmLayer();
     am.deGuiCont = createAmLayer();
@@ -482,7 +482,8 @@ function createAmRoot() {
         // document.head.appendChild(style);
     });
 
-    return sr;
+    am.rootElem = de;
+    am.rootShadow = sr;
     // return de;
 }
 
@@ -493,7 +494,7 @@ function createAmLayer() {
     de.style.width = '100%';
     de.style.height = '100%';
     de.setAttribute('data-am-nopick', '');
-    am.domElem.appendChild(de);
+    am.rootShadow.appendChild(de);
     return de;
 }
 

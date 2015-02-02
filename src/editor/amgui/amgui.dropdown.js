@@ -54,6 +54,8 @@ function createDropdown(opt) {
             if (optItem.onSelect) optItem.onSelect();//deprecated
             if (optItem.onClick) optItem.onClick();
 
+            onLeave();
+
             de.dispatchEvent(new CustomEvent('select', {detail: {selection: optItem.text}}));
         });
         de.appendChild(li);
@@ -63,7 +65,6 @@ function createDropdown(opt) {
 
         li.addEventListener('mouseenter', onEnter);
         li.addEventListener('mouseleave', onLeave);
-        li.addEventListener('mouseclick', onLeave);
 
         items.push(li);
 

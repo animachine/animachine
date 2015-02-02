@@ -17,12 +17,39 @@ function Item() {
 var p = Item.prototype;
 module.exports = Item;
 
+var cursors = {
+    undo: 'auto',
+    redo: 'auto',
+};
+
+amgui.on('fontLoaded', () => {
+
+    cursors.undo = createIcon('ccw');
+    cursors.redo = createIcon('cw');
+
+    function createIcon(icon) {
+
+        return amgui.createCursorFromText({
+            icon: icon,
+            color: amgui.color.text,
+            width: 16,
+            height: 16,
+            hotspotX: 8,
+            hotspotY: 8,
+            textX: 2,
+            stroke: {color:'black', width: 2},
+            debug: false,
+        })
+    }
+});
+
 p.setup = function (record) {
 
     this._rec = record;
 
     this._label.innerHTML = record.name;
     this._toggleState.setToggle(record.executed);
+    this.domElem.style.cursor = cursors[record.executed ? 'undo' : 'redo'];
 };
 
 p._createBase = function () {
@@ -30,7 +57,7 @@ p._createBase = function () {
     this.domElem = document.createElement('div');
     this.domElem.style.display = 'flex';
     this.domElem.style.width = '100%';
-    this.domElem.style.height = '21px';
+    this.domElem.style.height = amgui.LINE_HEIGHT + 'px';
     this.domElem.style.background = amgui.color.bg1;
 
     this._toggleState = amgui.createToggleIconBtn({

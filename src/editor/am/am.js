@@ -517,22 +517,3 @@ function createStatusLabel() {
     deTitle.style.opacity = '0.23';
     deTitle.style.fontWeight = 'bold';
 }
-
-function alertUnsupportedBrowsers() {
-
-    var deSorry = document.createElement('div');
-    deSorry.textContent = 'Sorry, this demo is currently only supported by chrome. ';
-    amgui.createIcon({icon: 'emo-unhappy', parent: deSorry, display: 'inline'});
-    deSorry.style.display = 'fixed';
-    deSorry.style.margin = 'auto';
-    deSorry.style.fontFamily = amgui.FONT_FAMILY;
-    deSorry.style.fontSize = '21px';
-    deSorry.style.color = amgui.color.text;
-    deSorry.style.background = amgui.color.overlay;
-    deSorry.style.top = 0;
-    deSorry.style.right = 0;
-    deSorry.style.bottom = 0;
-    deSorry.style.left = 0;
-    document.body.innerHTML = '';
-    document.body.appendChild(deSorry);
-}

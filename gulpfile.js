@@ -37,6 +37,7 @@ gulp.task('vendor', function () {
       paths.node + 'css.escape/css.escape.js',
       paths.node + 'whatwg-fetch/fetch.js',
       paths.node + 'array.prototype.find/index.js',
+      paths.node + 'array.prototype.find/implements.js',
       paths.node + 'lodash/dist/lodash.min.js',
       paths.node + 'gsap/src/minified/TweenMax.min.js',
       paths.node + 'jquery/dist/jquery.js',

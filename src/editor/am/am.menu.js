@@ -16,10 +16,10 @@ module.exports = function createMenu(am) {
                 text: 'file',
                 icon: 'floppy',
                 children: [
-                    {text: 'new', onSelect: () => am.openNewProject()},
-                    {text: 'save', onSelect: onSelectSave},
+                    {text: 'new', onSelect: () => am.openNewProject(), icon: 'doc'},
+                    {text: 'save', onSelect: onSelectSave, icon: 'upload-cloud'},
                     // {text: 'saveAs', onSelect: onSelectSave},
-                    {text: 'open', onSelect: onSelectOpen},
+                    {text: 'open', onSelect: onSelectOpen, icon: 'download-cloud'},
                 ]
             },
             {

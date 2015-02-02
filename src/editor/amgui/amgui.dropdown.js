@@ -72,7 +72,7 @@ function createDropdown(opt) {
 
             bindDropdown({
                 deTarget: li,
-                deDropdown: createDropdown(optItem.children),
+                deDropdown: createDropdown({options: optItem.children}),
             });
         }
 

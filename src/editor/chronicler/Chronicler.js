@@ -43,7 +43,11 @@ p.undo = function() {
 
             while (this._pointer !== startFlagIdx) {
 
-                this._call(this._stack[this._pointer--].undo);
+                let rec = this._stack[this._pointer--];
+                
+                if (!(rec instanceof Flag)) {
+                    this._call(rec.undo);
+                }
             }
 
             this._pointer--;
@@ -73,7 +77,11 @@ p.redo = function() {
 
             while (++this._pointer !== endFlagIdx) {
 
-                this._call(this._stack[this._pointer].redo);
+                let rec = this._stack[this._pointer];
+                
+                if (!(rec instanceof Flag)) {
+                    this._call(rec.redo);
+                }
             }
         }
     }
@@ -101,6 +109,8 @@ p._call = function (reg) {
 }
 
 p.save = function (...args) {
+
+
 
     if (this.saveSuspended) return;
 
@@ -238,31 +248,31 @@ p.wrap = function (fn, ctx) {
 
 
 
-p.saveChain = function (id, undo, redo, name, delay) {
+p.saveChain = function (opt) {
 
     if (this.saveSuspended) return;
 
-    var chain = this.getChain(id);
+    var chain = this.getChain(opt.id);
 
     if (chain) {
         
-        chain.reg.redo = redo;
+        chain.reg.redo = opt.redo;
     }
     else {
 
         chain = {
-            id: id,
-            reg: this.save(undo, redo, name)
+            id: opt.id,
+            reg: this.save(opt.undo, opt.redo, opt.name)
         };
         this._chains.push(chain);
     }
 
-    if (delay === undefined) {
-        delay = 312;
+    if (opt.delay === undefined) {
+        opt.delay = 312;
     }
 
     clearTimeout(chain.tid);
-    chain.tid = setTimeout(this.closeChain.bind(this, id), delay);
+    chain.tid = setTimeout(this.closeChain.bind(this, opt.id), opt.delay);
 };
 
 p.closeChain = function (id) {

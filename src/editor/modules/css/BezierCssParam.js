@@ -147,17 +147,13 @@ p.getValue = function (time) {
     };
 };
 
-p.addKey = function (opt, skipHistory) {
+p.addKey = function (opt) {
     
     var key = this.getKey(opt.time);
 
     if (key) {
 
         if ('value' in opt) {
-
-            if (!skipHistory) {
-                am.history.saveChain(key, [this.addKey, this, key, true], [this.addKey, this, opt, true], 'edit key');
-            }
 
             key.value.length = 0;
             [].push.apply(key.value, opt.value);
@@ -182,10 +178,11 @@ p.addKey = function (opt, skipHistory) {
 
         this.keyLine.addKey(key);
 
-        if (!skipHistory) {
-            am.history.closeChain(key);
-            am.history.save([this.removeKey, this, opt.time, true], [this.addKey, this, opt, true], 'add key');
-        }
+        am.history.save({
+            undo: () => this.removeKey(key),
+            redo: () => this.addKey(key),
+            name: 'add bezier key',
+        });
         
         this.emit('addKey');
     }

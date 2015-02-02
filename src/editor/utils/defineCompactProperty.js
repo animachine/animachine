@@ -19,7 +19,7 @@ module.exports = function defineCompactProperty(proto, opt) {
     if (history) {
         if (typeof(history) !== 'object') history = {};
         if (!history.hasOwnProperty('tag')) history.tag = 'change ' + name;
-        if (!history.hasOwnProperty('chainId')) history.chainId = Symbol();
+        if (!history.hasOwnProperty('chainId')) history.chainId = Symbol();//TODO make this unique per instance
     }
 
     Object.defineProperty(proto, name, {set: set, get: get});
@@ -45,7 +45,7 @@ module.exports = function defineCompactProperty(proto, opt) {
             return;
         }
 
-        save(value, v);
+        save.call(this, value, v);
 
         value = v;
 
@@ -58,7 +58,13 @@ module.exports = function defineCompactProperty(proto, opt) {
 
         if (!history) return;
 
-        am.history.saveChain(history.chainId, [set, oldValue], [set, newValue], history.tag, 312);
+        am.history.saveChain({
+            id: history.chainId, 
+            undo: [set, this, oldValue], 
+            redo: [set, this, newValue], 
+            name: history.tag, 
+            delay: 312,
+        });
     }
 
     function fixType(v) {

@@ -305,7 +305,7 @@ p._createBase = function () {
 
                     paramNames.forEach(function (paramName) {
 
-                        var time = this.timeline.currTime,
+                        var time = this._currTrack.timeline.currTime,
                             param = this._currTrack.getParam(paramName);
 
                         if (param && param.getKey(time)) {

@@ -335,7 +335,7 @@ p.getScript = function () {
     return code;
 };
 
-p.addParam = function (opt, skipHistory) {
+p.addParam = function (opt) {
 
     opt = opt || {};
 
@@ -356,12 +356,13 @@ p.addParam = function (opt, skipHistory) {
     else {
         param = this._paramFactory.create(opt);
 
-        //TODO history.flag();
+        let flag = am.history.startFlag('add param');
 
-        if (!skipHistory) {
-            am.history.save([this.removeParam, this, param, true],
-                [this.addParam, this, param, true], 'add param ' + opt.name);
-        }
+        am.history.save({
+            undo: () => this.removeParam(param),
+            redo: () => this.addParam(param),
+            name: 'add param ' + param.name,
+        });
 
         this._endParams.push(param);
         this._paramGroup.addParam(param);
@@ -370,6 +371,8 @@ p.addParam = function (opt, skipHistory) {
         param.on('delete', this._onDeleteParameter);
 
         this._prepareBuiltInGroup(opt.name);
+
+        am.history.endFlag(flag);
 
         //TODO history.endFlag();
 
@@ -380,7 +383,7 @@ p.addParam = function (opt, skipHistory) {
     return param;
 };
 
-p.removeParam = function (param, skipHistory) {
+p.removeParam = function (param) {
 
     var idx = this._endParams.indexOf(param);
 
@@ -388,10 +391,11 @@ p.removeParam = function (param, skipHistory) {
         return;
     }
 
-    if (!skipHistory) {
-        am.history.save([this.addParam, this, param, true],
-            [this.removeParam, this, param, true], 'remove param ' + param.name);
-    }
+    am.history.save({
+        undo: () => this.addParam(param),
+        redo: () => this.removeParam(param),
+        name: 'remove param ' + param.name,
+    });
 
     this._endParams.splice(idx, 1);
     param.parentTrack = undefined;
@@ -430,12 +434,16 @@ p.addGroup = function (path, opt) {
 
     if (!paramGroup) {
 
-        //TODO history.save()
-
         if (opt && opt.name !== name) throw Error;
 
         paramGroup = this._paramFactory.createGroup(opt || {name});
         parent.addParam(paramGroup);
+
+        am.history.save({
+            undo: () => this.removeGroup(paramGroup),
+            redo: () => this.addGroup(paramGroup),
+            name: 'add group ' + paramGroup.name,
+        });
 
         paramGroup.on('translateToBezier', this._switchFromTranslateToBezier, this);
     }
@@ -443,7 +451,7 @@ p.addGroup = function (path, opt) {
     return paramGroup;
 };
 
-p.removeGroup = function (path, history) {
+p.removeGroup = function (path) {
 
     path = path.slice();
 
@@ -457,13 +465,22 @@ p.removeGroup = function (path, history) {
         if (!parent) return;
     }
 
-    //TODO history.save()
     paramGroup = parent.getParam(name);
 
-    paramGroup.off('bezierToTranslate', this._switchFromBezierToTranslate, this);
-    paramGroup.off('translateToBezier', this._switchFromTranslateToBezier, this);
+    if (paramGroup) {
 
-    parent.removeParam();
+        am.history.save({
+            undo: () => this.addGroup(paramGroup),
+            redo: () => this.removeGroup(paramGroup),
+            name: 'remove group ' + paramGroup.name,
+        });
+
+        paramGroup.off('bezierToTranslate', this._switchFromBezierToTranslate, this);
+        paramGroup.off('translateToBezier', this._switchFromTranslateToBezier, this);
+
+        parent.removeParam(parentGroup);
+    }
+
 };
 
 

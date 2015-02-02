@@ -125,6 +125,7 @@ _.extend(amgui,
                 if ('parent' in opt)  opt.parent.appendChild(de);
                 if ('width' in opt)  de.style.width = opt.width;
                 if ('height' in opt)  de.style.height = opt.height;
+                if ('debug' in opt)  de.setAttribute('data-debug', opt.debug);
             }
 
             return de;

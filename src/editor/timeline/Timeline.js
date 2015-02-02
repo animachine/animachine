@@ -16,8 +16,6 @@ function Timeline(opt) {
 
     EventEmitter.call(this);
     this.setMaxListeners(11111);
-
-    this.inputs = {};
     
     this._headerH = 23;
 

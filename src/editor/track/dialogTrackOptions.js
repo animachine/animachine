@@ -93,10 +93,10 @@ function createContent() {
     });
 
 
-    $(optRepeat).one('mousedown', () => am.dialogs.WIP.show());
-    $(optRepeatDelay).one('mousedown', () => am.dialogs.WIP.show());
-    $(optKeyStretch).one('mousedown', () => am.dialogs.WIP.show());
-    $(optYoyo).one('mousedown', () => am.dialogs.WIP.show());
+    $(optRepeat.domElem).one('mousedown', () => am.dialogs.WIP.show());
+    $(optRepeatDelay.domElem).one('mousedown', () => am.dialogs.WIP.show());
+    $(optKeyStretch.domElem).one('mousedown', () => am.dialogs.WIP.show());
+    $(optYoyo.domElem).one('mousedown', () => am.dialogs.WIP.show());
 
     dialog.addProperty({
         name: 'name', 

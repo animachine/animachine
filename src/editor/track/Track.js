@@ -56,7 +56,7 @@ function Track(opt, timeline) {
                 {text: 'move down', onSelect: () => this.emit('move', this, 1)},
                 {text: 'delete', onSelect: () => this.emit('remove')},
             ],
-            onDblClick: () => this._showSettings(),
+            onDblclick: () => this._showSettings(),
         },
     }, this.timeline);
 
@@ -646,8 +646,8 @@ p._showSettings = function () {
         name: this._paramGroup.name,
         selectors: this._selectors,
         on: {
-            changeName: name => this._paramGroup.name = name,
-            changeSelectors: this._onChangeSelectors,
+            'change.name': name => this._paramGroup.name = name,
+            'change.selectors': this._onChangeSelectors,
         }
     });
 };

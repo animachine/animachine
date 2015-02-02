@@ -8,7 +8,8 @@ function Project(save = {}) {
     EventEmitter.call(this);
 
     this._timelines = [];
-
+    this.inputs = {};
+    
     this.useSave(save);
 }
 

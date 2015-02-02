@@ -134,7 +134,7 @@ p._createTarget = function (data) {
 
     var refreshSuggestions = () => {
 
-        inputPaths = am.projectMap.getCurrentProject().getInputPaths();
+        inputPaths = am.projectMap.getCurrProject().getInputPaths();
         inp.setSuggestions(inputPaths);
     }
 

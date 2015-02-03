@@ -35,7 +35,6 @@ function Track(opt, timeline) {
     this._onClickTgglKey = this._onClickTgglKey.bind(this);
     this._onClickTgglHide = this._onClickTgglHide.bind(this);
     this._onChangeHeight = this._onChangeHeight.bind(this);
-    this._onChangeHandler = this._onChangeHandler.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
     this._onChangeParameter = this._onChangeParameter.bind(this);
     this._onChangeSelectors = this._onChangeSelectors.bind(this);
@@ -44,6 +43,12 @@ function Track(opt, timeline) {
     this._onSelectTrack = this._onSelectTrack.bind(this);
     this._onDeselectTrack = this._onDeselectTrack.bind(this);
     this._animPlay = this._animPlay.bind(this);
+
+    this._onChangeHandler = am.history.wrap({
+        fn: this._onChangeHandler,
+        name: 'transform',
+        delay: 312,
+    });
 
     this._paramGroup = new ParamGroup({
         name: 'new track',
@@ -523,7 +528,7 @@ p.select = function (opt) {
         this._transformer = new Transhand();
     }
 
-    this._transformer.on('change', this._onChangeHandler);
+    this._transformer.on('change', this._onChangeHandler, this);
     window.addEventListener('resize', this._onWindowResize);
     window.addEventListener('scroll', this._onWindowScroll);
 
@@ -553,7 +558,7 @@ p.deselect = function () {
 
     if (this._transformer) {
 
-        this._transformer.removeListener('change', this._onChangeHandler);
+        this._transformer.off('change', this._onChangeHandler, this);
     }
 };
 

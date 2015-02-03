@@ -8,7 +8,10 @@ module.exports = function createMenu(am) {
         size: 24,
     });
 
-    am._staticToolbarIcons.push(deMenuIcon);
+    am._staticToolbarIcons.push({
+        deIcon: deMenuIcon,
+        separator: 'tools',
+    });
 
     am.menuDropdown = amgui.createDropdown({
         options: [

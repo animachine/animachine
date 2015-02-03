@@ -168,8 +168,8 @@ am._init = function () {
     am.deHandlerCont.appendChild(am.domPicker.domElem);
     am.domPicker.on('pick', de => am.selectDomElem(de));
 
-    inspectHandlerCont(am.deHandlerCont);
     amMenu(am);
+    inspectHandlerCont(am.deHandlerCont);
     addToggleGui();
     amTools(am);
     createStatusLabel();

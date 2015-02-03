@@ -253,16 +253,46 @@ p.endFlag = function (flag) {
     this._saveReg(flag);
 };
 
-p.wrap = function (fn, ctx) {
+p.wrap = function (opt) {
 
-    return function () {
+    var history = this,
+        fn = opt.fn,
+        delay = opt.delay,
+        name = opt.name;
 
-        var endFlag = this.startFlag();
+    if (delay === undefined) {
 
-        fn.apply(ctx, Array.prototype.slice.call(arguments,  2));
+        return function () {
 
-        this.endFlag(endFlag);
-    }.bind(this);
+            let endFlag = history.startFlag(name);
+
+            fn.apply(this, arguments);
+
+            history.endFlag(endFlag);
+        };
+    }
+    else {
+        let closeFlagSetT, 
+            endFlag,
+            finish = () => {
+                history.endFlag(endFlag);
+                endFlag = undefined;
+            },
+            onCalled = () => {
+                if (!endFlag) {
+                    endFlag = am.history.startFlag(name);
+                }
+                clearTimeout(closeFlagSetT);
+                closeFlagSetT = setTimeout(finish, delay);
+            };
+
+        return function () {
+
+            onCalled();
+
+            fn.apply(this, arguments);
+        };
+    }
 };
 
 

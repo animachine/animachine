@@ -45,7 +45,7 @@ p._onInputChange = function (paramName, value) {
         param = this._currTrack.addParam({name: paramName});
         param.addKey({value: value});
     }
-}
+};
 
 p._onTrackAddParam = function () {
 
@@ -113,7 +113,7 @@ p._showHideNoTrackMsg = function (show) {
 
     this._deMsgNoTrack.style.display = show ? 'inline-block' : 'none';
     this._deScrollCont.style.display = show ? 'none' : '';
-}
+};
 
 p._forEachInput = function (fn, thisArg) {
 

@@ -57,12 +57,6 @@ am.open = function (save) {
 
     am.report({evtName: 'open', 'value': 1});
 
-    if (!window.chrome) {
-        
-        reject();
-        return alertUnsupportedBrowsers();
-    }
-
     var promiseBody = (fulfill, reject) => {
         
         am._init();

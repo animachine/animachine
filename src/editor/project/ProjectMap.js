@@ -12,7 +12,7 @@ function ProjectMap(opt) {
     this._projects = [];
 
     this.projectTab = new ProjectTab();
-    am.workspace.fillTab('project tab', this.projectTab.domElem);
+    am.workspace.fillTab('Project', this.projectTab.domElem);
 }
 
 inherits(ProjectMap, EventEmitter);

@@ -45,6 +45,15 @@ p._createBase = function () {
     this.domElem.style.width = '100%';
     this.domElem.style.height = '100%';
     this.domElem.style.background = amgui.color.bg0;
+
+    this._scrollCont = document.createElement('div');
+    this._scrollCont.style.width = '100%';
+    this.domElem.appendChild(this._scrollCont);
+
+    amgui.makeScrollable({
+        deCont: this.domElem,
+        deTarget: this._scrollCont,
+    });
 };
 
 module.exports = ProjectTab;

@@ -4,7 +4,7 @@ module.exports = function tools (am) {
 
     am.dePickLayer.style.pointerEvents = 'auto';
 
-    var mode = 'interact';
+    var mode = 'pick';
 
     var cursors = {
         interact: 'auto',

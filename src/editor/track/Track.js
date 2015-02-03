@@ -360,6 +360,7 @@ p.addParam = function (opt) {
     }
     else {
         param = this._paramFactory.create(opt);
+        param.parentTrack = this;
 
         let flag = am.history.startFlag('add param');
 

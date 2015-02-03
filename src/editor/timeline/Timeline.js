@@ -146,7 +146,7 @@ p.getSave = function () {
         });
     });
 
-    return JSON.stringify(save);
+    return save;
 };
 
 p.useSave = function (save) {

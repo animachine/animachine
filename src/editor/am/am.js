@@ -96,11 +96,11 @@ am.open = function (save) {
                 }
             }
 
-            if (!save || !save.project) {
+            if (!save) {
                 throw Error('Can\'t use this save');
             }
 
-            am.projectMap.focus(save.project);
+            am.projectMap.focus(save);
             fulfill();
         }
     };
@@ -260,31 +260,6 @@ am.isPickableDomElem = function (deTest) {
         }
     }
 };
-
-am.toPickingMode = function (opt) {
-
-    am.deGuiCont.style.display = 'none';
-    am.deDialogCont.style.display = 'none';
-
-    am.domPicker.on('add', function (e) {
-
-        e.demand(-1).then(() => {
-
-            if (opt.onPick) opt.onPick(e.target);
-
-            close();
-        });
-    });
-
-    shortcuts.on('esc', close);
-
-    function close() {
-
-        if (opt.onClose) opt.onClose();
-
-        shortcuts.off('esc', close);
-    }
-}
 
 am.report = function (opt) {
 

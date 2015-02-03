@@ -85,7 +85,7 @@ p._createBase = function () {
 
     this._btnShowPicker = amgui.createIconBtn({
         parent: this.domElem,
-        icon: 'color-adjust',
+        icon: 'ajust',
         onClick: this._onClickShowPicker,
     });
 };

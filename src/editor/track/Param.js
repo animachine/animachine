@@ -261,6 +261,11 @@ p.getValue = function (time) {
 };
 
 p.addKey = function (opt) {
+
+    if (!_.has(opt, 'time')) {
+        
+        opt.time = this.timeline.currTime;
+    }
     
     var key = this.getKey(opt.time);
 

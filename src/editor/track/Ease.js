@@ -172,7 +172,7 @@ p._refreshEaser = function () {
     if (this.roughEase) {
 
         this._easer = new RoughEase({
-            ease: this._easer,
+            template: this._easer,
             strength: this.roughStrength,
             points: this.roughPoints,
             clamp: this.roughClamp,

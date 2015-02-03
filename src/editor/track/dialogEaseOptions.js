@@ -21,7 +21,7 @@ var currEase,
 createContent();
 
 dialog.addProperty({name: 'roughEase', input: optRoughEase.inputs.input});
-dialog.addProperty({name: 'roughStrengh', input: optRoughStrength.inputs.input});
+dialog.addProperty({name: 'roughStrength', input: optRoughStrength.inputs.input});
 dialog.addProperty({name: 'roughPoints', input: optRoughPoints.inputs.input});
 dialog.addProperty({name: 'roughClamp', input: optRoughClamp.inputs.input});
 dialog.addProperty({name: 'roughRandomise', input: optRoughRandomise.inputs.input});
@@ -33,7 +33,7 @@ dialog.addProperty({name: 'roughTaper', input: optRoughTaper.inputs.input});
 dialog.show = function (opt={}) {
 
     opt.roughEase = opt.ease.roughEase;
-    opt.roughStrengh = opt.ease.roughStrengh;
+    opt.roughStrength = opt.ease.roughStrength;
     opt.roughPoints = opt.ease.roughPoints;
     opt.roughClamp = opt.ease.roughClamp;
     opt.roughRandomise = opt.ease.roughRandomise;
@@ -69,13 +69,7 @@ function createContent() {
         inputs: [{
             type: 'checkbox',
             name: 'input',
-            onChange: function (v) {
-                optRoughStrength.domElem.style.display = v ? 'block' : 'none';
-                optRoughPoints.domElem.style.display = v ? 'block' : 'none';
-                optRoughClamp.domElem.style.display = v ? 'block' : 'none';
-                optRoughRandomise.domElem.style.display = v ? 'block' : 'none';
-                optRoughTaper.domElem.style.display = v ? 'block' : 'none';
-            }
+            onChange: v => setRoughOptionsVisibility(v),
         }],
     });
 
@@ -86,8 +80,8 @@ function createContent() {
             type: 'unit',
             name: 'input',
             min: 0,
-            dragSpeed: 0.1,
-            precision: 1
+            dragSpeed: 0.02,
+            precision: 2
         }],
     });
 
@@ -127,9 +121,19 @@ function createContent() {
         inputs: [{
             type: 'select',
             name: 'input',
-            options: ['none', 'ease', 'opt', 'both']
+            options: ['none', 'in', 'out', 'both']
         }],
     });
+
+    function setRoughOptionsVisibility(v) {
+
+        optRoughStrength.domElem.style.display = v ? 'block' : 'none';
+        optRoughPoints.domElem.style.display = v ? 'block' : 'none';
+        optRoughClamp.domElem.style.display = v ? 'block' : 'none';
+        optRoughRandomise.domElem.style.display = v ? 'block' : 'none';
+        optRoughTaper.domElem.style.display = v ? 'block' : 'none';
+    }
+    setRoughOptionsVisibility(false);
 };
 
 // p._onSelectEase = function (e) {

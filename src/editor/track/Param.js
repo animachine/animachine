@@ -262,6 +262,8 @@ p.getValue = function (time) {
 
 p.addKey = function (opt) {
 
+    this.timeline.pause();
+
     if (!_.has(opt, 'time')) {
         
         opt.time = this.timeline.currTime;

@@ -142,7 +142,48 @@ p._render = function () {
     this.domElem.style.top = br.top + 'px';
     this.domElem.style.width = br.width + 'px';
     this.domElem.style.height = br.height + 'px';
+
+    this._alignBtnCont();
 };
+
+p._alignBtnCont = function () {
+
+    var {top, left, width, height} = this.domElem.getBoundingClientRect(),
+        contLeft = left,
+        contTop = top,
+        ww = window.innerWidth,
+        wh = window.innerHeight,
+        btnSize = 21;
+
+    if (width < btnSize) {
+        left -= (btnSize - width) / 2;
+        width = btnSize;
+    }
+
+    if (height < btnSize) {
+        top -= (btnSize - height) / 2;
+        height = btnSize;
+    }
+
+    if (left < btnSize) {
+        left = btnSize;
+    }
+    if (left + width > ww) {
+        left = ww - width
+    }
+
+    if (top < btnSize) {
+        top = btnSize;
+    }
+    else if (top + height > wh) {
+        top = ww - height
+    }
+
+    this._btnCont.left = (left - contLeft) + 'px';
+    this._btnCont.top = (top - contTop) + 'px';
+    this._btnCont.width = width + 'px';
+    this._btnCont.height = height + 'px';
+}
 
 p._onMMove =  function (e) {
 
@@ -186,6 +227,7 @@ p._createBase = function () {
     de.style.pointerEvents = 'none';
     am.deHandlerCont.appendChild(de);
 
+    this._btnCont = amgui.createDiv({parent: de});
 
     var deDashed = document.createElement('div');
     deDashed.style.width = '100%';
@@ -198,6 +240,37 @@ p._createBase = function () {
     de.addEventListener('mouseleave', this._onMLeave);
     
     this.domElem = de;
+
+
+    var createBtn = (icon, tooltip, onClick) => {
+
+        var deIcon = amgui.createIconBtn({
+            icon: icon,
+            size: btnSize,
+            parent: this._btnCont,
+        });
+
+        deIcon.style.textShadow = '0 0 4px #000';
+
+        if (onClick) {
+
+            deIcon.addEventListener('click', function (e) {
+            
+                e.stopPropagation();
+                onClick();
+            })
+        }
+
+        amgui.addTooltip({
+            deTarget: deIcon,
+            text: tooltip
+        });
+
+        deIcon.style.position = 'absolute';
+        deIcon.style.pointerEvents = 'auto';
+
+        return deIcon;
+    }
 
     this._btnTop = createBtn('angle-up', 'up one level', function () {
 
@@ -247,35 +320,4 @@ p._createBase = function () {
     this._btnRightLeft = createBtn('plus', '');
     this._btnRightLeft.style.right = -btnSize + 'px';
     this._btnRightLeft.style.bottom = -btnSize + 'px';
-
-    function createBtn(icon, tooltip, onClick) {
-
-        var deIcon = amgui.createIconBtn({
-            icon: icon,
-            widht: btnSize,
-            height: btnSize,
-            parent: de
-        });
-
-        deIcon.style.textShadow = '0 0 4px #000';
-
-        if (onClick) {
-
-            deIcon.addEventListener('click', function (e) {
-            
-                e.stopPropagation();
-                onClick();
-            })
-        }
-
-        amgui.addTooltip({
-            deTarget: deIcon,
-            text: tooltip
-        });
-
-        deIcon.style.position = 'absolute';
-        deIcon.style.pointerEvents = 'auto';
-
-        return deIcon;
-    }
 };

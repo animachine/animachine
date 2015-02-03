@@ -10,11 +10,11 @@ function SelectInput(opt={}) {
 
     this._onSelect = this._onSelect.bind(this);
 
-    this._createBase();
-
     this._options = opt.options || [];
     this.value = opt.value || this._options[0] || '';
     this._defaultValue = opt.defaultValue || this._options[0] || '';
+
+    this._createBase();
 }
 
 inherits(SelectInput, Input);
@@ -67,14 +67,14 @@ p._createBase = function () {
 
     this._deValue = amgui.createLabel({
         parent: this.domElem,
-        text: '',
+        text: this.value,
     });
 
     amgui.bindDropdown({
-        deTarget: this._deValue,
-        onSelect: e => this._onSelect(e),
-        deMenu: amgui.createDropdown({
+        deTarget: this.domElem,
+        deDropdown: amgui.createDropdown({
             options: this._options,
+            onSelect: e => this._onSelect(e),
         }),
     });
 };

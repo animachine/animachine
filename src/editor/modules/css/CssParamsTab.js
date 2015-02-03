@@ -74,6 +74,7 @@ p._unlisten = function () {
     this._showHideNoTrackMsg(true);
 
     this._currTrack.off('addParam', this._onTrackAddParam, this);
+    this._currTrack.timeline.off('changeTime', this._onChangeTime, this);
 
     this._forEachInput(function (input, paramName) {
 
@@ -189,8 +190,8 @@ p._createBase = function () {
                 {title: 'font-weight', input: 'string'},
                 {title: 'font-style', input: 'string'},
                 {title: 'font-variant', input: 'string'},
-                {title: 'text-transform', input: 'string'},
-                {title: 'text-decoration', input: 'string'},
+                {title: 'text-transform', input: {type: 'select', options: 'none,capitalize,uppercase,lowercase,full-width'.split(',')}},
+                {title: 'text-decoration', input: {type: 'string', defaultValue: 'none'}},
                 {title: 'color', input: 'color'},
             ],
         },
@@ -286,9 +287,11 @@ p._createBase = function () {
             //listen to inputs
             Object.keys(optionLine.inputs).forEach(function (inputName) {
 
+                optionLine.inputs[inputName].reset();
+
                 var changeHandler = this._onInputChange.bind(this, inputName);
 
-                optionLine.inputs[inputName].on('change', changeHandler)
+                optionLine.inputs[inputName].on('change', changeHandler);
             }, this);
 
 

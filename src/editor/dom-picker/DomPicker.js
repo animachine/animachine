@@ -149,7 +149,7 @@ p._render = function () {
 p._alignBtnCont = function () {
 
     var {top, left, width, height} = this.domElem.getBoundingClientRect(),
-        {oTop, oLeft, oWidth, oHeight} = {top, left, width, height},
+        [oTop, oLeft, oWidth, oHeight] = [top, left, width, height],
         wWidth = window.innerWidth,
         wHeight = window.innerHeight,
         btnSize = 21;
@@ -165,10 +165,10 @@ p._alignBtnCont = function () {
     if (oLeft + left + width > wWidth) left = btnSize;
     if (oTop + top + height > wHeight) top = btnSize;
 
-    this._btnCont.left = (left - contLeft) + 'px';
-    this._btnCont.top = (top - contTop) + 'px';
-    this._btnCont.width = width + 'px';
-    this._btnCont.height = height + 'px';
+    this._btnCont.style.left = left + 'px';
+    this._btnCont.style.top = top + 'px';
+    this._btnCont.style.width = width + 'px';
+    this._btnCont.style.height = height + 'px';
 }
 
 p._onMMove =  function (e) {
@@ -184,14 +184,7 @@ p._onMMove =  function (e) {
 
         this._isMouseOver = over;
 
-        var v = over ? 'visible' : 'hidden';
-
-        this._btnTop.style.visibility = v;
-        this._btnRight.style.visibility = v;
-        this._btnBottom.style.visibility = v;
-        this._btnLeft.style.visibility = v;
-        this._btnClose.style.visibility = v;
-        this._btnRightLeft.style.visibility = v;
+        this._btnCont.style.visibility = over ? 'visible' : 'hidden';
     }
 };
 
@@ -213,14 +206,14 @@ p._createBase = function () {
     de.style.pointerEvents = 'none';
     am.deHandlerCont.appendChild(de);
 
-    this._btnCont = amgui.createDiv({parent: de});
-
     var deDashed = document.createElement('div');
     deDashed.style.width = '100%';
     deDashed.style.height = '100%';
     deDashed.style.border = 'dashed #444 ' + borderSize;
     deDashed.style.transform = 'translate(-'+borderSize+',-'+borderSize+')';
     de.appendChild(deDashed);
+
+    this._btnCont = amgui.createDiv({parent: de});
 
     de.addEventListener('mouseenter', this._onMEnter);
     de.addEventListener('mouseleave', this._onMLeave);

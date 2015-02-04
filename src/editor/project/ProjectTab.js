@@ -2,6 +2,7 @@
 
 var amgui = require('../amgui');
 var OptionLine = require('../utils/OptionLine');
+var SelectInput = require('../utils/SelectInput');
 
 function ProjectTab() {
 

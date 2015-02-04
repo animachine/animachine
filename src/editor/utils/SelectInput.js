@@ -8,8 +8,6 @@ function SelectInput(opt={}) {
 
     Input.call(this, opt);
 
-    this._onSelect = this._onSelect.bind(this);
-
     this._options = opt.options || [];
     this.value = opt.value || this._options[0] || '';
     this._defaultValue = opt.defaultValue || this._options[0] || '';

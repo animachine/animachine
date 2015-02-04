@@ -113,7 +113,8 @@ gulp.task('css', function () {
     paths.bower + 'codemirror/lib/codemirror.css',
     paths.bower + 'codemirror/theme/pastel-on-dark.css'
   ])
-    .pipe(concatCss('am.css'))
+    // .pipe(concatCss('am.css'))
+    .pipe(concat('am.css'))
     .pipe(gulp.dest('src/editor/'));
 });
 

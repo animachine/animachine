@@ -19,8 +19,8 @@ function CssParamFactory() {
         margin: ['marginTop',  'marginRight',  'marginBottom',  'marginLeft'],
         borderWidth: ['borderTopWidth',  'borderRightWidth',  'borderBottomWidth',  'borderLeftWidth'],
         borderRadius: ['borderTopLeftRadius', 'borderTopRightRadius', 'borderBottomLeftRadius', 'borderBottomRightRadius'],
-        borderColor: ['borderTopColor','borderRightColor','borderBottomColor','borderLeftColor'],
-        borderStyle: ['borderTopStyle','borderRightStyle','borderBottomStyle','borderLeftStyle'],
+        borderColor: ['borderTopColor', 'borderRightColor', 'borderBottomColor', 'borderLeftColor'],
+        borderStyle: ['borderTopStyle', 'borderRightStyle', 'borderBottomStyle', 'borderLeftStyle'],
         backgroundPosition: ['backgroundPositionX', 'backgroundPositionY'],
         textShadow: ['textShadowX', 'textShadowY', 'textShadowBlur'],
         translate: ['x', 'y', 'z'],
@@ -34,6 +34,7 @@ function CssParamFactory() {
     };
 }
 
+
 module.exports = CssParamFactory;
 inherits(CssParamFactory, ParamFactory);
 var p = CssParamFactory.prototype;
@@ -43,6 +44,7 @@ p.create = function (opt={}) {
 
     var paramOpt = {
             name: opt.name,
+            title: opt.title || opt.name,
             keys: opt.keys,
             hidden: opt.hidden,
             optionLine: {
@@ -109,6 +111,10 @@ p.create = function (opt={}) {
             input.min = 0;
             input.max = 1;
         })
+        .is('borderTopWidth,borderTopLeftRadius,borderTopColor,borderTopStyle', () => paramOpt.title = 'top')
+        .is('borderRightWidth,borderTopRightRadius,borderRightColor,borderRightStyle', () => paramOpt.title = 'right')
+        .is('borderBottomWidth,borderBottomLeftRadius,borderBottomColor,borderBottomStyle', () => paramOpt.title = 'bottom')
+        .is('borderLeftWidth,borderBottomRightRadius,borderLeftColor,borderLeftStyle', () => paramOpt.title = 'left')
         .is('bezier', () => {
 
             paramOpt.optionLine.inputs = [];

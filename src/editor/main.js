@@ -1,6 +1,6 @@
 var bowser = require('bowser').browser;
 
-if (!bowser.chrome && !bowser.opera && !(bowser.firefox && parseInt(bowser.version) >= 36)) {
+if (!bowser.chrome && !bowser.opera) {
     
     alertUnsupportedBrowsers();
     throw Error('unsupported browser');
@@ -11,7 +11,7 @@ window.am = require('./am/am');
 function alertUnsupportedBrowsers() {
 
     var deSorry = document.createElement('div');
-    deSorry.textContent = 'Sorry, this demo is currently only supported by the newest chrome, opera and firefox 36+.';
+    deSorry.textContent = 'Sorry, this demo is currently only supported by the newest chrome and opera.';
     deSorry.style.display = 'fixed';
     deSorry.style.margin = 'auto';
     deSorry.style.fontFamily = 'Open Sans';

@@ -149,35 +149,21 @@ p._render = function () {
 p._alignBtnCont = function () {
 
     var {top, left, width, height} = this.domElem.getBoundingClientRect(),
-        contLeft = left,
-        contTop = top,
-        ww = window.innerWidth,
-        wh = window.innerHeight,
+        {oTop, oLeft, oWidth, oHeight} = {top, left, width, height},
+        wWidth = window.innerWidth,
+        wHeight = window.innerHeight,
         btnSize = 21;
 
-    if (width < btnSize) {
-        left -= (btnSize - width) / 2;
-        width = btnSize;
-    }
+    width = Math.max(btnSize, Math.min(wWidth, oWidth));
+    height = Math.max(btnSize, Math.min(wHeight, oHeight));
 
-    if (height < btnSize) {
-        top -= (btnSize - height) / 2;
-        height = btnSize;
-    }
+    left = (oWidth - width) / 2;
+    top = (oHeight - height) / 2;
 
-    if (left < btnSize) {
-        left = btnSize;
-    }
-    if (left + width > ww) {
-        left = ww - width
-    }
-
-    if (top < btnSize) {
-        top = btnSize;
-    }
-    else if (top + height > wh) {
-        top = ww - height
-    }
+    if (oLeft + left < 0) left = btnSize - oLeft;
+    if (oTop + top < 0) top = btnSize - oTop;
+    if (oLeft + left + width > wWidth) left = btnSize;
+    if (oTop + top + height > wHeight) top = btnSize;
 
     this._btnCont.left = (left - contLeft) + 'px';
     this._btnCont.top = (top - contTop) + 'px';

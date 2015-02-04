@@ -14,6 +14,8 @@ module.exports = function defineCompactProperty(proto, opt) {
     var valMap = new WeakMap(),
         name = opt.name,
         history = opt.history,
+        startValue = opt.startValue,
+        onChange = opt.onChange,
         evtName = opt.event || opt.evtName || 'change.' + name;
 
     if (history) {
@@ -33,7 +35,7 @@ module.exports = function defineCompactProperty(proto, opt) {
     ///////////////////////////////////////////////////////////////
 
     function get() {
-        return valMap.has(this) ? valMap.get(this) : opt.startValue;
+        return valMap.has(this) ? valMap.get(this) : startValue;
     }
 
     function set(v) {
@@ -50,6 +52,8 @@ module.exports = function defineCompactProperty(proto, opt) {
         value = v;
 
         valMap.set(this, value);
+
+        if (onChange) onChange.call(this, value);
 
         this.emit(evtName, value);
     }

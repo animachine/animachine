@@ -16,7 +16,6 @@ function Param (opt={}, timeline) {
 
     this._lineH =  amgui.LINE_HEIGHT;
     this._inputs = [];
-    this._hidden = false;
     this._defaultValue = opt.defaultValue || 0;
 
     this._onChangeInput = this._onChangeInput.bind(this);
@@ -64,40 +63,19 @@ Object.defineProperties(p, {
             
             return this.hidden ? 0 : this._lineH;
         }
-    },
-    name: {
-        set: function (v) {
-
-            if (v === this._name) return;
-
-            this._name = v;
-            this.optionLine.title = v;
-        },
-        get: function () {
-
-            return this._name;
-        }
-    },
-    hidden: {
-        set: function (v) {
-
-            v = !!v;
-
-            if (v === this._hidden) return;
-
-            this._hidden = v;
-            
-            this.keyLine.hidden = v;
-            this.optionLine.hidden = v;
-
-            this.emit('changeHeight');
-        },
-        get: function () {
-
-            return this._hidden;
-        }
     }
 });
+
+defineCompactProperty(p, [
+    {name: 'name', type: 'string'},
+    {name: 'title', type: 'string', onChange: function (v) {
+        this.optionLine.title = v;
+    }},
+    {name: 'hidden', type: 'boolean', startValue: false, onChange: function (v) {
+        this.keyLine.hidden = v;
+        this.optionLine.hidden = v;
+    }},
+]);
 
 
 
@@ -105,6 +83,7 @@ p.getSave = function () {
 
     var save = {
         name: this.name,
+        title: this.title,
         hidden: this.hidden,
         keys: [],
     };
@@ -120,6 +99,7 @@ p.getSave = function () {
 p.useSave = function(save) {
 
     this.name = save.name;
+    this.title = save.title || save.name;
     this.hidden = save.hidden;
 
     if (save.keys) {

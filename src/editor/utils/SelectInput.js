@@ -46,11 +46,9 @@ Object.defineProperties(p, {
 
 
 
+p.setOptions = function (options) {
 
-
-p._onSelect = function (e) {
-
-    this.value = e.detail.selection;
+    this._deDropdpwn.setItems(options);
 };
 
 
@@ -70,12 +68,19 @@ p._createBase = function () {
         text: this.value,
     });
 
+    amgui.createIcon({
+        parent: this.domElem,
+        icon: 'down-dir',
+    });
+
+    this._deDropdown = amgui.createDropdown({
+        options: this._options,
+        onSelect: e => this.value = e.detail.selection,
+    });
+
     amgui.bindDropdown({
         deTarget: this.domElem,
-        deDropdown: amgui.createDropdown({
-            options: this._options,
-            onSelect: e => this._onSelect(e),
-        }),
+        deDropdown: this._deDropdown,
     });
 };
 

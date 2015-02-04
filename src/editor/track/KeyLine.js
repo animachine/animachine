@@ -216,7 +216,7 @@ p.getKeyTimes = function () {
 
 p._render = function () {
 
-    if (this._skipRender || this.hidden || !this.timeline) return;
+    if (this._skipRender || this.hidden) return;
 
     var canvas = this._canvas,
         ctx = this._ctx;

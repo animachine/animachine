@@ -2,17 +2,6 @@
 
 var amgui;
 
-module.exports = function (_amgui) {
-
-    amgui = _amgui;
-
-    return {
-        placeToPoint: placeToPoint,
-        callOnAdded: callOnAdded,
-        delayWithRAF: delayWithRAF,
-    };
-};
-
 
 function placeToPoint(de, mx, my, way) {
 
@@ -107,20 +96,52 @@ function callOnAdded(de, cb, thisArg) {
     }
 }
 
-function delayWithRAF(fn, thisArg) {
 
-    var waiting = undefined;
 
-    return (...args) => {
+var delayWithRAF = (() => {
 
-        if (waiting === undefined) {
+    var stack = new Map(),
+        waiting = undefined;
 
-            waiting = window.requestAnimationFrame(() => {
+    var onRaf = () => {
 
-                waiting = undefined;
+        stack.forEach((reg, fn) => {
 
-                fn.apply(thisArg, args);
-            });
+            fn.apply(reg.ctx, reg.args);
+        });
+
+        stack.clear();
+        waiting = undefined;
+    };
+    
+    return fn => {
+
+        function wrapper () { 
+
+            fn.apply(this, arguments); 
+        };
+        
+        return function () {
+
+            stack.set(wrapper, {ctx: this, args: arguments});
+            
+            if (waiting === undefined) {
+
+                waiting = window.requestAnimationFrame(onRaf);
+            }
         }
-    }
-}
+    };
+})();
+
+
+
+module.exports = function (_amgui) {
+
+    amgui = _amgui;
+
+    return {
+        placeToPoint: placeToPoint,
+        callOnAdded: callOnAdded,
+        delayWithRAF: delayWithRAF,
+    };
+};

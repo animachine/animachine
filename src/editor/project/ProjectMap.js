@@ -33,6 +33,8 @@ p.load = function (project) {
         project.on('focus.timeline', this._onFocusTimeline, this);
     }
 
+    this.emit('load', project);
+
     return project;
 };
 
@@ -42,6 +44,8 @@ p.unload = function (project) {
     project.dispose();
 
     project.off('focus.timeline', this._onFocusTimeline, this);
+
+    this.emit('unload', project);
 };
 
 p.focus = function (project) {
@@ -56,7 +60,7 @@ p.focus = function (project) {
     this._currProject = project;
     this._currProject.focus();
 
-    this.emit('open', this._currProject);
+    this.emit('focus', this._currProject);
 };
 
 p.blur = function () {
@@ -72,6 +76,11 @@ p.getCurrProject = function () {
 
     return this._currProject;
 };
+
+p.getProjects = function () {
+
+    return this._projects;
+}
 
 p._onFocusTimeline = function (timeline) {
 

@@ -17,7 +17,7 @@ inherits(Project, EventEmitter);
 var p = Project.prototype;
 module.exports = Project;
 
-defineCompactProperty(p, {name: 'name', type: 'string'});
+defineCompactProperty(p, {name: 'name', type: 'string', startValue: 'new project'});
 
 p.useSave = function (save = {}) {
 

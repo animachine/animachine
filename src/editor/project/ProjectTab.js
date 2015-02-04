@@ -20,17 +20,6 @@ var p = ProjectTab.prototype;
 
 
 
-p._refreshKeyButtons = function () {
-
-    if (this._currTrack) {
-
-        this._paramOptionLines.forEach(function (optionLine) {
-
-            optionLine.refreshKey();
-        });
-    }
-};
-
 
 
 
@@ -54,6 +43,32 @@ p._createBase = function () {
         deCont: this.domElem,
         deTarget: this._scrollCont,
     });
+
+    var refreshSelectInput = () => {
+        
+        var options = am.projectMap.getProjects().map(project => {
+
+            return {
+                name: project.name,
+                onClick: am.projectMap.focus(project)
+            }
+        });
+        this._inpSelect.setOptions(options);        
+    }
+
+    this._inpSelect = new SelectInput({
+        parent: this._scrollCont,
+    });
+
+    amgui.createBtn({
+        parent: this._scrollCont,
+        icon: 'add',
+        text: 'new project',
+        onClick: () => {
+            var project = am.projectMap.load({name: 'new project'});
+            am.projectMap.focus(project);
+        },
+    })
 };
 
 module.exports = ProjectTab;

@@ -35,6 +35,15 @@ function BezierCssParam (opt) {
         name: 'bezier',
         childIdx: 0,
     });
+
+    this.on('change.hidden', () => {
+        if (this.hidden) {
+            this._blurTransformer();
+        }
+        else {
+            this._focusTransformer();
+        }
+    });
 }
 
 inherits(BezierCssParam, CssParam);
@@ -224,7 +233,7 @@ p._focusTransformer = function (de) {
     de = de || this.parentTrack._currHandledDe;
     this._currHandledDe = de;
 
-    if (!this._currHandledDe) return this._blurTransformer();
+    if (!this._currHandledDe || this.hidden) return this._blurTransformer();
 
     if (!this._transformer) {
         this._transformer = new Transhand();
@@ -285,7 +294,7 @@ p._focusTransformer = function (de) {
 
 p._blurTransformer = function () {
 
-    if (this._transformer && this._transformer.domElem && this._transformer.domElem.parentNode) {
+    if (this._transformer) {
 
         this._transformer.deactivate();
     }

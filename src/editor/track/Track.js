@@ -44,8 +44,8 @@ function Track(opt, timeline) {
     this._onDeselectTrack = this._onDeselectTrack.bind(this);
     this._animPlay = this._animPlay.bind(this);
 
-    this._onChangeHandler = am.history.wrap({
-        fn: this._onChangeHandler,
+    this._onChangeTransformer = am.history.wrap({
+        fn: this._onChangeTransformer,
         name: 'transform',
         delay: 312,
     });
@@ -375,13 +375,11 @@ p.addParam = function (opt) {
 
         param.on('change', this._onChangeParameter);
         param.on('delete', this._onDeleteParameter);
+        param.on('bezierToTranslate', this._switchFromBezierToTranslate, this);
 
         this._prepareBuiltInGroup(opt.name);
 
         am.history.endFlag(flag);
-
-        //TODO history.endFlag();
-
         this.emit('addParam');
         this.emit('change');
     }
@@ -408,6 +406,7 @@ p.removeParam = function (param) {
 
     param.removeListener('change', this._onChangeParameter);
     param.removeListener('delete', this._onDeleteParameter);
+    param.off('bezierToTranslate', this._switchFromBezierToTranslate, this);
 
     this._paramGroup.removeParam(param);
 
@@ -481,7 +480,6 @@ p.removeGroup = function (path) {
             name: 'remove group ' + paramGroup.name,
         });
 
-        paramGroup.off('bezierToTranslate', this._switchFromBezierToTranslate, this);
         paramGroup.off('translateToBezier', this._switchFromTranslateToBezier, this);
 
         parent.removeParam(parentGroup);
@@ -529,7 +527,7 @@ p.select = function (opt) {
         this._transformer = new Transhand();
     }
 
-    this._transformer.on('change', this._onChangeHandler, this);
+    this._transformer.on('change', this._onChangeTransformer, this);
     window.addEventListener('resize', this._onWindowResize);
     window.addEventListener('scroll', this._onWindowScroll);
 
@@ -559,7 +557,7 @@ p.deselect = function () {
 
     if (this._transformer) {
 
-        this._transformer.off('change', this._onChangeHandler, this);
+        this._transformer.off('change', this._onChangeTransformer, this);
     }
 };
 
@@ -620,6 +618,8 @@ p.focusTransformer = function (de) {
 
     var p = handOpt.params;
     this._endParams.forEach(function (param) {
+
+        if (param.hidden) return;
 
         switch (param.name) {
             case 'x': p.tx = parseFloat(param.getValue()); break;
@@ -746,8 +746,6 @@ p._switchFromTranslateToBezier = function () {
     yParam.hidden = true;
     this._paramGroup.getParam('translate').hidden = true;
     bezierParam.hidden = false;
-    
-    this._transformer();
 };
 
 p._switchFromBezierToTranslate = function () {
@@ -759,18 +757,18 @@ p._switchFromBezierToTranslate = function () {
         xKeys = [],
         yKeys = [];
     
-    this.__savedBezierKeys = keys;
+    this.__savedBezierKeys = bezierKeys;
 
     bezierKeys.forEach(function (bezierKey) {
 
         var lastPoint = _.last(bezierKey.value);
 
-        xKeys.push(oldKey || {
-            time: time,
+        xKeys.push({
+            time: bezierKey.time,
             value: lastPoint.anchor.x + 'px',
         });
-        yKeys.push(oldKey || {
-            time: time,
+        yKeys.push({
+            time: bezierKey.time,
             value: lastPoint.anchor.y + 'px',
         });
     });
@@ -788,8 +786,6 @@ p._switchFromBezierToTranslate = function () {
     yParam.hidden = false;
     this._paramGroup.getParam('translate').hidden = false;
     bezierParam.hidden = true;
-
-    this.focusTransformer();
 };
 
 
@@ -819,7 +815,7 @@ p._onSelectClick = function () {
     am.selectTrack(this);
 };
 
-p._onChangeHandler = function(params, type) {
+p._onChangeTransformer = function(params, type) {
 
     var time = this.timeline.currTime;
 

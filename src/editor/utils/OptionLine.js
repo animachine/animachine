@@ -8,6 +8,7 @@ var StringInput = require('./StringInput');
 var SelectInput = require('./SelectInput');
 var ColorInput = require('./ColorInput');
 var CheckboxInput = require('./CheckboxInput');
+var defineCompactProperty = require('./defineCompactProperty');
 
 function OptionLine(opt) {
 
@@ -25,8 +26,8 @@ function OptionLine(opt) {
     this._subOptionLines = [];
 
     if (opt.separator) {
-        
-        amgui.createSeparator({parent: this._deHeadCont});;
+
+        amgui.createSeparator({parent: this._deHeadCont});
     }
 
     if (opt.parent) {
@@ -49,7 +50,7 @@ function OptionLine(opt) {
 
 
     if (opt.tgglChildren) {
-     
+
         this.buttons.tgglChildren = amgui.createToggleIconBtn({
             iconOn: 'angle-down',
             iconOff: 'angle-right',
@@ -72,24 +73,11 @@ function OptionLine(opt) {
     if (opt.title) {
 
         this._deTitle = amgui.createLabel({
-            text: typeof opt.title === 'string' ? opt.title : (opt.title.text || ''), 
+            text: typeof opt.title === 'string' ? opt.title : (opt.title.text || ''),
             parent: this._deHeadCont,
         });
 
         this._deTitle.style.marginRight = '3px';
-
-        // if (opt.title.onClick) {
-
-        //     this._deTitle.addEventListener('click', opt.title.onClick);
-
-        //     var deNameIcon = amgui.createIcon({
-        //         icon: 'pencil',
-        //         parent: this._deHeadCont,
-        //     });
-        //     deNameIcon.style.display = 'none';
-        //     this._deTitle.addEventListener('mouseenter', () => deNameIcon.style.display = 'inline-block');
-        //     this._deTitle.addEventListener('mouseleave', () => deNameIcon.style.display = 'none');
-        // }
     }
 
     this._inputCont = amgui.createDiv({
@@ -135,6 +123,11 @@ function OptionLine(opt) {
     if (opt.onDblclick) {
 
         this.domElem.addEventListener('dblclick', opt.onDblclick);
+    }
+
+    if (opt.data) {
+
+        this.data = opt.data;
     }
 }
 
@@ -192,7 +185,11 @@ Object.defineProperties(p, {
     }
 });
 
-
+defineCompactProperty(p, [
+    {name: 'bgHighlight', type: 'boolean', onChange: v => {
+        this._deHeadCont.style.backgroundColor = v ? amgui.color.bg1 : amgui.color.bg0;
+    }}
+]);
 
 
 p.addInput = function (opt) {
@@ -222,8 +219,8 @@ p.addInput = function (opt) {
             input = new CheckboxInput(opt);
             break;
 
-        case 'string':
         default:
+        case 'string':
             input = new StringInput(opt);
     }
 
@@ -279,14 +276,29 @@ p.removeOptionLine = function (optionLine) {
     }
 };
 
-p.showSubline = function () {
+p.removeAllOptionLines = function () {
+
+    this._subOptionLines.slice().forEach(ol => this.removeOptionLine(ol));
+};
+
+p.showSublines = function () {
 
     this._deSubcont.style.display = '';
 };
 
-p.hideSubline = function () {
+p.hideSublines = function () {
 
     this._deSubcont.style.display = 'none';
+};
+
+p.walkChildren = function (fn) {
+
+    this._subOptionLines.forEach(subOptionLine => {
+
+        fn(subOptionLine, this);
+
+        subOptionLine.walkChildren(fn);
+    });
 };
 
 p.borrowChildInputs = function () {
@@ -297,7 +309,7 @@ p.borrowChildInputs = function () {
     this._subOptionLines.forEach(line => {
 
         if (line.hidden) return;
-        
+
         Object.keys(line.inputs).forEach(inpName => {
 
             this._inputCont.appendChild(line.inputs[inpName].domElem);
@@ -341,6 +353,7 @@ p._createDomElem = function() {
     this._deHeadCont.style.display = 'flex';
     this._deHeadCont.style.width = '100%';
     this._deHeadCont.style.height = this._lineH + 'px';
+    this._deHeadCont.style.backgroundColor = amgui.color.bg0;
     this.domElem.appendChild(this._deHeadCont);
 
     amgui.createSeparator({parent: this._deHeadCont});

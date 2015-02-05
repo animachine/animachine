@@ -179,13 +179,6 @@ am._init = function () {
 
         modules[moduleName].init(am);
     });
-
-    am.projectMap.on('focus.timeline', timeline => {
-
-        timeline.toolbar.addIcon(am._staticToolbarIcons);
-
-        am.currTimeline = timeline;
-    });
 };
 
 am.openNewProject = function () {
@@ -194,6 +187,15 @@ am.openNewProject = function () {
         name: 'new project',
         timelines: [{}],
     });
+};
+
+am.setTimeline = function (timeline) {
+
+    timeline.toolbar.addIcon(am._staticToolbarIcons);
+
+    am.currTimeline = timeline;
+
+    am.workspace.fillTab('timeline', timeline.domElem);
 }
 
 am.selectTrack = function (track) {

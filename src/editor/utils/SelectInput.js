@@ -46,7 +46,7 @@ Object.defineProperties(p, {
 
 p.setOptions = function (options) {
 
-    this._deDropdpwn.setItems(options);
+    this._deDropdown.setItems(options);
 };
 
 

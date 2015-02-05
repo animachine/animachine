@@ -4,13 +4,27 @@ var amgui = require('../amgui');
 var OptionLine = require('../utils/OptionLine');
 var SelectInput = require('../utils/SelectInput');
 
-function ProjectTab() {
+function ProjectTab(projectMap) {
+
+    this._projectMap = projectMap;
 
     this._createBase();
 }
 
 var p = ProjectTab.prototype;
 
+p.focus = function (project) {
+
+    if (this._currProject) {
+
+        this._currProject.off(['addTimeline', 'removeTimeline'], this._refreshLibrary, this);
+    }
+
+    this._currProject = project;
+
+    this._refreshLibrary();
+    this._currProject.off(['addTimeline', 'removeTimeline'], this._refreshLibrary, this);
+};
 
 
 
@@ -18,7 +32,24 @@ var p = ProjectTab.prototype;
 
 
 
+p._refreshLibrary = function () {
 
+    this._optLibrary.removeAllOptionLines();
+
+    this._currProject._timelines.forEach(timeline => {
+
+        var optionLine = new OptionLine({
+            title: timeline.name || 'unnamed timeline',
+            onDblclick: () => this._currProject.selectTimeline(timeline),
+            data: {
+                type: 'timeline',
+                value: timeline,
+            },
+        });
+
+        this._optLibrary.addOptionLine(optionLine);
+    });
+};
 
 
 
@@ -28,8 +59,6 @@ var p = ProjectTab.prototype;
 
 
 p._createBase = function () {
-
-    var that = this;
 
     this.domElem = document.createElement('div');
     this.domElem.style.width = '100%';
@@ -45,31 +74,68 @@ p._createBase = function () {
         deTarget: this._scrollCont,
     });
 
+    this._createProjectHandlers();
+    this._createLibrary();
+};
+
+p._createProjectHandlers = function () {
+
     var refreshSelectInput = () => {
-        
-        var options = am.projectMap.getProjects().map(project => {
+
+        var options = this._projectMap.getProjects().map(project => {
 
             return {
                 name: project.name,
-                onClick: am.projectMap.focus(project)
-            }
+                onClick: () => this._projectMap.focus(project)
+            };
         });
-        this._inpSelect.setOptions(options);        
-    }
+        this._inpSelect.setOptions(options);
+    };
 
     this._inpSelect = new SelectInput({
         parent: this._scrollCont,
     });
 
+    refreshSelectInput();
+    this._projectMap.on(['load', 'unload'], refreshSelectInput);
+
     amgui.createBtn({
         parent: this._scrollCont,
-        icon: 'add',
+        icon: 'plus',
         text: 'new project',
         onClick: () => {
-            var project = am.projectMap.load({name: 'new project'});
-            am.projectMap.focus(project);
+            var project = this._projectMap.load({name: 'new project'});
+            this._projectMap.focus(project);
         },
-    })
+    });
+};
+
+p._createLibrary = function () {
+
+    this._optLibrary = new OptionLine({
+        title: 'Library',
+        parent: this._scrollCont,
+    });
+
+    var btnNew = amgui.createIconBtn({
+        icon: 'plus'
+    });
+
+    amgui.bindDropdown({
+        deTarget: btnNew,
+        deDropdown: amgui.createDropdown({
+            options: [
+                {text: 'timeline', icon: 'barcode', onClick: () => this._currProject.addTimeline()},
+                {text: 'folder', icon: 'folder-empty', onClick: () => am.dialogs.WIP.show()},
+                {text: 'image', icon: 'file-image', onClick: () => am.dialogs.WIP.show()},
+                {text: 'custom asset', icon: 'doc', onClick: () => am.dialogs.WIP.show()},
+            ],
+        }),
+    });
+
+    this._optLibrary.addButton({
+        domElem: btnNew,
+    });
 };
 
 module.exports = ProjectTab;

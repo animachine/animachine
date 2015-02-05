@@ -26,7 +26,7 @@ function KeyLine (opt, timeline) {
     this._onMouseDown = this._onMouseDown.bind(this);
 
     this._render = amgui.delayWithRAF(this._render, this);
-    
+
     this._createDomElem();
 
     var dropdownBinding = amgui.bindDropdown({
@@ -90,10 +90,16 @@ Object.defineProperties(p, {
 
 
 
+defineCompactProperty(p, [
+    {name: 'bgHighlight', type: 'boolean', onChange: v => {
+        this._canvas.style.backgroundColor = v ? amgui.color.bg1 : amgui.color.bg0;
+    }}
+]);
+
 
 
 p.addKey = function (key) {
-    
+
     this._keys.push(key);
     key.parentKeyLine = this;
 
@@ -102,7 +108,7 @@ p.addKey = function (key) {
     key.on('deselect', this._onChangeKey, this);
     key.on('needsRemove', this._onKeyNeedsRemove, this);
     key.on('needsRender', this._render, this);
-    
+
     this._render();
     this.emit('change');
 };
@@ -117,7 +123,7 @@ p.removeKey = function (key) {
 
     this._keys.splice(idx, 1);
     key.parentKeyLine = undefined;
-    
+
     key.off('change', this._onChangeKey, this);
     key.off('select', this._onChangeKey, this);
     key.off('deselect', this._onChangeKey, this);
@@ -145,7 +151,7 @@ p.getKeyByTime = function (time) {
 p.getPrevKey = function (time) {
 
     var retKey;
-    
+
     this._keys.forEach(function(key) {
 
         if (key.time < time && (!retKey || retKey.time < key.time)) {
@@ -160,7 +166,7 @@ p.getPrevKey = function (time) {
 p.getNextKey = function (time) {
 
     var retKey;
-    
+
     this._keys.forEach(function(key) {
 
         if (key.time > time && (!retKey || retKey.time > key.time)) {
@@ -175,7 +181,7 @@ p.getNextKey = function (time) {
 p.getClosestKey = function (time) {
 
     var retKey, retDist;
-    
+
     this._keys.forEach(function(key) {
 
         var dist = Math.abs(time - key.time);
@@ -234,7 +240,7 @@ p._render = function () {
 
 
 
-p._onChangeKey = function (key) {
+p._onChangeKey = function () {
 
     this._render();
     this.emit('change');
@@ -275,7 +281,7 @@ p._onMouseDown = function (e) {
 
 
 
-p._createDomElem = function createKeyline(opt) {
+p._createDomElem = function createKeyline() {
 
     this.domElem = document.createElement('div');
     this.domElem.style.width = '100%';
@@ -296,7 +302,7 @@ p._createDomElem = function createKeyline(opt) {
     this._canvas.style.position = 'absolute';
     this._deLine.appendChild(this._canvas);
     this._ctx = this._canvas.getContext('2d');
-    
+
     this._canvas.addEventListener('dblclick', this._onDblClick);
     this._canvas.addEventListener('mousedown', this._onMouseDown);
 };

@@ -34,13 +34,24 @@ function Param (opt={}, timeline) {
     this.deOptionLine = this.optionLine.domElem;
     this.deKeyLine = this.keyLine.domElem;
 
+    //hack!
+    $([this.optionLine.domElem, this.keyLine.domElem])
+        .on('mouseenter', () => {
+            this.optionLine.bgHighlight = true;
+            this.keyLine.bgHighlight = true;
+        })
+        .on('mouseleave', () => {
+            this.optionLine.bgHighlight = false;
+            this.keyLine.bgHighlight = false;
+        });
+
     this.setMaxListeners(1234);
 
 
     if (opt) {
         this.useSave(opt);
     }
-    
+
     this.timeline.on('changeTime', this._onChangeTime);
 }
 
@@ -60,7 +71,7 @@ Object.defineProperties(p, {
 
     height: {
         get: function () {
-            
+
             return this.hidden ? 0 : this._lineH;
         }
     }
@@ -138,17 +149,17 @@ p.getValue = function (time) {
     this.keyLine.forEachKeys(function (key) {
 
         if (key.time === time) {
-        
+
             same = key;
         }
 
         if (key.time < time && (!before || before.time < key.time)) {
-        
+
             before = key;
         }
 
         if (key.time > time && (!after || after.time > key.time)) {
-        
+
             after = key;
         }
     });
@@ -161,7 +172,7 @@ p.getValue = function (time) {
 
         if (after && before) {
 
-            var p = (time - before.time) / (after.time - before.time), 
+            var p = (time - before.time) / (after.time - before.time),
                 av = after.value, bv = before.value;
 
             p = after.ease.getRatio(p);
@@ -169,15 +180,15 @@ p.getValue = function (time) {
             ret = createCalc(av, bv, p);
         }
         else if (before) {
-            
+
             ret = before.value;
         }
         else if (after) {
-            
+
             ret = after.value;
         }
     }
-    
+
     return ret === undefined ? this._defaultValue : ret;
 
 
@@ -193,12 +204,12 @@ p.getValue = function (time) {
 
         var aUnit = getUnit(av);
         var bUnit = getUnit(bv);
-        
+
         if (aUnit === bUnit) {
 
             av = parseFloat(av);
             bv = parseFloat(bv);
-            
+
             return (bv + ((av - bv) * p)) + aUnit;
         }
 
@@ -216,7 +227,7 @@ p.getValue = function (time) {
             }
             else {
                 bvs = bvs.concat(avs.slice(bvl));
-            }         
+            }
         }
 
         avs.forEach(function (a, idx) {
@@ -245,10 +256,10 @@ p.addKey = function (opt) {
     this.timeline.pause();
 
     if (!_.has(opt, 'time')) {
-        
+
         opt.time = this.timeline.currTime;
     }
-    
+
     var key = this.getKey(opt.time);
 
     if (key) {
@@ -269,7 +280,7 @@ p.addKey = function (opt) {
             redo: () => this.addKey(key),
             name: 'add key',
         });
-        
+
         this.emit('addKey', key, this);
     }
 
@@ -363,7 +374,7 @@ p.attachInput = function (input) {
     this.detachInput(input);
 
     input.on('change', this._onChangeInput);
-  
+
     this._inputs.push(input);
 };
 
@@ -376,7 +387,7 @@ p.detachInput = function (input) {
     }
 
     input.removeListener('change', this._onChangeInput);
-  
+
     this._inputs.splice(idx, 1);
 };
 
@@ -393,13 +404,13 @@ p._isKeySet = function (time) {
 
 
 p._onChangeInput = function (value) {
-    
+
     var oldValue = this.getValue();
 
     if (String(value) === String(oldValue)) {
         return;
     }
-    
+
     this.addKey({
         time: this.timeline.currTime,
         value: value
@@ -450,7 +461,7 @@ p._onClickStepNextKey = function () {
 p._refreshInputs = function () {
 
     if (this.getValue() !== undefined) {
-        
+
         this._inputs.forEach(function (input) {
 
             //get the value again, because it can change over the iteration
@@ -462,7 +473,7 @@ p._refreshInputs = function () {
 p._refreshTgglKey = function () {
 
     var time = this.timeline.currTime;
-    
+
     this.optionLine.buttons.key.setHighlight(this._isKeySet(time));
     this.optionLine.buttons.key.setSteppers(!!this.getPrevKey(time), !!this.getNextKey(time));
 };
@@ -498,7 +509,7 @@ p._createOptions = function (opt) {
     }, opt));
 
     if (this.optionLine.inputs.input){
-        
+
         this.attachInput(this.optionLine.inputs.input);
     }
 };

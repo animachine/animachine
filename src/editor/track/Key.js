@@ -11,7 +11,7 @@ function Key(opt, timeline) {
     EventEmitter.call(this);
 
     this.timeline = timeline;
-    
+
     this.ease = new Ease();
     this._isSelected = false;
     this._height = amgui.LINE_HEIGHT;
@@ -21,8 +21,6 @@ function Key(opt, timeline) {
 
     this._onSelectDropdown = this._onSelectDropdown.bind(this);
     this._onChangeEase = this._onChangeEase.bind(this);
-    this._onDeselectAllKeys = this._onDeselectAllKeys.bind(this);
-    this._onTranslateSelectedKeys = this._onTranslateSelectedKeys.bind(this);
 
     this._deDropdown = amgui.createDropdown({
         options: ['ease', 'delete', 'randomise'],
@@ -43,7 +41,7 @@ function Key(opt, timeline) {
                 this.timeline.emit('deselectAllKeys');
             }
 
-            //TODO shift+select (if an other key(s) selected in this line its should select thoes are between them) 
+            //TODO shift+select (if an other key(s) selected in this line its should select thoes are between them)
             if (e.shiftKey || e.ctrlKey) {
                 if (this._isSelected) {
                     this.select();
@@ -55,7 +53,7 @@ function Key(opt, timeline) {
             else {
                 this.select();
             }
-            
+
             return {
                 dragged: 0,
             };
@@ -63,7 +61,7 @@ function Key(opt, timeline) {
         onMove: md => {
 
             var diffTime = (md.dx / this.timeline.timescale) - md.dragged;
-                
+
             md.dragged += diffTime;
 
             this.timeline.emit('translateSelectedKeys', diffTime);
@@ -74,8 +72,9 @@ function Key(opt, timeline) {
         am.history.dontSave(() => this.useSave(opt));
     }
 
-    this.timeline.on('deselectAllKeys', this._onDeselectAllKeys);
-    this.timeline.on('translateSelectedKeys', this._onTranslateSelectedKeys);
+    this.timeline.on('deselectAllKeys', this._onDeselectAllKeys, this);
+    this.timeline.on('translateSelectedKeys', this._onTranslateSelectedKeys, this);
+    // this.timeline.on('changeTime', this._onChangeTimelineTime, this);
 }
 
 inherits(Key, EventEmitter);
@@ -117,7 +116,7 @@ p.select = function () {
     this._isSelected = true;
 
     this.emit('select');
-}
+};
 
 p.deselect = function () {
 
@@ -131,19 +130,19 @@ p.deselect = function () {
 p.grab = function (e) {
 
     this._dragger.emitDown(e);
-}
+};
 
 p.remove = function () {
 
     this.emit('needsRemove', this);
 };
 
-p.getPrevKey = function (time) {
+p.getPrevKey = function () {
 
     return this.parentKeyLine.getPrevKey(this.time);
 };
 
-p.getNextKey = function (time) {
+p.getNextKey = function () {
 
     return this.parentKeyLine.getNextKey(this.time);
 };
@@ -153,8 +152,6 @@ p.renderToLine = function (ctx) {
     var looks = this.looks || this.parentKeyLine.keyLooks,
         height = this._height,
         keyPos = ~~this.timeline.timeToRenderPos(this.time) + 0.5,
-        prevKey = this.getPrevKey(),
-        prevKeyPos = this.timeline.timeToRenderPos(prevKey ? prevKey.time : 0),
         line = looks.line,
         circle = looks.circle,
         r = 2,
@@ -163,7 +160,7 @@ p.renderToLine = function (ctx) {
     this.renderEaseToLine(ctx);
 
     this.emit('prerender', ctx, this);
-    
+
     if (line) {
         ctx.save();
         ctx.beginPath();
@@ -247,7 +244,7 @@ p.getDropdown = function () {
 
 
 p._onSelectDropdown = function (e) {
-    
+
     var selection = e.detail.selection;
 
     if (selection === 'ease') {
@@ -264,7 +261,7 @@ p._onSelectDropdown = function (e) {
     }
 };
 
-p._onChangeEase = function (ease) {
+p._onChangeEase = function () {
 
     this.emit('change.ease');
 };
@@ -279,6 +276,16 @@ p._onTranslateSelectedKeys = function (offset) {
     if (this._isSelected) {
 
         this.time += offset;
+    }
+};
+
+p._onChangeTimelineTime = function () {
+
+    var isInTime = this.timeline.currTime === this.time;
+
+    if (isInTime !== this._isInTime) {
+
+        this.emit('change.render');
     }
 };
 
@@ -298,10 +305,9 @@ p._onTranslateSelectedKeys = function (offset) {
 p.dispose = function () {
 
     this._deDropdown.removeEventListener('select', this._onSelectDropdown);
-    this.timeline.removeListener('changeTape', this._onChangeTape);
-    this.timeline.removeListener('deselectAllKeys', this._onDeselectAllKeys);
-    this.timeline.removeListener('translateSelectedKeys', this._onTranslateSelectedKeys);
+    this.timeline.off('deselectAllKeys', this._onDeselectAllKeys, this);
+    this.timeline.off('translateSelectedKeys', this._onTranslateSelectedKey, this);
+    this.timeline.off('changeTime', this._onChangeTimelineTime, this);
 
-    if (this._deDropdown.parentNode) this._deDropdown.parentNode.removeChild(this._deDropdown); 
+    if (this._deDropdown.parentNode) this._deDropdown.parentNode.removeChild(this._deDropdown);
 };
-

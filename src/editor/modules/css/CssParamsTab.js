@@ -20,7 +20,7 @@ var p = CssParamsTab.prototype;
 
 
 p._onSelectTrack = function (track) {
-
+    
     this._unlisten();
 
     this._currTrack = track;
@@ -93,7 +93,7 @@ p._listen = function () {
 
     this._currTrack.on('addParam', this._onTrackAddParam, this);
     this._currTrack.timeline.on('changeTime', this._onChangeTime, this);
-    
+
     this._showHideNoTrackMsg(false);
 
     this._forEachInput(function (input, paramName) {
@@ -277,7 +277,7 @@ p._createBase = function () {
 
                 node.tgglChildren = {
                     onClick: onToggleChildren,
-                }   
+                }
             }
 
             //create
@@ -348,10 +348,10 @@ p._createBase = function () {
 
                 if (isChildrenVisible) {
 
-                    optionLine.showSubline();
+                    optionLine.showSublines();
                 }
                 else {
-                    optionLine.hideSubline();
+                    optionLine.hideSublines();
                 }
             }
 
@@ -367,7 +367,7 @@ p._createBase = function () {
 
         if (node.children) {
 
-            ret = ret.concat(node.children.forEach(collectParamNames))                
+            ret = ret.concat(node.children.forEach(collectParamNames))
         }
         else {
             ret.push(node.title);

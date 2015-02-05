@@ -11,7 +11,7 @@ function ProjectMap(opt) {
 
     this._projects = [];
 
-    this.projectTab = new ProjectTab();
+    this.projectTab = new ProjectTab(this);
     am.workspace.fillTab('Project', this.projectTab.domElem);
 }
 
@@ -29,8 +29,6 @@ p.load = function (project) {
     if (!_.include(this._projects, project)) {
 
         this._projects.push(project);
-
-        project.on('focus.timeline', this._onFocusTimeline, this);
     }
 
     this.emit('load', project);
@@ -41,9 +39,8 @@ p.load = function (project) {
 p.unload = function (project) {
 
     _.pull(this._projects, project);
-    project.dispose();
 
-    project.off('focus.timeline', this._onFocusTimeline, this);
+    project.dispose();
 
     this.emit('unload', project);
 };
@@ -55,12 +52,16 @@ p.focus = function (project) {
     if (this._currProject) {
 
         this._currProject.blur();
+        this._currProject.off('change.currTimeline', am.setTimeline, am);
     }
 
     this._currProject = project;
     this._currProject.focus();
 
-    this.emit('focus', this._currProject);
+    am.setTimeline(this._currProject.currTimeline);
+    this._currProject.on('change.currTimeline', am.setTimeline, am);
+
+    this.projectTab.focus(this._currProject);
 };
 
 p.blur = function () {
@@ -81,8 +82,3 @@ p.getProjects = function () {
 
     return this._projects;
 }
-
-p._onFocusTimeline = function (timeline) {
-
-    this.emit('focus.timeline', timeline);
-};

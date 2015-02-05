@@ -46,8 +46,8 @@ p.getSave = function () {
         timelines: this._timelines.map(tl => tl.getSave()),
     };
 
-    if (this._currTimeline) {
-        save.currTimelineIdx = this._timelines.indexOf(this._currTimeline);
+    if (this.currTimeline) {
+        save.currTimelineIdx = this._timelines.indexOf(this.currTimeline);
     }
 
     return save;
@@ -103,47 +103,40 @@ p.removeTimeline = function (timeline) {
     this.emit('removeTimeline');
 };
 
-p.selectTimeline = function (idx) {
+p.selectTimeline = function (timeline) {
 
-    var timeline = this._timelines[idx];
+    if (_.isNumber(timeline)) {
 
-    if (!timeline || timeline === this._currTimeline) return;
-
-    if (this._currTimeline) {
-
-        this._currTimeline.pause();
+        timeline = this._timelines[timeline];
     }
 
-    this._currTimeline = timeline;
+    if (!timeline || timeline === this.currTimeline) return;
+
+    if (this.currTimeline) {
+
+        this.currTimeline.pause();
+    }
+
+    this.currTimeline = timeline;
+
+    this.emit('change.currTimeline', this.currTimeline);
 }
 
 p.focus = function () {
+    
+    if (!this.currTimeline && !_.isEmpty(this._timelines)) {
 
-    this._showTimeline()
+        this.selectTimeline(this._timelines[0]);
+    } 
 };
 
 p.blur = function () {
     
-    if (this._currTimeline) {
+    if (this.currTimeline) {
 
-        this._currTimeline.pause();
+        this.currTimeline.pause();
     }
 };
-
-p._showTimeline = function () {
-
-    if (!this._currTimeline && !_.isEmpty(this._timelines)) {
-
-        this.selectTimeline(0);
-    }
-
-    if (this._currTimeline) {
-
-        am.workspace.fillTab('timeline', this._currTimeline.domElem);
-    }
-
-    this.emit('focus.timeline', this._currTimeline);
-}
 
 
 

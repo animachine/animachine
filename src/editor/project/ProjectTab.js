@@ -22,6 +22,8 @@ p.focus = function (project) {
 
     this._currProject = project;
 
+    this._inpSelect.value = this._currProject.name;
+
     this._refreshLibrary();
     this._currProject.off(['addTimeline', 'removeTimeline'], this._refreshLibrary, this);
 };
@@ -85,7 +87,7 @@ p._createProjectHandlers = function () {
         var options = this._projectMap.getProjects().map(project => {
 
             return {
-                name: project.name,
+                title: project.name,
                 onClick: () => this._projectMap.focus(project)
             };
         });

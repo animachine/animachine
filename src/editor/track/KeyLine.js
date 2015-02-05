@@ -296,12 +296,13 @@ p._createDomElem = function createKeyline() {
     this._deLine.style.width = '100%';
     this._deLine.style.height = this._height + 'px';
     this.domElem.appendChild(this._deLine);
-    amgui.createSeparator({parent: this._deLine});
 
     this._canvas = document.createElement('canvas');
     this._canvas.style.position = 'absolute';
     this._deLine.appendChild(this._canvas);
     this._ctx = this._canvas.getContext('2d');
+    
+    amgui.createSeparator({parent: this._deLine});
 
     this._canvas.addEventListener('dblclick', this._onDblClick);
     this._canvas.addEventListener('mousedown', this._onMouseDown);

@@ -68,7 +68,7 @@
 .icon-vector-pencil { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe840;&nbsp;'); }
 .icon-target { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe841;&nbsp;'); }
 .icon-clock { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe842;&nbsp;'); }
-.icon-color-adjust { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe843;&nbsp;'); }
+.icon-ajust { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe843;&nbsp;'); }
 .icon-link { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe844;&nbsp;'); }
 .icon-unlink { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe845;&nbsp;'); }
 .icon-check-empty { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe846;&nbsp;'); }
@@ -114,3 +114,12 @@
 .icon-lightbulb { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe86e;&nbsp;'); }
 .icon-zoom-in { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe86f;&nbsp;'); }
 .icon-zoom-out { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe870;&nbsp;'); }
+.icon-up-circled2 { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe871;&nbsp;'); }
+.icon-infinity { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe872;&nbsp;'); }
+.icon-barcode { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe873;&nbsp;'); }
+.icon-share { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe874;&nbsp;'); }
+.icon-info { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe875;&nbsp;'); }
+.icon-help { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe876;&nbsp;'); }
+.icon-file-video { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe877;&nbsp;'); }
+.icon-file-audio { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe878;&nbsp;'); }
+.icon-file-image { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe879;&nbsp;'); }

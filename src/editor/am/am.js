@@ -191,6 +191,8 @@ am.openNewProject = function () {
 
 am.setTimeline = function (timeline) {
 
+    if (!timeline) return;
+
     timeline.toolbar.addIcon(am._staticToolbarIcons);
 
     am.currTimeline = timeline;

@@ -91,7 +91,7 @@ Object.defineProperties(p, {
 
 
 defineCompactProperty(p, [
-    {name: 'bgHighlight', type: 'boolean', onChange: v => {
+    {name: 'bgHighlight', type: 'boolean', onChange: function (v) {
         this._canvas.style.backgroundColor = v ? amgui.color.bg1 : amgui.color.bg0;
     }}
 ]);

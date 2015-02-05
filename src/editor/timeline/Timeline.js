@@ -16,7 +16,7 @@ function Timeline(opt) {
 
     EventEmitter.call(this);
     this.setMaxListeners(11111);
-    
+
     this._headerH = 23;
 
     this._onSelectTrack = this._onSelectTrack.bind(this);
@@ -34,7 +34,7 @@ function Timeline(opt) {
     this._onFinishEditCurrTime = this._onFinishEditCurrTime.bind(this);
     this._onChangeInpCurrTime = this._onChangeInpCurrTime.bind(this);
     this._animPlay = this._animPlay.bind(this);
-    
+
     this._timebar = new Timebar({
         height: this._headerH,
         timescale: 0.12,
@@ -45,7 +45,7 @@ function Timeline(opt) {
         height: this._headerH,
         bgColor: 'none',
     });
-    
+
     this._createBase();
     this._createPointerLine();
 
@@ -69,7 +69,7 @@ function Timeline(opt) {
     this._timebar.on('seek', this._onTimebarSeek);
 
     amgui.callOnAdded(this.domElem, this._refreshTimebarWidth, this);
-    
+
     window.addEventListener('resize', this._onWindowResize);
 
     if (opt) {
@@ -241,11 +241,11 @@ p.getScript = function (opt) {
         compressed_ast.mangle_names();
 
         return compressed_ast.print_to_string({comments: 'all'});
-    } 
+    }
 };
 
 p.clear = function () {
-    
+
     while(this._tracks.length) {
 
         this.removeTrack(this._tracks[0]);
@@ -261,7 +261,7 @@ p.addTrack = function (track) {
         redo: () => this.addTrack(track),
         name: 'add track',
     });
-    
+
     this._tracks.push(track);
 
     track.parentTimeline = this;
@@ -393,12 +393,12 @@ p._onTimebarSeek = function () {
 
 p._onSelectTrack = function(track) {
 
-    if (this._currTrack === track) 
+    if (this._currTrack === track)
         return;
 
     if (this._currTrack) {
-        
-        this._currTrack.deselect(); 
+
+        this._currTrack.deselect();
     }
 
     this._currTrack = track;
@@ -480,7 +480,7 @@ p._onSelectNewTrack = function (e) {
 
         default:
             am.dialogs.WIP.show();
-            
+
     }
 };
 
@@ -556,7 +556,7 @@ p._refreshPointerLine = function () {
 
     var left = (this._timebar.start + this.currTime) * this.timescale;
     left = parseInt(left) + 0.5;
-    
+
     ctx.strokeStyle = amgui.color.red;
     ctx.moveTo(left, 0);
     ctx.lineTo(left, canvas.height);
@@ -568,7 +568,7 @@ p._refreshPointerLine = function () {
 
 p._refreshDeCurrTime = function () {
 
-    var time = this.currTime, 
+    var time = this.currTime,
         min, sec, ms, str  = '';
 
     min = ~~(time / 60000);
@@ -598,11 +598,11 @@ p._refreshDeCurrTime = function () {
 p._createBase = function () {
 
     this.domElem = document.createElement('div');
-    this.domElem.style.backgroundColor = amgui.color.bg0; 
-    this.domElem.style.display = 'flex'; 
-    this.domElem.style.width = '100%'; 
-    this.domElem.style.height = '100%'; 
-    this.domElem.style.pointerEvents = 'auto'; 
+    this.domElem.style.backgroundColor = amgui.color.bg0;
+    this.domElem.style.display = 'flex';
+    this.domElem.style.width = '100%';
+    this.domElem.style.height = '100%';
+    this.domElem.style.pointerEvents = 'auto';
 
     this._deLeft = document.createElement('div');
     this._deLeft.style.backgroundColor = amgui.color.bg0;
@@ -676,7 +676,7 @@ p._createBase = function () {
         deTarget: [this._deOptionLineCont, this._deKeyLineCont],
         deRange: this._deRange
     });
-    
+
     this._createDividerHandler();
 };
 
@@ -702,7 +702,7 @@ p._createSettingsHead = function () {
     });
     this.toolbar.addIcon({deIcon: this._btnNewTrack});
 
-    amgui.bindDropdown({    
+    amgui.bindDropdown({
         deTarget: this._btnNewTrack,
         deMenu: amgui.createDropdown({
             options: ['css', 'js', 'attribute', 'media', 'timeline', 'three.js', 'pixi.js', 'easel.js', 'kinetic.js', 'raphael.js', 'snap.js'],
@@ -710,10 +710,10 @@ p._createSettingsHead = function () {
         }),
     });
 
-    
+
     this._btnEditTriggers = amgui.createIconBtn({
         tooltip: 'set timeline triggers',
-        icon: 'gamepad', 
+        icon: 'gamepad',
         size: this._headerH,
         display: 'inline-block',
         onClick: () => this.triggerMap.showEditor(),
@@ -722,10 +722,10 @@ p._createSettingsHead = function () {
         deIcon: this._btnEditTriggers,
     });
 
-    
+
     this._btnTogglePlay = amgui.createToggleIconBtn({
         tooltip: 'play/pause preview',
-        iconOn: 'pause', 
+        iconOn: 'pause',
         iconOff: 'play',
         size: this._headerH,
         display: 'inline-block',
@@ -769,7 +769,7 @@ p._createDividerHandler = function () {
     this._deDividerHandler.style.width = '1px';
     this._deDividerHandler.style.position = 'absolute';
     this._deDividerHandler.style.height = 'calc(100% - ' + this._headerH + 'px)';
-    this._deDividerHandler.style.transform = 'scaleX(3)';
+    this._deDividerHandler.style.transform = 'translateX(1px) scaleX(3)';
     this._deDividerHandler.style.cursor = 'ew-resize';
     this.domElem.appendChild(this._deDividerHandler);
 
@@ -777,7 +777,7 @@ p._createDividerHandler = function () {
 
         deTarget: this._deDividerHandler,
         thisArg: this,
-        
+
         onMove: function (md, mx) {
 
             var left = mx - this.domElem.getBoundingClientRect().left + 'px';

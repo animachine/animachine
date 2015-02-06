@@ -3,6 +3,8 @@
 var EventEmitter = require('eventman');
 var fontelloConf = require('../assets/fontello/config.json');
 
+var amgui = window.amgui = new EventEmitter();
+
 WebFont.load({
     google: {
       families: ['Open+Sans:300,400,600,700,800:latin,latin-ext']
@@ -36,12 +38,10 @@ WebFont.load({
                     amgui.emit('fontLoaded');
                 }
             }
-        }
+        };
 
     })(),
 });
-
-var amgui = window.amgui = new EventEmitter();
 
 _.extend(amgui,
     require('./amgui.bezierEditor')(amgui),
@@ -80,6 +80,7 @@ _.extend(amgui,
             overlayInverse: 'rgba(222,232,222,.785)',
             bgHover: 'rgba(255,255,255,0.12)',
             selected: '#01FF70',
+            transparent: 'rgba(0,0,0,0)',
             //https://github.com/mrmrs/colors
             aqua: "#7FDBFF",
             blue: "#0074D9",

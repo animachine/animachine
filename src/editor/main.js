@@ -1,7 +1,7 @@
 var bowser = require('bowser').browser;
 
 if (!bowser.chrome && !bowser.opera) {
-    
+
     alertUnsupportedBrowsers();
     throw Error('unsupported browser');
 }

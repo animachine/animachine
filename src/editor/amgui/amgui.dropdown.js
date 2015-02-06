@@ -40,12 +40,10 @@ function createDropdown(opt) {
         li.style.cursor = 'pointer';
         li.style.background = amgui.color.overlayInverse;
 
-        optItem.label = amgui.createLabel({
-            text: optItem.text,
-            icon: optItem.icon,
+        optItem.label = amgui.createLabel(_.assign({
             parent: li,
             color: amgui.color.textInverse,
-        });
+        }, optItem));
 
         li.addEventListener('click', function (e) {
 
@@ -70,7 +68,7 @@ function createDropdown(opt) {
 
         if (optItem.children) {
 
-            optItem.label.iconRight = 'dir-right';
+            optItem.label.iconRight = 'right-dir';
 
             bindDropdown({
                 deTarget: li,

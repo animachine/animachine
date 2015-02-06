@@ -9,7 +9,7 @@ function SelectInput(opt={}) {
     Input.call(this, opt);
 
     this._options = opt.options || [];
-    this.value = opt.value || this._options[0] || '';
+    this._value = opt.value || this._options[0] || '';
     this._defaultValue = opt.defaultValue || this._options[0] || '';
 
     this._createBase();
@@ -81,4 +81,3 @@ p._createBase = function () {
         deDropdown: this._deDropdown,
     });
 };
-

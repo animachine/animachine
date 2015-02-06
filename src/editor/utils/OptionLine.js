@@ -191,7 +191,7 @@ Object.defineProperties(p, {
 
 defineCompactProperty(p, [
     {name: 'bgHighlight', type: 'boolean', onChange: function (v) {
-        this._deHeadCont.style.backgroundColor = v ? amgui.color.bg1 : amgui.color.bg0;
+        this._deHeadCont.style.backgroundColor = v ? amgui.color.bg1 : amgui.color.transparent;
     }}
 ]);
 
@@ -259,6 +259,8 @@ p.addOptionLine = function (optionLine) {
 
     this._subOptionLines.push(optionLine);
     this._deSubcont.appendChild(optionLine.domElem);
+
+    optionLine.indent = this.indent + 1;
 
     if (this._isBorrowingChildInputs) {
         this.returnChildInputs();

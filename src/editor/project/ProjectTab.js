@@ -2,7 +2,6 @@
 
 var amgui = require('../amgui');
 var OptionLine = require('../utils/OptionLine');
-var SelectInput = require('../utils/SelectInput');
 
 function ProjectTab(projectMap) {
 
@@ -22,7 +21,7 @@ p.focus = function (project) {
 
     this._currProject = project;
 
-    this._inpSelect.value = this._currProject.name;
+    this._deSelected.text = this._currProject.name;
 
     this._refreshLibrary();
     this._currProject.off(['addTimeline', 'removeTimeline'], this._refreshLibrary, this);
@@ -43,6 +42,7 @@ p._refreshLibrary = function () {
         var optionLine = new OptionLine({
             title: timeline.name || 'unnamed timeline',
             onDblclick: () => this._currProject.selectTimeline(timeline),
+            keepSpaceForTgglChildren: true,
             data: {
                 type: 'timeline',
                 value: timeline,
@@ -84,27 +84,38 @@ p._createProjectHandlers = function () {
 
     var refreshSelectInput = () => {
 
-        var options = this._projectMap.getProjects().map(project => {
+        var items = this._projectMap.getProjects().map(project => {
 
             return {
-                title: project.name,
-                onClick: () => this._projectMap.focus(project)
+                text: project.name,
+                onClick: () => this._projectMap.focus(project),
+                iconRight: project === this._currProject ? 'paw' : undefined,
             };
         });
-        this._inpSelect.setOptions(options);
+        this._ddSelect.setItems(items);
     };
 
-    this._inpSelect = new SelectInput({
+    this._deSelected = amgui.createLabel({
         parent: this._scrollCont,
+        fontSize: '14px',
+        fontWeight: '600',
+        iconRight: 'down-dir',
+    });
+
+    this._ddSelect = amgui.createDropdown({});
+
+    amgui.bindDropdown({
+        deTarget: this._deSelected,
+        deDropdown: this._ddSelect,
     });
 
     refreshSelectInput();
     this._projectMap.on(['load', 'unload'], refreshSelectInput);
 
-    amgui.createBtn({
+    amgui.createIconBtn({
         parent: this._scrollCont,
         icon: 'plus',
-        text: 'new project',
+        display: 'inline-block',
         onClick: () => {
             var project = this._projectMap.load({name: 'new project'});
             this._projectMap.focus(project);
@@ -117,6 +128,7 @@ p._createLibrary = function () {
     this._optLibrary = new OptionLine({
         title: 'Library',
         parent: this._scrollCont,
+        tgglChildren: true,
     });
 
     var btnNew = amgui.createIconBtn({

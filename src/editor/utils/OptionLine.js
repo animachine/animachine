@@ -152,6 +152,10 @@ Object.defineProperties(p, {
     highlight: {
         set: function (v) {
             this._deHighlight.style.opacity = v ? 1 : 0;
+
+            if (typeof(v) === 'string') {
+                this._deHighlight.style.backgroundColor = v;
+            }
         },
     },
     indent: {

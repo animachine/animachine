@@ -1,0 +1,29 @@
+@import url(http://fonts.googleapis.com/css?family=Oswald:400,300,700);
+html {
+  background: black;
+}
+
+.main {
+  width: 650px;
+  height: 350px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -175px;
+  margin-left: -325px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.head h1 {
+  font-family: "Oswald";
+  text-align: center;
+  font-size: 100px;
+  width: 100%;
+  position: absolute;
+  overflow: hidden;
+  margin-left: -15px;
+  color: transparent;
+  text-shadow: 0px 0px 3px #eee, 5px 5px 2px teal, -5px -2px 2px #7f0000;
+  font-weight: 400;
+}

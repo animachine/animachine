@@ -44,10 +44,20 @@ p.getScript = function () {
 
     this._triggers.forEach(trigger => {
 
-        let args = _.pluck(trigger.action.argument, 'value').join(', '),
-            action = `${trigger.action.method}(${args})`;
+        let add,
+            args = _.pluck(trigger.action.argument, 'value').join(', '),
+            action = `function () {tl.${trigger.action.method}(${args})}`;
 
-        ret.push(`$(${trigger.targets}).on(${trigger.events}, ${action});`);
+        if (trigger.type === 'jQuery') {
+
+            add = `$(${trigger.targets}).on`;
+        }
+        else if (trigger.type === 'Reveal.js') {
+
+            add = 'Reveal.addEventListener';
+        }
+
+        ret.push(`${add}(${trigger.events}, ${action});`);
     });
 
     return ret.join('\n');
@@ -81,6 +91,7 @@ p.removeTrigger = function (trigger) {
 p._createTrigger = function () {
 
     return {
+        type: 'jQuery',
         name: 'myTrigger',
         events: ['click'],
         targets: ['#selector'],
@@ -98,7 +109,7 @@ p._createEditDialog = function () {
     this._editDialog = dialog;
 
     var selectTrigger = trigger => {
-        
+
         if (!trigger) return;
 
         currTrigger = trigger;
@@ -131,6 +142,17 @@ p._createEditDialog = function () {
             defaultValue: 'myTrigger',
             onChange: v => currTrigger.name = v,
             type: 'string',
+            name: 'input',
+        }],
+    });
+
+    var optType = new OptionLine({
+        title: 'type:',
+        parent: deCont,
+        inputs: [{
+            onChange: v => currTrigger.type = v,
+            type: 'select',
+            options: ['jQuery', 'reveal.js'],
             name: 'input',
         }],
     });
@@ -183,6 +205,6 @@ p._createEditDialog = function () {
         text: 'remove trigger',
         onClick: () => {
             this.removeTrigger(currTrigger);
-        },  
+        },
     });
 };

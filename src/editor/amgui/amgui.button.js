@@ -20,7 +20,7 @@ module.exports = function (_amgui) {
 function createLinebreak(opt) {
 
     var de = document.createElement('br');
-    
+
     if (opt.parent) {
         opt.parent.appendChild(de);
     }
@@ -31,7 +31,7 @@ function createLinebreak(opt) {
 function createLabel(opt) {
 
     var de = amgui.createDiv(opt),
-        deIcon,
+        deIconLeft, deIconRight,
         deText = amgui.createDiv({
             parent: de,
             display: 'inline'
@@ -56,36 +56,42 @@ function createLabel(opt) {
         },
         icon: {
             set: function (v) {
-                if (!v && !deIcon) return;
-                if (!deIcon) {
-                    deIcon  = amgui.createIcon({
+                this.iconLeft = v;
+            }
+        },
+        iconLeft: {
+            set: function (v) {
+                if (!v && !deIconLeft) return;
+                if (!deIconLeft) {
+                    deIconLeft  = amgui.createIcon({
                         color: opt.color,
                     });
-                    deIcon.style.marginRight = '3px';
-                    de.insertBefore(deIcon, deText);
+                    deIconLeft.style.marginRight = '3px';
+                    de.insertBefore(deIconLeft, deText);
                 }
-                deIcon.setIcon(v);
-                deIcon.style.display = v ? 'inline' : 'none';
+                deIconLeft.setIcon(v);
+                deIconLeft.style.display = v ? 'inline' : 'none';
+            }
+        },
+        iconRight: {
+            set: function (v) {
+                if (!v && !deIconRight) return;
+                if (!deIconRight) {
+                    deIconRight  = amgui.createIcon({
+                        color: opt.color,
+                    });
+                    deIconRight.style.marginLeft = '3px';
+                    de.appendChild(deIconRight);
+                }
+                deIconRight.setIcon(v);
+                deIconRight.style.display = v ? 'inline' : 'none';
             }
         }
     });
 
-    if (opt.caption) {
-        opt.text = opt.caption;
-        console.warn('opt.caption is deprecated');
-    }
-    
     de.text = opt.text;
-    de.icon = opt.icon;
-
-    de.setText = function (text) {
-        console.warn('setText() is deprecated');
-        de.text = text;
-    }
-    de.getText = function () {
-        console.warn('getText() is deprecated');
-        return de.text;
-    }
+    de.iconLeft = opt.iconLeft || opt.icon;
+    de.iconRight = opt.iconRight;
 
     return de;
 }
@@ -112,9 +118,9 @@ function createBtn(opt) {
 
                 return de.textContent;
             }
-        } 
+        }
     });
-    
+
     de.text = opt.text || opt.caption || 'button';
 
     behaviorBtn(de, opt);
@@ -127,8 +133,6 @@ function createBtn(opt) {
 }
 
 function createIconBtn(opt) {
-
-    var isFixedHighlight = false;
 
     var de = amgui.createIcon(opt);
     de.style.overflow = 'hidden';
@@ -147,7 +151,7 @@ function behaviorBtn(de, opt) {
         backgroundHover = opt.backgroundHover || amgui.color.bgHover;
 
     de.style.cursor = 'pointer';
-    
+
     de.addEventListener('mouseenter', onMOver);
     de.addEventListener('mouseleave', onMOut);
 
@@ -221,7 +225,7 @@ function createToggleIconBtn(opt) {
     setIcon();
 
     if ('autoToggle' in opt ? opt.autoToggle : !opt.onClick) {
-        
+
         de.addEventListener('click', onToggleClick);
     }
 
@@ -241,7 +245,7 @@ function createToggleIconBtn(opt) {
         if (on === isOn) {
             return;
         }
-        
+
         isOn = on;
         setIcon();
 
@@ -256,7 +260,7 @@ function createToggleIconBtn(opt) {
 
 
     function onToggleClick() {
-        
+
         de.setToggle(!isOn);
     }
 
@@ -276,7 +280,7 @@ function createIcon(opt) {
 
     opt = opt || {};
     opt.size = opt.size || opt.height || amgui.LINE_HEIGHT;
-    
+
     var de = amgui.createDiv();
     de.style.color = opt.color || amgui.color.text;
     de.style.width = (opt.width || opt.size) + 'px';

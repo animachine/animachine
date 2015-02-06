@@ -184,7 +184,7 @@ p.useSave = function (save) {
     var loadChildren = (children, path) => {
 
         children.forEach(child => {
-            
+
             if (child.children) {
 
                 path = path.slice().concat(child.save.name);
@@ -256,11 +256,11 @@ p._getScriptParams = function (opt) {
                 duration: key.duration,
                 options: {
                     ease: key.options.ease,
-                    transformOrigin: '' + 
+                    transformOrigin: '' +
                         (tox && tox[idx] ? tox[idx].options.transformOriginX : '50%') + ' ' +
                         (toy && toy[idx] ? toy[idx].options.transformOriginY : '50%') + ' ' +
                         (toz && toz[idx] ? (toz[idx].options.transformOriginZ || '0px') : ''),
-                } 
+                }
             });
         });
 
@@ -322,7 +322,7 @@ p.getScript = function () {
     //                     }
     //                 });
     //             }
-    //         } 
+    //         }
     //     }
     // }
 
@@ -427,7 +427,7 @@ p.getParam = function (name) {
 p.addGroup = function (path, opt) {
 
     path = path.slice();
-    
+
     var name = path.pop(),
         parent = this._paramGroup;
 
@@ -511,7 +511,7 @@ p._prepareBuiltInGroup = function (paramName) {
             group.addParam(param);
         }
     };
-    
+
     walk(rootGroupName, []);
 };
 
@@ -638,7 +638,7 @@ p.focusTransformer = function (de) {
             case 'yPercent': yPercent = parseFloat(param.getValue()); break;
         }
     });
-    
+
 
     this._transformer.setLocalRoot(de.parentNode);
     this._transformer.setup({
@@ -712,11 +712,13 @@ p._switchFromTranslateToBezier = function () {
 
     var xParam = this.getParam('x'),
         yParam = this.getParam('y'),
-        xKeys = xParam.getSave().keys,
-        yKeys = yParam.getSave().keys,
+        xParamSave = xParam.getSave(),
+        yParamSave = yParam.getSave(),
+        xKeys = xParamSave.keys,
+        yKeys = yParamSave.keys,
         bezierKeys = [],
         times = _.sortBy(_.uniq(_.pluck(xKeys, 'time').concat(_.pluck(yKeys, 'time')))),
-        oldBezierKeys = this.__savedBezierKeys || [];
+        oldBezierKeys = this.__bezierParamSave ? this.__bezierParamSave.keys : [];
 
     times.forEach(function (time) {
 
@@ -742,6 +744,13 @@ p._switchFromTranslateToBezier = function () {
         keys: bezierKeys,
     });
 
+    this.__xParamSave = xParamSave;
+    this.__yParamSave = yParamSave;
+    bezierParam.once('change', () => {
+        delete this.__xParamSave;
+        delete this.__yParamSave;
+    });
+
     xParam.hidden = true;
     yParam.hidden = true;
     this._paramGroup.getParam('translate').hidden = true;
@@ -753,13 +762,11 @@ p._switchFromBezierToTranslate = function () {
     //TODO restore original x, y keys when bezier wasn't changed
 
     var bezierParam = this.getParam('bezier'),
-        bezierKeys = bezierParam.getSave().keys,
+        bezierParamSave = bezierParam.getSave(),
         xKeys = [],
         yKeys = [];
-    
-    this.__savedBezierKeys = bezierKeys;
 
-    bezierKeys.forEach(function (bezierKey) {
+    bezierParamSave.keys.forEach(function (bezierKey) {
 
         var lastPoint = _.last(bezierKey.value);
 
@@ -773,14 +780,16 @@ p._switchFromBezierToTranslate = function () {
         });
     });
 
-    var xParam = this.addParam({
+    var xParam = this.addParam(this.__xParamSave || {
         name: 'x',
         keys: xKeys,
     });
-    var yParam = this.addParam({
+    var yParam = this.addParam(this.__yParamSave || {
         name: 'y',
         keys: yKeys,
     });
+
+    this.__bezierParamSave = bezierParamSave;
 
     xParam.hidden = false;
     yParam.hidden = false;
@@ -800,7 +809,7 @@ p._switchFromBezierToTranslate = function () {
 p._onSelectTrack = function (track) {
 
     if (track === this) {
-    
+
         this.select();
     }
 };
@@ -894,7 +903,7 @@ p._onChangeTime = function (time) {
 };
 
 p._onChangeParameter = function () {
-    
+
     this._refreshPlayer();
     this.renderTime();
     this.focusTransformer();
@@ -980,7 +989,7 @@ p._onChangeHeight = function (selectors) {
 
 
 
-p._refreshPlayer = function () { 
+p._refreshPlayer = function () {
 
     if (this._player) this._player.kill();
 
@@ -1040,7 +1049,7 @@ p._refreshSelectedElems = function () {
     function add(item) {
 
         if (typeof(item) === 'string') {
-            
+
             var items = am.deRoot.querySelectorAll(item);
             items = Array.prototype.slice.call(items);
             list = list.concat(items);

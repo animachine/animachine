@@ -1,0 +1,10 @@
+#cplink {
+  position: absolute;
+  top: 6px;
+  right: 12px;
+}
+
+#cplink img {
+  right: 0px;
+  width: 134px;
+}

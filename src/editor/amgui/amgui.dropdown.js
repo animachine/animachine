@@ -70,6 +70,8 @@ function createDropdown(opt) {
 
         if (optItem.children) {
 
+            optItem.label.iconRight = 'dir-right';
+
             bindDropdown({
                 deTarget: li,
                 deDropdown: createDropdown({options: optItem.children}),
@@ -94,14 +96,14 @@ function createDropdown(opt) {
     de.setItems = function (newItems) {
 
         while (items.length) de.removeItem(items[0]);
-        
+
         newItems.forEach(optItem => de.addItem(optItem));
     };
 
     if (opt.options) {
 
-        de.setItems(opt.options)
-    };
+        de.setItems(opt.options);
+    }
 
     if (opt.onSelect) {
 
@@ -134,7 +136,7 @@ function bindDropdown(opt) {
         });
     }
 
-    
+
 
     return {
         setDropdown: function (dd) {
@@ -145,7 +147,7 @@ function bindDropdown(opt) {
 
     function open(e) {
 
-        if (opt.onOpening && opt.onOpening(e) === false) {   
+        if (opt.onOpening && opt.onOpening(e) === false) {
             return;
         }
 
@@ -157,7 +159,7 @@ function bindDropdown(opt) {
         deDropdown.style.position = 'fixed';
         deDropdown.style.pointerEvents = 'auto';
         deCont.appendChild(deDropdown);
-        
+
         amgui.placeToPoint(deDropdown, e.clientX, e.clientY, opt.side);
 
         deDropdown.addEventListener('select', close);

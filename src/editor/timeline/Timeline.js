@@ -195,6 +195,7 @@ p.getScript = function (opt) {
         name: 'amsave',
         saveJson: opt.includeSave && this.getSave(),
         trackPlayerGens: playerScripts.join(',\n'),
+        triggerScript: this.triggerMap.getScript(),
         autoPlay: opt.autoPlay
     });
 
@@ -292,7 +293,7 @@ p.addTrack = function (track) {
     }
 };
 
-p.removeTrack = function (track, skipHistory) {
+p.removeTrack = function (track) {
 
     if (!_.include(this._tracks, track)) return;
 

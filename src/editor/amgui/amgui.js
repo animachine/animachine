@@ -14,18 +14,18 @@ WebFont.load({
     fontactive: (() => {
 
         var variants = [
-            'amgui:n4', 
-            'Open Sans:n3', 
-            'Open Sans:n4', 
-            'Open Sans:n6', 
-            'Open Sans:n7', 
+            'amgui:n4',
+            'Open Sans:n3',
+            'Open Sans:n4',
+            'Open Sans:n6',
+            'Open Sans:n7',
             'Open Sans:n8'
         ];
 
         return (familyName, fvd) => {
 
             var variant = familyName + ':' + fvd;
-            
+
             if (variants.indexOf(variant) !== -1) {
 
                 variants.splice(variants.indexOf(variant), 1);
@@ -37,7 +37,7 @@ WebFont.load({
                 }
             }
         }
-        
+
     })(),
 });
 
@@ -79,7 +79,7 @@ _.extend(amgui,
             overlay: 'rgba(0,0,0,.785)',
             overlayInverse: 'rgba(222,232,222,.785)',
             bgHover: 'rgba(255,255,255,0.12)',
-            selected: "#01FF70",
+            selected: '#01FF70',
             //https://github.com/mrmrs/colors
             aqua: "#7FDBFF",
             blue: "#0074D9",
@@ -146,7 +146,7 @@ _.extend(amgui,
             var glyph = fontelloConf.glyphs.find(glyph => glyph.css === iconName);
 
             var code = glyph ? glyph.code : 59407;
-            
+
             return String.fromCharCode(code);
         }
     }

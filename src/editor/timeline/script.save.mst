@@ -12,7 +12,7 @@
     root.am.anims = root.am.anims || {};
 
     var reg = root.am.anims.{{name}} = {
-        
+
         create: function (inputs) {
 
             var tl = new TimelineMax({paused: true});
@@ -24,7 +24,7 @@
 
             return tl;
         },
-        
+
         {{#saveJson}}
         saveJson: SAVEJSON,
         {{/saveJson}}
@@ -34,13 +34,13 @@
 
     //-- CJS --//
     if (typeof exports === 'object') {
-        
+
         module.exports = reg;
     }
 
     //-- AMD --//
     if (typeof define === 'function' && define.amd) {
-        
+
         define(function () {
             return reg;
         });
@@ -59,22 +59,14 @@
     }
     {{/autoPlay}}//
 
-    {{#triggerMap}}
+    {{#triggerScript}}
     (function () {
 
-        var tl;
-
-        triggerMap.forEach(function (trigger) {
-
-            $(getAnimTargets(trigger.selectors)).on(trigger.events, function () {
-
-                if (!tl) tl = reg.create();
-
-                tl[trigger.method].apply(tl, trigger.arguments.split(','))
-            });
-        });
+        var tl = reg.create();
+        
+        {{triggerScript}}
     })
-    {{/triggerMap}}//
+    {{/triggerScript}}//
 
     //utils
     function getAnimTargets(selectors, inputs) {
@@ -104,7 +96,7 @@
 
         return list;
     };
-    
+
 }(this));
 
 

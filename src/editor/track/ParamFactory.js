@@ -18,13 +18,13 @@ var p = ParamFactory.prototype;
 
 p.create = function (opt={}) {
 
-    param = new Param(opt, this.timeline);
+    var param = new Param(opt, this.timeline);
 
     return param;
 };
 
 p.createGroup = function (opt) {
-    
+
     var paramGroup = new ParamGroup(opt, this.timeline);
 
     return paramGroup;
@@ -47,7 +47,7 @@ p.getRootParamGroupName = function (paramName) {
             }
         }
         else {
-            
+
             for (var key in group) {
 
                 if (search(group[key])) {
@@ -60,7 +60,7 @@ p.getRootParamGroupName = function (paramName) {
 };
 
 p.getGroupMemberNames = function (path) {
-    
+
     var group = this.groups;
 
     path = path.slice();
@@ -68,7 +68,7 @@ p.getGroupMemberNames = function (path) {
     while (path.length) {
 
         group = group[path.shift()];
-    };
+    }
 
     if (_.isPlainObject(group)) group = Object.keys(group);
 
@@ -82,15 +82,9 @@ p.ifit = function (str) {
     var ret = {
         is: (cases, cb) => {
 
-            try {
+            if (cases.match(rx)) {
 
-                if (cases.match(rx)) {
-
-                    cb();
-                }
-            }
-            catch (e) {
-                debugger;
+                cb();
             }
 
             return ret;
@@ -98,4 +92,4 @@ p.ifit = function (str) {
     };
 
     return ret;
-}
+};

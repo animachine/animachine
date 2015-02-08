@@ -112,15 +112,29 @@ p._createProjectHandlers = function () {
     refreshSelectInput();
     this._projectMap.on(['load', 'unload'], refreshSelectInput);
 
-    amgui.createIconBtn({
-        parent: this._scrollCont,
-        icon: 'plus',
-        display: 'inline-block',
-        onClick: () => {
-            var project = this._projectMap.load({name: 'new project'});
-            this._projectMap.focus(project);
-        },
-    });
+
+
+    amgui.bindDropdown({
+        deTarget: amgui.createIconBtn({
+            parent: this._scrollCont,
+            icon: 'ellipsis',
+            display: 'inline-block',
+        }),
+        deDropdown: amgui.createDropdown({
+            options: [{
+                text: 'new project',
+                icon: 'plus',
+                onClick: () => {
+                    var project = this._projectMap.load({name: 'new project'});
+                    this._projectMap.focus(project);
+                },
+            }, {
+                text: 'close this project',
+                icon: 'cancel',
+                onClick: () => am.dialogs.WIP.show(),
+            }],
+        }),
+    })
 };
 
 p._createLibrary = function () {

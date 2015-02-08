@@ -69,7 +69,7 @@ p.blur = function () {
 
 
 p._onChangeInput = function () {
-    
+
     this.value = this._input.value;
 };
 
@@ -85,6 +85,7 @@ p._createBase = function () {
 
     this.domElem = amgui.createDiv();
     this.domElem.style.display = 'flex';
+    this.domElem.style.width = '100%';
 
     this._input = amgui.createInput({
         parent: this.domElem,

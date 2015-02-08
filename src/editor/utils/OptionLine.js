@@ -359,7 +359,6 @@ p._createDomElem = function() {
     this._deHeadCont.style.display = 'flex';
     this._deHeadCont.style.width = '100%';
     this._deHeadCont.style.height = this._lineH + 'px';
-    this._deHeadCont.style.backgroundColor = amgui.color.bg0;
     this.domElem.appendChild(this._deHeadCont);
 
     amgui.createSeparator({parent: this._deHeadCont});

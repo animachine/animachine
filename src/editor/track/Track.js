@@ -2,12 +2,9 @@
 
 var EventEmitter = require('eventman');
 var inherits = require('inherits');
-var defineCompactProperty = require('../utils/defineCompactProperty');
 var amgui = require('../amgui');
 var ParamFactory = require('./ParamFactory');
 var Transhand = require('transhand');
-var KeyLineGroup = require('./KeyLineGroup');
-var OptionLine = require('../utils/OptionLine');
 var ParamGroup = require('./ParamGroup');
 var dialogTrackOptions = require('./dialogTrackOptions');
 var dialogNewParam = require('./dialogNewParam');
@@ -30,13 +27,6 @@ function Track(opt, timeline) {
     if (!this._paramFactory) this._paramFactory = new ParamFactory({}, this.timeline);
 
     this._onSelectClick = this._onSelectClick.bind(this);
-    this._onDeleteParameter = this._onDeleteParameter.bind(this);
-    this._onMoveParameter = this._onMoveParameter.bind(this);
-    this._onClickTgglKey = this._onClickTgglKey.bind(this);
-    this._onClickTgglHide = this._onClickTgglHide.bind(this);
-    this._onChangeHeight = this._onChangeHeight.bind(this);
-    this._onChangeTime = this._onChangeTime.bind(this);
-    this._onChangeParameter = this._onChangeParameter.bind(this);
     this._onChangeSelectors = this._onChangeSelectors.bind(this);
     this._onWindowResize = this._onWindowResize.bind(this);
     this._onWindowScroll = this._onWindowScroll.bind(this);
@@ -52,6 +42,7 @@ function Track(opt, timeline) {
 
     this._paramGroup = new ParamGroup({
         name: 'new track',
+        paramFactory: this._paramFactory,
         optionLine: {
             tgglMerge: false,
             title: '-',
@@ -65,30 +56,15 @@ function Track(opt, timeline) {
         },
     }, this.timeline);
 
+    this._paramGroup.on('change.structure', () => {
+
+        this._endParams = this._paramGroup.getEndParams();
+    });
+
+    this._paramGroup.on('change.param', this._onChangeParameter, this);
+
     //test hack
     this._paramGroup.optionLine._deTitle.style.fontWeight = 'bold';
-
-    this._paramGroup.optionLine.addButton({
-        domElem: amgui.createToggleIconBtn({
-            iconOn: 'eye',
-            iconOff: 'eye-off',
-            changeColor: true,
-            onClick: this._onClickTgglHide,
-        }),
-        name: 'tgglHide',
-        childIdx: 0,
-    });
-
-    this._paramGroup.optionLine.addButton({
-        domElem: amgui.createToggleIconBtn({
-            tooltip: 'enable/disable 3d',
-            icon: 'cube',
-            changeColor: true,
-            onClick: () => am.dialogs.WIP.show(),
-        }),
-        name: 'tggl3d',
-        childIdx: 0,
-    });
 
 
     this._paramGroup.optionLine.addButton({
@@ -107,7 +83,7 @@ function Track(opt, timeline) {
     this.deOptionLine.addEventListener('click', this._onSelectClick);
     this.deKeyLine.addEventListener('click', this._onSelectClick);
 
-    this._paramGroup.on('changeHeight', this._onChangeHeight);
+    this._paramGroup.on('changeHeight', this._onChangeHeight, this);
     am.on('selectTrack', this._onSelectTrack);
     am.on('deselectTrack', this._onDeselectTrack);
 
@@ -117,7 +93,7 @@ function Track(opt, timeline) {
         this.useSave(opt);
     }
 
-    this.timeline.on('changeTime', this._onChangeTime);
+    this.timeline.on('changeTime', this._onChangeTime, this);
 }
 
 inherits(Track, EventEmitter);
@@ -149,26 +125,8 @@ p.getSave = function () {
 
     var save = {
         selectors: _.clone(this._selectors),
-        paramTree: {children: [], save: this._paramGroup.getSave()},
+        paramTree: this._paramGroup.getSave(),
     };
-    //TODO make param and group handling cleaner
-    var saveChildren = (children, paramGroup) => {
-
-        paramGroup.getParamNames().forEach(name => {
-
-            let param = paramGroup.getParam(name),
-                child = {save: param.getSave()};
-
-            children.push(child);
-
-            if (param instanceof ParamGroup) {
-
-                child.children = [];
-                saveChildren(child.children, param);
-            }
-        });
-    };
-    saveChildren(save.paramTree.children, this._paramGroup);
 
     return save;
 };
@@ -180,29 +138,7 @@ p.useSave = function (save) {
     }
 
     this._selectors = save.selectors || [];
-
-    var loadChildren = (children, path) => {
-
-        children.forEach(child => {
-
-            if (child.children) {
-
-                path = path.slice().concat(child.save.name);
-
-                this.addGroup(path, child.save);
-
-                loadChildren(child.children, path);
-            }
-            else {
-                this.addParam(child.save);
-            }
-        });
-    };
-    if ('paramTree' in save) {
-
-        if (save.paramTree.children) loadChildren(save.paramTree.children, []);
-        if ('save' in save.paramTree) this._paramGroup.useSave(save.paramTree.save);
-    }
+    if (save.paramTree) this._paramGroup.useSave(save.paramTree);
 
     this._refreshSelectedElems();
     this._refreshPlayer();
@@ -216,10 +152,9 @@ p._getScriptParams = function (opt) {
 
         if (param.hidden) return;
 
-        var tl = new TimelineMax(),
-            lastTime = 0;
+        var lastTime = 0;
 
-        var param = param.getScriptKeys({runnable: opt.runnable}).map(key => {
+        param = param.getScriptKeys({runnable: opt.runnable}).map(key => {
 
             key.duration = (key.time - lastTime)/1000;
             lastTime = key.time;
@@ -293,7 +228,7 @@ p.getPlayer = function () {
 
 p.getScript = function () {
 
-    var code = '', optionLine, selectors,
+    var code = '', selectors,
         timelines = this._getScriptParams({runnable: false});
 
 
@@ -359,61 +294,13 @@ p.addParam = function (opt) {
         }
     }
     else {
-        param = this._paramFactory.create(opt);
-        param.parentTrack = this;
-
-        let flag = am.history.startFlag('add param');
-
-        am.history.save({
-            undo: () => this.removeParam(param),
-            redo: () => this.addParam(param),
-            name: 'add param ' + param.name,
-        });
-
-        this._endParams.push(param);
         this._paramGroup.addParam(param);
 
-        param.on('change', this._onChangeParameter);
-        param.on('delete', this._onDeleteParameter);
-        param.on('bezierToTranslate', this._switchFromBezierToTranslate, this);
-
-        this._prepareBuiltInGroup(opt.name);
-
-        am.history.endFlag(flag);
         this.emit('addParam');
         this.emit('change');
     }
 
     return param;
-};
-
-p.removeParam = function (param) {
-
-    var idx = this._endParams.indexOf(param);
-
-    if (idx === -1) {
-        return;
-    }
-
-    am.history.save({
-        undo: () => this.addParam(param),
-        redo: () => this.removeParam(param),
-        name: 'remove param ' + param.name,
-    });
-
-    this._endParams.splice(idx, 1);
-    param.parentTrack = undefined;
-
-    param.removeListener('change', this._onChangeParameter);
-    param.removeListener('delete', this._onDeleteParameter);
-    param.off('bezierToTranslate', this._switchFromBezierToTranslate, this);
-
-    this._paramGroup.removeParam(param);
-
-    $(param.deOptionLine).remove();
-    $(param.deKeyline).remove();
-
-    this.emit('change');
 };
 
 p.getParam = function (name) {
@@ -422,97 +309,6 @@ p.getParam = function (name) {
 
         return param.name === name;
     });
-};
-
-p.addGroup = function (path, opt) {
-
-    path = path.slice();
-
-    var name = path.pop(),
-        parent = this._paramGroup;
-
-    path.forEach((parentName, idx) => {
-        this.addGroup(path.slice(0, idx+1));
-    });
-
-    var paramGroup = parent.getParam(name);
-
-    if (!paramGroup) {
-
-        if (opt && opt.name !== name) throw Error;
-
-        paramGroup = this._paramFactory.createGroup(opt || {name});
-        parent.addParam(paramGroup);
-
-        am.history.save({
-            undo: () => this.removeGroup(paramGroup),
-            redo: () => this.addGroup(paramGroup),
-            name: 'add group ' + paramGroup.name,
-        });
-
-        paramGroup.on('translateToBezier', this._switchFromTranslateToBezier, this);
-    }
-
-    return paramGroup;
-};
-
-p.removeGroup = function (path) {
-
-    path = path.slice();
-
-    var name = path.pop(),
-        parent = this._paramGroup;
-
-    while (path.length) {
-
-        parent = parent.getParam(path.shift());
-
-        if (!parent) return;
-    }
-
-    paramGroup = parent.getParam(name);
-
-    if (paramGroup) {
-
-        am.history.save({
-            undo: () => this.addGroup(paramGroup),
-            redo: () => this.removeGroup(paramGroup),
-            name: 'remove group ' + paramGroup.name,
-        });
-
-        paramGroup.off('translateToBezier', this._switchFromTranslateToBezier, this);
-
-        parent.removeParam(parentGroup);
-    }
-};
-
-
-
-p._prepareBuiltInGroup = function (paramName) {
-
-    var rootGroupName = this._paramFactory.getRootParamGroupName(paramName);
-
-    if (!rootGroupName) return;
-
-    var walk = (groupName, path) => {
-
-        var newPath = path.slice().concat(groupName);
-
-        var memberNames = this._paramFactory.getGroupMemberNames(newPath);
-
-        if (memberNames.length) {
-
-            memberNames.forEach(memberName => walk(memberName, newPath));
-        }
-        else {
-            var param = this.addParam({name: groupName}),
-                group = this.addGroup(path);
-
-            group.addParam(param);
-        }
-    };
-
-    walk(rootGroupName, []);
 };
 
 p.select = function (opt) {
@@ -594,74 +390,6 @@ p.getMagnetPoints = function () {
     return this._paramGroup.keyLine.getKeyTimes();
 };
 
-p.focusTransformer = function (de) {
-
-    de = de || this._currHandledDe;
-    this._currHandledDe = de;
-
-    if (!this._currHandledDe) return this._blurTransformer();
-
-    this.emit('focusTransformer');
-
-    var handOpt = {
-            type: 'transformer',
-            base: {
-                x: de.offsetLeft,
-                y: de.offsetTop,
-                w: de.offsetWidth,
-                h: de.offsetHeight,
-            },
-            params: {},
-        },
-        xPercent = 0,
-        yPercent = 0;
-
-    var p = handOpt.params;
-    this._endParams.forEach(function (param) {
-
-        if (param.hidden) return;
-
-        switch (param.name) {
-            case 'x': p.tx = parseFloat(param.getValue()); break;
-            case 'y': p.ty = parseFloat(param.getValue()); break;
-            case 'scaleX': p.sx = parseFloat(param.getValue()); break;
-            case 'scaleY': p.sy = parseFloat(param.getValue()); break;
-            case 'rotationZ': p.rz = parseFloat(param.getValue()) / 180 * Math.PI; break;
-            case 'transformOriginX': p.ox = parseFloat(param.getValue()) / 100; break;
-            case 'transformOriginY': p.oy = parseFloat(param.getValue()) / 100; break;
-            case 'bezier':
-                var value = param.getValue();
-                p.tx = parseFloat(value.x);
-                p.ty = parseFloat(value.y);
-            break;
-            case 'xPercent': xPercent = parseFloat(param.getValue()); break;
-            case 'yPercent': yPercent = parseFloat(param.getValue()); break;
-        }
-    });
-
-
-    this._transformer.setLocalRoot(de.parentNode);
-    this._transformer.setup({
-        hand: handOpt,
-    });
-    this._transformer.activate();
-
-    am.deHandlerCont.appendChild(this._transformer.domElem);
-};
-
-p._blurTransformer = function () {
-
-    this._currHandledDe = undefined;
-
-    this.emit('blurTransformer');
-
-    if (this._transformer && this._transformer.domElem && this._transformer.domElem.parentNode) {
-
-        this._transformer.deactivate();
-        this._transformer.domElem.parentNode.removeChild(this._transformer.domElem);
-    }
-};
-
 p._showSettings = function () {
 
     dialogTrackOptions.show({
@@ -681,121 +409,6 @@ p._animPlay = function () {
     this.renderTime(this.timeline.currTime);
 };
 
-p._hideSelectedElems = function () {
-
-    if (this._isHidingSelectedElems) return;
-    this._isHidingSelectedElems = true;
-
-    this._paramGroup.optionLine.buttons.tgglHide.setToggle(true);
-
-    this._selectedElems.forEach(function (de) {
-
-        de._amVisibilitySave = de.style.visibility;
-        de.style.visibility = 'hidden';
-    });
-};
-
-p._showSelectedElems = function () {
-
-    if (!this._isHidingSelectedElems) return;
-    this._isHidingSelectedElems = false;
-
-    this._paramGroup.optionLine.buttons.tgglHide.setToggle(false);
-
-    this._selectedElems.forEach(function (de) {
-
-        de.style.visibility = de._amVisibilitySave;
-    });
-};
-
-p._switchFromTranslateToBezier = function () {
-
-    var xParam = this.getParam('x'),
-        yParam = this.getParam('y'),
-        xParamSave = xParam.getSave(),
-        yParamSave = yParam.getSave(),
-        xKeys = xParamSave.keys,
-        yKeys = yParamSave.keys,
-        bezierKeys = [],
-        times = _.sortBy(_.uniq(_.pluck(xKeys, 'time').concat(_.pluck(yKeys, 'time')))),
-        oldBezierKeys = this.__bezierParamSave ? this.__bezierParamSave.keys : [];
-
-    times.forEach(function (time) {
-
-        var x = parseFloat(xParam.getValue(time)),
-            y = parseFloat(yParam.getValue(time)),
-            xKey = xParam.getKey(time),
-            yKey = yParam.getKey(time),
-            oldKey = _.find(oldBezierKeys, {time: time, anchor: {x:x, y:y}});
-
-        bezierKeys.push(oldKey || {
-            time: time,
-            ease: (xKey && xKey.ease) || (yKey && yKey.ease),
-            value: [{
-                anchor: {x, y},
-                handleLeft: {x, y},
-                handleRight: {x, y},
-            }]
-        });
-    });
-
-    var bezierParam = this.addParam({
-        name: 'bezier',
-        keys: bezierKeys,
-    });
-
-    this.__xParamSave = xParamSave;
-    this.__yParamSave = yParamSave;
-    bezierParam.once('change', () => {
-        delete this.__xParamSave;
-        delete this.__yParamSave;
-    });
-
-    xParam.hidden = true;
-    yParam.hidden = true;
-    this._paramGroup.getParam('translate').hidden = true;
-    bezierParam.hidden = false;
-};
-
-p._switchFromBezierToTranslate = function () {
-
-    //TODO restore original x, y keys when bezier wasn't changed
-
-    var bezierParam = this.getParam('bezier'),
-        bezierParamSave = bezierParam.getSave(),
-        xKeys = [],
-        yKeys = [];
-
-    bezierParamSave.keys.forEach(function (bezierKey) {
-
-        var lastPoint = _.last(bezierKey.value);
-
-        xKeys.push({
-            time: bezierKey.time,
-            value: lastPoint.anchor.x + 'px',
-        });
-        yKeys.push({
-            time: bezierKey.time,
-            value: lastPoint.anchor.y + 'px',
-        });
-    });
-
-    var xParam = this.addParam(this.__xParamSave || {
-        name: 'x',
-        keys: xKeys,
-    });
-    var yParam = this.addParam(this.__yParamSave || {
-        name: 'y',
-        keys: yKeys,
-    });
-
-    this.__bezierParamSave = bezierParamSave;
-
-    xParam.hidden = false;
-    yParam.hidden = false;
-    this._paramGroup.getParam('translate').hidden = false;
-    bezierParam.hidden = true;
-};
 
 
 
@@ -921,16 +534,6 @@ p._onWindowScroll = function () {
     this.focusTransformer();
 };
 
-p._onDeleteParameter = function (param) {
-
-    this.removeParam(param);
-};
-
-p._onMoveParameter = function (param, way) {
-
-    this.moveParameter(param, way);
-};
-
 p._onClickTgglKey = function () {
 
     var time = this.timeline.currTime,
@@ -979,7 +582,7 @@ p._onChangeSelectors = function (selectors) {
     this.focusTransformer(this._currHandledDe || this._selectedElems[0]);
 };
 
-p._onChangeHeight = function (selectors) {
+p._onChangeHeight = function () {
 
     this.emit('changeHeight', this);
 };
@@ -994,7 +597,7 @@ p._refreshPlayer = function () {
     if (this._player) this._player.kill();
 
     this._player = this.getPlayer();
-}
+};
 
 
 
@@ -1035,7 +638,9 @@ p._refreshSelectedElems = function () {
 
             selector.value.split('.').every(function (name) {
 
-                return parent = parent[name]
+                parent = parent[name];
+
+                return parent;
             });
 
             if (parent) {
@@ -1065,7 +670,7 @@ p._refreshSelectedElems = function () {
 
 p.dispose = function () {
 
-    this.timeline.removeListener('changeTime', this._onChangeTime);
+    this.timeline.off('changeTime', this._onChangeTime, this);
 
     //TODO
 };

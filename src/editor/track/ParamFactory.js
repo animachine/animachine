@@ -18,16 +18,64 @@ var p = ParamFactory.prototype;
 
 p.create = function (opt={}) {
 
-    var param = new Param(opt, this.timeline);
+    if (!_.has(opt, 'title')) opt.title = opt.name;
 
-    return param;
+    if (opt.children || opt.isGroup) {
+        return this.createGroup(opt);
+    }
+
+    if(!opt.dontBuildFromRoot) {
+
+        var rpgName = this.getRootParamGroupName(opt.name);
+
+        if (rpgName) {
+            return this.createGroup({name: rpgName});
+        }
+    }
+
+    return this._assembleParam(opt);
 };
 
 p.createGroup = function (opt) {
 
-    var paramGroup = new ParamGroup(opt, this.timeline);
+    opt.paramFactory = this;
 
-    return paramGroup;
+    if (!opt.path && !opt.name) throw Error;
+
+    opt.path = opt.path || [opt.name];
+    opt.name = opt.name || _.last(opt.path);
+
+    var group =  this._assembleGroup(opt);
+
+    var children = this.getGroupMemberNames(opt.path);
+
+    if (children.length) {
+
+        children.forEach(childName => {
+
+            if (group.getParam(childName)) return;
+
+            var child = this.create({
+                name: childName,
+                path: opt.path.concat(childName),
+                dontBuildFromRoot: true,
+            });
+
+            group.addParam(child);
+        });
+    }
+
+    return group;
+};
+
+p._assembleParam = function (opt) {
+    //for overwriting
+    return new Param(opt, this.timeline);
+};
+
+p._assembleGroup = function (opt) {
+    //for overwriting
+    return new ParamGroup(opt, this.timeline);
 };
 
 p.getRootParamGroupName = function (paramName) {

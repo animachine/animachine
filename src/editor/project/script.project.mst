@@ -6,67 +6,32 @@
     var SAVEJSON = '{{{saveJson}}}';
     {{/saveJson}}
 
-    var trackPlayerGens = [{{{trackPlayerGens}}}];
-
-    root.am = root.am || {};
-    root.am.anims = root.am.anims || {};
-
-    var reg = root.am.anims.{{name}} = {
-
-        create: function (inputs) {
-
-            var tl = new TimelineMax({paused: true});
-
-            trackPlayerGens.forEach(function (create) {
-
-                tl.add(create(inputs), 0);
-            });
-
-            return tl;
-        },
-
+    var projectReg = {
+        timelines: {{timelines}},
         {{#saveJson}}
         saveJson: SAVEJSON,
         {{/saveJson}}
     };
+
+    root.am = root.am || {};
+    root.am.projects = root.am.projects || {};
+    root.am.projects.{{projectName}} = projectReg;
 
 
 
     //-- CJS --//
     if (typeof exports === 'object') {
 
-        module.exports = reg;
+        module.exports = projectReg;
     }
 
     //-- AMD --//
     if (typeof define === 'function' && define.amd) {
 
         define(function () {
-            return reg;
+            return projectReg;
         });
     }
-
-    {{#autoPlay}}
-    if (document.readyState == 'interactive' || document.readyState == 'complete') {
-
-        reg.create().play();
-    }
-    else {
-        document.addEventListener('DOMContentLoaded', function () {
-
-            reg.create().play();
-        });
-    }
-    {{/autoPlay}}//
-
-    {{#triggerScript}}
-    (function () {
-
-        var tl = reg.create();
-        
-        {{triggerScript}}
-    })
-    {{/triggerScript}}//
 
     //utils
     function getAnimTargets(selectors, inputs) {

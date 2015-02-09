@@ -40,37 +40,32 @@ inherits(CssParamFactory, ParamFactory);
 var p = CssParamFactory.prototype;
 
 
-p.create = function (opt={}) {
+p._assembleParam = function (opt={}) {
 
-    var paramOpt = {
-            name: opt.name,
-            title: opt.title || opt.name,
-            keys: opt.keys,
-            hidden: opt.hidden,
-            optionLine: {
-                inputs: [{name: 'input'}]
-            }
-        },
-        input = paramOpt.optionLine.inputs[0];
+    if (!_.has(opt, 'hidden') && _.include(defaultHidden, opt.name)) opt.hidden = true;
+    if (!_.has(opt,'optionLine')) opt.optionLine = {};
+    if (!_.has(opt.optionLine,'inputs')) opt.optionLine.inputs = [];
+    if (_.isEmpty(opt.optionLine.inputs)) opt.optionLine.inputs.push({name: 'input'});
 
+    var input = opt.optionLine.inputs[0];
 
     this.ifit(opt.name)
         .is('x,y,z,transformOriginZ', () => {
 
-            paramOpt.defaultValue = '0px';
-            input.units = ['px']; 
+            opt.defaultValue = '0px';
+            input.units = ['px'];
         })
         .is('scaleX,scaleY,scaleZ', () => {
 
             input.type = 'unit';
-            paramOpt.defaultValue = 1; 
-            input.dragSpeed = 0.01; 
+            opt.defaultValue = 1;
+            input.dragSpeed = 0.01;
             input.precision = 2;
         })
         .is('rotationX,rotationY,rotationZ', () => {
 
-            paramOpt.defaultValue = '0deg';
-            input.units = ['deg', 'rad']; 
+            opt.defaultValue = '0deg';
+            input.units = ['deg', 'rad'];
             input.precision = 1;
             input.converters = {
                 deg2rad: function (deg) {
@@ -79,24 +74,24 @@ p.create = function (opt={}) {
                 rad2deg: function (rad) {
                     return rad / Math.PI * 180;
                 },
-            }
+            };
         })
         .is('transformOriginX,transformOriginY', () => {
-            
-            paramOpt.defaultValue = '50%';
-            input.units = ['%']; 
-            input.dragSpeed = 0.01; 
+
+            opt.defaultValue = '50%';
+            input.units = ['%'];
+            input.dragSpeed = 0.01;
             input.precision = 2;
         })
         .is('xPercent,yPercent', () => {
 
-            input.units = []; 
-            input.dragSpeed = 1; 
+            input.units = [];
+            input.dragSpeed = 1;
             input.precision = 1;
         })
         .is('color,borderColorTop,borderColorRight,borderColorBottom,borderColorLeft,backgroundColor', () => {
 
-            input.type = 'color'; 
+            input.type = 'color';
         })
         .is('borderWidth,top,right,bottom,left,width,height', () => {
 
@@ -104,28 +99,21 @@ p.create = function (opt={}) {
         })
         .is('opacity', () => {
 
-            paramOpt.defaultValue = 1;
+            opt.defaultValue = 1;
             input.type = 'unit';
-            input.dragSpeed = 0.01; 
+            input.dragSpeed = 0.01;
             input.precision = 2;
             input.min = 0;
             input.max = 1;
         })
-        .is('borderTopWidth,borderTopLeftRadius,borderTopColor,borderTopStyle', () => paramOpt.title = 'top')
-        .is('borderRightWidth,borderTopRightRadius,borderRightColor,borderRightStyle', () => paramOpt.title = 'right')
-        .is('borderBottomWidth,borderBottomLeftRadius,borderBottomColor,borderBottomStyle', () => paramOpt.title = 'bottom')
-        .is('borderLeftWidth,borderBottomRightRadius,borderLeftColor,borderLeftStyle', () => paramOpt.title = 'left')
+        .is('borderTopWidth,borderTopLeftRadius,borderTopColor,borderTopStyle', () => opt.title = 'top')
+        .is('borderRightWidth,borderTopRightRadius,borderRightColor,borderRightStyle', () => opt.title = 'right')
+        .is('borderBottomWidth,borderBottomLeftRadius,borderBottomColor,borderBottomStyle', () => opt.title = 'bottom')
+        .is('borderLeftWidth,borderBottomRightRadius,borderLeftColor,borderLeftStyle', () => opt.title = 'left')
         .is('bezier', () => {
 
-            paramOpt.optionLine.inputs = [];
+            opt.optionLine.inputs = [];
         });
-
-    if (defaultHidden.indexOf(opt.name) !== -1) {
-
-        if (!('hidden' in opt)) {
-            paramOpt.hidden = true;
-        }
-    }
 
     if (input.units) {
         input.type = 'unit';
@@ -135,29 +123,28 @@ p.create = function (opt={}) {
 
     if (opt.name === 'bezier') {
 
-        param = new BezierCssParam(paramOpt, this.timeline);
+        param = new BezierCssParam(opt, this.timeline);
     }
     else {
-        param = new CssParam(paramOpt, this.timeline);
+        param = new CssParam(opt, this.timeline);
     }
 
     return param;
 };
 
-p.createGroup = function (opt={}) {
+p._assembleGroup = function (opt={}) {
 
-    var pgOpt = {
-        name: opt.name,
-        collapsed: 'collapsed' in opt ? opt.collapsed : false,
-        merged: 'merged' in opt ? opt.merged : true,
-        hidden: 'hidden' in opt ? opt.hidden : false,
+    _.defaults(opt, {
+        collapsed: false,
+        merged: true,
+        hidden: false,
         borrowChildInputsOnCollapse: true,
         optionLine: {
             inputs: [],
         },
-    };
-    
-    var paramGroup = new CssParamGroup(pgOpt, this.timeline);
+    });
+
+    var paramGroup = new CssParamGroup(opt, this.timeline);
 
     if (opt.name === 'translate') {
 

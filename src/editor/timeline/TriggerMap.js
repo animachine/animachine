@@ -42,7 +42,7 @@ p.getScript = function () {
 
     var ret = [];
 
-    this._triggers.forEach(trigger => {
+    _.forEach(this._triggers, trigger => {
 
         let add,
             args = _.pluck(trigger.action.argument, 'value').join(', '),
@@ -74,9 +74,9 @@ p.addTrigger = function (trigger) {
 
     this._triggers.push(trigger);
 
-    return trigger;
-
     this.emit('change');
+
+    return trigger;
 };
 
 p.removeTrigger = function (trigger) {
@@ -117,7 +117,7 @@ p._createEditDialog = function () {
         inpEvent = currTrigger.events[0];
         inpSelector = currTrigger.selectors[0];
         inpMethod = currTrigger.actions[0].method;
-        inpArguments = currTrigger.actions[0].argiuments[0];
+        inpArguments = currTrigger.actions[0].arguments[0];
     };
 
     amgui.createBtn({

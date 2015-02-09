@@ -1,0 +1,29 @@
+(function () {
+    var trackPlayerGens = [{{{trackPlayerGens}}}];
+
+    var reg = {
+
+        create: function (inputs) {
+
+            var tl = new TimelineMax({paused: true});
+
+            trackPlayerGens.forEach(function (create) {
+
+                tl.add(create(inputs), 0);
+            });
+
+            return tl;
+        },
+    };
+
+    {{#triggerScript}}
+    (function () {
+
+        var tl = reg.create();
+
+        {{triggerScript}}
+    })
+    {{/triggerScript}}//
+
+    return reg;
+}());

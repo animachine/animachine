@@ -7,7 +7,7 @@ var EaseMap = require('./EaseMap');
 var TriggerMap = require('./TriggerMap');
 var amgui = require('../amgui');
 var UglifyJS = require('uglify-js');
-var mstSaveScript = require('./script.save.mst');
+var mstScript = require('./script.timeline.mst');
 var InlineEaseEditor = require('./InlineEaseEditor');
 var Toolbar = require('../toolbar');
 var defineCompactProperty = require('../utils/defineCompactProperty');
@@ -125,30 +125,6 @@ Object.defineProperties(p, {
 
 defineCompactProperty(p, {name: 'parentProject', event: 'added'});
 
-p.getSave = function () {
-
-    var save = {
-        timebar: {
-            currTime: this._timebar.currTime,
-            timescale: this._timebar.timescale,
-            length: this._timebar.length,
-        },
-        tracks: [],
-        easeMap: this.easeMap.getSave(),
-        triggerMap: this.triggerMap.getSave(),
-    };
-
-    this._tracks.forEach(function (track) {
-
-        save.tracks.push({
-            type: track.type,
-            data: track.getSave()
-        });
-    });
-
-    return save;
-};
-
 p.useSave = function (save) {
 
     this.clear();
@@ -177,77 +153,62 @@ p.useSave = function (save) {
 
     this._refreshMagnetPoints();
 
+    if (_.has(save, 'currTrackIdx')) {
+
+        this._tracks[save.currTrackIdx].select();
+    }
+
     am.history.clear();
 };
 
-p.getScript = function (opt) {
+p.getSave = function () {
 
-    opt = opt || {};
+    var save = {
+        timebar: {
+            currTime: this._timebar.currTime,
+            timescale: this._timebar.timescale,
+            length: this._timebar.length,
+        },
+        tracks: [],
+        easeMap: this.easeMap.getSave(),
+        triggerMap: this.triggerMap.getSave(),
+    };
+
+    if (this._currTrack) {
+
+        save.currTrackIdx = this._tracks.indexOf(this._currTrack);
+    }
+
+    this._tracks.forEach(function (track) {
+
+        save.tracks.push({
+            type: track.type,
+            data: track.getSave()
+        });
+    });
+
+    return save;
+};
+
+p.getScript = function () {
 
     var script, playerScripts = [];
 
     this._tracks.forEach(function (track) {
-
         playerScripts.push(track.getScript());
     });
 
-    script = Mustache.render(mstSaveScript, {
-        name: 'amsave',
-        saveJson: opt.includeSave && this.getSave(),
+    script = Mustache.render(mstScript, {
         trackPlayerGens: playerScripts.join(',\n'),
         triggerScript: this.triggerMap.getScript(),
-        autoPlay: opt.autoPlay
     });
 
-    if (opt.minify) {
-
-    console.log(script);
-        script = minify(script);
-    }
-
-    console.log(script);
-
     return script;
-
-    function minify(code) {
-
-        return code;//TODO
-
-        var result = UglifyJS.minify(code, {
-            fromString: true,
-            mangle: false,
-            output: {
-                comments: /@amsave/,
-            },
-            compress: {
-                // reserved: 'JSON_SAVE',
-            }
-        });
-
-        return result.code;
-
-        var toplevel = null;
-        toplevel = UglifyJS.parse(code, {
-            filename: 'save',
-            toplevel: toplevel
-        });
-
-        toplevel.figure_out_scope();
-
-        var compressor = UglifyJS.Compressor({mangle: false});
-        var compressed_ast = toplevel.transform(compressor);
-
-        compressed_ast.figure_out_scope();
-        compressed_ast.compute_char_frequency();
-        compressed_ast.mangle_names();
-
-        return compressed_ast.print_to_string({comments: 'all'});
-    }
 };
 
 p.clear = function () {
 
-    while(this._tracks.length) {
+    while (this._tracks.length) {
 
         this.removeTrack(this._tracks[0]);
     }

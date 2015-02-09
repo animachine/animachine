@@ -5,7 +5,7 @@ var inherits = require('inherits');
 var ProjectTab = require('./ProjectTab');
 var Project = require('./Project');
 
-function ProjectMap(opt) {
+function ProjectMap() {
 
     EventEmitter.call(this);
 
@@ -19,8 +19,17 @@ inherits(ProjectMap, EventEmitter);
 var p = ProjectMap.prototype;
 module.exports = ProjectMap;
 
+Object.defineProperties(p, {
+    currProject: {
+        get: function () {
+
+            return  this.getCurrProject();
+        }
+    }
+});
+
 p.load = function (project) {
-    
+
     if (!(project instanceof Project)) {
 
         project = new Project(project);
@@ -81,4 +90,4 @@ p.getCurrProject = function () {
 p.getProjects = function () {
 
     return this._projects;
-}
+};

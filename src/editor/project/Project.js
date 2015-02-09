@@ -1,7 +1,10 @@
+"use strict";
+
 var EventEmitter = require('eventman');
 var inherits = require('inherits');
 var Timeline = require('../timeline');
 var defineCompactProperty = require('../utils/defineCompactProperty');
+var mstScript = require('./script.project.mst');
 
 function Project(save = {}) {
 
@@ -9,7 +12,7 @@ function Project(save = {}) {
 
     this._timelines = [];
     this.inputs = {};
-    
+
     this.useSave(save);
 }
 
@@ -22,7 +25,7 @@ defineCompactProperty(p, {name: 'name', type: 'string', startValue: 'new project
 p.useSave = function (save = {}) {
 
     var block = am.history.blockSaving();
-    
+
     if (_.has(save, 'name')) {
         this.name = save.name;
     }
@@ -31,7 +34,7 @@ p.useSave = function (save = {}) {
 
         save.timelines.forEach(tl => this.addTimeline(tl));
     }
-    
+
     if (_.has(save, 'currTimelineIdx')) {
         this.selectTimeline(save.currTimelineIdx);
     }
@@ -53,6 +56,62 @@ p.getSave = function () {
     return save;
 };
 
+p.getScript = function (opt={}) {
+
+    var timelines = [];
+
+    this._timelines.forEach(timeline => {
+        timelines.push(timeline.name + ':' + timeline.getScript());
+    });
+
+    var script = Mustache.render(mstScript, {
+        timelines: '{' + timelines.join('\n') + '}',
+        saveJson: opt.includeSave && JSON.stringify(this.getSave()),
+    });
+
+    if (opt.minify) {
+
+        script = minify(script);
+    }
+
+    return script;
+
+    function minify(code) {
+
+        return code;//TODO
+
+        // var result = UglifyJS.minify(code, {
+        //     fromString: true,
+        //     mangle: false,
+        //     output: {
+        //         comments: /@amsave/,
+        //     },
+        //     compress: {
+        //         // reserved: 'JSON_SAVE',
+        //     }
+        // });
+        //
+        // return result.code;
+        //
+        // var toplevel = null;
+        // toplevel = UglifyJS.parse(code, {
+        //     filename: 'save',
+        //     toplevel: toplevel
+        // });
+        //
+        // toplevel.figure_out_scope();
+        //
+        // var compressor = UglifyJS.Compressor({mangle: false});
+        // var compressed_ast = toplevel.transform(compressor);
+        //
+        // compressed_ast.figure_out_scope();
+        // compressed_ast.compute_char_frequency();
+        // compressed_ast.mangle_names();
+        //
+        // return compressed_ast.print_to_string({comments: 'all'});
+    }
+};
+
 p.addTimeline = function (timeline) {
 
     //create the instance if the parameter is a save object
@@ -63,7 +122,7 @@ p.addTimeline = function (timeline) {
     //remove the timeline if it's already added to an other project
     else if (timeline.parentProject && timeline.parentProject !== this) {
 
-        timeline.parentProject.removeTimeline(timeilne);
+        timeline.parentProject.removeTimeline(timeline);
     }
 
     timeline.parentProject = this;
@@ -120,18 +179,18 @@ p.selectTimeline = function (timeline) {
     this.currTimeline = timeline;
 
     this.emit('change.currTimeline', this.currTimeline);
-}
+};
 
 p.focus = function () {
-    
+
     if (!this.currTimeline && !_.isEmpty(this._timelines)) {
 
         this.selectTimeline(this._timelines[0]);
-    } 
+    }
 };
 
 p.blur = function () {
-    
+
     if (this.currTimeline) {
 
         this.currTimeline.pause();
@@ -193,7 +252,7 @@ p.getInputPaths = function (maxLevel = 4) {
                 step(obj[key], path + key + '.', level + 1);
             }
         });
-    }
+    };
 
     step(this.inputs, '', 0);
 

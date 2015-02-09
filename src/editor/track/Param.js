@@ -287,7 +287,7 @@ p.addKey = function (opt) {
     this._refreshInputs();
     this._refreshTgglKey();
 
-    this.emit('change');
+    this.emit('change.param');
 
     return key;
 };
@@ -307,7 +307,7 @@ p.removeKey = function (key) {
 
     this._refreshTgglKey();
 
-    this.emit('change');
+    this.emit('change.param');
 };
 
 p.getKey = function (time) {
@@ -416,12 +416,12 @@ p._onChangeInput = function (value) {
         value: value
     });
 
-    this.emit('change');
+    this.emit('change.param');
 };
 
 p._onChangeKeyLine = function () {
 
-    this.emit('change');
+    this.emit('change.param');
 };
 
 p._onKeyNeedsRemove = function (key) {

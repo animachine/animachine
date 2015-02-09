@@ -1,16 +1,13 @@
 'use strict';
 
 var inherits = require('inherits');
-var defineCompactProperty = require('../utils/defineCompactProperty');
 var OptionLine = require('../utils/OptionLine');
 var KeyLineGroup = require('./KeyLineGroup');
 var Param = require('./Param');
-var amgui = require('../amgui');
 
 function ParamGroup (opt={}) {
 
-    this._onClickTgglChildren = this._onClickTgglChildren.bind(this);
-    this._onClickTgglMerge = this._onClickTgglMerge.bind(this);
+    this.paramFactory = opt.paramFactory;
 
     this._params = [];
     this._merged = false;
@@ -19,9 +16,9 @@ function ParamGroup (opt={}) {
     this.borrowChildInputsOnCollapse = opt.borrowChildInputsOnCollapse;
 
     Param.apply(this, arguments);
-    
+
     this.keyLine.keyLooks.circle = undefined;
-    
+
 
     this._refreshHeights();
 }
@@ -53,7 +50,7 @@ Object.defineProperties(p, {
 
             v = !!v;
             if (v === this._merged) return;
-            
+
             this._merged = v;
 
             this.optionLine.buttons.tgglMerge.setToggle(v);
@@ -79,7 +76,7 @@ Object.defineProperties(p, {
             this._collapsed = v;
 
             this.optionLine.buttons.tgglChildren.setToggle(!v);
-            this.emit('changeHeight', this);
+            this.emit('', this);
             this._refreshHeights();
 
             if (this.borrowChildInputsOnCollapse) {
@@ -102,11 +99,11 @@ Object.defineProperties(p, {
 p.getSave = function () {
 
     var save = Param.prototype.getSave.call(this);
-
     delete save.keys;
-    
+
     save.merged = this.merged;
     save.collapsed = this.collapsed;
+    save.children = this._params.map(p => p.getSave());
 
     return save;
 };
@@ -117,31 +114,55 @@ p.useSave = function (save) {
 
     if ('collapsed' in save) this.collapsed = save.collapsed;
     if ('merged' in save) this.merged = save.merged;
+    if ('children' in save) save.children.forEach(childOpt => {
+
+        childOpt.dontBuildFromRoot = true;
+        this.addParam(childOpt);
+    });
 };
 
 p.addParam = function (param) {
 
+    if (!(param instanceof Param)) {
+
+        param = this.paramFactory.create(param);
+    }
+
     if (param.parentGroup) {
+
         param.parentGroup.removeParam(param);
     }
     param.parentGroup = this;
 
+    am.history.save({
+        undo: () => this.removeParam(param),
+        redo: () => this.addParam(param),
+        name: 'add param ' + param.name,
+    });
+
     this._params.push(param);
     this.optionLine.addOptionLine(param.optionLine);
     this.keyLine.addKeyLine(param.keyLine);
-    
+
     param.optionLine.indent = this.optionLine.indent + 1;
-    param.on('changeHeight', this._onChangeSubparamHeight, this);
+    param.on('change.param', (...args) => this.emit('change.params', ...args));
+    param.on('addParam', (...args) => this.emit('addParam', ...args));
+    param.on('removeParam', (...args) => this.emit('removeParam', ...args));
+    param.on('change.height', this._onChangeSubparamHeight, this);
     param.on('addKey', this._onAddKeySubparam, this);
     param.on('needsRemove', this._onSubparamNeedsRemove, this);
-    
+
     if (param.name in this.optionLine.inputs) {
 
         param.attachInput(this.optionLine.inputs[param.name]);
     }
 
-    this.emit('changeHeight');
+    this.emit('addParam', param, this);
+    this.emit('change.structure');
+    this.emit('change.height');
     this._refreshHeights();
+
+    return param;
 };
 
 p.removeParam = function (param) {
@@ -151,17 +172,19 @@ p.removeParam = function (param) {
     if (idx === -1) {
         return;
     }
-    
+
     parent.parentGroup = undefined;
-    
-    param.off('changeHeight', this._onChangeSubparamHeight, this);
+
+    param.off('', this._onChangeSubparamHeight, this);
     param.off('addKey', this._onAddKeySubparam, this);
     param.off('needsRemove', this._onSubparamNeedsRemove, this);
 
     this._params.splice(idx, 1);
     this.keyLine.removeKeyline(param.keyLine);
 
-    this.emit('changeHeight');
+    this.emit('removeParam', param, this);
+    this.emit('change.structure', this);
+    this.emit('change.height');
     this._refreshHeights();
 };
 
@@ -175,9 +198,27 @@ p.getParamNames = function () {
     return _.pluck(this._params, 'name');
 };
 
+p.getEndParams = function () {
+
+    var ret = [];
+
+    this._params.forEach(param => {
+
+        if (param instanceof ParamGroup) {
+
+            ret.push.apply(ret, param.getEndParams());
+        }
+        else {
+            ret.push(param);
+        }
+    });
+
+    return ret;
+};
+
 p.moveParam = function () {
 
-    
+
 };
 
 p.toggleKey = function (time) {
@@ -198,14 +239,14 @@ p.toggleKey = function (time) {
     }
 };
 
-p._makeKeyLinesSymmetric = function (time) {
+p._makeKeyLinesSymmetric = function () {
     console.time('_makeKeyLinesSymmetric');
     var times = [];
 
     this._params.forEach(param => {
 
         if (param.hidden) return;
-        
+
         [].push.apply(times, param.getKeyTimes());
     });
 
@@ -253,7 +294,7 @@ p.removeKeyAll = function (time) {
 p._isKeySet = function (time) {
 
     //empty groups returns true except if this is the root paramGroup
-    return (this.parentGroup || this._params.length !== 0) && 
+    return (this.parentGroup || this._params.length !== 0) &&
         this._params.every(p => p._isKeySet(time));
 };
 
@@ -294,14 +335,14 @@ p._onClickTgglMerge = function () {
 
 p._onChangeSubparamHeight = function () {
 
-    this.emit('changeHeight', this);
+    this.emit('', this);
     this._refreshHeights();
 };
 
 p._onAddKeySubparam = function (key, param) {
 
     if (this._merged && !param.hidden) {
-    
+
         this.addKeyAll(key.time);
     }
 };
@@ -329,7 +370,7 @@ p._createOptions = function (opt) {
 
     this.optionLine = new OptionLine(_.merge({
         tgglChildren: {
-            onClick: this._onClickTgglChildren,
+            onClick: () => this._onClickTgglChildren(),
         },
         contextMenuOptions: [
             {text: 'move up', onSelect: this.emit.bind(this, 'move', this, -1)},
@@ -337,7 +378,7 @@ p._createOptions = function (opt) {
             {text: 'delete', onSelect: this.emit.bind(this, 'delete', this)}
         ],
         tgglMerge: {
-            onClick: this._onClickTgglMerge,
+            onClick: () => this._onClickTgglMerge(),
         },
         title: {
             text: this.name,

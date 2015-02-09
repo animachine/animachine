@@ -58,7 +58,7 @@ p._onChangeInput = function () {
 p._refreshInput = function () {
 
     if (this._input.checked !== this._value) {
-    
+
         this._input.checked = this._value;
     }
 };
@@ -66,15 +66,11 @@ p._refreshInput = function () {
 
 
 
-p._createBase = function () {
-
-    this.domElem = amgui.createDiv();
-    this.domElem.style.display = 'flex';
+p._createInput = function () {
 
     this._input = amgui.createCheckbox({
         parent: this.domElem,
         onChange: this._onChangeInput,
-        flex: 1, 
+        flex: 1,
     });
 };
-

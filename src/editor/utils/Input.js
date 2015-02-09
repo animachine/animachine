@@ -87,15 +87,14 @@ p._createBase = function () {
     this.domElem.style.display = 'flex';
     this.domElem.style.width = '100%';
 
+    this._createInput();
+};
+
+p._createInput = function () {
+
     this._input = amgui.createInput({
         parent: this.domElem,
         flex: 1,
         onChange: v => this._onChangeInput(v),
     });
-
-    this.domElem.style.color = this._input.style.color;
-    this._input.style.color = 'inherit';
-
-    // this._input.style.textAlign =  'right';
-    this._input.style.paddingRight =  '2px';
 };

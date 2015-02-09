@@ -52,8 +52,8 @@ p._onClickShowPicker = function () {
 
     am.dialogs.WIP.show();
     // var br = this._btnShowPicker.getBoundingClientRect();
-    // colorPicker.show(br.left, br.bottom, 
-    //     this.value || this._defaultValue, 
+    // colorPicker.show(br.left, br.bottom,
+    //     this.value || this._defaultValue,
     //     this._onChangePicker);
 };
 
@@ -62,7 +62,7 @@ p._onClickShowPicker = function () {
 p._refreshInput = function () {
 
     if (this._input.value !== this._value) {
-    
+
         this._input.value = this._value;
     }
 };
@@ -70,15 +70,12 @@ p._refreshInput = function () {
 
 
 
-p._createBase = function () {
-
-    this.domElem = amgui.createDiv();
-    this.domElem.style.display = 'flex';
+p._createInput = function () {
 
     this._input = amgui.createInput({
         parent: this.domElem,
-        onChange: v => this._onChangeInput(),
-        flex: 1, 
+        onChange: v => this._onChangeInput(v),
+        flex: 1,
     });
     this._input.style.textAlign =  'right';
     this._input.style.paddingRight =  '2px';
@@ -129,11 +126,11 @@ p._createBase = function () {
 //             return '#' + colorPicker.color.HEX;
 //         }
 //         else {
-//             return 'rgba(' + 
-//                 ~~(colorPicker.color.colors.RND.rgb.r)+','+ 
-//                 ~~(colorPicker.color.colors.RND.rgb.g)+','+ 
-//                 ~~(colorPicker.color.colors.RND.rgb.b)+','+ 
-//                 colorPicker.color.colors.alpha + ')';            
+//             return 'rgba(' +
+//                 ~~(colorPicker.color.colors.RND.rgb.r)+','+
+//                 ~~(colorPicker.color.colors.RND.rgb.g)+','+
+//                 ~~(colorPicker.color.colors.RND.rgb.b)+','+
+//                 colorPicker.color.colors.alpha + ')';
 //         }
 //     };
 

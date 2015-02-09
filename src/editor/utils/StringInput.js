@@ -84,7 +84,7 @@ p.setSuggestions = function (suggestions) {
 
 
 p._onChangeInput = function () {
-    
+
     this.value = this._input.value;
 };
 
@@ -93,7 +93,7 @@ p._onChangeInput = function () {
 p._refreshInput = function () {
 
     if (this._input.value !== this._value) {
-    
+
         this._input.value = this._value;
     }
 };
@@ -101,10 +101,7 @@ p._refreshInput = function () {
 
 
 
-p._createBase = function () {
-
-    this.domElem = amgui.createDiv();
-    this.domElem.style.display = 'flex';
+p._createInput = function () {
 
     this._input = amgui.createInput({
         parent: this.domElem,
@@ -125,7 +122,7 @@ p._prepareSuggestions = function (suggestions) {
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         // `states` is an array of state names defined in "The Basics"
-        local: suggestions, 
+        local: suggestions,
     });
 
     // kicks off the loading/processing of `local` and `prefetch`

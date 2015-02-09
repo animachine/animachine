@@ -37,7 +37,7 @@ Object.defineProperties(p, {
 
     value: {
         set: function (v) {
-            
+
             v += '';
 
             var mAmount = this._rxAmount.exec(v),
@@ -117,10 +117,10 @@ p._setValueParts = function (amount, unit) {
     unit = String(unit) || '';
 
     if (this._amount === amount && this._unit === unit) return;
-    
+
     if (_.isFinite(this.min)) amount = Math.max(this.min, amount);
     if (_.isFinite(this.max)) amount = Math.min(this.max, amount);
-    
+
     this._amount = amount;
     var fixAmount = this._toFixedAmount(amount);
 
@@ -133,10 +133,10 @@ p._setValueParts = function (amount, unit) {
 
         this._unit = unit;
         this._deUnit.text = unit;
-    } 
+    }
 
     this.emit('change', this.value);
-}
+};
 
 p._toFixedAmount = function (amount) {
 
@@ -162,29 +162,19 @@ p._onChangeInputAmount = function () {
     if (fixAmount !== value) {
 
         this._setValueParts(value, this._unit);
-    } 
-};
-
-
-
-p.refreshDisplay = function () {
-
-    this._inpAmount.value = this._getFixedValue();
-    this._deUnit.text = v;
+    }
 };
 
 
 
 
-p._createBase = function () {
 
-    this.domElem = amgui.createDiv();
-    this.domElem.style.display = 'flex';
+p._createInput = function () {
 
     this._inpAmount = amgui.createInput({
         parent: this.domElem,
         onChange: this._onChangeInputAmount,
-        flex: 1, 
+        flex: 1,
     });
     this._inpAmount.style.textAlign =  'right';
     this._inpAmount.style.paddingRight =  '2px';
@@ -198,19 +188,19 @@ p._createBase = function () {
             return {
                 amount: this._amount,
                 moved: false,
-            }
+            };
         },
         onMove: function (md, mx) {
 
             md.moved = true;
 
             var dx = mx - md.mx;
-            
+
             this._setValueParts(md.amount + this._dragSpeed * dx);
         },
         onUp: function (md) {
             if (!md.moved) {
-                this._inpAmount.focus()
+                this._inpAmount.focus();
             }
         }
     });
@@ -220,4 +210,3 @@ p._createBase = function () {
         text: '',
     });
 };
-

@@ -56,10 +56,7 @@ p.setOptions = function (options) {
 
 
 
-p._createBase = function () {
-
-    this.domElem = amgui.createDiv();
-    this.domElem.style.display = 'flex';
+p._createInput = function () {
 
     this._deValue = amgui.createLabel({
         parent: this.domElem,

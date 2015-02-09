@@ -67,14 +67,12 @@ p.removeTarget = function (target) {
 
 
 
-p._createBase = function () {
+p._createInput = function () {
 
-    this.domElem = amgui.createDiv();
-    
     this._deTargetsCont = amgui.createDiv({
         parent: this.domElem,
     });
-    
+
     amgui.createIconBtn({
         icon: 'hash',
         display: 'inline-block',
@@ -136,13 +134,13 @@ p._createTarget = function (data) {
 
         inputPaths = am.projectMap.getCurrProject().getInputPaths();
         inp.setSuggestions(inputPaths);
-    }
+    };
 
     if (target.data.type === 'input') {
 
         refreshSuggestions();
         // this.timeline.on('change.inputs', refreshSuggestions);
-    } 
+    }
 
     if (target.data.type === 'css') {
 
@@ -178,7 +176,7 @@ p._createTarget = function (data) {
     target.dispose = function () {
 
         // this.timeline.off('change.inputs', refreshSuggestions);
-    }
+    };
 
     return target;
-}
+};

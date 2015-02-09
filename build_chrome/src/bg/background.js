@@ -1,3 +1,5 @@
+"use strict";
+
 // if you checked "fancy-settings" in extensionizr.com, uncomment this lines
 
 // var settings = new Store("settings", {
@@ -15,7 +17,7 @@ _gaq.push(['_trackPageview']);
 })();
 
 chrome.browserAction.onClicked.addListener(function (tab) {
-    
+
     console.log('clicked', tab.id);
 
     chrome.tabs.executeScript(tab.id, {file: "js/content_script.js"});
@@ -23,10 +25,13 @@ chrome.browserAction.onClicked.addListener(function (tab) {
     chrome.tabs.insertCSS(tab.id, {file: "assets/dialog-polyfill.css"});
 });
 
-chrome.runtime.onMessage.addListener(
-    
+chrome.browserAction.setBadgeText({text: 'α'});
+chrome.browserAction.setBadgeBackgroundColor({color: '#000'});
+
+chrome.runtime.onMessage.addListener(function (request) {
+
     if (request.subject === 'track') {
 
         _gaq.push(['_trackEvent', request.evtName, request.value]);
-    };
+    }
 });

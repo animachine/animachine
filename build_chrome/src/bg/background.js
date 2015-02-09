@@ -26,7 +26,7 @@ chrome.browserAction.onClicked.addListener(function (tab) {
 });
 
 chrome.browserAction.setBadgeText({text: 'α'});
-chrome.browserAction.setBadgeBackgroundColor({color: '#000'});
+chrome.browserAction.setBadgeBackgroundColor({color: isDevMode() ? '#F00' : '#000'});
 
 chrome.runtime.onMessage.addListener(function (request) {
 
@@ -35,3 +35,8 @@ chrome.runtime.onMessage.addListener(function (request) {
         _gaq.push(['_trackEvent', request.evtName, request.value]);
     }
 });
+
+
+function isDevMode() {
+    return !('update_url' in chrome.runtime.getManifest());
+}

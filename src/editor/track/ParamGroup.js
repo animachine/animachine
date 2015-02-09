@@ -146,8 +146,6 @@ p.addParam = function (param) {
 
     param.optionLine.indent = this.optionLine.indent + 1;
     param.on('change.param', (...args) => this.emit('change.params', ...args));
-    param.on('addParam', (...args) => this.emit('addParam', ...args));
-    param.on('removeParam', (...args) => this.emit('removeParam', ...args));
     param.on('change.height', this._onChangeSubparamHeight, this);
     param.on('addKey', this._onAddKeySubparam, this);
     param.on('needsRemove', this._onSubparamNeedsRemove, this);

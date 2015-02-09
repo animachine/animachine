@@ -33,8 +33,23 @@ function CssTrack (opt={}, timeline) {
         childIdx: 1,
     });
 
-    this._paramGroup.on('addParam', this._onAddParam, this);
-    this._paramGroup.on('removeParam', this._onRemoveParam, this);
+    this._paramGroup.on('addParam', param => {
+
+        if (param.name === 'translate') {
+            param.on('translateToBezier', this._switchFromTranslateToBezier, this);
+        }
+        else if (param.name === 'bezier') {
+            param.on('bezierToTranslate', this._switchFromBezierToTranslate, this);
+        }
+    });
+
+    if (this._paramGroup.getParam('translate')) {
+        this._paramGroup.getParam('translate').on('translateToBezier', this._switchFromTranslateToBezier, this);
+    }
+
+    if (this._paramGroup.getParam('bezier')) {
+        this._paramGroup.getParam('bezier').on('bezierToTranslate', this._switchFromBezierToTranslate, this);
+    }
 }
 
 inherits(CssTrack, Track);
@@ -43,19 +58,6 @@ module.exports = CssTrack;
 
 p.type = 'css_track_type';
 
-
-
-p._onAddParam = function (param) {
-
-    param.on('translateToBezier', this._switchFromTranslateToBezier, this);
-    param.on('bezierToTranslate', this._switchFromBezierToTranslate, this);
-};
-
-p._onRemoveParam = function (param) {
-
-    param.off('translateToBezier', this._switchFromTranslateToBezier, this);
-    param.off('bezierToTranslate', this._switchFromBezierToTranslate, this);
-};
 
 p.focusTransformer = function (de) {
 

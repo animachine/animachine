@@ -157,7 +157,7 @@ p.getValue = function (time) {
 };
 
 p.addKey = function (opt) {
-    
+
     var key = this.getKey(opt.time);
 
     if (key) {
@@ -192,7 +192,7 @@ p.addKey = function (opt) {
             redo: () => this.addKey(key),
             name: 'add bezier key',
         });
-        
+
         this.emit('addKey');
     }
 
@@ -266,17 +266,17 @@ p._focusTransformer = function (de) {
             if (idx !== arr.length - 1) {
 
                 srcKey.style = {
-                    anchorFill: 'navajowhite', 
+                    anchorFill: 'navajowhite',
                     anchorStroke: 'deepskyblue',
-                    handleFill: 'navajowhite', 
-                    handleStroke: 'deepskyblue', 
+                    handleFill: 'navajowhite',
+                    handleStroke: 'deepskyblue',
                 };
             }
-            
+
             points.push(srcKey);
         });
     });
-    
+
     this._transformer.setup({
         hand: {
             type: 'curver',
@@ -338,7 +338,7 @@ p._onChangeTransformer = function (changes) {
             });
         }
         else if (change.type === 'remove') {
-            
+
             key.value.splice(idx, 1);
 
             if (key.value.length === 0) {
@@ -355,11 +355,11 @@ p._onChangeTransformer = function (changes) {
             point.handleLeft.y = change.point.handleLeft.y;
             point.handleRight.x = change.point.handleRight.x;
             point.handleRight.y = change.point.handleRight.y;
-            point.linked = change.point.linked;            
+            point.linked = change.point.linked;
         }
-        
+
     });
-    
+
     changedKeys.forEach(key => key.emit('change'));
 };
 

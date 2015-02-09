@@ -294,7 +294,7 @@ p.addParam = function (opt) {
         }
     }
     else {
-        this._paramGroup.addParam(param);
+        param = this._paramGroup.addParam(opt);
 
         this.emit('addParam');
         this.emit('change');

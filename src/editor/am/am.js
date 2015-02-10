@@ -18,6 +18,7 @@ var Mouse = require('../mouse');
 var ProjectMap = require('../project/ProjectMap');
 var dialogWIP = require('../commonDialogs/dialogWIP');
 var dialogFeedback = require('../commonDialogs/dialogFeedback');
+var dialogWelcome = require('../commonDialogs/dialogWelcome');
 var mineSave = require('../mineSave');
 var modules = {
     css: require('../modules/css'),
@@ -58,7 +59,7 @@ am.open = function (save) {
     am.report({evtName: 'open', 'value': 1});
 
     var promiseBody = (fulfill, reject) => {
-        
+
         am._init();
 
         if (save) {
@@ -68,7 +69,7 @@ am.open = function (save) {
                 useSave(save);
             }
             else if (typeof(save) === 'string') {
-                
+
                 if (save.indexOf('{') === -1) {
 
                     fetch(save)
@@ -106,14 +107,19 @@ am.open = function (save) {
     };
 
     if (false) {
-        console.warn('am.open is in debug mode!')
+        console.warn('am.open is in debug mode!');
         promiseBody(); //debug
-        return
+        return;
     }
 
     var promise = new Promise(promiseBody)
         .then(() => {
             am.report({evtName: 'open', 'value': 1});
+
+            if (!am.dialogs.welcome.isChecked()) {
+
+                am.dialogs.welcome.show();
+            }
         })
         .catch(err => {
             console.log(err.stack);
@@ -135,7 +141,7 @@ am._init = function () {
     am.deDialogCont = createAmLayer();
 
     amgui.deOverlayCont = am.deDialogCont;
-    
+
     am.i18n = i18n;
 
     am.workspace = new Windooman();
@@ -154,7 +160,7 @@ am._init = function () {
     am.history = new Chronicler();
     shortcuts.on('undo', () => am.history.undo());
     shortcuts.on('redo', () => am.history.redo());
-    
+
     am.historyTab = new HistoryTab();
     am.workspace.fillTab('History', am.historyTab.domElem);
 
@@ -167,10 +173,11 @@ am._init = function () {
     addToggleGui();
     amTools(am);
     createStatusLabel();
-    
+
     am.dialogs = {
         WIP: dialogWIP,
         feedback: dialogFeedback,
+        welcome: dialogWelcome,
     };
 
     Object.keys(modules).forEach( moduleName => {
@@ -198,7 +205,7 @@ am.setTimeline = function (timeline) {
     am.currTimeline = timeline;
 
     am.workspace.fillTab('timeline', timeline.domElem);
-}
+};
 
 am.selectTrack = function (track) {
 
@@ -272,8 +279,8 @@ am.report = function (opt) {
         chrome.runtime.sendMessage({
                 subject: 'track',
                 evtName: opt.evtName,
-                value: opt.value, 
-            }, 
+                value: opt.value,
+            },
             function(response) {
                 console.log(response.farewell);
             }
@@ -299,15 +306,15 @@ am.isExtension = function () {
 function inspectHandlerCont(deCont) {
 
     var config = {childList: true},
-        observer = new MutationObserver(function(mutations) {
-        
+        observer = new MutationObserver(function() {
+
         observer.disconnect();
-        
+
         _(deCont.children)
             .toArray()
             .sortBy('renderLevel')
             .forEach(de => deCont.appendChild(de));
-    
+
         observer.observe(deCont, config);
     });
 
@@ -316,7 +323,7 @@ function inspectHandlerCont(deCont) {
 
 function addToggleGui() {
 
-    var isHidden = false;   
+    var isHidden = false;
 
     am._staticToolbarIcons.push({
         tooltip: 'show/hide editor',
@@ -350,7 +357,7 @@ function addToggleGui() {
         isHidden = true;
 
         am.deGuiCont.style.display = 'none';
-        
+
         document.body.appendChild(btnFull);
 
         var zIndex = getMaxZIndex();
@@ -363,7 +370,7 @@ function addToggleGui() {
 
         if (!isHidden) return;
         isHidden = false;
-            
+
         am.deGuiCont.style.display = 'block';
         btnFull.parentElement.removeChild(btnFull);
     }
@@ -393,7 +400,7 @@ function getMaxZIndex() {
         }
       }
     }
-    return zIndex;    
+    return zIndex;
 }
 
 
@@ -421,7 +428,7 @@ function createAmRoot() {
     // $('body').css('opacity', 0)
         // .mouseenter(function () {$('body').css('opacity', 1)})
         // .mouseleave(function () {$('body').css('opacity', .23)});
-    
+
     var de = document.createElement('div');
     de.style.position = 'fixed';
     de.style.left = '0px';
@@ -444,7 +451,7 @@ function createAmRoot() {
     document.body.appendChild(de);
 
     var sr = de.createShadowRoot();
-        
+
     sr.appendChild(amgui.getStyleSheet());
 
     externalStylesheets.forEach(function (css) {

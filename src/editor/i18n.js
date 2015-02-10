@@ -2,9 +2,8 @@ module.exports = {
     cssModule: {
         noTrackSelected: 'No track selected.',
     },
-    wellcomeMsg:`Hi! This is the alpha version of Animachine. It's animation tool for designing GreenSock based animations for any kind of web project.
-Currently we're working on reaching the beta state, so every enthusiast developer could try it out. Until that you're welcomed to check the current state of the program and play with it:)
-
-Demos:
-Chrome plugin`
+    welcomeMsg:`It's animation tool for designing <a href="//greensock.com/" style="color:#88ce02;">GreenSock</a> based animations for any kind of web project.<br>
+Although it's in alpha state, (so many of the features are just draft or buggy and the UI isn't that friendly) you're welcomed to check the current state of the program and play with it :)<br>
+If you have any kind of question, opinion, feature request or just want to contact with us, we waiting for you on the <a href="//github.com/animachine/animachine/issues">Github issues</a> or on feedback@animachine.org<br>
+For more detailes check <a href="//github.com/animachine/animachine">Github</a>`
 }

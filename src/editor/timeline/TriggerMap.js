@@ -4,14 +4,14 @@ var EventEmitter = require('eventman');
 var inherits = require('inherits');
 var Dialog = require('../utils/Dialog');
 var OptionLine = require('../utils/OptionLine');
-var StringInput = require('../utils/StringInput');
+var amgui = require('../amgui');
 
 var ACTIONS = [{
     method: 'play',
     arguments: [{type: 'number'}, {}],
 }];
 
-function TriggerMap(opt) {
+function TriggerMap() {
 
     EventEmitter.call(this);
 
@@ -113,11 +113,12 @@ p._createEditDialog = function () {
         if (!trigger) return;
 
         currTrigger = trigger;
-        olName.inputs.input.name = currTrigger.name;
-        inpEvent = currTrigger.events[0];
-        inpSelector = currTrigger.selectors[0];
-        inpMethod = currTrigger.actions[0].method;
-        inpArguments = currTrigger.actions[0].arguments[0];
+        optName.inputs.input.value = currTrigger.name;
+        optType.inputs.input.value = currTrigger.events[0];
+        optEvent.inputs.input.value = currTrigger.events[0];
+        optSelector.inputs.input.value = currTrigger.selectors[0];
+        optMethod.inputs.method.value = currTrigger.actions[0].method;
+        optMethod.inputs.arguments.value = currTrigger.actions[0].arguments[0];
     };
 
     amgui.createBtn({
@@ -191,7 +192,7 @@ p._createEditDialog = function () {
             suggestions: _.pluck(ACTIONS, 'method'),
             onChange: v => currTrigger.actions[0].method = v,
             type: 'string',
-            name: 'name',
+            name: 'method',
         },{
             placeholder: 'comma selected arguments',
             defaultValue: '0',

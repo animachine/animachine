@@ -105,7 +105,7 @@ _.extend(amgui,
 
             var style = document.createElement('style');
 
-            style.innerHTML = `a{color: ${amgui.color.aqua};}`;
+            style.innerHTML = `a{color: ${amgui.color.aqua};text-decoration:none;}`;
 
             return style;
         },

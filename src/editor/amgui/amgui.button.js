@@ -43,6 +43,7 @@ function createLabel(opt) {
     if ('flex' in opt) de.style.flex = opt.flex;
     if ('position' in opt) de.style.position = opt.position;
     if ('color' in opt) de.style.color = opt.color;
+    if ('fontWeight' in opt) de.style.fontWeight = opt.fontWeight;
 
 
     Object.defineProperties(de, {

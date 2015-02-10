@@ -13,15 +13,18 @@ dialog.addButton('close', 'hide');
 const CHECKFLAG = '__am_dontshowwelcomemsgagain',
     CHECKFLAGVAL = 'v1';
 
-dialog.deContent.style.width = '560px';
+dialog.deContent.style.width = '570px';
 
-amgui.createLabel({
+var deText = amgui.createLabel({
     text: i18n.welcomeMsg,
     fontSize: '14px',
     height: 'auto',
     display: 'block',
+    fontWeight: '600',
     parent: dialog.deContent
 });
+deText.style.marginBottom = '12px';
+
 
 var cb = amgui.createCheckbox({
     text: 'don\'t show this again',

@@ -253,6 +253,18 @@ p.addButton = function (opt) {
 
         this.buttons[opt.name] = opt.domElem;
     }
+
+    if (opt.hoverMode) {
+
+        opt.domElem.style.visibility = 'hidden';
+
+        this.domElem.addEventListener('mouseenter', () => {
+            opt.domElem.style.visibility = 'visible';
+        });
+        this.domElem.addEventListener('mouseleave',() => {
+            opt.domElem.style.visibility = 'hidden';
+        });
+    }
 };
 
 p.addOptionLine = function (optionLine) {
@@ -363,9 +375,10 @@ p._createDomElem = function() {
 
     amgui.createSeparator({parent: this._deHeadCont});
 
-    this._deSubcont = document.createElement('div');
-    this._deSubcont.style.width = '100%';
-    this.domElem.appendChild(this._deSubcont);
+    this._deSubcont = amgui.createDiv({
+        parent: this.domElem,
+        width: '100%',
+    });
 };
 
 p._createHighlight = function () {
@@ -385,4 +398,8 @@ p._createIndent = function () {
     this._deIndent.style.display = 'inline-block';
     this._deIndent.style.width = '0px';
     this._deHeadCont.appendChild(this._deIndent);
+};
+
+p.dispose = function () {
+    //TODO
 };

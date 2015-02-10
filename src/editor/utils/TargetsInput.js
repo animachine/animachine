@@ -3,17 +3,15 @@
 var Input = require('./Input');
 var inherits = require('inherits');
 var amgui = require('../amgui');
-var StringInput = require('./StringInput');
+var OptionLine = require('./OptionLine');
 
 function TargetsInput(opt={}) {
 
     Input.call(this, opt);
 
-    this._createBase();
-
+    this._targets = [];
     this._value = opt.value || [];
     this._defaultValue = opt.defaultValue || [];
-    this._targets = [];
 }
 
 inherits(TargetsInput, Input);
@@ -46,7 +44,7 @@ p.addTarget = function (opt) {
     var target = this._createTarget(opt);
 
     this._targets.push(target);
-    this._deTargetsCont.appendChild(target.domElem);
+    this._rootOptionLine.addOptionLine(target.optionLine);
 };
 
 p.removeTarget = function (target) {
@@ -56,7 +54,7 @@ p.removeTarget = function (target) {
     if (idx === -1) return;
 
     this._targets.splice(idx, 1);
-    $(target.domElem).remove();
+    this._rootOptionLine.removeOptionLine(target.optionLine);
     target.dispose();
 };
 
@@ -69,23 +67,35 @@ p.removeTarget = function (target) {
 
 p._createInput = function () {
 
-    this._deTargetsCont = amgui.createDiv({
+    this._rootOptionLine = new OptionLine({
+        title: 'Targets',
         parent: this.domElem,
     });
 
-    amgui.createIconBtn({
-        icon: 'hash',
-        display: 'inline-block',
-        onClick: () => this.addTarget({type: 'css', value: ''}),
-        parent: this.domElem
+    this._rootOptionLine.addButton({
+        name: 'add',
+        domElem: amgui.createIconBtn({
+            icon: 'plus',
+            tooltip: 'add new input'
+        }),
     });
 
-    amgui.createIconBtn({
-        icon: 'code',
-        display: 'inline-block',
-        onClick: () => this.addTarget({type: 'input', value: ''}),
-        parent: this.domElem,
-        tooltip: 'select from js inputs'
+    amgui.bindDropdown({
+        deTarget: this._rootOptionLine.buttons.add,
+        deDropdown: amgui.createDropdown({
+            options: [{
+                icon: 'hash',
+                text: 'css selector',
+                onClick: () => this.addTarget({type: 'css', value: ''}),
+                tooltip: 'new css selector input'
+            }, {
+                icon: 'code',
+                text: 'js input',
+                onClick: () => this.addTarget({type: 'input', value: ''}),
+                tooltip: 'new js input'
+
+            }]
+        })
     });
 };
 
@@ -93,47 +103,39 @@ p._createTarget = function (data) {
 
     var target = {data}, inputPaths = [];
 
-    var height = amgui.LINE_HEIGHT;
+    target.optionLine = new OptionLine({
+        inputs: [{
+            name: 'input',
+            type: 'string',
+            placeholder: 'type here',
+            value: target.data.value,
+            onChange: value => {
 
-    target.domElem = document.createElement('div');
-    target.domElem.style.display = 'flex';
-    target.domElem.style.height = height + 'px';
-    target.domElem.style.margin = '1px 0';
-    target.domElem.style.background = amgui.color.bg2;
+                target.data.value = value;
+                this.emit('change');
 
-    var deHighlight = document.createElement('div');
-    deHighlight.style.display = 'inline-block';
-    deHighlight.style.width = '2px';
-    deHighlight.style.height = height + 'px';
-    deHighlight.style.marginRight = '2px';
-    deHighlight.style.background = data.type === 'css' ? amgui.color.purple : amgui.color.blue;
-    target.domElem.appendChild(deHighlight);
+                if (data.type === 'input') {
 
-    var inp = new StringInput({
-        parent: target.domElem,
-        placeholder: 'type here',
-        value: target.data.value,
-        onChange: () => {
+                    let match = inputPaths.indexOf(input.value) === -1,
+                        color = match ? amgui.color.text : amgui.color.aqua;
 
-            target.data.value = inp.value;
-            this.emit('change');
-
-            if (data.type === 'input') {
-                inp.domElem.style.color = inputPaths.indexOf(inp.value) === -1 ? amgui.color.text : amgui.color.aqua;
+                    input.style.color = color;
+                }
             }
-        }
+        }]
     });
-    inp.domElem.style.width = '245px';
-    inp.domElem.style.height = height + 'px';
-    inp.domElem.style.fontSize = '14px';
-    inp.domElem.style.flex = '1';
 
-    inp.focus();
+    var input = target.optionLine.inputs.input;
+    input.focus();
+
+    target.optionLine.highlight = data.type === 'input' ? amgui.color.blue : amgui.color.purple;
+
+
 
     var refreshSuggestions = () => {
 
         inputPaths = am.projectMap.getCurrProject().getInputPaths();
-        inp.setSuggestions(inputPaths);
+        input.setSuggestions(inputPaths);
     };
 
     if (target.data.type === 'input') {
@@ -146,36 +148,24 @@ p._createTarget = function (data) {
 
         var btnPick = amgui.createIconBtn({
             icon: 'target',
-            height: height,
             display: 'inline-block',
             onClick: () => am.dialogs.WIP.show(),
-            parent: target.domElem,
             tooltip: 'pick DOM element'
         });
-        btnPick.style.visibility = 'hidden';
+        target.optionLine.addButton({domElem: btnPick, hoverMode: true});
     }
 
     var btnDel = amgui.createIconBtn({
         icon: 'cancel',
-        height: height,
         display: 'inline-block',
         onClick: () => this.removeTarget(target),
-        parent: target.domElem
     });
-    btnDel.style.visibility = 'hidden';
-
-    target.domElem.addEventListener('mouseenter', function () {
-        if (btnPick) btnPick.style.visibility = 'visible';
-        btnDel.style.visibility = 'visible';
-    });
-    target.domElem.addEventListener('mouseleave', function () {
-        if (btnPick) btnPick.style.visibility = 'hidden';
-        btnDel.style.visibility = 'hidden';
-    });
+    target.optionLine.addButton({domElem: btnDel, hoverMode: true});
 
     target.dispose = function () {
 
-        // this.timeline.off('change.inputs', refreshSuggestions);
+        //TODO
+        target.optionLine.dispose();
     };
 
     return target;

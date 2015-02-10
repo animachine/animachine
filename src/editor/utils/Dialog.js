@@ -17,13 +17,13 @@ function Dialog (opt) {
     this._offOnHideListeners = [];
 
     this._createDomElem();
-    
+
     this._options = {
         deContent: this.deContent,
         buttons: [],
         title: opt.title || 'Dialog',
         onHide: () => this._onHide(),
-    }
+    };
 }
 
 inherits(Dialog, EventEmitter);
@@ -85,7 +85,7 @@ p.show = function (opt) {
         var onOpt = 'on' + propData.evtName.charAt(0).toUpperCase() + propData.evtName.slice(1);
 
         if (onOpt in opt) {
-            console.warn('deprecated, use opt.on to bind listeners!')
+            console.warn('deprecated, use opt.on to bind listeners!');
             this._offOnHideListeners.push({
                 evtName: propData.evtName,
                 callback: opt[onOpt],
@@ -102,14 +102,14 @@ p.show = function (opt) {
 };
 
 p.hide = function () {
-    
+
     am.workspace.dialogs.hideDialog(this._options);
 
     return this;
 };
 
 p._onHide = function () {
-    
+
     if (!this._isOpened) return;
     this._isOpened = false;
 
@@ -118,7 +118,7 @@ p._onHide = function () {
     });
 
     this.emit('hide');
-}
+};
 
 p.addProperty = function (opt) {
 
@@ -132,7 +132,7 @@ p.addProperty = function (opt) {
         opt.input.on('change', v => this[reg.name] = v);
         this.on(reg.evtName, v => opt.input.value = v);
     }
-    
+
     return this;
 };
 
@@ -178,5 +178,3 @@ p._createDomElem = function () {
     this.deContent.style.width = '330px';
     this.deContent.style.padding = '30px 12px';
 };
-
-

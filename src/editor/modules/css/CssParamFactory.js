@@ -110,6 +110,8 @@ p._assembleParam = function (opt={}) {
         .is('borderRightWidth,borderTopRightRadius,borderRightColor,borderRightStyle', () => opt.title = 'right')
         .is('borderBottomWidth,borderBottomLeftRadius,borderBottomColor,borderBottomStyle', () => opt.title = 'bottom')
         .is('borderLeftWidth,borderBottomRightRadius,borderLeftColor,borderLeftStyle', () => opt.title = 'left')
+        .is('skeewX', () => opt.title = 'x')
+        .is('skeewY', () => opt.title = 'y')
         .is('bezier', () => {
 
             opt.optionLine.inputs = [];

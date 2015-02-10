@@ -33,12 +33,14 @@ function CssTrack (opt={}, timeline) {
         childIdx: 1,
     });
 
+    //TODO do this somehow else
     this._paramGroup.on('addParam', param => {
 
         if (param.name === 'translate') {
             param.on('translateToBezier', this._switchFromTranslateToBezier, this);
         }
         else if (param.name === 'bezier') {
+            param.parentTrack = this;//hack!
             param.on('bezierToTranslate', this._switchFromBezierToTranslate, this);
         }
     });
@@ -48,6 +50,7 @@ function CssTrack (opt={}, timeline) {
     }
 
     if (this._paramGroup.getParam('bezier')) {
+        this._paramGroup.getParam('bezier').parentTrack = this;//hack!
         this._paramGroup.getParam('bezier').on('bezierToTranslate', this._switchFromBezierToTranslate, this);
     }
 }

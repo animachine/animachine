@@ -105,7 +105,7 @@ _.extend(amgui,
 
             var style = document.createElement('style');
 
-            style.innerHTML = 'dialog::backdrop { background:'+amgui.color.bgHover+' }';
+            style.innerHTML = `a{color: ${amgui.color.aqua};}`;
 
             return style;
         },

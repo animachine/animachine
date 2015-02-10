@@ -21,6 +21,8 @@ function ParamGroup (opt={}) {
 
 
     this._refreshHeights();
+
+    this.on('change.hidden', () => this._refreshHeights());
 }
 
 inherits(ParamGroup, Param);

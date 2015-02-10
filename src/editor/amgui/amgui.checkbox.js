@@ -21,22 +21,31 @@ function createCheckbox(opt) {
         }),
         isChecked = false;
 
-    Object.defineProperty(de, 'checked', {
+    Object.defineProperties(de, {
+        checked: {
+            set: function (v) {
 
-        set: function (v) {
+                v = !!v;
 
-            v = !!v;
+                if (isChecked === v) return;
 
-            if (isChecked === v) return;
+                isChecked = v;
 
-            isChecked = v;
+                cb.setToggle(isChecked);
 
-            cb.setToggle(isChecked);
-
-            de.dispatchEvent(new CustomEvent('change', {checked: isChecked}));
+                de.dispatchEvent(new CustomEvent('change', {checked: isChecked}));
+            },
+            get: function () {
+                return isChecked;
+            }
         },
-        get: function () {
-            return isChecked;
+        text: {
+            set: function (v) {
+                label.text = v;
+            },
+            get: function () {
+                return label.text;
+            }
         }
     });
 
@@ -46,7 +55,7 @@ function createCheckbox(opt) {
         parent: de,
         display: 'inline-block',
     });
-    
+
     var label = amgui.createLabel({
         text: opt.text,
         parent: de,

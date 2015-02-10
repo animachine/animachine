@@ -69,6 +69,7 @@ function Timeline(opt) {
     this._timebar.on('seek', this._onTimebarSeek);
 
     amgui.callOnAdded(this.domElem, this._refreshTimebarWidth, this);
+    this._refreshPointerLine = amgui.delayWithRAF(this._refreshPointerLine, this);
 
     window.addEventListener('resize', this._onWindowResize);
 

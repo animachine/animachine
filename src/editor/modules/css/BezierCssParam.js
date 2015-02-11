@@ -13,13 +13,17 @@ function BezierCssParam (opt) {
     opt.optionLine.inputs = [
         {name: 'x', type: 'unit'},
         {name: 'y', type: 'unit'},
-        {name: 'autoRotate', type: 'checkbox'},
+        {name: 'autoRotate', type: 'checkbox', text: 'rotate'},
     ];
 
     this._checkTimeline = undefined;
     this._checkObj = {x: 0, y: 0};
 
     CssParam.apply(this, arguments);
+
+    this.optionLine.inputs.autoRotate.domElem.addEventListener('click', () => {
+        am.dialogs.WIP.show();
+    });
 
     this.on('change.keys', this._refreshCheckTimeline, this);
     this._refreshCheckTimeline();

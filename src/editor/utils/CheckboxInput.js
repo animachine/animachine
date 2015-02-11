@@ -3,6 +3,7 @@
 var Input = require('./Input');
 var inherits = require('inherits');
 var amgui = require('../amgui');
+var defineCompactProperty = require('./defineCompactProperty');
 
 function CheckboxInput(opt={}) {
 
@@ -14,6 +15,8 @@ function CheckboxInput(opt={}) {
 
     this._value = opt.value || false;
     this._defaultValue = opt.defaultValue || false;
+
+    if (_.has(opt, 'text')) this.text = opt.text;
 }
 
 inherits(CheckboxInput, Input);
@@ -39,10 +42,12 @@ Object.defineProperties(p, {
 
             return this._value;
         }
-    },
+    }
 });
 
-
+defineCompactProperty(p, {name: 'text', type: 'string', onChange: function (v) {
+    this._input.text = v;
+}});
 
 
 

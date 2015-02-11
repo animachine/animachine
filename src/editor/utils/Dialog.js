@@ -2,7 +2,6 @@
 
 var EventEmitter = require('eventman');
 var inherits = require('inherits');
-var amgui = require('../amgui');
 var defineCompactProperty = require('./defineCompactProperty');
 
 function Dialog (opt) {

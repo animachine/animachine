@@ -341,7 +341,7 @@ p._onClickTgglMerge = function () {
 
 p._onChangeSubparamHeight = function () {
 
-    this.emit('', this);
+    this.emit('change.height', this);
     this._refreshHeights();
 };
 

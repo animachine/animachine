@@ -240,7 +240,7 @@ p.addTrack = function (track) {
     track.on('select', this._onSelectTrack, this);
     track.on('remove', this._onRemoveTrack, this);
     track.on('move', this._onMoveTrack, this);
-    track.on('changeHeight', this._onChangeTrackHeight, this);
+    track.on('change.height', this._onChangeTrackHeight, this);
 
     function createCont(content, parent) {
 
@@ -278,7 +278,7 @@ p.removeTrack = function (track) {
     track.off('change.keys', this._onChangeTrackKeys, this);
     track.off('remove', this._onRemoveTrack, this);
     track.off('move', this._onMoveTrack, this);
-    track.off('changeHeight', this._onChangeTrackHeight, this);
+    track.off('change.height', this._onChangeTrackHeight, this);
 
     track.dispose();
 };

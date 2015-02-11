@@ -467,7 +467,7 @@ p._createOptions = function (opt) {
         contextMenuOptions: [
             {text: 'move up', onSelect: () => am.dialogs.WIP.show()},
             {text: 'move down', onSelect: () => am.dialogs.WIP.show()},
-            {text: 'delete', onSelect: () => this.emit('need.remove')},
+            {text: 'delete', onSelect: () => this.emit('need.remove', this)},
         ],
         title: {
             text: this.name,

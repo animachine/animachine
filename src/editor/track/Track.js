@@ -78,7 +78,7 @@ function Track(opt, timeline) {
     this.deOptionLine.addEventListener('click', this._onSelectClick);
     this.deKeyLine.addEventListener('click', this._onSelectClick);
 
-    this.paramGroup.on('changeHeight', this._onChangeHeight, this);
+    this.paramGroup.on('change.height', this._onChangeHeight, this);
 
     this.setMaxListeners(1234);
 
@@ -569,7 +569,7 @@ p._onChangeSelectors = function (selectors) {
 
 p._onChangeHeight = function () {
 
-    this.emit('changeHeight', this);
+    this.emit('change.height', this);
 };
 
 

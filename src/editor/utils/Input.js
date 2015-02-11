@@ -92,9 +92,9 @@ p._createBase = function () {
 
 p._createInput = function () {
 
-    this._input = amgui.createInput({
-        parent: this.domElem,
-        flex: 1,
-        onChange: v => this._onChangeInput(v),
-    });
+    // this._input = amgui.createInput({
+    //     parent: this.domElem,
+    //     flex: 1,
+    //     onChange: v => this._onChangeInput(v),
+    // });
 };

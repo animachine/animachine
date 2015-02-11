@@ -8,11 +8,6 @@ function StringInput(opt={}) {
 
     Input.call(this, opt);
 
-    this._createBase();
-
-    this._defaultValue = opt.defaultValue || '';
-    this._value = opt.value || this._defaultValue;
-
     if (opt.placeholder) {
 
         this._input.placeholder = opt.placeholder;
@@ -107,6 +102,7 @@ p._createInput = function () {
         parent: this.domElem,
         flex: 1,
         onChange: v => this._onChangeInput(v),
+        value: this.value,
     });
 
     this.domElem.style.color = this._input.style.color;
@@ -128,12 +124,15 @@ p._prepareSuggestions = function (suggestions) {
     // kicks off the loading/processing of `local` and `prefetch`
     this._suggestionEngine.initialize();
 
-    var template = [
-        '<div class="guess" style="padding: 2px;color:'+amgui.color.textColor+';background-color:'+amgui.color.bg1+';">',
-          '<span>{{{value}}}</span>',
-        '</div>'].join('');
+    var template = `<div class="guess"
+            style="padding: 2px;
+                color:${amgui.color.textColor};
+                background-color:${amgui.color.bg1};
+            ">
+          <span>{{{value}}}</span>
+        </div>`
 
-    amgui.callOnAdded(this._input, function () {
+    amgui.callOnAdded(this._input, () => {
 
         $(this._input).typeahead({
                 hint: true,
@@ -151,8 +150,8 @@ p._prepareSuggestions = function (suggestions) {
                     }
                 }
             })
-            .on('typeahead:opened', function () {console.log('onOpened')})
-            .on('typeahead:autocompleted', function () {console.log('onAutocompleted')})
-            .on('typeahead:selected', function () {console.log('onSelected')});
-    }, this);
+            .on('typeahead:opened', () => this._onChangeInput())
+            .on('typeahead:autocompleted', () => this._onChangeInput())
+            .on('typeahead:selected', () => this._onChangeInput());
+    });
 };

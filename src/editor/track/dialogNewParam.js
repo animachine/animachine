@@ -8,7 +8,7 @@ var inited = false,
     inpParamName,
     dialog = new Dialog({
         title: 'New param',
-    }); 
+    });
 module.exports = dialog;
 
 dialog.addButton('add', function () {
@@ -23,7 +23,7 @@ dialog.addButton('add', function () {
 dialog.addButton('close', 'hide');
 
 dialog.on('show', function () {
-    
+
     createContent();
 
     inpParamName.value = '';
@@ -43,16 +43,17 @@ function createContent() {
       return {value: camelCase(suggestion.property)};
     });
 
-    function camelCase(input) { 
+    function camelCase(input) {
       return input.toLowerCase().replace(/-(.)/g, function(match, group1) {
           return group1.toUpperCase();
       });
     }
-
+    console.log('papapapappapapapapapa')
     inpParamName = new StringInput({
         parent: dialog.deContent,
         placeholder: 'css parameter name',
-        suggestions: suggestions
+        suggestions: suggestions,
+        value: 'ref'
     });
 }
 

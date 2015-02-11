@@ -134,7 +134,7 @@ p.grab = function (e) {
 
 p.remove = function () {
 
-    this.emit('needsRemove', this);
+    this.emit('need.remove', this);
 };
 
 p.getPrevKey = function () {

@@ -56,10 +56,7 @@ function Track(opt, timeline) {
         },
     }, this.timeline);
 
-    this._paramGroup.on('change.structure', () => {
-
-        this._endParams = this._paramGroup.getEndParams();
-    });
+    this._paramGroup.on('change.structure', this._refreshEndParams, this);
 
     this._paramGroup.on('change.param', this._onChangeParameter, this);
 
@@ -140,6 +137,7 @@ p.useSave = function (save) {
     this._selectors = save.selectors || [];
     if (save.paramTree) this._paramGroup.useSave(save.paramTree);
 
+    this._refreshEndParams();
     this._refreshSelectedElems();
     this._refreshPlayer();
 };
@@ -294,7 +292,9 @@ p.addParam = function (opt) {
         }
     }
     else {
-        param = this._paramGroup.addParam(opt);
+        this._paramGroup.addParam(opt);
+        this._refreshEndParams();
+        param = _.find(this._endParams, {name: opt.name});
 
         this.emit('addParam');
         this.emit('change');
@@ -621,6 +621,11 @@ p.isOwnedDomElem = function (de) {
 
     return this._selectedElems.indexOf(de) !== -1;
 };
+
+p._refreshEndParams = function () {
+
+    this._endParams = this._paramGroup.getEndParams();
+}
 
 p._refreshSelectedElems = function () {
 

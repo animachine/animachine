@@ -103,11 +103,9 @@ p.addKey = function (key) {
     this._keys.push(key);
     key.parentKeyLine = this;
 
-    key.on('change', this._onChangeKey, this);
-    key.on('select', this._onChangeKey, this);
-    key.on('deselect', this._onChangeKey, this);
-    key.on('needsRemove', this._onKeyNeedsRemove, this);
-    key.on('needsRender', this._render, this);
+    key.on('change.value', this._onChangeKeyValue, this);
+    key.on('need.remove', this._onKeyNeedRemove, this);
+    key.on('need.render', this._onKeyNeedRender, this);
 
     this._render();
     this.emit('change');
@@ -124,11 +122,9 @@ p.removeKey = function (key) {
     this._keys.splice(idx, 1);
     key.parentKeyLine = undefined;
 
-    key.off('change', this._onChangeKey, this);
-    key.off('select', this._onChangeKey, this);
-    key.off('deselect', this._onChangeKey, this);
-    key.off('needsRemove', this._onKeyNeedsRemove, this);
-    key.off('needsRender', this._render, this);
+    key.off('change.value', this._onChangeKeyValue, this);
+    key.off('need.remove', this._onKeyNeedRemove, this);
+    key.off('need.render', this._onKeyNeedRender, this);
 
     key.dispose();
 
@@ -240,13 +236,17 @@ p._render = function () {
 
 
 
-p._onChangeKey = function () {
+p._onChangeKeyValue = function () {
 
-    this._render();
-    this.emit('change');
+    this.emit('change.keys');
 };
 
-p._onKeyNeedsRemove = function (key) {
+p._onKeyNeedRender = function () {
+
+    this._render();
+};
+
+p._onKeyNeedRemove = function (key) {
 
     this.removeKey(key);
 };
@@ -301,7 +301,7 @@ p._createDomElem = function createKeyline() {
     this._canvas.style.position = 'absolute';
     this._deLine.appendChild(this._canvas);
     this._ctx = this._canvas.getContext('2d');
-    
+
     amgui.createSeparator({parent: this._deLine});
 
     this._canvas.addEventListener('dblclick', this._onDblClick);

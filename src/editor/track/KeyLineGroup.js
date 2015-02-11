@@ -11,9 +11,6 @@ function KeyLineGroup (opt) {
 
     this._keyLines = [];
 
-    this._onChangeKeyLine = this._onChangeKeyLine.bind(this);
-    this._onKeyNeedsRemove = this._onKeyNeedsRemove.bind(this);
-
     this._refreshHeadKeyline = amgui.delayWithRAF(this._refreshHeadKeyline, this);
 
     this._createSubcont();
@@ -58,7 +55,7 @@ p.addKeyLine = function (keyLine) {
         return;
     }
 
-    keyLine.on('change', this._onChangeKeyLine);
+    keyLine.on('change.keys', this._onChangeKeyLineKeys, this);
 
     this._keyLines.push(keyLine);
 
@@ -68,11 +65,11 @@ p.addKeyLine = function (keyLine) {
 };
 
 p.removeKeyline = function (keyLine) {
-    
+
     var idx = this._keyLines.indexOf(keyLine);
     if (idx === -1) return;
 
-    keyLine.removeListener('change', this._onChangeKeyLine);
+    keyLine.off('change.keys', this._onChangeKeyLineKeys, this);
 
     this._keyLines.splice(idx, 1);
 
@@ -98,7 +95,7 @@ p.moveKeylineTo = function (keyline, idx) {
 
 
 
-p._onChangeKeyLine = function (key) {
+p._onChangeKeyLineKeys = function (key) {
 
     this._refreshHeadKeyline();
 
@@ -147,7 +144,7 @@ p._refreshHeadKeyline = function () {
     this._keyLines.forEach(function (keyLine) {
 
         if (keyLine.hidden) return;
-        
+
         keyLine.forEachKeys(function (key, idx) {
 
             var tidx = times.indexOf(key.time);

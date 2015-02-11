@@ -179,16 +179,16 @@ p.renderToLine = function (ctx) {
         ctx.stroke();
         ctx.restore();
     }
-
-    if (this.timeline.currTime === this.time) {
-        ctx.save();
-        ctx.beginPath();
-        ctx.strokeStyle = amgui.color.red;
-        ctx.lineWidth = 1;
-        ctx.arc(keyPos, height/2, 6, 0, 2 * Math.PI);
-        ctx.stroke();
-        ctx.restore();
-    }
+    //TODO
+    // if (this.timeline.currTime === this.time) {
+    //     ctx.save();
+    //     ctx.beginPath();
+    //     ctx.strokeStyle = amgui.color.red;
+    //     ctx.lineWidth = 1;
+    //     ctx.arc(keyPos, height/2, 6, 0, 2 * Math.PI);
+    //     ctx.stroke();
+    //     ctx.restore();
+    // }
 
     this.emit('postrender', ctx, this);
 };

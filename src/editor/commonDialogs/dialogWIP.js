@@ -10,7 +10,7 @@ var dialog = new Dialog({
 dialog.addButton('ok', 'hide');
 
 amgui.createLabel({
-    text: `This feature doesn't ready yet. (but it's on the way!)<br>
+    text: `This feature isn't ready yet. (but it's on the way!)<br>
 To get notified about the latest changes follow us on <a href="//github.com/animachine/animachine">Github!</a>`,
     fontSize: '16px',
     height: 'auto',

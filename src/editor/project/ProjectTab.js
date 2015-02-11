@@ -8,11 +8,13 @@ function ProjectTab(projectMap) {
     this._projectMap = projectMap;
 
     this._createBase();
+
+    projectMap.on('focus', this._onFocus, this);
 }
 
 var p = ProjectTab.prototype;
 
-p.focus = function (project) {
+p._onFocus = function (project) {
 
     if (this._currProject) {
 
@@ -24,7 +26,7 @@ p.focus = function (project) {
     this._deSelected.text = this._currProject.name;
 
     this._refreshLibrary();
-    this._currProject.off(['addTimeline', 'removeTimeline'], this._refreshLibrary, this);
+    this._currProject.on(['addTimeline', 'removeTimeline'], this._refreshLibrary, this);
 };
 
 
@@ -41,12 +43,20 @@ p._refreshLibrary = function () {
 
         var optionLine = new OptionLine({
             title: timeline.name || 'unnamed timeline',
-            onDblclick: () => this._currProject.selectTimeline(timeline),
+            onDblclick: () => this._projectMap.currProject.selectTimeline(timeline),
             keepSpaceForTgglChildren: true,
             data: {
                 type: 'timeline',
                 value: timeline,
             },
+        });
+
+        optionLine.addButton({
+            domElem: amgui.createIconBtn({
+                icon: 'cancel',
+                hoveMode: true,
+                onClick: () => this._projectMap.currProject.removeTimeline(timeline),
+            }),
         });
 
         this._optLibrary.addOptionLine(optionLine);
@@ -89,7 +99,7 @@ p._createProjectHandlers = function () {
             return {
                 text: project.name,
                 onClick: () => this._projectMap.focus(project),
-                iconRight: project === this._currProject ? 'paw' : undefined,
+                iconRight: project === this._projectMap.currProject ? 'paw' : undefined,
             };
         });
         this._ddSelect.setItems(items);
@@ -110,7 +120,7 @@ p._createProjectHandlers = function () {
     });
 
     refreshSelectInput();
-    this._projectMap.on(['load', 'unload'], refreshSelectInput);
+    this._projectMap.on(['load', 'unload', 'focus'], refreshSelectInput);
 
 
 
@@ -125,7 +135,10 @@ p._createProjectHandlers = function () {
                 text: 'new project',
                 icon: 'plus',
                 onClick: () => {
-                    var project = this._projectMap.load({name: 'new project'});
+                    var project = this._projectMap.load({
+                        name: 'new project',
+                        timelines: [{}],
+                    });
                     this._projectMap.focus(project);
                 },
             }, {

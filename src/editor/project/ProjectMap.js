@@ -70,7 +70,7 @@ p.focus = function (project) {
     am.setTimeline(this._currProject.currTimeline);
     this._currProject.on('change.currTimeline', am.setTimeline, am);
 
-    this.projectTab.focus(this._currProject);
+    this.emit('focus', this._currProject);
 };
 
 p.blur = function () {

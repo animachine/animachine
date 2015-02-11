@@ -286,7 +286,7 @@ p.removeOptionLine = function (optionLine) {
     if (idx === -1) return;
 
     this._subOptionLines.splice(idx, 1);
-    $(optionLine).remove();
+    this._deSubcont.removeChild(optionLine.domElem);
 
     if (this._isBorrowingChildInputs) {
         this.returnChildInputs();

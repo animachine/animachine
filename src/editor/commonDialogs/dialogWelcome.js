@@ -33,12 +33,21 @@ var cb = amgui.createCheckbox({
 
 dialog.on('hide', () => {
 
-    window.localStorage.setItem(CHECKFLAG, cb.checked ? CHECKFLAGVAL : false);
+    am.setVar(CHECKFLAG, cb.checked ? CHECKFLAGVAL : false);
 });
 
-dialog.isChecked = function () {
+var _oriShow = dialog.show;
+dialog.show = function () {
 
-    return window.localStorage.getItem(CHECKFLAG) === CHECKFLAGVAL;
+    dialog.isChecked(yes => {
+
+        if (!yes) _oriShow.call(dialog);
+    });
+};
+
+dialog.isChecked = function (cb) {
+
+    am.getVar(CHECKFLAG, v => cb(v === CHECKFLAGVAL));
 };
 
 module.exports = dialog;

@@ -103,12 +103,18 @@ p.addKey = function (key) {
     this._keys.push(key);
     key.parentKeyLine = this;
 
-    key.on('change.value', this._onChangeKeyValue, this);
+    am.history.save({
+        undo: () => this.removeKey(key),
+        redo: () => this.addKey(key),
+        name: 'add key',
+    });
+
+    key.on(['change.value', 'change.time'], this._onChangeKeyValue, this);
+    key.on(['need.render', 'select', 'deselect', 'change.time'], this._onKeyNeedRender, this);
     key.on('need.remove', this._onKeyNeedRemove, this);
-    key.on('need.render', this._onKeyNeedRender, this);
 
     this._render();
-    this.emit('change');
+    this.emit('change.keys');
 };
 
 p.removeKey = function (key) {
@@ -122,14 +128,20 @@ p.removeKey = function (key) {
     this._keys.splice(idx, 1);
     key.parentKeyLine = undefined;
 
-    key.off('change.value', this._onChangeKeyValue, this);
+    am.history.save({
+        undo: () => this.addKey(key),
+        redo: () => this.removeKey(key),
+        name: 'remove key',
+    });
+
+    key.off(['change.value', 'change.time'], this._onChangeKeyValue, this);
+    key.off(['need.render', 'select', 'deselect', 'change.time'], this._onKeyNeedRender, this);
     key.off('need.remove', this._onKeyNeedRemove, this);
-    key.off('need.render', this._onKeyNeedRender, this);
 
     key.dispose();
 
     this._render();
-    this.emit('change');
+    this.emit('change.keys');
 
     return true;
 };

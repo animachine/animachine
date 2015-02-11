@@ -23,6 +23,7 @@
     "default_title": "open animachine"
   },
   "permissions": [
+    "storage",
     "clipboardRead",
     "clipboardWrite",
     "tabs",

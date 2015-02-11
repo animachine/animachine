@@ -5,7 +5,7 @@ var KeyLine = require('./KeyLine');
 var KeyGroup = require('./KeyGroup');
 var amgui = require('../amgui');
 
-function KeyLineGroup (opt) {
+function KeyLineGroup () {
 
     KeyLine.apply(this, arguments);
 
@@ -45,8 +45,14 @@ p.addKey = function (key) {
 
     if(!(key instanceof KeyGroup)) throw Error;
 
-    KeyLine.prototype.addKey.call(this, key)
-}
+    am.history.dontSave(() => KeyLine.prototype.addKey.call(this, key));
+};
+
+
+p.removeKey = function (key) {
+
+    am.history.dontSave(() => KeyLine.prototype.removeKey.call(this, key));
+};
 
 
 p.addKeyLine = function (keyLine) {
@@ -80,10 +86,6 @@ p.removeKeyline = function (keyLine) {
     this._refreshHeadKeyline();
 };
 
-p.moveKeylineTo = function (keyline, idx) {
-
-    var keyline = this._keyLines.splice(idx, 1);
-};
 
 
 
@@ -94,12 +96,9 @@ p.moveKeylineTo = function (keyline, idx) {
 
 
 
-
-p._onChangeKeyLineKeys = function (key) {
+p._onChangeKeyLineKeys = function () {
 
     this._refreshHeadKeyline();
-
-    this.emit('change');
 };
 
 p._onDblClick = function (e) {
@@ -145,7 +144,7 @@ p._refreshHeadKeyline = function () {
 
         if (keyLine.hidden) return;
 
-        keyLine.forEachKeys(function (key, idx) {
+        keyLine.forEachKeys(function (key) {
 
             var tidx = times.indexOf(key.time);
 

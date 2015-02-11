@@ -45,9 +45,10 @@ p.createGroup = function (opt) {
     opt.path = opt.path || [opt.name];
     opt.name = opt.name || _.last(opt.path);
 
-    var group =  this._assembleGroup(opt);
-
     var children = this.getGroupMemberNames(opt.path);
+    opt.static = _.has(opt, 'static') ? opt.static : children.length !== 0;
+
+    var group =  this._assembleGroup(opt);
 
     if (children.length) {
 
@@ -56,6 +57,7 @@ p.createGroup = function (opt) {
             if (group.getParam(childName)) return;
 
             var child = this.create({
+                static: true,
                 name: childName,
                 path: opt.path.concat(childName),
                 dontBuildFromRoot: true,

@@ -11,7 +11,7 @@ function CssTrack (opt={}, timeline) {
 
     Track.apply(this, arguments);
 
-    this._paramGroup.optionLine.addButton({
+    this.paramGroup.optionLine.addButton({
         domElem: amgui.createToggleIconBtn({
             iconOn: 'eye',
             iconOff: 'eye-off',
@@ -22,7 +22,7 @@ function CssTrack (opt={}, timeline) {
         childIdx: 1,
     });
 
-    this._paramGroup.optionLine.addButton({
+    this.paramGroup.optionLine.addButton({
         domElem: amgui.createToggleIconBtn({
             tooltip: 'enable/disable 3d',
             icon: 'cube',
@@ -34,7 +34,7 @@ function CssTrack (opt={}, timeline) {
     });
 
     //TODO do this somehow else
-    this._paramGroup.on('addParam', param => {
+    this.paramGroup.on('addParam', param => {
 
         if (param.name === 'translate') {
             param.on('translateToBezier', this._switchFromTranslateToBezier, this);
@@ -45,13 +45,13 @@ function CssTrack (opt={}, timeline) {
         }
     });
 
-    if (this._paramGroup.getParam('translate')) {
-        this._paramGroup.getParam('translate').on('translateToBezier', this._switchFromTranslateToBezier, this);
+    if (this.paramGroup.getParam('translate')) {
+        this.paramGroup.getParam('translate').on('translateToBezier', this._switchFromTranslateToBezier, this);
     }
 
-    if (this._paramGroup.getParam('bezier')) {
-        this._paramGroup.getParam('bezier').parentTrack = this;//hack!
-        this._paramGroup.getParam('bezier').on('bezierToTranslate', this._switchFromBezierToTranslate, this);
+    if (this.paramGroup.getParam('bezier')) {
+        this.paramGroup.getParam('bezier').parentTrack = this;//hack!
+        this.paramGroup.getParam('bezier').on('bezierToTranslate', this._switchFromBezierToTranslate, this);
     }
 }
 
@@ -182,7 +182,7 @@ p._switchFromTranslateToBezier = function () {
 
     xParam.hidden = true;
     yParam.hidden = true;
-    this._paramGroup.getParam('translate').hidden = true;
+    this.paramGroup.getParam('translate').hidden = true;
     bezierParam.hidden = false;
 };
 
@@ -222,7 +222,7 @@ p._switchFromBezierToTranslate = function () {
 
     xParam.hidden = false;
     yParam.hidden = false;
-    this._paramGroup.getParam('translate').hidden = false;
+    this.paramGroup.getParam('translate').hidden = false;
     bezierParam.hidden = true;
 };
 
@@ -249,7 +249,7 @@ p._hideSelectedElems = function () {
     if (this._isHidingSelectedElems) return;
     this._isHidingSelectedElems = true;
 
-    this._paramGroup.optionLine.buttons.tgglHide.setToggle(true);
+    this.paramGroup.optionLine.buttons.tgglHide.setToggle(true);
 
     this._selectedElems.forEach(function (de) {
 
@@ -263,7 +263,7 @@ p._showSelectedElems = function () {
     if (!this._isHidingSelectedElems) return;
     this._isHidingSelectedElems = false;
 
-    this._paramGroup.optionLine.buttons.tgglHide.setToggle(false);
+    this.paramGroup.optionLine.buttons.tgglHide.setToggle(false);
 
     this._selectedElems.forEach(function (de) {
 

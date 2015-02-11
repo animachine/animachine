@@ -21,7 +21,7 @@ function BezierCssParam (opt) {
 
     CssParam.apply(this, arguments);
 
-    this.on('change', this._refreshCheckTimeline, this);
+    this.on('change.keys', this._refreshCheckTimeline, this);
     this._refreshCheckTimeline();
 
     this._defaultValue = {x: 0, y: 0};
@@ -126,7 +126,7 @@ p.getScriptKeys = function () {
 p._refreshCheckTimeline = function () {
 
     var time = 0,
-     tl = new window.TimelineMax();
+        tl = new window.TimelineMax();
 
     if (this._checkTimeline) this._checkTimeline.kill();
     this._checkTimeline = tl;
@@ -177,7 +177,7 @@ p.addKey = function (opt) {
             opt.value = [{
                 anchor: {x, y},
                 handleLeft: {x, y},
-                handleRight: {x, y}
+                handleRight: {x, y},
             }];
         }
 
@@ -186,12 +186,6 @@ p.addKey = function (opt) {
         key.on('prerender', this._onKeyPrerender, this);
 
         this.keyLine.addKey(key);
-
-        am.history.save({
-            undo: () => this.removeKey(key),
-            redo: () => this.addKey(key),
-            name: 'add bezier key',
-        });
 
         this.emit('addKey');
     }
@@ -315,6 +309,7 @@ p._onChangeTransformer = function (changes) {
             keys = _.sortBy(this.keyLine._keys, 'time'),
             key;
 
+        //find the key according to the change
         for (var i = 0, l = keys.length; i < l; ++i) {
 
             key = keys[i];
@@ -336,6 +331,8 @@ p._onChangeTransformer = function (changes) {
                 handleRight: {x: change.point.handleRight.x, y: change.point.handleRight.y},
                 linked: change.point.linked,
             });
+
+            changedKeys.push(key);
         }
         else if (change.type === 'remove') {
 
@@ -345,6 +342,8 @@ p._onChangeTransformer = function (changes) {
 
                 this.keyLine.removeKey(key);
             }
+
+            changedKeys.push(key);
         }
         else if (change.type === 'edit') {
 
@@ -356,11 +355,12 @@ p._onChangeTransformer = function (changes) {
             point.handleRight.x = change.point.handleRight.x;
             point.handleRight.y = change.point.handleRight.y;
             point.linked = change.point.linked;
+
+            changedKeys.push(key);
         }
-
     });
-
-    changedKeys.forEach(key => key.emit('change'));
+    //the key.value object doesn't change so we need to throw the change event manually
+    changedKeys.forEach(key => key.emit('change.value'));
 };
 
 p._onKeyPrerender = function (ctx, key) {

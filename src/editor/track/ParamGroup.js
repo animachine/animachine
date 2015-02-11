@@ -125,6 +125,8 @@ p.useSave = function (save) {
 
 p.addParam = function (param) {
 
+    if (param === this) throw Error;
+
     if (!(param instanceof Param)) {
 
         param = this.paramFactory.create(param);
@@ -147,10 +149,10 @@ p.addParam = function (param) {
     this.keyLine.addKeyLine(param.keyLine);
 
     param.optionLine.indent = this.optionLine.indent + 1;
-    param.on('change.param', (...args) => this.emit('change.param', ...args));
+    param.on('change.keys', (...args) => this.emit('change.keys', ...args));
     param.on('change.height', this._onChangeSubparamHeight, this);
     param.on('addKey', this._onAddKeySubparam, this);
-    param.on('needsRemove', this._onSubparamNeedsRemove, this);
+    param.on('need.remove', this._onSubparamNeedRemove, this);
 
     if (param.name in this.optionLine.inputs) {
 
@@ -173,11 +175,17 @@ p.removeParam = function (param) {
         return;
     }
 
+    am.history.save({
+        undo: () => this.addParam(param),
+        redo: () => this.removeParam(param),
+        name: 'remove param ' + param.name,
+    });
+
     parent.parentGroup = undefined;
 
     param.off('', this._onChangeSubparamHeight, this);
     param.off('addKey', this._onAddKeySubparam, this);
-    param.off('needsRemove', this._onSubparamNeedsRemove, this);
+    param.off('need.remove', this._onSubparamNeedRemove, this);
 
     this._params.splice(idx, 1);
     this.keyLine.removeKeyline(param.keyLine);
@@ -304,18 +312,16 @@ p._isKeySet = function (time) {
 
 
 
-p._onKeyNeedsRemove = function (key) {
 
-    this._params.forEach(function (param) {
+p._onSubparamNeedRemove = function (param) {
 
-        var key = param.getKey(time);
-        if (key) param.removeKey(key);
-    });
-};
+    if (this.static) {
 
-p._onSubparamNeedsRemove = function (key) {
-
-    this.emit('needsRemove', this);
+        this.emit('need.remove', this);
+    }
+    else {
+        this.removeParam(param);
+    }
 };
 
 p._onChangeTime = function () {
@@ -398,7 +404,6 @@ p._createOptions = function (opt) {
 p._createKeyline = function () {
 
     this.keyLine = new KeyLineGroup({}, this.timeline);
-    this.keyLine.on('keyNeedsRemove', this._onKeyNeedsRemove);
 };
 
 

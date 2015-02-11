@@ -116,10 +116,7 @@ am.open = function (save) {
         .then(() => {
             am.report({evtName: 'open', 'value': 1});
 
-            if (!am.dialogs.welcome.isChecked()) {
-
-                am.dialogs.welcome.show();
-            }
+            am.dialogs.welcome.show();
         })
         .catch(err => {
             console.log(err.stack);
@@ -207,21 +204,13 @@ am.setTimeline = function (timeline) {
     am.workspace.fillTab('timeline', timeline.domElem);
 };
 
-am.selectTrack = function (track) {
+am.setCurrTrack = function (track) {
 
-    if (!track) throw Error;
-    if (am.selectedTrack === track) return;
+    if (am.currTrack === track) return;
 
-    am.selectedTrack = track;
-    am.emit('selectTrack', am.selectedTrack);
-};
+    am.currTrack = track;
 
-am.deselectTrack = function () {
-
-    if (!am.selectedTrack) return;
-
-    am.selectedTrack = undefined;
-    am.emit('deselectTrack');
+    am.emit('change.currTrack', am.currTrack);
 };
 
 am.selectDomElem = function (de) {
@@ -272,6 +261,10 @@ am.isPickableDomElem = function (deTest) {
     }
 };
 
+
+
+
+
 am.report = function (opt) {
 
     if (am.isExtension()) {
@@ -290,7 +283,35 @@ am.report = function (opt) {
 
 am.isExtension = function () {
 
-    return location.protocol === 'chrome-extension:';
+    return chrome && chrome.storage;
+};
+
+am.setVar = function (name, value, cb) {
+
+    if (am.isExtension()) {
+
+        chrome.storage.sync.set({[name]: value}, function(response) {
+             if (cb) cb(response);
+        });
+    }
+    else {
+        window.localStorage.setItem('__animachine_var_' + name, value);
+        if (cb) cb();
+    }
+};
+
+am.getVar = function (name, cb) {
+
+    if (am.isExtension()) {
+
+        chrome.storage.sync.get(name, function(value) {
+             if (cb) cb(value);
+        });
+    }
+    else {
+        let value = window.localStorage.getItem('__animachine_var_' + name);
+        cb(value);
+    }
 };
 
 

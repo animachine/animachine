@@ -20,7 +20,7 @@ function Timeline(opt) {
     this._headerH = 23;
 
     this._onSelectTrack = this._onSelectTrack.bind(this);
-    this._onChangeTrack = this._onChangeTrack.bind(this);
+    this._onChangeTrackKeys = this._onChangeTrackKeys.bind(this);
     this._onRemoveTrack = this._onRemoveTrack.bind(this);
     this._onMoveTrack = this._onMoveTrack.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
@@ -236,11 +236,11 @@ p.addTrack = function (track) {
 
     this._onChangeTrackHeight(track);
 
-    track.on('select', this._onSelectTrack);
-    track.on('change', this._onChangeTrack);
-    track.on('remove', this._onRemoveTrack);
-    track.on('move', this._onMoveTrack);
-    track.on('changeHeight', this._onChangeTrackHeight);
+    track.on('change.keys', this._onChangeTrackKeys, this);
+    track.on('select', this._onSelectTrack, this);
+    track.on('remove', this._onRemoveTrack, this);
+    track.on('move', this._onMoveTrack, this);
+    track.on('changeHeight', this._onChangeTrackHeight, this);
 
     function createCont(content, parent) {
 
@@ -274,11 +274,11 @@ p.removeTrack = function (track) {
     $(trackData.deContKf).remove();
     this._mapTrackDatas.delete(track);
 
-    track.off('select', this._onSelectTrack);
-    track.off('change', this._onChangeTrack);
-    track.off('remove', this._onRemoveTrack);
-    track.off('move', this._onMoveTrack);
-    track.off('changeHeight', this._onChangeTrackHeight);
+    track.off('select', this._onSelectTrack, this);
+    track.off('change.keys', this._onChangeTrackKeys, this);
+    track.off('remove', this._onRemoveTrack, this);
+    track.off('move', this._onMoveTrack, this);
+    track.off('changeHeight', this._onChangeTrackHeight, this);
 
     track.dispose();
 };
@@ -365,9 +365,11 @@ p._onSelectTrack = function(track) {
     }
 
     this._currTrack = track;
+
+    am.setCurrTrack(track);
 };
 
-p._onChangeTrack = function() {
+p._onChangeTrackKeys = function() {
 
     this._refreshMagnetPoints();
 };

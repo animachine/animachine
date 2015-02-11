@@ -31,8 +31,7 @@ exports.init = function () {
             }, am.currTimeline);
 
             am.currTimeline.addTrack(track);
-
-            am.selectTrack(track);
+            track.select();
         });
     });
 };
@@ -45,15 +44,12 @@ function onSelectDomElem(de) {
 
             if (track.isOwnedDomElem(de)) {
 
-                am.selectTrack(track);
+                track.select();
                 track.focusTransformer(de);
-                am.domPicker.hide();
             }
-            else {
-                if (am.selectedTrack === track) {
+            else if (track.isSelected()) {
 
-                    am.deselectTrack();
-                } 
+                track.deselect();
             }
         }
     });

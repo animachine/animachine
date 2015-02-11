@@ -16,7 +16,7 @@ function DomPicker() {
     window.addEventListener('mousemove', this._onMMove);
 
     am.on('selectDomElem', this._onSelectDomElem, this);
-    am.on('selectTrack', this.hide, this);
+    am.on('change.currTrack', this.hide, this);
 
     this._createBase();
 
@@ -26,14 +26,14 @@ function DomPicker() {
         onClick:  () => {
 
             var winner, winnerPrior, done = false;
-            
+
             this.emit('add', {
                 target: this._deTarget,
                 demand: prior => {
 
                     return new Promise((resolve, reject) => {
 
-                        if (done) return reject();                      
+                        if (done) return reject();
 
                         if (winnerPrior === undefined || prior < winnerPrior) {
 
@@ -72,7 +72,7 @@ p.focusElem = function (target) {
         crumbs.push(oldTarget);
     }
     else if (target === lastCrumb) {
-        
+
         crumbs.pop();
     }
     else if (target.parentElement === lastCrumb) {
@@ -217,7 +217,7 @@ p._createBase = function () {
 
     de.addEventListener('mouseenter', this._onMEnter);
     de.addEventListener('mouseleave', this._onMLeave);
-    
+
     this.domElem = de;
 
 
@@ -234,7 +234,7 @@ p._createBase = function () {
         if (onClick) {
 
             deIcon.addEventListener('click', function (e) {
-            
+
                 e.stopPropagation();
                 onClick();
             })
@@ -280,7 +280,7 @@ p._createBase = function () {
     this._btnBottom.style.right = '0';
     this._btnBottom.style.margin = '0 auto';
 
-    this._btnLeft = createBtn('angle-left', 'previous sibling', function () { 
+    this._btnLeft = createBtn('angle-left', 'previous sibling', function () {
 
         this.focusElem(this._deTarget.previousElementSibling);
     }.bind(this));

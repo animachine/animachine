@@ -49,7 +49,7 @@ defineCompactProperty(p, [
 p.getSave = function () {
 
     return {};
-}
+};
 
 p.select = function () {
 
@@ -96,7 +96,7 @@ p.remove = function () {
     });
 };
 
-p.renderEaseToLine = function (ctx, start, width) {
+p.renderEaseToLine = function (ctx) {
 
     this._subkeys.forEach(key => key.renderEaseToLine(ctx));
 };
@@ -110,7 +110,7 @@ p.renderEaseToLine = function (ctx, start, width) {
 
 
 p._onSelectDropdown = function (e) {
-    
+
     var selection = e.detail.selection;
 
     if (selection === 'ease') {
@@ -145,11 +145,17 @@ p._refreshSelected = function () {
 
         this._isSelected = selected;
 
-        this.emit(this._isSelected ? 'select' : 'deselect')
+        this.emit(this._isSelected ? 'select' : 'deselect');
     }
-}
+};
 
 
+
+
+
+p._createEase = function () {
+    //override, KeyGroup isn't need its own Ease
+};
 
 
 
@@ -157,11 +163,4 @@ p._refreshSelected = function () {
 
 p.dispose = function () {
 
-    this._deDropdown.removeEventListener('select', this._onSelectDropdown);
-    this.timeline.removeListener('changeTape', this._onChangeTape);
-    this.timeline.removeListener('deselectAllKeys', this._onDeselectAllKeys);
-    this.timeline.removeListener('translateSelectedKeys', this._onTranslateSelectedKeys);
-
-    if (this._deDropdown.parentNode) this._deDropdown.parentNode.removeChild(this._deDropdown); 
 };
-

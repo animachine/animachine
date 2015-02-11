@@ -9,8 +9,7 @@ function CssParamsTab() {
 
     this._createBase();
 
-    am.on('selectTrack', this._onSelectTrack, this);
-    am.on('deselectTrack', this._onDeselectTrack, this);
+    am.on('change.currTrack', this._onChangeCurrTrack, this);
 }
 
 var p = CssParamsTab.prototype;
@@ -19,18 +18,13 @@ var p = CssParamsTab.prototype;
 
 
 
-p._onSelectTrack = function (track) {
-    
+p._onChangeCurrTrack = function (track) {
+
     this._unlisten();
 
     this._currTrack = track;
 
     this._listen();
-};
-
-p._onDeselectTrack = function () {
-
-    this._unlisten();
 };
 
 
@@ -73,7 +67,7 @@ p._unlisten = function () {
 
     this._showHideNoTrackMsg(true);
 
-    this._currTrack.off('addParam', this._onTrackAddParam, this);
+    this._currTrack.paramGroup.off('change.structure', this._onTrackAddParam, this);
     this._currTrack.timeline.off('changeTime', this._onChangeTime, this);
 
     this._forEachInput(function (input, paramName) {
@@ -82,7 +76,7 @@ p._unlisten = function () {
 
         if (param) {
 
-            param.off('change', this._onChangeParam, this);
+            param.off('change.keys', this._onChangeParam, this);
             param.detachInput(input);
             input.reset();
         }
@@ -91,7 +85,9 @@ p._unlisten = function () {
 
 p._listen = function () {
 
-    this._currTrack.on('addParam', this._onTrackAddParam, this);
+    if (!this._currTrack) return;
+
+    this._currTrack.paramGroup.on('change.structure', this._onTrackAddParam, this);
     this._currTrack.timeline.on('changeTime', this._onChangeTime, this);
 
     this._showHideNoTrackMsg(false);
@@ -104,7 +100,7 @@ p._listen = function () {
 
             input.value = param.getValue();
             param.attachInput(input);
-            param.on('change', this._onChangeParam, this);
+            param.on('change.keys', this._onChangeParam, this);
         }
     }, this);
 };
@@ -277,7 +273,7 @@ p._createBase = function () {
 
                 node.tgglChildren = {
                     onClick: onToggleChildren,
-                }
+                };
             }
 
             //create
@@ -367,7 +363,7 @@ p._createBase = function () {
 
         if (node.children) {
 
-            ret = ret.concat(node.children.forEach(collectParamNames))
+            ret = ret.concat(node.children.forEach(collectParamNames));
         }
         else {
             ret.push(node.title);

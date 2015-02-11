@@ -30,8 +30,6 @@ function Track(opt, timeline) {
     this._onChangeSelectors = this._onChangeSelectors.bind(this);
     this._onWindowResize = this._onWindowResize.bind(this);
     this._onWindowScroll = this._onWindowScroll.bind(this);
-    this._onSelectTrack = this._onSelectTrack.bind(this);
-    this._onDeselectTrack = this._onDeselectTrack.bind(this);
     this._animPlay = this._animPlay.bind(this);
 
     this._onChangeTransformer = am.history.wrap({
@@ -40,7 +38,7 @@ function Track(opt, timeline) {
         delay: 312,
     });
 
-    this._paramGroup = new ParamGroup({
+    this.paramGroup = new ParamGroup({
         name: 'new track',
         paramFactory: this._paramFactory,
         optionLine: {
@@ -56,15 +54,15 @@ function Track(opt, timeline) {
         },
     }, this.timeline);
 
-    this._paramGroup.on('change.structure', this._refreshEndParams, this);
+    this.paramGroup.on('change.structure', this._refreshEndParams, this);
 
-    this._paramGroup.on('change.param', this._onChangeParameter, this);
+    this.paramGroup.on('change.keys', this._onChangeKeys, this);
 
     //test hack
-    this._paramGroup.optionLine._deTitle.style.fontWeight = 'bold';
+    this.paramGroup.optionLine._deTitle.style.fontWeight = 'bold';
 
 
-    this._paramGroup.optionLine.addButton({
+    this.paramGroup.optionLine.addButton({
         domElem: amgui.createToggleIconBtn({
             tooltip: 'add new parameter',
             icon: 'plus',
@@ -74,15 +72,13 @@ function Track(opt, timeline) {
         childIdx: 0,
     });
 
-    this.deOptionLine = this._paramGroup.optionLine.domElem;
-    this.deKeyLine = this._paramGroup.keyLine.domElem;
+    this.deOptionLine = this.paramGroup.optionLine.domElem;
+    this.deKeyLine = this.paramGroup.keyLine.domElem;
 
     this.deOptionLine.addEventListener('click', this._onSelectClick);
     this.deKeyLine.addEventListener('click', this._onSelectClick);
 
-    this._paramGroup.on('changeHeight', this._onChangeHeight, this);
-    am.on('selectTrack', this._onSelectTrack);
-    am.on('deselectTrack', this._onDeselectTrack);
+    this.paramGroup.on('changeHeight', this._onChangeHeight, this);
 
     this.setMaxListeners(1234);
 
@@ -110,7 +106,7 @@ Object.defineProperties(p, {
 
         get: function () {
 
-            return this._paramGroup.height;
+            return this.paramGroup.height;
         }
     }
 });
@@ -122,7 +118,7 @@ p.getSave = function () {
 
     var save = {
         selectors: _.clone(this._selectors),
-        paramTree: this._paramGroup.getSave(),
+        paramTree: this.paramGroup.getSave(),
     };
 
     return save;
@@ -135,7 +131,7 @@ p.useSave = function (save) {
     }
 
     this._selectors = save.selectors || [];
-    if (save.paramTree) this._paramGroup.useSave(save.paramTree);
+    if (save.paramTree) this.paramGroup.useSave(save.paramTree);
 
     this._refreshEndParams();
     this._refreshSelectedElems();
@@ -292,12 +288,9 @@ p.addParam = function (opt) {
         }
     }
     else {
-        this._paramGroup.addParam(opt);
+        this.paramGroup.addParam(opt);
         this._refreshEndParams();
         param = _.find(this._endParams, {name: opt.name});
-
-        this.emit('addParam');
-        this.emit('change');
     }
 
     return param;
@@ -334,7 +327,7 @@ p.select = function (opt) {
         this.focusTransformer(opt.focusElem || this._selectedElems[0]);
     }
 
-    this._paramGroup.optionLine.highlight = true;
+    this.paramGroup.optionLine.highlight = true;
 
     this.emit('select', this);
 };
@@ -346,7 +339,7 @@ p.deselect = function () {
 
     this._blurTransformer();
 
-    this._paramGroup.optionLine.highlight = false;
+    this.paramGroup.optionLine.highlight = false;
 
     window.removeEventListener('resize', this._onWindowResize);
     window.removeEventListener('scroll', this._onWindowScroll);
@@ -355,6 +348,11 @@ p.deselect = function () {
 
         this._transformer.off('change', this._onChangeTransformer, this);
     }
+};
+
+p.isSelected = function () {
+
+    return this._isSelected;
 };
 
 p.renderTime = function (time) {
@@ -387,18 +385,18 @@ p.pause = function () {
 
 p.getMagnetPoints = function () {
 
-    return this._paramGroup.keyLine.getKeyTimes();
+    return this.paramGroup.keyLine.getKeyTimes();
 };
 
 p._showSettings = function () {
 
     dialogTrackOptions.show({
-        name: this._paramGroup.name,
+        name: this.paramGroup.name,
         selectors: this._selectors,
         on: {
-            'change.name': name => this._paramGroup.name = name,
+            'change.name': name => this.paramGroup.name = name,
             'change.selectors': this._onChangeSelectors,
-        }
+        },
     });
 };
 
@@ -419,22 +417,9 @@ p._animPlay = function () {
 
 
 
-p._onSelectTrack = function (track) {
-
-    if (track === this) {
-
-        this.select();
-    }
-};
-
-p._onDeselectTrack = function () {
-
-    this.deselect();
-};
-
 p._onSelectClick = function () {
 
-    am.selectTrack(this);
+    this.select();
 };
 
 p._onChangeTransformer = function(params, type) {
@@ -515,13 +500,13 @@ p._onChangeTime = function (time) {
     this.focusTransformer();
 };
 
-p._onChangeParameter = function () {
+p._onChangeKeys = function () {
 
     this._refreshPlayer();
     this.renderTime();
     this.focusTransformer();
 
-    this.emit('change');
+    this.emit('change.keys');
 };
 
 p._onWindowResize = function () {
@@ -624,7 +609,7 @@ p.isOwnedDomElem = function (de) {
 
 p._refreshEndParams = function () {
 
-    this._endParams = this._paramGroup.getEndParams();
+    this._endParams = this.paramGroup.getEndParams();
 }
 
 p._refreshSelectedElems = function () {

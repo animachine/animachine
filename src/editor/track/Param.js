@@ -20,8 +20,7 @@ function Param (opt={}, timeline) {
 
     this._onChangeInput = this._onChangeInput.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
-    this._onChangeKeyLine = this._onChangeKeyLine.bind(this);
-    this._onKeyNeedsRemove = this._onKeyNeedsRemove.bind(this);
+    this._onChangeKeyLineKeys = this._onChangeKeyLineKeys.bind(this);
     this._onClickTgglKey = this._onClickTgglKey.bind(this);
     this._onClickStepPrevKey = this._onClickStepPrevKey.bind(this);
     this._onClickStepNextKey = this._onClickStepNextKey.bind(this);
@@ -48,9 +47,7 @@ function Param (opt={}, timeline) {
     this.setMaxListeners(1234);
 
 
-    if (opt) {
-        this.useSave(opt);
-    }
+    this.useSave(opt);
 
     this.timeline.on('changeTime', this._onChangeTime);
 }
@@ -86,6 +83,7 @@ defineCompactProperty(p, [
         this.keyLine.hidden = v;
         this.optionLine.hidden = v;
     }},
+    {name: 'static', type: 'boolean'},
 ]);
 
 
@@ -96,6 +94,7 @@ p.getSave = function () {
         name: this.name,
         title: this.title,
         hidden: this.hidden,
+        static: this.static,
         keys: [],
     };
 
@@ -112,6 +111,7 @@ p.useSave = function(save) {
     this.name = save.name;
     this.title = save.title || save.name;
     this.hidden = save.hidden;
+    this.static = save.static;
 
     if (save.keys) {
 
@@ -194,7 +194,7 @@ p.getValue = function (time) {
 
 
 
-
+    //TODO dont think is it's needed anymore
     function createCalc(av, bv, p) {
 
         if (!isNaN(av) && !isNaN(bv)) {
@@ -275,19 +275,11 @@ p.addKey = function (opt) {
 
         this.keyLine.addKey(key);
 
-        am.history.save({
-            undo: () => this.removeKey(key),
-            redo: () => this.addKey(key),
-            name: 'add key',
-        });
-
         this.emit('addKey', key, this);
     }
 
     this._refreshInputs();
     this._refreshTgglKey();
-
-    this.emit('change.param');
 
     return key;
 };
@@ -299,15 +291,7 @@ p.removeKey = function (key) {
         return;
     }
 
-    am.history.save({
-        undo: () => this.addKey(key),
-        redo: () => this.removeKey(key),
-        name: 'remove key',
-    });
-
     this._refreshTgglKey();
-
-    this.emit('change.param');
 };
 
 p.getKey = function (time) {
@@ -415,18 +399,11 @@ p._onChangeInput = function (value) {
         time: this.timeline.currTime,
         value: value
     });
-
-    this.emit('change.param');
 };
 
-p._onChangeKeyLine = function () {
+p._onChangeKeyLineKeys = function () {
 
-    this.emit('change.param');
-};
-
-p._onKeyNeedsRemove = function (key) {
-
-    this.removeKey(key);
+    this.emit('change.keys');
 };
 
 p._onChangeTime = function () {
@@ -490,7 +467,7 @@ p._createOptions = function (opt) {
         contextMenuOptions: [
             {text: 'move up', onSelect: () => am.dialogs.WIP.show()},
             {text: 'move down', onSelect: () => am.dialogs.WIP.show()},
-            {text: 'delete', onSelect: () => am.dialogs.WIP.show()},
+            {text: 'delete', onSelect: () => this.emit('need.remove')},
         ],
         title: {
             text: this.name,
@@ -517,8 +494,7 @@ p._createOptions = function (opt) {
 p._createKeyline = function () {
 
     this.keyLine = new KeyLine({}, this.timeline);
-    this.keyLine.on('change', this._onChangeKeyLine);
-    this.keyLine.on('keyNeedsRemove', this._onKeyNeedsRemove);
+    this.keyLine.on('change.keys', this._onChangeKeyLineKeys);
 };
 
 

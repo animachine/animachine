@@ -319,19 +319,6 @@ $.prototype.v=function(a,b){var c=this.d.id,d=this.c.u,e=this;c?(d.__webfontfont
     return new Promise(function(resolve, reject) {
       var xhr = new XMLHttpRequest()
 
-      function responseURL() {
-        if ('responseURL' in xhr) {
-          return xhr.responseURL
-        }
-
-        // Avoid security warnings on getResponseHeader when not allowed by CORS
-        if (/^X-Request-URL:/m.test(xhr.getAllResponseHeaders())) {
-          return xhr.getResponseHeader('X-Request-URL')
-        }
-
-        return;
-      }
-
       xhr.onload = function() {
         var status = (xhr.status === 1223) ? 204 : xhr.status
         if (status < 100 || status > 599) {
@@ -342,10 +329,9 @@ $.prototype.v=function(a,b){var c=this.d.id,d=this.c.u,e=this;c?(d.__webfontfont
           status: status,
           statusText: xhr.statusText,
           headers: headers(xhr),
-          url: responseURL()
+          url: xhr.responseURL || xhr.getResponseHeader('X-Request-URL')
         }
-        var body = 'response' in xhr ? xhr.response : xhr.responseText;
-        resolve(new Response(body, options))
+        resolve(new Response(blobSupport ? xhr.response : xhr.responseText, options))
       }
 
       xhr.onerror = function() {
@@ -353,7 +339,7 @@ $.prototype.v=function(a,b){var c=this.d.id,d=this.c.u,e=this;c?(d.__webfontfont
       }
 
       xhr.open(self.method, self.url)
-      if ('responseType' in xhr && blobSupport) {
+      if (blobSupport) {
         xhr.responseType = 'blob'
       }
 

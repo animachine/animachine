@@ -7,7 +7,7 @@ function Chronicler() {
 
     EventEmitter.call(this);
 
-    this._stack = [], 
+    this._stack = [],
     this._pointer = -1;
     this._chains = [];
     this._blocks = new Set();
@@ -34,10 +34,10 @@ p.undo = function() {
 
             while (this._pointer !== startFlagIdx) {
 
-                let rec = this._stack[this._pointer--];
-                
-                if (!(rec instanceof Flag)) {
-                    this._call(rec.undo);
+                let _rec = this._stack[this._pointer--];
+
+                if (!(_rec instanceof Flag)) {
+                    this._call(_rec.undo);
                 }
             }
 
@@ -59,7 +59,7 @@ p.redo = function() {
     }
 
     var rec = this._stack[++this._pointer];
-    
+
     if (rec instanceof Flag) {
 
         var endFlagIdx = this._stack.indexOf(rec.pair);
@@ -68,10 +68,10 @@ p.redo = function() {
 
             while (++this._pointer !== endFlagIdx) {
 
-                let rec = this._stack[this._pointer];
-                
-                if (!(rec instanceof Flag)) {
-                    this._call(rec.redo);
+                let _rec = this._stack[this._pointer];
+
+                if (!(_rec instanceof Flag)) {
+                    this._call(_rec.redo);
                 }
             }
         }
@@ -96,7 +96,7 @@ p._call = function (reg) {
     }
 
     this.releaseBlock(block);
-}
+};
 
 p.save = function (...args) {
 
@@ -114,7 +114,7 @@ p.save = function (...args) {
             undo: args[0],
             redo: args[1],
             name: args[2],
-        }
+        };
     }
 
     this._saveReg(reg);
@@ -128,7 +128,7 @@ p._saveReg = function (reg) {
     if (this.isBlocked) return;
 
     this._stack.splice(++this._pointer, this._stack.length, reg);
-    
+
     this.emit('change');
 };
 
@@ -220,27 +220,24 @@ p.dontSave = function (fn) {
     var block = this.blockSaving();
     fn();
     this.releaseBlock(block);
-}
+};
 
 
 
 
 
 
-var debugFlagId = 0
 function Flag(name, pair) {
 
     this.name = name;
     this.pair = pair || new Flag(name, this);
-    this.id = ++debugFlagId;
-    
+
     Object.freeze(this);
 }
 
 p.startFlag = function (name) {
 
     var flag = new Flag(name);
-    console.log('startFlag', name, flag.id)
 
     this._saveReg(flag);
 
@@ -249,7 +246,6 @@ p.startFlag = function (name) {
 
 p.endFlag = function (flag) {
 
-    console.log('closeFlag', flag.name, flag.id)
     this._saveReg(flag);
 };
 
@@ -272,7 +268,7 @@ p.wrap = function (opt) {
         };
     }
     else {
-        let closeFlagSetT, 
+        let closeFlagSetT,
             endFlag,
             finish = () => {
                 history.endFlag(endFlag);
@@ -310,7 +306,7 @@ p.saveChain = function (opt) {
     var chain = this.getChain(opt.id);
 
     if (chain) {
-        
+
         chain.reg.redo = opt.redo;
     }
     else {
@@ -347,8 +343,8 @@ p.clear = function () {
     while (this._chains.length) {
         this.closeChain(this._chains[0].id);
     }
-    
-    this._stack.length = 0, 
+
+    this._stack.length = 0,
     this._pointer = -1;
 
     this.emit('change');

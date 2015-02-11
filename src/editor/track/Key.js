@@ -12,25 +12,18 @@ function Key(opt, timeline) {
 
     this.timeline = timeline;
 
-    this.ease = new Ease();
+    this._createEase();
+
     this._isSelected = false;
     this._height = amgui.LINE_HEIGHT;
 
 
     this.looks = opt.looks;
 
-    this._onSelectDropdown = this._onSelectDropdown.bind(this);
-    this._onChangeEase = this._onChangeEase.bind(this);
-
     this._deDropdown = amgui.createDropdown({
         options: ['ease', 'delete', 'randomise'],
-        onSelect: this._onSelectDropdown,
+        onSelect: e => this._onSelectDropdown(e),
     });
-
-
-    if (this.ease) {
-        this.ease.on('change', this._onChangeEase);
-    }
 
     this._dragger = amgui.makeDraggable({
         deTarget: this.domElem,
@@ -285,7 +278,7 @@ p._onChangeTimelineTime = function () {
 
     if (isInTime !== this._isInTime) {
 
-        this.emit('change.render');
+        this.emit('need.render');
     }
 };
 
@@ -295,6 +288,12 @@ p._onChangeTimelineTime = function () {
 
 
 
+
+p._createEase = function () {
+
+    this.ease = new Ease();
+    this.ease.on('change', this._onChangeEase, this);
+};
 
 
 

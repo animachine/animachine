@@ -3,7 +3,7 @@
 $(function () {
     am.open();
     setupWorkspace();
-    
+
     var deCookiejar = document.querySelector('#cookie'),
         numberOfSavesAtStart = getNumberOfSaves();
 
@@ -38,7 +38,7 @@ $(function () {
                         tour.removePointer(this._cookiePointer);
                     }
 
-                    if (!tour.isChecked(1) && am.timeline._tracks.length) {
+                    if (!tour.isChecked(1) && am.projectMap.currProject.currTimeline._tracks.length) {
 
                         tour.checkIn(1);
                     }
@@ -70,7 +70,7 @@ $(function () {
                 ],
                 runningLoop: function (tour) {
 
-                    if (!tour.isChecked(0) && am.timeline.currTime !== 0) {
+                    if (!tour.isChecked(0) && am.projectMap.currProject.currTimeline.currTime !== 0) {
 
                         tour.checkIn(0);
                     }

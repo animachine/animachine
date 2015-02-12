@@ -46,6 +46,7 @@ p.setup = function (data) {
         });
 
         cb.domElem.style.display = 'none';
+        cb.domElem.style.width = 'auto';
 
         return cb;
     }
@@ -90,7 +91,7 @@ p.goto = function (idx) {
         clearInterval(this._runningLoopSetI);
 
         if (typeof(this._currStep.onClose) === 'function') {
-        
+
             this._currStep.onClose(this);
         }
         this._deStepContent.removeChild(this._currStep.domElem);
@@ -101,14 +102,14 @@ p.goto = function (idx) {
 
     this._deStepContent.appendChild(this._currStep.domElem);
     this._currStep.checklist.forEach(cb => cb.domElem.style.display = 'inline-block');
-    
+
     if (typeof(this._currStep.onReady) === 'function') {
-        
+
         this._currStep.onReady(this);
     }
-    
+
     if (typeof(this._currStep.runningLoop) === 'function') {
-        
+
         this._runningLoopSetI = setInterval(this._callRunningLoop, 312);
     }
 
@@ -142,7 +143,7 @@ p.isChecked = function (idx, step) {
     step = step || this._currStep;
     if (!step) return;
 
-    return step.checklist[idx].value; 
+    return step.checklist[idx].value;
 };
 
 p.addPointer = function (opt) {
@@ -247,8 +248,8 @@ p._createBase = function () {
     this._deStepContScroll = document.createElement('div');
     this._deStepContScroll.style.position = 'relative';
     this._deStepContScroll.style.flex = '1';
-    this.domElem.appendChild(this._deStepContScroll); 
-    
+    this.domElem.appendChild(this._deStepContScroll);
+
     this._srStepContScroll = this._deStepContScroll.createShadowRoot();
 
     this._deStepCont = document.createElement('div');
@@ -341,5 +342,3 @@ p._createTriangle = function () {
 
     return de;
 }
-
-

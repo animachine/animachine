@@ -102,8 +102,6 @@ p.save = function (...args) {
 
     if (this.isBlocked) return;
 
-    console.log('save', args);
-
     if (args.length === 0) throw Error;
 
     var reg = args[0];
@@ -301,7 +299,6 @@ p.wrap = function (opt) {
 p.saveChain = function (opt) {
 
     if (this.isBlocked) return;
-    console.log('saveChain', opt.name);
 
     var chain = this.getChain(opt.id);
 

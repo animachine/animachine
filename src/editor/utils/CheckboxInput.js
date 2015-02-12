@@ -9,13 +9,6 @@ function CheckboxInput(opt={}) {
 
     Input.call(this, opt);
 
-    this._onChangeInput = this._onChangeInput.bind(this);
-
-    this._createBase();
-
-    this._value = opt.value || false;
-    this._defaultValue = opt.defaultValue || false;
-
     if (_.has(opt, 'text')) this.text = opt.text;
 }
 
@@ -75,7 +68,7 @@ p._createInput = function () {
 
     this._input = amgui.createCheckbox({
         parent: this.domElem,
-        onChange: this._onChangeInput,
+        onChange: () => this._onChangeInput(),
         flex: 1,
     });
 };

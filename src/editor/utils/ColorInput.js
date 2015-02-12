@@ -10,8 +10,6 @@ function ColorInput(opt={}) {
 
     Input.call(this, opt);
 
-    this._createBase();
-
     this._value = opt.value || '';
     this._defaultValue = opt.defaultValue || '#000000';
 }

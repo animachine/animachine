@@ -11,10 +11,6 @@ function UnitInput(opt={}) {
     this._rxAmount = /^\s*([\+-]?\d*\.?\d*)/;
     this._rxUnit;
 
-    this._onChangeInputAmount = this._onChangeInputAmount.bind(this);
-
-    this._createBase();
-
     this.units = opt.units && opt.units.length ? opt.units : [''];
     this.min = opt.min;
     this.max = opt.max;
@@ -173,7 +169,7 @@ p._createInput = function () {
 
     this._inpAmount = amgui.createInput({
         parent: this.domElem,
-        onChange: this._onChangeInputAmount,
+        onChange: () => this._onChangeInputAmount(),
         flex: 1,
     });
     this._inpAmount.style.textAlign =  'right';

@@ -29,7 +29,7 @@ gulp.task('clean', function(cb) {
   return gulp.src(['./build/**/*.*'])
   // return gulp.src(['./build/**/*.*', './build_chrome/**/*.*'])
     .pipe(rimraf());
-}); 
+});
 
 gulp.task('vendor', function () {
   return gulp.src([
@@ -144,7 +144,7 @@ gulp.task('init',  function (cb) {
   var cmds = [
     'git pull',
     // 'npm update'
-    
+
     'cd node_modules/eventman',
     'git pull',
     // 'npm update',
@@ -162,7 +162,7 @@ gulp.task('init',  function (cb) {
 
     if (!cmd) {
       return gulp.run('dev');
-    };
+    }
 
     console.log('run', cmd,  '...');
 

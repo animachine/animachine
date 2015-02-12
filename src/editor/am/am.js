@@ -2,6 +2,7 @@
 
 var amTools = require('./am.tools');
 var amMenu = require('./am.menu');
+var amClipboard = require('./am.clipboard');
 var baseWorkspace = require('./baseWorkspace');
 
 var EventEmitter = require('eventman');
@@ -165,6 +166,7 @@ am._init = function () {
     am.deHandlerCont.appendChild(am.domPicker.domElem);
     am.domPicker.on('pick', de => am.selectDomElem(de));
 
+    amClipboard(am);
     amMenu(am);
     inspectHandlerCont(am.deHandlerCont);
     addToggleGui();
@@ -195,13 +197,13 @@ am.openNewProject = function () {
 
 am.setTimeline = function (timeline) {
 
-    if (!timeline) return;
-
-    timeline.toolbar.addIcon(am._staticToolbarIcons);
+    if (timeline) {
+        am._staticToolbarIcons = timeline.toolbar.addIcon(am._staticToolbarIcons);
+    }
 
     am.currTimeline = timeline;
 
-    am.workspace.fillTab('timeline', timeline.domElem);
+    am.workspace.fillTab('timeline', timeline && timeline.domElem);
 };
 
 am.setCurrTrack = function (track) {

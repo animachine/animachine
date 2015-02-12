@@ -159,6 +159,12 @@ p.removeTimeline = function (timeline) {
 
     _.pull(this._timelines, timeline);
 
+    //TODO wrap to the removing save
+    if (this.currTimeline === timeline) {
+
+        this.selectTimeline(this._timelines[0]);
+    }
+
     this.emit('removeTimeline');
 };
 
@@ -169,7 +175,7 @@ p.selectTimeline = function (timeline) {
         timeline = this._timelines[timeline];
     }
 
-    if (!timeline || timeline === this.currTimeline) return;
+    if (timeline === this.currTimeline) return;
 
     if (this.currTimeline) {
 

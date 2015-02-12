@@ -25,7 +25,7 @@ p.loadWorkspace = function (name, workspace) {
 p.getWorkspace = function (name) {
 
     return _.cloneDeep(this._workspaces[name]);
-}
+};
 
 p.load = function (name, workspace) {
 
@@ -40,7 +40,7 @@ p.load = function (name, workspace) {
     }
 
     this._root = new Container(map);
-    
+
     this._deCont.innerHTML = '';
     this._deCont.appendChild(this._root.domElem);
 
@@ -68,7 +68,7 @@ p.fillTab = function (name, content) {
         tab.setContent(content);
     }
     else {
-
+        //TODO open in a new window
     }
 };
 
@@ -93,7 +93,7 @@ p._initResize = function () {
             window.requestAnimationFrame(cb);
         }
     });
-}
+};
 
 p._createDomElem = function () {
 

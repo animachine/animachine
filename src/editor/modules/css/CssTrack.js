@@ -73,12 +73,6 @@ p.focusTransformer = function (de) {
 
     var handOpt = {
             type: 'transformer',
-            base: {
-                x: de.offsetLeft,
-                y: de.offsetTop,
-                w: de.offsetWidth,
-                h: de.offsetHeight,
-            },
             params: {},
         },
         xPercent = 0,
@@ -108,7 +102,8 @@ p.focusTransformer = function (de) {
     });
 
 
-    this._transformer.setLocalRoot(de.parentNode);
+    handOpt.base = this._transformer.setLocalRoot(de.parentNode, de);
+    
     this._transformer.setup({
         hand: handOpt,
     });

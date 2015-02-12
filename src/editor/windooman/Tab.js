@@ -18,8 +18,12 @@ var p = Tab.prototype;
 p.setContent = function (deContent) {
 
     this.domElem.innerHTML = '';
-    this.domElem.appendChild(deContent);
-    deContent.style.position = 'absolute';
+
+    if (deContent) {
+
+        this.domElem.appendChild(deContent);
+        deContent.style.position = 'absolute';
+    }
 };
 
 p.bubbleResize = function () {

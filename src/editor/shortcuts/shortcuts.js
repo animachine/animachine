@@ -5,6 +5,7 @@ var shortcuts = new EventEmitter();
 module.exports = shortcuts;
 
 var map = {
+    'enter': ['enter'],
     'copy': ['ctrl+c'],
     'cut': ['ctrl+x'],
     'delete': ['del', 'backspace'],

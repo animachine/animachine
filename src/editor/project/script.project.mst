@@ -7,7 +7,7 @@
     {{/saveJson}}
 
     var projectReg = {
-        timelines: {{timelines}},
+        timelines: {{{timelines}}},
         {{#saveJson}}
         saveJson: SAVEJSON,
         {{/saveJson}}

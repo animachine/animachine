@@ -21,7 +21,7 @@ function Timeline(opt) {
 
     this._onSelectTrack = this._onSelectTrack.bind(this);
     this._onChangeTrackKeys = this._onChangeTrackKeys.bind(this);
-    this._onRemoveTrack = this._onRemoveTrack.bind(this);
+    this._onTrackNeedRemove = this._onTrackNeedRemove.bind(this);
     this._onMoveTrack = this._onMoveTrack.bind(this);
     this._onChangeTime = this._onChangeTime.bind(this);
     this._onChangeTape = this._onChangeTape.bind(this);
@@ -61,6 +61,7 @@ function Timeline(opt) {
     this.easeMap = new EaseMap();
     this.triggerMap = new TriggerMap();
 
+    //TODO this._timebar.forward(['changeTime', 'changeTape', changeTimescale], this);
     this._timebar.on('changeTime', this.emit.bind(this, 'changeTime'));
     this._timebar.on('changeTape', this.emit.bind(this, 'changeTape'));
     this._timebar.on('changeTimescale', this.emit.bind(this, 'changeTimescale'));
@@ -124,7 +125,10 @@ Object.defineProperties(p, {
     }
 });
 
-defineCompactProperty(p, {name: 'parentProject', event: 'added'});
+defineCompactProperty(p, [
+    {name: 'parentProject', event: 'added'},
+    {name: 'name', type: 'string', startValue: 'timeline'},
+]);
 
 p.useSave = function (save) {
 
@@ -238,7 +242,7 @@ p.addTrack = function (track) {
 
     track.on('change.keys', this._onChangeTrackKeys, this);
     track.on('select', this._onSelectTrack, this);
-    track.on('remove', this._onRemoveTrack, this);
+    track.on('need.remove', this._onTrackNeedRemove, this);
     track.on('move', this._onMoveTrack, this);
     track.on('change.height', this._onChangeTrackHeight, this);
 
@@ -276,7 +280,7 @@ p.removeTrack = function (track) {
 
     track.off('select', this._onSelectTrack, this);
     track.off('change.keys', this._onChangeTrackKeys, this);
-    track.off('remove', this._onRemoveTrack, this);
+    track.off('need.remove', this._onTrackNeedRemove, this);
     track.off('move', this._onMoveTrack, this);
     track.off('change.height', this._onChangeTrackHeight, this);
 
@@ -374,7 +378,7 @@ p._onChangeTrackKeys = function() {
     this._refreshMagnetPoints();
 };
 
-p._onRemoveTrack = function (track) {
+p._onTrackNeedRemove = function (track) {
 
     this.removeTrack(track);
 };

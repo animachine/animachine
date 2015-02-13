@@ -84,12 +84,16 @@ p.getRootParamGroupName = function (paramName) {
 
     return Object.keys(this.groups).find(rootKey => {
 
-        return search(this.groups[rootKey]);
+        return search(this.groups[rootKey], rootKey);
     });
 
-    function search(group) {
+    function search(group, groupName) {
 
-        if (_.isArray(group)) {
+        if (groupName === paramName) {
+
+            return true;
+        }
+        else if (_.isArray(group)) {
 
             if (group.indexOf(paramName) !== -1) {
 
@@ -97,10 +101,9 @@ p.getRootParamGroupName = function (paramName) {
             }
         }
         else {
-
             for (var key in group) {
 
-                if (search(group[key])) {
+                if (search(group[key], key)) {
 
                     return true;
                 }

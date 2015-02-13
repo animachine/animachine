@@ -149,7 +149,8 @@ p.addParam = function (param) {
     this.keyLine.addKeyLine(param.keyLine);
 
     param.optionLine.indent = this.optionLine.indent + 1;
-    param.on('change.keys', (...args) => this.emit('change.keys', ...args));
+
+    param.on('change.keys', (...args) => this.emit('change.keys', ...args));//TODO param.forward('change.keys', this);
     param.on('change.height', this._onChangeSubparamHeight, this);
     param.on('addKey', this._onAddKeySubparam, this);
     param.on('need.remove', this._onSubparamNeedRemove, this);
@@ -169,11 +170,7 @@ p.addParam = function (param) {
 
 p.removeParam = function (param) {
 
-    var idx = this._params.indexOf(param);
-
-    if (idx === -1) {
-        return;
-    }
+    if (!_.include(this._params, param)) return;
 
     am.history.save({
         undo: () => this.addParam(param),
@@ -183,11 +180,13 @@ p.removeParam = function (param) {
 
     parent.parentGroup = undefined;
 
-    param.off('', this._onChangeSubparamHeight, this);
+    //TODO param.forwardOff('change.keys', this);
+    param.off('change.height', this._onChangeSubparamHeight, this);
     param.off('addKey', this._onAddKeySubparam, this);
     param.off('need.remove', this._onSubparamNeedRemove, this);
 
-    this._params.splice(idx, 1);
+    _.pull(this._params, param);
+    this.optionLine.removeOptionLine(param.optionLine);
     this.keyLine.removeKeyline(param.keyLine);
 
     this.emit('removeParam', param, this);
@@ -379,9 +378,9 @@ p._createOptions = function (opt) {
             onClick: () => this._onClickTgglChildren(),
         },
         contextMenuOptions: [
-            {text: 'move up', onSelect: this.emit.bind(this, 'move', this, -1)},
-            {text: 'move down', onSelect: this.emit.bind(this, 'move', this, 1)},
-            {text: 'delete', onSelect: this.emit.bind(this, 'delete', this)}
+            {text: 'move up', onSelect: () => am.dialogs.WIP.show()},
+            {text: 'move down', onSelect: () => am.dialogs.WIP.show()},
+            {text: 'delete', onSelect: () => this.emit('need.remove', this)},
         ],
         tgglMerge: {
             onClick: () => this._onClickTgglMerge(),

@@ -30,7 +30,6 @@ function CssParamFactory() {
         perspectiveOrigin: ['perspectiveOriginX', 'perspectiveOriginY', 'perspectiveOriginZ'],
         transformOrigin: ['transformOriginX', 'transformOriginY'],
         boxShadow: ['boxShadowX', 'boxShadowY', 'boxShadowBlur'],
-        clip: ['clipTop',  'clipRight',  'clipBottom',  'clipLeft'],
     };
 }
 
@@ -110,8 +109,9 @@ p._assembleParam = function (opt={}) {
         .is('borderRightWidth,borderTopRightRadius,borderRightColor,borderRightStyle', () => opt.title = 'right')
         .is('borderBottomWidth,borderBottomLeftRadius,borderBottomColor,borderBottomStyle', () => opt.title = 'bottom')
         .is('borderLeftWidth,borderBottomRightRadius,borderLeftColor,borderLeftStyle', () => opt.title = 'left')
-        .is('skeewX', () => opt.title = 'x')
-        .is('skeewY', () => opt.title = 'y')
+        .is('transformOriginX,perspectiveOriginX,scaleX,rotateX,textShadowX,boxShadowX,skeewX', () => opt.title = 'x')
+        .is('transformOriginY,perspectiveOriginY,scaleY,rotateY,textShadowY,boxShadowY,skeewY', () => opt.title = 'y')
+        .is('transformOriginZ,perspectiveOriginZ,scaleZ,rotateZ', () => opt.title = 'z')
         .is('bezier', () => {
 
             opt.optionLine.inputs = [];

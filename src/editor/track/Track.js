@@ -48,7 +48,7 @@ function Track(opt, timeline) {
                 {text: 'options', onSelect: () => this._showSettings()},
                 {text: 'move up', onSelect: () => this.emit('move', this, -1)},
                 {text: 'move down', onSelect: () => this.emit('move', this, 1)},
-                {text: 'delete', onSelect: () => this.emit('remove')},
+                {text: 'delete', onSelect: () => this.emit('need.remove', this)},
             ],
             onDblclick: () => this._showSettings(),
         },
@@ -610,7 +610,7 @@ p.isOwnedDomElem = function (de) {
 p._refreshEndParams = function () {
 
     this._endParams = this.paramGroup.getEndParams();
-}
+};
 
 p._refreshSelectedElems = function () {
 
@@ -644,10 +644,12 @@ p._refreshSelectedElems = function () {
     function add(item) {
 
         if (typeof(item) === 'string') {
-
-            var items = am.deRoot.querySelectorAll(item);
-            items = Array.prototype.slice.call(items);
-            list = list.concat(items);
+            //it's easy to get an invalid selector by the user
+            try {
+                var items = am.deRoot.querySelectorAll(item);
+                items = Array.prototype.slice.call(items);
+                list = list.concat(items);
+            } catch (e) {}
         }
         else if (window.jQuery && item instanceof window.jQuery) {
             list = list.concat(item.toArray());

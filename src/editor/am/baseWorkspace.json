@@ -11,10 +11,10 @@
             "size": 1,
             "scaleMode": "flex",
             "tabs": [
-                {"name": "Css Style"}, 
-                {"name": "Dom Tree"}, 
-                {"name": "History"},
-                {"name": "Project"} 
+                {"name": "Project"},
+                {"name": "Css Style"},
+                {"name": "Dom Tree"},
+                {"name": "History"}
             ]
         }, {
             "type": "panel",

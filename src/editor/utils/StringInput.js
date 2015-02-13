@@ -14,8 +14,9 @@ function StringInput(opt={}) {
     }
 
     if (opt.suggestions) {
-        this._prepareSuggestions(opt.suggestions, opt.typeaheadOptions, opt.datasetOptions);
-    };
+
+        this._prepareSuggestions(opt.suggestions);
+    }
 
     this._refreshInput();
 }
@@ -44,6 +45,14 @@ Object.defineProperties(p, {
             return this._value;
         }
     },
+    color: {
+        set: function (v) {
+            this._input.style.color = v;
+        },
+        get: function () {
+            return this._input.style.color;
+        }
+    }
 });
 
 
@@ -51,7 +60,7 @@ Object.defineProperties(p, {
 
 p.setSuggestions = function (suggestions) {
 
-    suggestions = suggestions.map((suggestion, idx) => {
+    suggestions = suggestions.map(suggestion => {
 
         if (typeof suggestion !== 'object') {
             return {value: suggestion};

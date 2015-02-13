@@ -1,8 +1,8 @@
 'use strict';
 
-var amgui = require('../amgui');
 var Dialog = require('../utils/Dialog');
 var StringInput = require('../utils/StringInput');
+var shortcuts = require('../shortcuts');
 
 var inited = false,
     inpParamName,
@@ -11,7 +11,28 @@ var inited = false,
     });
 module.exports = dialog;
 
-dialog.addButton('add', function () {
+dialog.addButton('add', add);
+dialog.addButton('close', 'hide');
+
+dialog.on('show', function () {
+
+    createContent();
+
+    shortcuts.on('enter', add);
+
+    inpParamName.value = '';
+});
+
+dialog.on('hide', function () {
+
+    shortcuts.off('enter', add);
+});
+
+
+dialog.addProperty({name: 'track', input: inpParamName});
+
+
+function add() {
 
     if (inpParamName.value) {
 
@@ -19,20 +40,7 @@ dialog.addButton('add', function () {
     }
 
     dialog.hide();
-});
-dialog.addButton('close', 'hide');
-
-dialog.on('show', function () {
-
-    createContent();
-
-    inpParamName.value = '';
-});
-
-
-
-dialog.addProperty({name: 'track', input: inpParamName});
-
+}
 
 function createContent() {
 
@@ -48,7 +56,7 @@ function createContent() {
           return group1.toUpperCase();
       });
     }
-    console.log('papapapappapapapapapa')
+
     inpParamName = new StringInput({
         parent: dialog.deContent,
         placeholder: 'css parameter name',

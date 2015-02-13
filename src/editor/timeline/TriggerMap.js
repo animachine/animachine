@@ -15,7 +15,7 @@ function TriggerMap() {
 
     EventEmitter.call(this);
 
-    this._triggers = {};
+    this._triggers = [];
 
     this._createEditDialog();
 }

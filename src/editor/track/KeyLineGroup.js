@@ -72,12 +72,11 @@ p.addKeyLine = function (keyLine) {
 
 p.removeKeyline = function (keyLine) {
 
-    var idx = this._keyLines.indexOf(keyLine);
-    if (idx === -1) return;
+    if (!_.include(this._keyLines, keyLine)) return;
 
     keyLine.off('change.keys', this._onChangeKeyLineKeys, this);
 
-    this._keyLines.splice(idx, 1);
+    _.pull(this._keyLines, keyLine);
 
     if (keyLine.domElem.parentNode === this._deSubcont) {
         this._deSubcont.removeChild(keyLine.domElem);

@@ -26,4 +26,4 @@
     {{/triggerScript}}//
 
     return reg;
-}());
+}())

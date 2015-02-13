@@ -112,24 +112,42 @@ p._createTarget = function (data) {
             onChange: value => {
 
                 target.data.value = value;
-                this.emit('change');
-
-                if (data.type === 'input') {
-
-                    let match = inputPaths.indexOf(input.value) === -1,
-                        color = match ? amgui.color.text : amgui.color.aqua;
-
-                    input.style.color = color;
-                }
+                refreshSpellingFeedback();
+                this.emit('change', this.value);
             }
-        }]
+        }],
     });
 
     var input = target.optionLine.inputs.input;
     input.focus();
+    input.domElem.style.color = 'red';
+    target.optionLine.highlight = data.type === 'input' ? amgui.color.blue : amgui.color.maroon;
 
-    target.optionLine.highlight = data.type === 'input' ? amgui.color.blue : amgui.color.purple;
+    var refreshSpellingFeedback = () => {
 
+        if (data.type === 'input') {
+
+            let match = inputPaths.indexOf(input.value) === -1,
+                color = match ? amgui.color.text : amgui.color.aqua;
+
+            input.domElem.style.color = color;
+        }
+        else if (data.type === 'css') {
+
+            let color = amgui.color.text;
+
+            try {//querySelector breaks on invalid selectors
+                if (document.querySelector(input.value)) {
+
+                    color = amgui.color.maroon;
+                }
+            } catch (e) {}
+
+            input.domElem.style.color = color;
+        }
+    };
+
+    refreshSpellingFeedback();
 
 
     var refreshSuggestions = () => {

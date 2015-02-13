@@ -50,10 +50,19 @@ function createBreadcrumbs(opt) {
         removeItems();
 
         _crumbs.forEach(function (crumb) {
-            
+
             crumb.domElem = createCrumb(crumb.name, crumb.value);
             crumb.deSlash = createSlash();
             crumbs.push(crumb);
+
+            crumb.domElem.addEventListener('click' , () => {
+
+                if (crumb.onSelect) {
+                    crumb.onSelect();
+                }
+
+                dispatchSelect(crumb);
+            });
         });
     };
 
@@ -61,7 +70,10 @@ function createBreadcrumbs(opt) {
 
 
 
+    function dispatchSelect(crumb) {
 
+        de.dispatchEvent(new CustomEvent('select', {detail: {selection: crumb}}));
+    }
 
     function removeItems() {
 

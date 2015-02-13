@@ -65,6 +65,7 @@ p.getScript = function (opt={}) {
     });
 
     var script = Mustache.render(mstScript, {
+        projectName: this.name,
         timelines: '{' + timelines.join('\n') + '}',
         saveJson: opt.includeSave && JSON.stringify(this.getSave()),
     });
@@ -126,6 +127,9 @@ p.addTimeline = function (timeline) {
     }
 
     timeline.parentProject = this;
+
+
+    timeline.name = makeUnique(timeline.name, _.pluck(this._timelines, 'name'));
 
     //avoid to add twice
     if (_.include(this._timelines, timeline)) {
@@ -265,6 +269,32 @@ p.getInputPaths = function (maxLevel = 4) {
     return ret;
 };
 
+//TODO outsource this
+/**opt {
+    separator: '-',
+    mode: 'suffix',
+    fillHoles: 'false',
+    fixedDigitCount: false
+}*/
+function makeUnique (name, list) {
+
+    if (list.indexOf(name) === -1) return name;
+
+    var highest = 0,
+        base = name.replace(/-\d+$/, ""),
+        rx = new RegExp(base + '-(\\d+)$');
+
+    list.forEach(n => {
+
+        var match = rx.exec(n);
+        if (match && match[1] > highest) {
+
+            highest = match[1];
+        }
+    });
+
+    return base + '-' + (parseInt(highest) + 1);
+}
 
 
 p.dispose = function () {

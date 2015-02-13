@@ -30,6 +30,21 @@ var p = ParamGroup.prototype;
 module.exports = ParamGroup;
 
 
+p.wake = function () {
+
+    Param.prototype.wake.call(this);
+
+    _.invoke(this._params, 'wake');
+};
+
+p.sleep = function () {
+
+    Param.prototype.sleep.call(this);
+        
+    _.invoke(this._params, 'sleep');
+};
+
+
 
 Object.defineProperties(p, {
 
@@ -147,6 +162,7 @@ p.addParam = function (param) {
     this._params.push(param);
     this.optionLine.addOptionLine(param.optionLine);
     this.keyLine.addKeyLine(param.keyLine);
+    param.wake();
 
     param.optionLine.indent = this.optionLine.indent + 1;
 
@@ -178,6 +194,7 @@ p.removeParam = function (param) {
         name: 'remove param ' + param.name,
     });
 
+    param.sleep();
     parent.parentGroup = undefined;
 
     //TODO param.forwardOff('change.keys', this);

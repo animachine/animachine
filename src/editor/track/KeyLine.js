@@ -48,8 +48,6 @@ function KeyLine (opt, timeline) {
     });
 
     amgui.callOnAdded(this.domElem, () => this._render());
-
-    this.timeline.on(['changeTimescale', 'changeTape'], this._render, this);
 }
 
 inherits(KeyLine, EventEmitter);
@@ -57,6 +55,19 @@ var p = KeyLine.prototype;
 module.exports = KeyLine;
 
 
+p.wake = function () {
+
+    this.timeline.on(['changeTimescale', 'changeTape'], this._render, this);
+
+    _.invoke(this._keys, 'wake');
+};
+
+p.sleep = function () {
+
+    this.timeline.off(['changeTimescale', 'changeTape'], this._render, this);
+
+    _.invoke(this._keys, 'sleep');
+};
 
 
 
@@ -102,6 +113,7 @@ p.addKey = function (key) {
 
     this._keys.push(key);
     key.parentKeyLine = this;
+    key.wake();
 
     am.history.save({
         undo: () => this.removeKey(key),
@@ -119,13 +131,10 @@ p.addKey = function (key) {
 
 p.removeKey = function (key) {
 
-    var idx = this._keys.indexOf(key);
+    if(!_.includes(this._keys, key)) return false;
 
-    if (idx === -1) {
-        return false;
-    }
-
-    this._keys.splice(idx, 1);
+    _.pull(this._keys, key);
+    key.sleep();
     key.parentKeyLine = undefined;
 
     am.history.save({

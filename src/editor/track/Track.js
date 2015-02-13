@@ -85,8 +85,6 @@ function Track(opt, timeline) {
     if (opt) {
         this.useSave(opt);
     }
-
-    this.timeline.on('changeTime', this._onChangeTime, this);
 }
 
 inherits(Track, EventEmitter);
@@ -111,6 +109,22 @@ Object.defineProperties(p, {
     }
 });
 
+
+
+
+p.wake = function () {
+
+    this.timeline.on('changeTime', this._onChangeTime, this);
+
+    _.invoke(this._params, 'wake');
+};
+
+p.sleep = function () {
+
+    this.timeline.off('changeTime', this._onChangeTime, this);
+
+    _.invoke(this._params, 'sleep');
+};
 
 
 

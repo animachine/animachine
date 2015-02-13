@@ -19,7 +19,6 @@ function Param (opt={}, timeline) {
     this._defaultValue = opt.defaultValue || 0;
 
     this._onChangeInput = this._onChangeInput.bind(this);
-    this._onChangeTime = this._onChangeTime.bind(this);
     this._onChangeKeyLineKeys = this._onChangeKeyLineKeys.bind(this);
     this._onClickTgglKey = this._onClickTgglKey.bind(this);
     this._onClickStepPrevKey = this._onClickStepPrevKey.bind(this);
@@ -48,15 +47,25 @@ function Param (opt={}, timeline) {
 
 
     this.useSave(opt);
-
-    this.timeline.on('changeTime', this._onChangeTime);
 }
 
 inherits(Param, EventEmitter);
 var p = Param.prototype;
 module.exports = Param;
 
+p.wake = function () {
 
+    this.timeline.on('changeTime', this._onChangeTime, this);
+
+    this.keyLine.wake();
+};
+
+p.sleep = function () {
+
+    this.timeline.off('changeTime', this._onChangeTime, this);
+
+    this.keyLine.sleep();
+};
 
 
 

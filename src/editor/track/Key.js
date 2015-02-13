@@ -64,10 +64,6 @@ function Key(opt, timeline) {
     if (opt) {
         am.history.dontSave(() => this.useSave(opt));
     }
-
-    this.timeline.on('deselectAllKeys', this._onDeselectAllKeys, this);
-    this.timeline.on('translateSelectedKeys', this._onTranslateSelectedKeys, this);
-    // this.timeline.on('changeTime', this._onChangeTimelineTime, this);
 }
 
 inherits(Key, EventEmitter);
@@ -81,6 +77,19 @@ defineCompactProperty(p, [
     {name: 'parentKeyLine', event: 'added'},
 ]);
 
+p.wake = function () {
+
+    this.timeline.on('deselectAllKeys', this._onDeselectAllKeys, this);
+    this.timeline.on('translateSelectedKeys', this._onTranslateSelectedKeys, this);
+    // this.timeline.on('changeTime', this._onChangeTimelineTime, this);
+};
+
+p.sleep = function () {
+
+    this.timeline.off('deselectAllKeys', this._onDeselectAllKeys, this);
+    this.timeline.off('translateSelectedKeys', this._onTranslateSelectedKeys, this);
+    // this.timeline.off('changeTime', this._onChangeTimelineTime, this);
+};
 
 
 

@@ -232,6 +232,7 @@ p.addTrack = function (track) {
     this._tracks.push(track);
 
     track.parentTimeline = this;
+    track.wake();
 
     this._mapTrackDatas.set(track, {
         deContOpt: createCont(track.deOptionLine, this._deOptionLineCont),
@@ -269,6 +270,7 @@ p.removeTrack = function (track) {
         name: 'remove track',
     });
 
+    track.sleep();
     track.parentTimeline = undefined;
 
     _.pull(this._tracks, track);

@@ -11,14 +11,18 @@ function KeyGroup(opt) {
     this._subkeys = [];
 
     Key.apply(this, arguments);
-
-    this.timeline.removeListener('deselectAllKeys', this._onDeselectAllKeys);
-    this.timeline.removeListener('translateSelectedKeys', this._onTranslateSelectedKeys);
 }
 
 inherits(KeyGroup, Key);
 var p = KeyGroup.prototype;
 module.exports = KeyGroup;
+
+
+
+p.wake = function () {};
+
+p.sleep = function () {};
+
 
 
 

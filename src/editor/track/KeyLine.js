@@ -131,7 +131,7 @@ p.addKey = function (key) {
 
 p.removeKey = function (key) {
 
-    if(!_.includes(this._keys, key)) return false;
+    if(!_.include(this._keys, key)) return false;
 
     _.pull(this._keys, key);
     key.sleep();
@@ -146,8 +146,6 @@ p.removeKey = function (key) {
     key.off(['change.value', 'change.time'], this._onChangeKeyValue, this);
     key.off(['need.render', 'select', 'deselect', 'change.time'], this._onKeyNeedRender, this);
     key.off('need.remove', this._onKeyNeedRemove, this);
-
-    key.dispose();
 
     this._render();
     this.emit('change.keys');

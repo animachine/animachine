@@ -5,7 +5,7 @@ var Dialog = require('../utils/Dialog');
 
 function decorDialog(whm) {
 
-    var dialog, deLeft, deHead, deBreadcrumbs, inpName, 
+    var dialog, deLeft, deHead, deBreadcrumbs, inpName,
         deStorageSelector, deDirectory, btnNewFolder, isInited, deOptions,
         openOptions = {}, mode;
 
@@ -182,9 +182,9 @@ function decorDialog(whm) {
             var names = dialog.selectedPath.split('/').filter(Boolean),
                 value = '',
                 crumbs = [];
-            
+
             crumbs.push({
-                name: (whm._currStorage.rootName || 'root') + '://', 
+                name: (whm._currStorage.rootName || 'root') + '://',
                 value: value
             });
 
@@ -296,7 +296,7 @@ function decorDialog(whm) {
         }
 
         function onClick(e) {
-            
+
             dialog.selectedName = this.name;
 
             if (e.type === 'dblclick') {
@@ -320,9 +320,9 @@ function decorDialog(whm) {
         }
 
         function onMOver() {
-            
+
             overItem = this;
-            refreshSelection();            
+            refreshSelection();
         }
 
         function onMOut() {
@@ -333,12 +333,12 @@ function decorDialog(whm) {
                 refreshSelection();
             }
         }
-  
+
         function createItem(name, type) {
 
             var deItem = document.createElement('div');
             deItem.name = name;
-            
+
             amgui.createIcon({
                 icon: type === 'folder' ? 'folder-empty' : 'doc',
                 parent: deItem,
@@ -372,12 +372,13 @@ function decorDialog(whm) {
         deStorageSelector.style.display = 'inline-block';
         deStorageSelector.style.width = btnSize + 'px';
         deStorageSelector.style.height = '100%';
+        deStorageSelector.style.marginRight = '12px';
         dialog.deContent.insertBefore(deStorageSelector, deLeft);
 
         deStorageSelector.addEventListener('click', function (e) {
 
             var idx = e.target._storageIdx;
-            
+
             if (idx !== undefined) {
 
                 whm.selectStorage(whm._storages[idx]);
@@ -429,7 +430,7 @@ function decorDialog(whm) {
                 }
             });
         }
-  
+
         function createItem(storage) {
 
             var btn = {
@@ -445,7 +446,7 @@ function decorDialog(whm) {
             };
 
             amgui.addTooltip({
-                deTarget: btn.domElem, 
+                deTarget: btn.domElem,
                 text: storage.tooltip
             });
 
@@ -516,4 +517,3 @@ function decorDialog(whm) {
 
 
 module.exports = decorDialog;
-

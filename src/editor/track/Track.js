@@ -54,7 +54,7 @@ function Track(opt, timeline) {
         },
     }, this.timeline);
 
-    this.paramGroup.on('change.structure', this._refreshEndParams, this);
+    this.paramGroup.on('change.structure', this._onChangeParamGroupStructure, this);
 
     this.paramGroup.on('change.keys', this._onChangeKeys, this);
 
@@ -504,6 +504,12 @@ p._onChangeTransformer = function(params, type) {
     }
 };
 
+p._onChangeParamGroupStructure = function () {
+
+    this._refreshEndParams();
+    this._refreshPlayer();
+};
+
 p._onChangeTime = function (time) {
 
     if (this._isPlaying) {
@@ -586,6 +592,19 @@ p._onChangeHeight = function () {
     this.emit('change.height', this);
 };
 
+p._isAllParamsHaveKey = function (time) {
+
+    return this._endParams.every(function (param) {
+
+        return param.getKey(time) || !param.isValid();
+    });
+};
+
+p.isOwnedDomElem = function (de) {
+
+    return this._selectedElems.indexOf(de) !== -1;
+};
+
 
 
 
@@ -596,29 +615,6 @@ p._refreshPlayer = function () {
     if (this._player) this._player.kill();
 
     this._player = this.getPlayer();
-};
-
-
-
-
-
-
-p._isAllParamsHaveKey = function (time) {
-
-    return this._endParams.every(function (param) {
-
-        return param.getKey(time) || !param.isValid();
-    });
-};
-
-
-
-
-
-
-p.isOwnedDomElem = function (de) {
-
-    return this._selectedElems.indexOf(de) !== -1;
 };
 
 p._refreshEndParams = function () {
@@ -675,8 +671,6 @@ p._refreshSelectedElems = function () {
 };
 
 p.dispose = function () {
-
-    this.timeline.off('changeTime', this._onChangeTime, this);
 
     //TODO
 };

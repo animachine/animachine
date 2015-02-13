@@ -207,8 +207,8 @@ function getStep2Content() {
 function getStep3Content() {
 
     return '<img src="http://zippy.gfycat.com/ImpureSplendidHyracotherium.gif" style="width:100%;">' +
-        '<p>If you move the pointer on the timeline into an other position and make some other changes with the transform tool, you\'ll have two keys witch is makes an animation!!:)</p>' +
-        '<p>Click on the <span class="play"></span> to see it moving!</p>';
+        '<p>If you move the pointer on the timeline into an other position and make some other changes with the transform tool, you\'ll have two keys witch is an animation!!:)</p>' +
+        '<p>Click on the <span class="icon-play"></span> to see it move!</p>';
 }
 
 function getStep4Content() {
@@ -216,9 +216,9 @@ function getStep4Content() {
     return '<img src="http://zippy.gfycat.com/ImpureSplendidHyracotherium.gif" style="width:100%;">' +
         '<p>To save your animation:</p>' +
         '<ul style="list-style-type:disc">' +
-        '<li>click ont the floppy (<span class="icon-floppy"></span>) in the toolbar</li>' +
+        '<li>click ont the menu<span class="icon-menu"></span> / file<span class="icon-floppy"></span> / save<span class="icon-upload-cloud"></span> in the toolbar</li>' +
         '<li>select the save option</li>' +
-        '<li>select the web storage (<span class="icon-bullseye"></span>) on the right of the opened dialog</li>' +
+        '<li>select the web storage<span class="icon-bullseye"></span> on the right of the opened dialog</li>' +
         '<li>than give some name to it and save.</li>' +
         '</ul>' +
         '<p>Now your animation is saved in your browser. You can refresh the page and continue with the last step.</p>';

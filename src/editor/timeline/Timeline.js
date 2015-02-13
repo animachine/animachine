@@ -285,8 +285,6 @@ p.removeTrack = function (track) {
     track.off('need.remove', this._onTrackNeedRemove, this);
     track.off('move', this._onMoveTrack, this);
     track.off('change.height', this._onChangeTrackHeight, this);
-
-    track.dispose();
 };
 
 p.moveTrack = function (track, way) {

@@ -78,7 +78,7 @@ Object.defineProperties(p, {
             this._collapsed = v;
 
             this.optionLine.buttons.tgglChildren.setToggle(!v);
-            this.emit('', this);
+            this.emit('change.height', this);
             this._refreshHeights();
 
             if (this.borrowChildInputsOnCollapse) {

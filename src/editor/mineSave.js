@@ -35,14 +35,14 @@ function extractJSON(str) {
         }
         do {
             candidate = str.substring(firstOpen, firstClose + 1);
-            console.log('candidate: ' + candidate);
+//             console.log('candidate: ' + candidate);
             try {
                 var res = JSON.parse(candidate);
-                console.log('...found');
+//                 console.log('...found');
                 return [res, firstOpen, firstClose + 1];
             }
             catch(e) {
-                console.log('...failed');
+//                 console.log('...failed');
             }
             firstClose = str.substr(0, firstClose).lastIndexOf('}');
         } while(firstClose > firstOpen);

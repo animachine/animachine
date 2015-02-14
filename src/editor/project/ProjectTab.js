@@ -92,6 +92,12 @@ p._createBase = function () {
 
 p._createProjectHandlers = function () {
 
+    var deHead = amgui.createDiv({
+        parent: this._scrollCont,
+        display: 'flex',
+        width: '100%'
+    })
+
     var refreshSelectInput = () => {
 
         var items = this._projectMap.getProjects().map(project => {
@@ -106,7 +112,7 @@ p._createProjectHandlers = function () {
     };
 
     this._deSelected = amgui.createLabel({
-        parent: this._scrollCont,
+        parent: deHead,
         fontSize: '14px',
         fontWeight: '600',
         iconRight: 'down-dir',
@@ -122,13 +128,17 @@ p._createProjectHandlers = function () {
     refreshSelectInput();
     this._projectMap.on(['load', 'unload', 'focus'], refreshSelectInput);
 
-
+    amgui.createDiv({
+        parent: deHead,
+        flex: 1,
+    });
 
     amgui.bindDropdown({
         deTarget: amgui.createIconBtn({
-            parent: this._scrollCont,
-            icon: 'ellipsis',
+            parent: deHead,
+            icon: 'ellipsis-vert',
             display: 'inline-block',
+            size: 18,
         }),
         deDropdown: amgui.createDropdown({
             options: [{

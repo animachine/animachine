@@ -60,6 +60,7 @@ p.wake = function () {
     this.timeline.on(['changeTimescale', 'changeTape'], this._render, this);
 
     _.invoke(this._keys, 'wake');
+
 };
 
 p.sleep = function () {

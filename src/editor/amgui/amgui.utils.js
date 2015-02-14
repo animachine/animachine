@@ -65,7 +65,7 @@ function callOnAdded(de, cb, thisArg) {
 
     var setT, setTTime = 1;
     checkLoop();
-    
+
     function checkLoop() {
 
         if (check(de)) {
@@ -87,7 +87,7 @@ function callOnAdded(de, cb, thisArg) {
         while (node.parentNode) {
 
             node = node.parentNode;
-            
+
             if (node.nodeType === 9 || node.nodeType === 11) {
 
                 return true;
@@ -113,18 +113,18 @@ var delayWithRAF = (() => {
         stack.clear();
         waiting = undefined;
     };
-    
+
     return fn => {
 
-        function wrapper () { 
+        function wrapper () {
 
-            fn.apply(this, arguments); 
+            fn.apply(this, arguments);
         };
-        
-        return function () {
 
-            stack.set(wrapper, {ctx: this, args: arguments});
+        return function () {
             
+            stack.set(wrapper, {ctx: this, args: arguments});
+
             if (waiting === undefined) {
 
                 waiting = window.requestAnimationFrame(onRaf);

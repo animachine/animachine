@@ -53,6 +53,7 @@ function Track(opt, timeline) {
             onDblclick: () => this._showSettings(),
         },
     }, this.timeline);
+    this.paramGroup.wake();
 
     this.paramGroup.on('change.structure', this._onChangeParamGroupStructure, this);
 

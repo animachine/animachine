@@ -153,7 +153,7 @@ p.renderToLine = function (ctx) {
 
     var looks = this.looks || this.parentKeyLine.keyLooks,
         height = this._height,
-        keyPos = ~~this.timeline.timeToRenderPos(this.time) + 0.5,
+        keyPos = parseInt(this.timeline.timeToRenderPos(this.time)) + 0.5,
         line = looks.line,
         circle = looks.circle,
         r = 2,

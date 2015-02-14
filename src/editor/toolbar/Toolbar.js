@@ -48,19 +48,19 @@ p.addIcon = function (opt) {
 
     if (_.isArray(opt)) {
 
-        return opt.map(o => this.addIcon(o));
+        return opt.forEach(o => this.addIcon(o));
     }
 
     var deIcon;
 
     if (_.isElement(opt)) {
-        
+
         deIcon = opt;
-    } 
+    }
     else if (_.isElement(opt.deIcon)) {
-        
+
         deIcon = opt.deIcon;
-    } 
+    }
     else {
         deIcon = amgui.createIconBtn({
             size: this._height,
@@ -70,7 +70,7 @@ p.addIcon = function (opt) {
     }
 
     if (opt.tooltip) {
-        
+
         amgui.addTooltip({
             deTarget: deIcon,
             text: opt.tooltip,
@@ -79,7 +79,6 @@ p.addIcon = function (opt) {
     }
 
     deIcon.style.display = 'inline-block';
-
     this.domElem.insertBefore(deIcon, this._separators[opt.separator || 'rest']);
 
     return deIcon;

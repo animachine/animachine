@@ -199,7 +199,7 @@ am.openNewProject = function () {
 am.setTimeline = function (timeline) {
 
     if (timeline) {
-        am._staticToolbarIcons = timeline.toolbar.addIcon(am._staticToolbarIcons);
+        timeline.toolbar.addIcon(am._staticToolbarIcons);
     }
 
     am.currTimeline = timeline;
@@ -350,10 +350,13 @@ function addToggleGui() {
     var isHidden = false;
 
     am._staticToolbarIcons.push({
-        tooltip: 'show/hide editor',
-        icon: 'resize-small',
+        deIcon: amgui.createIconBtn({
+            tooltip: 'show/hide editor',
+            icon: 'resize-small',
+            onClick: hide,
+            size: 24,
+        }),
         separator: 'first',
-        onClick: hide,
     });
 
     var btnFull = amgui.createIconBtn({

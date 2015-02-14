@@ -60,7 +60,7 @@ p.hideDialog = function (popup) {
 
         if (this._dialogStack.length) {
 
-            this.showDialog(this._dialogStack.pop());   
+            this.showDialog(this._dialogStack.pop());
         }
     }
 };
@@ -159,7 +159,7 @@ p._createFrame = function() {
         display: 'inline-block',
     });
 
-    
+
 
     deContentCont = document.createElement('div');
     deContentCont.style.background = amgui.color.overlay;
@@ -210,7 +210,9 @@ p._createFrame = function() {
         deButtonsCont.innerHTML = '';
 
         btnDataList.forEach(function (btnData) {
-            
+
+            if (btnData.hidden) return;
+
             if (typeof(btnData) === 'string') {
                 de.addButton(btnData);
             }
@@ -235,7 +237,7 @@ p._createFrame = function() {
         buttons.push(btn);
 
         btn.addEventListener('click', function () {
-            
+
             if (handler) handler();
 
             de.dispatchEvent(new Event('click_' + text.toLowerCase()));

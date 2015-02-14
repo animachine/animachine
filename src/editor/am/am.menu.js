@@ -43,7 +43,7 @@ module.exports = function createMenu(am) {
                 icon: "github",
                 separator: "rest",
                 onClick: () => window.open("https://github.com/animachine/animachine"),
-            }   
+            }
         ]
     });
 
@@ -57,10 +57,10 @@ module.exports = function createMenu(am) {
         am.storage.showSaveDialog({
 
             getSave: function () {
-                
+
                 var opt = am.storage.getSaveOptions();
 
-                return am.projectMap.getCurrentProject().getScript(opt);
+                return am.projectMap.currProject.getScript(opt);
             }
         });
     }
@@ -71,7 +71,7 @@ module.exports = function createMenu(am) {
 
             onOpen: function (save) {
 
-                am.projectMap.open(save.project);
+                am.open(save);
             }
         });
     }

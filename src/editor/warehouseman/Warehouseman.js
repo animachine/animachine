@@ -36,7 +36,7 @@ Object.defineProperties(p, {
 
     selectedStorageType: {
         get: function () {
-            return this._currStorage && this._currStorage.type;
+            return this.currStorage && this.currStorage.type;
         }
     }
 })
@@ -53,11 +53,11 @@ p.addStorage = function (storage) {
 
 p.selectStorage = function (storage) {
 
-    if (this._currStorage === storage) {
+    if (this.currStorage === storage) {
         return;
     }
 
-    this._currStorage = storage;
+    this.currStorage = storage;
 
     if (storage.features.placeholder) {
 
@@ -69,23 +69,22 @@ p.selectStorage = function (storage) {
 
 p.save = function (name, data, path) {
 
-    return this._currStorage.save(name, data, path);
+    return this.currStorage.save(name, data, path);
 };
 
 p.load = function (name, path   ) {
 
-    return this._currStorage.load(name, path);
+    return this.currStorage.load(name, path);
 };
 
 p.mkdir = function (path) {
 
-    return this._currStorage.mkdir(path);
+    return this.currStorage.mkdir(path);
 };
 
 p.dir = function (path) {
 
-    return this._currStorage.dir(path);
+    return this.currStorage.dir(path);
 };
 
 module.exports = Warehouseeman;
-

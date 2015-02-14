@@ -128,7 +128,7 @@ $(function () {
 
                         tour.checkIn(0);
                     }
-                    if (!tour.isChecked(1) && am.timeline._tracks.length) {
+                    if (!tour.isChecked(1) && am.currTimeline && am.currTimeline._tracks.length) {
 
                         tour.checkIn(1);
 

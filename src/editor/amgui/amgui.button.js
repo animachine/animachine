@@ -155,6 +155,7 @@ function behaviorBtn(de, opt) {
 
     de.addEventListener('mouseenter', onMOver);
     de.addEventListener('mouseleave', onMOut);
+    de.addEventListener('mousedown', onMOut);
 
     if ('onClick' in opt) {
         de.addEventListener('click', opt.onClick);

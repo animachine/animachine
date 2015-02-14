@@ -2,6 +2,7 @@
 
 var amgui = require('../amgui');
 var Dialog = require('../utils/Dialog');
+var StringInput = require('../utils/StringInput');
 
 function decorDialog(whm) {
 
@@ -42,17 +43,18 @@ function decorDialog(whm) {
         openOptions = opt;
         mode = 'save';
 
-        dialog.selectedName = opt.name || 'anim.am.js';
+        dialog.selectedName = opt.name || '';
         dialog.selectedData = opt.data || '';
         dialog.selectedPath = opt.path || '';
 
-        inpName.style.display = 'block';
+        inpName.domElem.style.display = 'block';
 
         dialog.title = 'Save';
         dialog.showButton('save');
         dialog.hideButton('open');
 
         deStorageSelector.refresh();
+        deDirectory.refresh();
         setupModules();
         dialog.show();
     };
@@ -67,13 +69,14 @@ function decorDialog(whm) {
         dialog.selectedName = opt.name || '';
         dialog.selectedPath = opt.path || '';
 
-        inpName.style.display = 'none';
+        inpName.domElem.style.display = 'none';
 
         dialog.title = 'Open';
         dialog.showButton('open');
         dialog.hideButton('save');
 
         deStorageSelector.refresh();
+        deDirectory.refresh();
         setupModules();
         dialog.show();
     };
@@ -90,8 +93,8 @@ function decorDialog(whm) {
 
     function feature(name) {
 
-        return whm._currStorage.features &&
-            whm._currStorage.features[name];
+        return whm.currStorage.features &&
+            whm.currStorage.features[name];
     }
 
     function setupModules() {
@@ -184,7 +187,7 @@ function decorDialog(whm) {
                 crumbs = [];
 
             crumbs.push({
-                name: (whm._currStorage.rootName || 'root') + '://',
+                name: (whm.currStorage.rootName || 'root') + '://',
                 value: value
             });
 
@@ -232,19 +235,12 @@ function decorDialog(whm) {
 
     function createNameInput() {
 
-        inpName = document.createElement('input');
-        inpName.type = 'text';
-        inpName.style.width = '100%';
-        inpName.style.height = '21px';
-        inpName.style.background = 'none';
-        inpName.style.border = 'none';
-        inpName.style.color = amgui.color.text;
-        inpName.style.fontSize = amgui.FONT_SIZE;
-        inpName.style.fontFamily = amgui.FONT_FAMILY;
-        inpName.placeholder = 'File name';
-        deLeft.appendChild(inpName);
+        inpName = new StringInput({
+            parent: deLeft,
+            placeholder: 'File name (ex. anim.am.js)',
+        });
 
-        inpName.addEventListener('change', function () {
+        inpName.on('change', function () {
 
             dialog.selectedName = inpName.value;
         });
@@ -294,6 +290,8 @@ function decorDialog(whm) {
                 createItem(item.name, item.type);
             });
         }
+
+        deDirectory.refresh = refresh;
 
         function onClick(e) {
 
@@ -410,14 +408,24 @@ function decorDialog(whm) {
                     createItem(storage);
                 }
             });
+
+            refreshSelection();
         };
 
         function refreshSelection() {
 
-            buttons.forEach(function (btn) {
+            var match = false;
 
-                btn.domElem.fixedHighlight = btn.storage === whm._currStorage;
+            buttons.forEach(btn => {
+
+                var _m = btn.storage === whm.currStorage;
+                btn.domElem.fixedHighlight = _m;
+                if (_m) match = _m;
             });
+
+            if (!match) {
+                whm.selectStorage(_.find(buttons, b => !b.storage.features.placeholder).storage);
+            }
         };
 
         function onClickBtn(e) {

@@ -71,7 +71,7 @@ am.open = function (save) {
             }
             else if (typeof(save) === 'string') {
 
-                if (save.indexOf('{') === -1) {
+                if (save.indexOf('{') === -1) {//TODO determine if it is an url better
 
                     fetch(save)
                         .then(response => response.text(), reject)
@@ -129,6 +129,7 @@ am.open = function (save) {
 am._init = function () {
 
     if (isInited) return;
+    isInited = true;
 
     am.deRoot = document.body;
 

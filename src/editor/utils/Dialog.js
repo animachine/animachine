@@ -54,12 +54,10 @@ Object.defineProperties(p, {
 });
 
 
-p.show = function (opt) {
+p.show = function (opt={}) {
 
     if (this._isOpened) return;
     this._isOpened = true;
-
-    opt = opt || {};
 
     if (opt.on) {
 

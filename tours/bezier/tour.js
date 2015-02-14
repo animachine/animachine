@@ -2,7 +2,7 @@
 
 $(function () {
 
-    am.open();
+    am.open('bezier_tour.am.js');
     setupWorkspace();
 
     am.tour.setup({
@@ -30,9 +30,13 @@ $(function () {
 
                     if (!tour.isChecked(0)) {
 
-                        if(/"bezier"/.test(JSON.stringify(save))) {
-                            tour.checkIn(0);
-                        }
+                        walkObj(save, function(val, key, obj) {
+
+                            if (obj.name === 'bezier' && !obj.hidden) {
+
+                                tour.checkIn(0);
+                            }
+                        });
                     }
                     if (!tour.isChecked(1)) {
 
@@ -78,21 +82,21 @@ function walkObj(obj, cb) {
 function getStep0Content() {
 
     return '<img src="http://zippy.gfycat.com/MelodicPerfectAlpinegoat.gif" style="width:100%;">' +
-        '<p>This a quict tutorial to the bezier paths (or motion paths if you like).</p>' +
+        '<p>This a quick tutorial to the bezier paths (or motion paths if you like).</p>' +
         '<p>On the timeline you see a track with a simple animation. If you hit the play button you\'ll see that the bullet leaves the cannon. It\'s looks pretty dummy but we can turn this point to point movement into curve</p>';
 }
 
 function getStep1Content() {
 
     return '<img src="http://zippy.gfycat.com/PoshHighlevelFalcon.gif" style="width:100%;">' +
-        '<p>So just click on the <span class="curve"></span> button on the right of the translate group and you\'ll see a blue line on the screen which shows the root of the bullet. If you familiar with any vector graphics editor you can easily modify the path by adding, editing, removing points. If you stop your over the path, anchor or handle the hints will show up.</p>';
+        '<p>So just click on the bezier<span class="icon-vector"></span> button on the right of the translate group and you\'ll see a blue line on the screen which shows the route of the bullet. If you familiar with any vector graphics editor you can easily modify the path by adding, editing and removing points. If you stop your over the path, anchor or handle the hints will show up.</p>';
 }
 
 function getStep2Content() {
 
     return '<img src="http://zippy.gfycat.com/ImpureSplendidHyracotherium.gif" style="width:100%;">' +
-        '<p>That\'s it. If you click to the <span class="chart-line"></span> you can convert bezier param beck to linear translate.</p>' +
-        '<p>Thanks for trying out the Animachine(alpha)! For more information check out the project page on <a href="https://github.com/animachine/animachine">github</a></p>';
+        '<p>That\'s it. If you click to the translate<span class="icon-chart-line"></span> you can convert bezier param back to linear translate.</p>' +
+        '<p>Thanks for trying out animachine! For more information check out the project on <a href="https://github.com/animachine/animachine">github</a></p>';
 }
 
 function setupWorkspace() {

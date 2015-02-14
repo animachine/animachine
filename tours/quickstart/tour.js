@@ -245,7 +245,7 @@ function getStep5Content() {
 function getStep6Content() {
 
     return '<img src="http://zippy.gfycat.com/ImpureSplendidHyracotherium.gif" style="width:100%;">' +
-        '<p>Thanks for trying out animachine! For more information check out the project page on <a href="https://github.com/animachine/animachine">github</a></p>';
+        '<p>Thanks for trying out animachine! For more information check out the project on <a href="https://github.com/animachine/animachine">github</a></p>';;
 }
 
 function setupWorkspace() {

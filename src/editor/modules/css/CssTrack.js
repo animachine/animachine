@@ -103,7 +103,7 @@ p.focusTransformer = function (de) {
 
 
     handOpt.base = this._transformer.setLocalRoot(de.parentNode, de);
-    
+
     this._transformer.setup({
         hand: handOpt,
     });
@@ -179,6 +179,8 @@ p._switchFromTranslateToBezier = function () {
     yParam.hidden = true;
     this.paramGroup.getParam('translate').hidden = true;
     bezierParam.hidden = false;
+
+    this.focusTransformer();//for redraw the transformers(with curver)
 };
 
 p._switchFromBezierToTranslate = function () {
@@ -219,6 +221,8 @@ p._switchFromBezierToTranslate = function () {
     yParam.hidden = false;
     this.paramGroup.getParam('translate').hidden = false;
     bezierParam.hidden = true;
+
+    this.focusTransformer();//for redraw the transformers(without curver)
 };
 
 

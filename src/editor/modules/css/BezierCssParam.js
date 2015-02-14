@@ -336,6 +336,7 @@ p._onChangeTransformer = function (changes) {
                 linked: change.point.linked,
             });
 
+            key.emit('need.render');//for render the extra key markers btw keys
             changedKeys.push(key);
         }
         else if (change.type === 'remove') {
@@ -347,6 +348,7 @@ p._onChangeTransformer = function (changes) {
                 this.keyLine.removeKey(key);
             }
 
+            key.emit('need.render');//for render the extra key markers btw keys
             changedKeys.push(key);
         }
         else if (change.type === 'edit') {

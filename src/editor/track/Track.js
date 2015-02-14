@@ -474,7 +474,8 @@ p._onChangeTransformer = function(params, type) {
                 lastPoint.handleLeft[name] += diff;
                 lastPoint.handleRight[name] += diff;
 
-                bezierParam.addKey(keyOpt);
+                let key = bezierParam.addKey(keyOpt);
+                key.emit('change.value');
 
                 return;
             }
@@ -509,6 +510,7 @@ p._onChangeParamGroupStructure = function () {
 
     this._refreshEndParams();
     this._refreshPlayer();
+    this.renderTime();
 };
 
 p._onChangeTime = function (time) {

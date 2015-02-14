@@ -8,6 +8,8 @@ function InlineEaseEditor(opt) {
 
     EventEmitter.call(this);
 
+    this._onClickWindow = this._onClickWindow.bind(this);
+
     this._height = amgui.LINE_HEIGHT;
     this._color = '#00BFFF';
 
@@ -49,7 +51,7 @@ p.show = function (opt) {
 
     this._startAutoRefresh();
 
-    window.addEventListener('click', this._onClickWindow, this);
+    window.addEventListener('click', this._onClickWindow);
 
     this.domElem.style.display = '';
 };
@@ -66,7 +68,7 @@ p.hide = function () {
 
     this._stopAutoRefresh();
 
-    window.removeEventListener('click', this._onClickWindow, this);
+    window.removeEventListener('click', this._onClickWindow);
 
     this.domElem.style.display = 'none';
 };

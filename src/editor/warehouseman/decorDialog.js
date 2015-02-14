@@ -299,7 +299,13 @@ function decorDialog(whm) {
 
             if (e.type === 'dblclick') {
 
-                onOpen(dialog.selectedPath, dialog.selectedName);
+                if (mode === 'save') {
+
+                    onSave(dialog.selectedPath, dialog.selectedName);
+                }
+                else {
+                    onOpen(dialog.selectedPath, dialog.selectedName);
+                }
             }
         }
 

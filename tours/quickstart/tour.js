@@ -4,6 +4,11 @@ $(function () {
     am.open();
     setupWorkspace();
 
+    fetch('jumping.am.json')
+        .then(function (response) {return response.json()})
+        .then(function (json) {am.projectMap.load(json)})
+        .catch(function () {console.log('parsing falied')});
+
     var deCookiejar = document.querySelector('#cookie'),
         numberOfSavesAtStart = getNumberOfSaves();
 
@@ -229,7 +234,7 @@ function getStep5Content() {
     return '<img src="http://zippy.gfycat.com/ImpureSplendidHyracotherium.gif" style="width:100%;">' +
         '<p>To open your animation:</p>' +
         '<ul style="list-style-type:disc">' +
-        '<li>click ont the floppy (<span class="icon-floppy"></span>) in the toolbar</li>' +
+        '<li>click ont the menu<span class="icon-menu"></span> / file<span class="icon-floppy"></span> / open<span class="icon-download-cloud"></span> in the toolbar</li>' +
         '<li>select the open option</li>' +
         '<li>select the web storage (<span class="icon-bullseye"></span>) on the right</li>' +
         '<li>if the animation is saved, you\'ll find it in the list. Select it and click on the open.</li>' +

@@ -12,7 +12,7 @@ var targetsInput,
     deSelectors = [],
     dialog = new Dialog({
         title: 'Track',
-    }); 
+    });
 module.exports = dialog;
 
 createContent();
@@ -33,14 +33,9 @@ function createContent() {
         }],
     });
 
-    amgui.createLabel({
-        text: 'Selectors:',
-        display: 'block',
-        parent: dialog.deContent,
-    });
-
     targetsInput = new TargetsInput({
         parent: dialog.deContent,
+        title: 'Selectors',
         onChange: () => dialog.emit('changeSelectors', targetsInput.value),
     });
 
@@ -99,32 +94,32 @@ function createContent() {
     $(optYoyo.domElem).one('mousedown', () => am.dialogs.WIP.show());
 
     dialog.addProperty({
-        name: 'name', 
+        name: 'name',
         startValue: 'Track',
         input: optName.inputs.name
     });
     dialog.addProperty({
-        name: 'selectors', 
+        name: 'selectors',
         startValue: [],
         input: targetsInput,
     });
     dialog.addProperty({
-        name: 'repeat', 
+        name: 'repeat',
         startValue: 0,
         input: optRepeat.inputs.repeat,
     });
     dialog.addProperty({
-        name: 'repeatDelay', 
+        name: 'repeatDelay',
         startValue: 0,
         input: optRepeatDelay.inputs.repeatDelay,
     });
     dialog.addProperty({
-        name: 'keyStretch', 
+        name: 'keyStretch',
         startValue: 1,
         input: optKeyStretch.inputs.keyStretch,
     });
     dialog.addProperty({
-        name: 'yoyo', 
+        name: 'yoyo',
         startValue: false,
         input: optYoyo.inputs.yoyo,
     });

@@ -12,6 +12,8 @@ function TargetsInput(opt={}) {
     this._targets = [];
     this._value = opt.value || [];
     this._defaultValue = opt.defaultValue || [];
+
+    if (_.has(opt, 'title')) this.title = opt.title;
 }
 
 inherits(TargetsInput, Input);
@@ -32,6 +34,16 @@ Object.defineProperties(p, {
         get: function () {
 
             return _.pluck(this._targets, 'data');
+        }
+    },
+    title: {
+        set: function (v) {
+
+            this._rootOptionLine.title = v;
+        },
+        get: function () {
+
+            return this._rootOptionLine.title;
         }
     },
 });
@@ -121,7 +133,7 @@ p._createTarget = function (data) {
     var input = target.optionLine.inputs.input;
     input.focus();
     input.domElem.style.color = 'red';
-    target.optionLine.highlight = data.type === 'input' ? amgui.color.blue : amgui.color.maroon;
+    target.optionLine.highlight = data.type === 'input' ? amgui.color.blue : amgui.color.purple;
 
     var refreshSpellingFeedback = () => {
 
@@ -139,7 +151,7 @@ p._createTarget = function (data) {
             try {//querySelector breaks on invalid selectors
                 if (document.querySelector(input.value)) {
 
-                    color = amgui.color.maroon;
+                    color = amgui.color.purple;
                 }
             } catch (e) {}
 

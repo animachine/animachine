@@ -405,10 +405,10 @@ p.getMagnetPoints = function () {
 p._showSettings = function () {
 
     dialogTrackOptions.show({
-        name: this.paramGroup.name,
+        name: this.paramGroup.title,
         selectors: this._selectors,
         on: {
-            'change.name': name => this.paramGroup.name = name,
+            'change.name': name => this.paramGroup.title = name,
             'change.selectors': this._onChangeSelectors,
         },
     });
@@ -626,7 +626,7 @@ p._refreshSelectedElems = function () {
 
     var list = [];
 
-    this._selectors.forEach(function (selector) {
+    this._selectors.forEach(selector => {
 
         if (selector.type === 'css') {
 
@@ -634,7 +634,7 @@ p._refreshSelectedElems = function () {
         }
         else if (selector.type === 'input') {
 
-            var parent = this.timeline.inputs;
+            var parent = this.timeline.parentProject.inputs;
 
             selector.value.split('.').every(function (name) {
 

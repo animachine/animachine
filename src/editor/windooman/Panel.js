@@ -54,7 +54,7 @@ Object.defineProperties(p, {
             return this._empty;
         }
     },
-    
+
     collapsed: {
         set: function (v) {
 
@@ -68,7 +68,7 @@ Object.defineProperties(p, {
             return this._collapsed;
         }
     },
-    
+
     noHead: {
         set: function (v) {
 
@@ -113,7 +113,7 @@ p.findTab = function (name) {
 p.showTab = function (tab) {
 
     this._tabs.forEach(function (t) {
-        
+
         if (tab === t) {
             t.select();
         }
@@ -153,14 +153,14 @@ p._onToggleCollapsed = function () {
 
 p._createTabBase = function () {
 
-    this._deTabBase = document.createElement('div');
+    this._deTabBase = amgui.createDiv();;
     this._deTabBase.style.display = 'flex';
     this._deTabBase.style.flexDirection = 'column';
     this._deTabBase.style.alignSelf = 'stretch';
     this._deTabBase.style.flex = '1';
     this.domElem.appendChild(this._deTabBase);
 
-    this._deTabHead = document.createElement('div');
+    this._deTabHead = amgui.createDiv();;
     this._deTabHead.style.width = '100%';
     this._deTabHead.style.height = amgui.LINE_HEIGHT + 'px';
     this._deTabHead.style.display = 'flex';
@@ -170,7 +170,7 @@ p._createTabBase = function () {
     this._deTabHead.setAttribute('data-debug', 'tabhead')
     this._deTabBase.appendChild(this._deTabHead);
 
-    this._deTabContent = document.createElement('div');
+    this._deTabContent = amgui.createDiv();;
     this._deTabContent.style.position = 'relative';
     this._deTabContent.style.overflow = 'hidden';
     this._deTabContent.style.width = '100%';
@@ -180,7 +180,7 @@ p._createTabBase = function () {
 
     this._btnToggleCollapsed = amgui.createToggleIconBtn({
         tooltip: 'show/hide tabs',
-        iconOn: 'collapse', 
+        iconOn: 'collapse',
         iconOff: 'expand',
         parent: this._deTabHead,
         display: 'inline-block',

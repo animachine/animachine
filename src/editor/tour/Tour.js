@@ -58,7 +58,7 @@ p.setup = function (data) {
 
     data.steps.forEach(function (step) {
 
-        step.domElem = document.createElement('div');
+        step.domElem = amgui.createDiv();
         step.domElem.innerHTML = step.content;
         step.checklist = step.checklist ? step.checklist.map(createCheck) : [];
 
@@ -232,27 +232,27 @@ p._refreshChecklist = function () {
 
 p._createBase = function () {
 
-    this.domElem = document.createElement('div');
+    this.domElem = amgui.createDiv();
     this.domElem.style.width = '100%';
     this.domElem.style.height = '100%';
     this.domElem.style.display = 'flex';
     this.domElem.style.flexDirection = 'column';
     this.domElem.style.background = amgui.color.bg0;
 
-    this._deHead = document.createElement('div');
+    this._deHead = amgui.createDiv();
     this._deHead.style.display = 'flex';
     this._deHead.style.width = '100%';
     this._deHead.style.height = '23px';
     this.domElem.appendChild(this._deHead);
 
-    this._deStepContScroll = document.createElement('div');
+    this._deStepContScroll = amgui.createDiv();
     this._deStepContScroll.style.position = 'relative';
     this._deStepContScroll.style.flex = '1';
     this.domElem.appendChild(this._deStepContScroll);
 
     this._srStepContScroll = this._deStepContScroll.createShadowRoot();
 
-    this._deStepCont = document.createElement('div');
+    this._deStepCont = amgui.createDiv();
     this._deStepCont.style.position = 'absolute';
     this._deStepCont.style.width = '100%';
     this._srStepContScroll.appendChild(this._deStepCont);
@@ -318,12 +318,12 @@ p._createTriangle = function () {
 
     var size = 12;
 
-    var de = document.createElement('div');
+    var de = amgui.createDiv();
     de.style.position = 'absolute';
     de.style.pointerEvents = 'none';
     am.deDialogCont.appendChild(de);
 
-    var deTriangle = document.createElement('div');
+    var deTriangle = amgui.createDiv();
     deTriangle.style.position = 'absolute';
     deTriangle.style.width = '0';
     deTriangle.style.height = '0';

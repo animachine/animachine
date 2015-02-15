@@ -146,14 +146,14 @@ function decorDialog(whm) {
         dialog.deContent.style.display = 'flex';
         dialog.deContent.style.color = 'white';
 
-        deLeft = document.createElement('div');
+        deLeft = amgui.createDiv();;
         deLeft.style.height = '100%';
         deLeft.style.flex = '1';
         deLeft.style.display = 'flex';
         deLeft.style.flexDirection = 'column';
         dialog.deContent.appendChild(deLeft);
 
-        deHead = document.createElement('div');
+        deHead = amgui.createDiv();;
         deHead.style.width = '100%';
         deHead.style.height = '21px';
         deHead.style.display = 'flex';
@@ -257,7 +257,7 @@ function decorDialog(whm) {
 
     function createDirectory() {
 
-        deDirectory = document.createElement('div');
+        deDirectory = amgui.createDiv();;
         deDirectory.style.listStyle = 'none';
         deDirectory.style.display = 'inline-block';
         deDirectory.style.width = '100%';
@@ -340,7 +340,7 @@ function decorDialog(whm) {
 
         function createItem(name, type) {
 
-            var deItem = document.createElement('div');
+            var deItem = amgui.createDiv();;
             deItem.name = name;
 
             amgui.createIcon({
@@ -372,7 +372,7 @@ function decorDialog(whm) {
 
         var btnSize = 33, buttons = [];
 
-        deStorageSelector = document.createElement('div');
+        deStorageSelector = amgui.createDiv();;
         deStorageSelector.style.display = 'inline-block';
         deStorageSelector.style.width = btnSize + 'px';
         deStorageSelector.style.height = '100%';
@@ -472,7 +472,7 @@ function decorDialog(whm) {
 
         var isOpened = false;
 
-        deOptions = document.createElement('div');
+        deOptions = amgui.createDiv();;
         deOptions.style.display = 'none';
         deOptions.style.width = '138px';
         deOptions.style.height = '100%';

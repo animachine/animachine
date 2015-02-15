@@ -566,14 +566,14 @@ p._refreshDeCurrTime = function () {
 
 p._createBase = function () {
 
-    this.domElem = document.createElement('div');
+    this.domElem = amgui.createDiv();
     this.domElem.style.backgroundColor = amgui.color.bg0;
     this.domElem.style.display = 'flex';
     this.domElem.style.width = '100%';
     this.domElem.style.height = '100%';
     this.domElem.style.pointerEvents = 'auto';
 
-    this._deLeft = document.createElement('div');
+    this._deLeft = amgui.createDiv();
     this._deLeft.style.backgroundColor = amgui.color.bg0;
     this._deLeft.style.display = 'flex';
     this._deLeft.style.flexDirection = 'column';
@@ -583,13 +583,13 @@ p._createBase = function () {
 
     this._createSettingsHead();
 
-    this._deDivider = document.createElement('div');
+    this._deDivider = amgui.createDiv();
     this._deDivider.style.backgroundColor = amgui.color.bg3;
     this._deDivider.style.width = '1px';
     this._deDivider.style.height = '100%';
     this.domElem.appendChild(this._deDivider);
 
-    this._deRight = document.createElement('div');
+    this._deRight = amgui.createDiv();
     this._deRight.style.display = 'flex';
     this._deRight.style.flexDirection = 'column';
     this._deRight.style.position = 'relative';
@@ -602,7 +602,7 @@ p._createBase = function () {
     this._deRight.appendChild(this._timebar.domElem);
 
     //keeps the scroll bar and the scroll container(_deKeyLineCont2)
-    this._deKeyLineCont3 = document.createElement('div');
+    this._deKeyLineCont3 = amgui.createDiv();
     this._deKeyLineCont3.style.position = 'relative';
     this._deKeyLineCont3.style.display = 'flex';
     this._deKeyLineCont3.style.flex = '1';
@@ -611,7 +611,7 @@ p._createBase = function () {
     this._deKeyLineCont3.style.overflow = 'hidden';
     this._deRight.appendChild(this._deKeyLineCont3);
 
-    this._deOptionLineCont2 = document.createElement('div');
+    this._deOptionLineCont2 = amgui.createDiv();
     this._deOptionLineCont2.style.position = 'relative';
     this._deOptionLineCont2.style.flex = '1';
     this._deOptionLineCont2.style.width = '100%';
@@ -619,18 +619,18 @@ p._createBase = function () {
     this._deOptionLineCont2.style.overflow = 'hidden';
     this._deLeft.appendChild(this._deOptionLineCont2);
 
-    this._deKeyLineCont2 = document.createElement('div');
+    this._deKeyLineCont2 = amgui.createDiv();
     this._deKeyLineCont2.style.position = 'relative';
     this._deKeyLineCont2.style.flex = '1';
     this._deKeyLineCont3.appendChild(this._deKeyLineCont2);
 
     //this container is moving with the timeline
-    this._deKeyLineCont = document.createElement('div');
+    this._deKeyLineCont = amgui.createDiv();
     this._deKeyLineCont.style.position = 'relative';
     this._deKeyLineCont.style.width = '100%';
     this._deKeyLineCont2.appendChild(this._deKeyLineCont);
 
-    this._deOptionLineCont = document.createElement('div');
+    this._deOptionLineCont = amgui.createDiv();
     this._deOptionLineCont.style.position = 'relative';
     this._deOptionLineCont2.appendChild(this._deOptionLineCont);
 

@@ -362,11 +362,11 @@ p.returnChildInputs = function () {
 
 p._createDomElem = function() {
 
-    this.domElem = document.createElement('div');
+    this.domElem = amgui.createDiv();;
     this.domElem.style.width = '100%';
     this.domElem.style.overflow = 'hidden';
 
-    this._deHeadCont = document.createElement('div');
+    this._deHeadCont = amgui.createDiv();;
     this._deHeadCont.style.position = 'relative';
     this._deHeadCont.style.display = 'flex';
     this._deHeadCont.style.width = '100%';
@@ -383,7 +383,7 @@ p._createDomElem = function() {
 
 p._createHighlight = function () {
 
-    this._deHighlight = document.createElement('div');
+    this._deHighlight = amgui.createDiv();;
     this._deHighlight.style.display = 'inline-block';
     this._deHighlight.style.width = '2px';
     this._deHighlight.style.height = this._lineH + 'px';
@@ -394,7 +394,7 @@ p._createHighlight = function () {
 
 p._createIndent = function () {
 
-    this._deIndent = document.createElement('div');
+    this._deIndent = amgui.createDiv();;
     this._deIndent.style.display = 'inline-block';
     this._deIndent.style.width = '0px';
     this._deHeadCont.appendChild(this._deIndent);

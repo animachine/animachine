@@ -264,7 +264,7 @@ p.toggleKey = function (time) {
 };
 
 p._makeKeyLinesSymmetric = function () {
-    console.time('_makeKeyLinesSymmetric');
+//     console.time('_makeKeyLinesSymmetric');
     var times = [];
 
     this._params.forEach(param => {
@@ -275,7 +275,7 @@ p._makeKeyLinesSymmetric = function () {
     });
 
     _.uniq(times).forEach(time => this.addKeyAll(time));
-    console.timeEnd('_makeKeyLinesSymmetric');
+//     console.timeEnd('_makeKeyLinesSymmetric');
 };
 
 

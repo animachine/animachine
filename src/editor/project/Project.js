@@ -118,15 +118,15 @@ p.addTimeline = function (timeline) {
     //create the instance if the parameter is a save object
     if (!(timeline instanceof Timeline)) {
 
-        timeline = new Timeline(timeline);
+        timeline = new Timeline(timeline, this);
     }
     //remove the timeline if it's already added to an other project
-    else if (timeline.parentProject && timeline.parentProject !== this) {
+    else if (timeline.project && timeline.project !== this) {
 
-        timeline.parentProject.removeTimeline(timeline);
+        timeline.project.removeTimeline(timeline);
+        timeline.project = this;
     }
 
-    timeline.parentProject = this;
 
 
     timeline.name = makeUnique(timeline.name, _.pluck(this._timelines, 'name'));
@@ -153,7 +153,7 @@ p.removeTimeline = function (timeline) {
         return;
     }
 
-    timeline.parentProject = undefined;
+    timeline.project = undefined;
 
     am.history.save({
         undo: () => this.addTimeline(timeline),

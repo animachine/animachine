@@ -1,5 +1,7 @@
 {
+	"name": "argh",
 	"timelines": [{
+		"name": "argh timeline",
 		"timebar": {
 			"currTime": 391,
 			"timescale": 0.12,

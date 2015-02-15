@@ -637,7 +637,7 @@ p._refreshSelectedElems = function () {
         }
         else if (selector.type === 'input') {
 
-            var parent = this.timeline.parentProject.inputs;
+            var parent = this.timeline.project.inputs;
 
             selector.value.split('.').every(function (name) {
 

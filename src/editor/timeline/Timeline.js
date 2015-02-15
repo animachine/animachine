@@ -12,10 +12,12 @@ var InlineEaseEditor = require('./InlineEaseEditor');
 var Toolbar = require('../toolbar');
 var defineCompactProperty = require('../utils/defineCompactProperty');
 
-function Timeline(opt) {
+function Timeline(opt, project) {
 
     EventEmitter.call(this);
     this.setMaxListeners(11111);
+
+    this.project = project;
 
     this._headerH = 23;
 
@@ -126,7 +128,7 @@ Object.defineProperties(p, {
 });
 
 defineCompactProperty(p, [
-    {name: 'parentProject', event: 'added'},
+    {name: 'project', event: 'added'},
     {name: 'name', type: 'string', startValue: 'timeline'},
 ]);
 

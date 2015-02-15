@@ -39,25 +39,28 @@ $(function () {
             $lshoulder = create('lshoulder');
             $rshoulder = create('rshoulder');
             $head = create('head');
-        
-        if (false) { //edit
-            am.open('save.json');
-            am.timeline.setInputs({
-                root: $root,
-                lfoot: $lfoot,
-                rfoot: $rfoot,
-                lhand: $lhand,
-                rhand: $rhand,
-                lshoulder: $lshoulder,
-                rshoulder: $rshoulder,
-                head: $head,
+
+        if (location.hash === '#edit') {
+
+            am.open('save.json').then(function () {
+
+                am.projectMap.currProject.setInputs({
+                    root: $root,
+                    lfoot: $lfoot,
+                    rfoot: $rfoot,
+                    lhand: $lhand,
+                    rhand: $rhand,
+                    lshoulder: $lshoulder,
+                    rshoulder: $rshoulder,
+                    head: $head,
+                });
+                $zombie.css({
+                    left: '50%',
+                    top: '50%',
+                    border: '1px tomato solid'
+                });
+                $('#base').remove();
             });
-            $zombie.css({
-                left: '50%',
-                top: '50%',
-                border: '1px tomato solid'
-            });
-            $('#base').remove();
         }
         else {
             var anim = am.anims.amsave.create({
@@ -96,10 +99,10 @@ $(function () {
 
         TweenMax.to($zombie, 0.34, {
             rotation: ((Math.atan2(dy, dx) / Math.PI * 180) + 90) + '_short',
-        }); 
+        });
 
         TweenMax.to($zombie, d/123, {
-            x: target.x, 
+            x: target.x,
             y: target.y,
             onComplete: sendZombie.bind(null, $zombie),
             ease: Linear.easeNone,

@@ -20,10 +20,11 @@ If later you want to change your animation, just open the animachine, load that 
 ###What is the state of this?
 We're working for reach the beta state where you can start to use it in your projects, but currently it's in alpha, so things are changing day from day, many of the basic features are just draft and the save files from last week probably don't gonna work in the next week. Although you're wellcomed to play with the [extension], the demos and take the in app tours.
 
-###Demos: [1][demo1], [2][demo2], ...(wip)
-###Tours:  [1][tour1], ...(wip)
+###Demos: [marslanding][demo-marspolip], [argh][demo-argh]
+###Tours:  [quickstart][tour-quickstart], [bezier path][tour-bezier], triggers
+###Videos:  react.js, WordPress
 
-<img src="http://s29.postimg.org/m5m0pevhj/Animachine_css_mars_polip_demo_3.png">
+<img src="http://i.imgur.com/9X2xUfz.png">
 
 ###Milestones
 **1,**  
@@ -49,7 +50,8 @@ Three.js support.
 Create online playground.  
 
 [extension]: https://chrome.google.com/webstore/detail/animachine/gpnfomkfgajaojpakbkikiekmajeojgd
-[demo1]: http://animachine.github.io/animachine/demos/marspolip/
-[demo2]: http://animachine.github.io/animachine/demos/argh/
-[tour1]: http://animachine.github.io/animachine/tours/quickstart/
+[demo-marspolip]: http://animachine.github.io/animachine/demos/marspolip/
+[demo-argh]: http://animachine.github.io/animachine/demos/argh/
+[tour-quickstart]: http://animachine.github.io/animachine/tours/quickstart/
+[tour-bezier]: http://animachine.github.io/animachine/tours/bezier/
 [GSAP]: http://greensock.com/

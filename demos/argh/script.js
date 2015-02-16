@@ -63,7 +63,7 @@ $(function () {
             });
         }
         else {
-            am.projects.argh.timelines.argh.create({
+            am.projects.argh.timelines.timeline.create({
                 root: $root,
                 lfoot: $lfoot,
                 rfoot: $rfoot,

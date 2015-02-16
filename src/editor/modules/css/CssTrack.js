@@ -64,6 +64,8 @@ p.type = 'css_track_type';
 
 p.focusTransformer = function (de) {
 
+    if (!this._transformer) return;//TODO clean up
+
     de = de || this._currHandledDe;
     this._currHandledDe = de;
 

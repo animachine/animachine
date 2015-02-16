@@ -108,9 +108,10 @@ var delayWithRAF = (() => {
         stack.forEach((reg, fn) => {
 
             fn.apply(reg.ctx, reg.args);
+            stack.delete(fn);
         });
 
-        stack.clear();
+        // stack.clear();
         waiting = undefined;
     };
 
@@ -122,7 +123,7 @@ var delayWithRAF = (() => {
         };
 
         return function () {
-            
+
             stack.set(wrapper, {ctx: this, args: arguments});
 
             if (waiting === undefined) {

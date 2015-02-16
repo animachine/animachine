@@ -183,10 +183,12 @@ p.selectTimeline = function (timeline) {
 
     if (this.currTimeline) {
 
-        this.currTimeline.pause();
+        this.currTimeline.blur();
     }
 
     this.currTimeline = timeline;
+
+    this.currTimeline.focus();
 
     this.emit('change.currTimeline', this.currTimeline);
 };
@@ -197,13 +199,18 @@ p.focus = function () {
 
         this.selectTimeline(this._timelines[0]);
     }
+
+    if (this.currTimeline) {
+
+        this.currTimeline.focus();
+    }
 };
 
 p.blur = function () {
 
     if (this.currTimeline) {
 
-        this.currTimeline.pause();
+        this.currTimeline.blur();
     }
 };
 

@@ -116,6 +116,7 @@ Object.defineProperties(p, {
 p.wake = function () {
 
     this.timeline.on('changeTime', this._onChangeTime, this);
+    this.timeline.project.on('change.inputs', this._onChangeSelectors, this);
 
     _.invoke(this._params, 'wake');
 };
@@ -123,6 +124,7 @@ p.wake = function () {
 p.sleep = function () {
 
     this.timeline.off('changeTime', this._onChangeTime, this);
+    this.timeline.project.off('change.inputs', this._onChangeSelectors, this);
 
     _.invoke(this._params, 'sleep');
 };
@@ -574,10 +576,9 @@ p._onClickTgglHide = function () {
     }
 };
 
-p._onChangeSelectors = function (selectors) {
+p._onChangeSelectors = function () {
 
-    this._selectors.length = 0;
-    this._selectors = this._selectors.concat(selectors);
+    //targetsInput edits the this._selectedElems array so there is no need to refresh it
 
     this._refreshSelectedElems();
     this._refreshPlayer();

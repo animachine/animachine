@@ -20,9 +20,8 @@ chrome.browserAction.onClicked.addListener(function (tab) {
 
     console.log('clicked', tab.id);
 
-    chrome.tabs.executeScript(tab.id, {file: "js/content_script.js"});
-    chrome.tabs.insertCSS(tab.id, {file: "assets/fontello/css/amgui-embedded.css"});
-    chrome.tabs.insertCSS(tab.id, {file: "assets/dialog-polyfill.css"});
+    chrome.tabs.executeScript(tab.id, {code: "if (this.am) {am.toggle();console.log('have am');} else { chrome.runtime.sendMessage({subject:\'embed\', id:"+tab.id+"});console.log('no am'); }"});
+
 });
 
 chrome.browserAction.setBadgeText({text: 'α'});
@@ -30,6 +29,12 @@ chrome.browserAction.setBadgeBackgroundColor({color: isDevMode() ? '#F00' : '#00
 
 chrome.runtime.onMessage.addListener(function (request) {
 
+    if (request.subject === 'embed') {
+
+        chrome.tabs.executeScript(request.id, {file: "js/content_script.js"});
+        chrome.tabs.insertCSS(request.id, {file: "assets/fontello/css/amgui-embedded.css"});
+        chrome.tabs.insertCSS(request.id, {file: "assets/dialog-polyfill.css"});
+    }
     if (request.subject === 'track') {
 
         _gaq.push(['_trackEvent', request.evtName, request.value]);

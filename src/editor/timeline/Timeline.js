@@ -6,7 +6,6 @@ var Timebar = require('./Timebar');
 var EaseMap = require('./EaseMap');
 var TriggerMap = require('./TriggerMap');
 var amgui = require('../amgui');
-var UglifyJS = require('uglify-js');
 var mstScript = require('./script.timeline.mst');
 var InlineEaseEditor = require('./InlineEaseEditor');
 var Toolbar = require('../toolbar');
@@ -211,6 +210,15 @@ p.getScript = function () {
     });
 
     return script;
+};
+
+p.focus = function () {
+    
+};
+
+p.blur = function () {
+
+    this.pause();
 };
 
 p.clear = function () {
@@ -423,7 +431,7 @@ p._onWindowResize = function () {
 
 p._onTogglePlayPause = function () {
 
-    am.report({evtName: '_onTogglePlayPause', value: 2})
+    am.report({evtName: '_onTogglePlayPause', value: 2});
 
     if (this._isPlaying) {
 

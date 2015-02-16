@@ -10,7 +10,7 @@ function Timebar(opt) {
     EventEmitter.call(this);
 
     opt = opt || {};
-    
+
     this._start = opt.start || 0;
     this._width = opt.width || 0;
     this._height = opt.height || 21;
@@ -60,7 +60,7 @@ Object.defineProperties(p, {
             this._renderTape();
             this.emit('changeTape');
             this.emit('changeTimescale');
-            //prevent to get bigger start margin than "_startMargin" 
+            //prevent to get bigger start margin than "_startMargin"
             this.start = this.start;
         },
         get: function () {
@@ -82,16 +82,16 @@ Object.defineProperties(p, {
         get: function () {
             return this._start;
         }
-    }, 
+    },
 
     /**px*/
     width: {
         set: function (v) {
 
             v = parseInt(v);
-
-            if (!Number.isFinite(v) || this._width === v) return;
             
+            if (!Number.isFinite(v) || this._width === v) return;
+
             this._width = v;
             this._renderTape();
             this.emit('changeTape');
@@ -99,8 +99,8 @@ Object.defineProperties(p, {
         get: function () {
             return this._width;
         }
-    }, 
-    
+    },
+
     end: {
         get: function () {
             return this._start + (this._width / this._timescale);
@@ -116,7 +116,7 @@ Object.defineProperties(p, {
             return this._width / this._timescale;
         }
     },
-    
+
     currTime: {
         set: function (v) {
 
@@ -133,8 +133,8 @@ Object.defineProperties(p, {
         get: function () {
             return this._currTime;
         }
-    }, 
-    
+    },
+
     magnetPoints: {
         set: function (v) {
             this._magnetPoints = v;
@@ -217,7 +217,7 @@ p.magnetizeTime = function (time) {
             magnetPointDiff = diff;
         }
     });
-    
+
     if ((magnetPointDiff * this._timescale) < this._magnetDistancePx) {
 
         time = magnetPoint;
@@ -247,7 +247,7 @@ p._renderTape = function () {
         length = this._length,
         visibleTime = this.visibleTime,
         height = this._height,
-        scale = this.timescale, 
+        scale = this.timescale,
         width = this._width,
         maxMarkers = width / 4,
         step, i, text, textW,
@@ -401,7 +401,7 @@ p._createBase = function () {
     this._canvasTape = document.createElement('canvas');
     this._ctxTape = this._canvasTape.getContext('2d');
     this._canvasTape.style.display = 'block';
-    this.domElem.appendChild(this._canvasTape); 
+    this.domElem.appendChild(this._canvasTape);
 };
 
 p._createPointer = function () {
@@ -419,8 +419,8 @@ p._createPointer = function () {
     pointer.style.height = 2*radius + 'px';
     pointer.style.border = 'solid '+amgui.color.red+' 1px';
     pointer.style.borderRadius = radius + 'px';
-    this._dePointer.appendChild(pointer); 
-    this.domElem.appendChild(this._dePointer); 
+    this._dePointer.appendChild(pointer);
+    this.domElem.appendChild(this._dePointer);
 };
 
 p._createEndShadow = function () {
@@ -433,7 +433,7 @@ p._createEndShadow = function () {
     this._deEndShadow.style.width = '0px';
     this._deEndShadow.style.pointerEvents = 'none';
     this._deEndShadow.style.backgroundColor = 'rgba(83,83,83,0.73)';
-    this.domElem.appendChild(this._deEndShadow); 
+    this.domElem.appendChild(this._deEndShadow);
 
     var handler = document.createElement('div');
     handler.style.position = 'absolute';
@@ -449,7 +449,7 @@ p._createEndShadow = function () {
         deTarget: handler,
         thisArg: this,
         onDown: function () {
-            
+
             return {
                 length: this.length,
             };
@@ -476,66 +476,66 @@ function getSteps() {
 
     return [
         {
-            small: 5, 
-            big: 50, 
-            time: 50, 
+            small: 5,
+            big: 50,
+            time: 50,
             format: function (ms) {
-                
+
                 return ms + 'ms';
-            } 
+            }
         },
         {
-            small: 10, 
-            big: 100, 
-            time: 100, 
+            small: 10,
+            big: 100,
+            time: 100,
             format: function (ms) {
-                
+
                 return ms + 'ms';
-            } 
+            }
         },
         {
-            small: 100, 
-            big: 1000, 
-            time: 1000, 
+            small: 100,
+            big: 1000,
+            time: 1000,
             format: function (ms) {
                 var min = parseInt(ms/60000);
                 var sec = parseInt(ms/1000) % 60;
 
                 return (min ? min+':'+two(sec) : sec) + 's';
-            } 
+            }
         },
         {
-            small: 500, 
-            big: 5000, 
-            time: 5000, 
+            small: 500,
+            big: 5000,
+            time: 5000,
             format: function (ms) {
                 var min = parseInt(ms/60000);
                 var sec = parseInt(ms/1000) % 60;
 
                 return (min ? min+':'+two(sec) : sec) + 's';
-            } 
+            }
         },
         {
-            small: 10000, 
-            big: 60000, 
-            time: 60000, 
+            small: 10000,
+            big: 60000,
+            time: 60000,
             format: function (ms) {
                 var min = parseInt(ms/60000) % 60;
                 var hour = parseInt(ms/3600000);
 
                 return (hour ? hour+':'+two(min) : min) + 'm';
-            } 
+            }
         },
         {
-            small: 60000, 
-            big: 5*60000, 
-            time: 5*60000, 
+            small: 60000,
+            big: 5*60000,
+            time: 5*60000,
             format: function (ms) {
                 var min = parseInt(ms/60000) % 60;
                 var hour = parseInt(ms/3600000);
 
                 return (hour ? hour+':'+two(min) : min) + 'm';
-            } 
+            }
         }
     ];
 

@@ -32,12 +32,12 @@ $(function () {
                 })
                 .appendTo('body'),
             $root = $('<div>').css('position', 'absolute').appendTo($zombie),
-            $lfoot = create('lfoot');
-            $rfoot = create('rfoot');
-            $lhand = create('lhand');
-            $rhand = create('rhand');
-            $lshoulder = create('lshoulder');
-            $rshoulder = create('rshoulder');
+            $lfoot = create('lfoot'),
+            $rfoot = create('rfoot'),
+            $lhand = create('lhand'),
+            $rhand = create('rhand'),
+            $lshoulder = create('lshoulder'),
+            $rshoulder = create('rshoulder'),
             $head = create('head');
 
         if (location.hash === '#edit') {
@@ -63,7 +63,7 @@ $(function () {
             });
         }
         else {
-            var anim = am.anims.amsave.create({
+            am.projects.argh.timelines.argh.create({
                 root: $root,
                 lfoot: $lfoot,
                 rfoot: $rfoot,

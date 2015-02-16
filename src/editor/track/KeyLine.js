@@ -61,6 +61,7 @@ p.wake = function () {
 
     _.invoke(this._keys, 'wake');
 
+    this._render();
 };
 
 p.sleep = function () {

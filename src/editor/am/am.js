@@ -62,6 +62,7 @@ am.open = function (save) {
     var promiseBody = (fulfill, reject) => {
 
         am._init();
+        document.body.appendChild(am.rootElem);
 
         if (save) {
 
@@ -82,9 +83,11 @@ am.open = function (save) {
                 }
             }
         }
-        else {
+        else if (!am.projectMap.currProject){
+
             am.openNewProject();
         }
+
 
         function useSave(save) {
 
@@ -124,6 +127,25 @@ am.open = function (save) {
         });
 
     return promise;
+};
+
+am.hide = function () {
+
+    if (am.rootElem.parentNode) {
+
+        am.rootElem.parentNode.removeChild(am.rootElem);
+    }
+};
+
+am.toggle = function () {
+
+    if (am.rootElem.parentNode) {
+
+        am.hide();
+    }
+    else {
+        am.open();
+    }
 };
 
 am._init = function () {
@@ -474,8 +496,6 @@ function createAmRoot() {
     if (zIndex) {
         de.style.zIndex = zIndex + 1000;
     }
-
-    document.body.appendChild(de);
 
     var sr = de.createShadowRoot();
 

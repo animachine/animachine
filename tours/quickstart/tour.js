@@ -191,14 +191,14 @@ function walkObj(obj, cb) {
 function getStep0Content() {
 
     return '<img src="http://zippy.gfycat.com/MelodicPerfectAlpinegoat.gif" style="width:100%;">' +
-        '<p>Hi! We\'ve made a quick tour to show how to use Animachine.</p>' +
+        '<p>Hi! This quick tour shows you how to use Animachine.</p>' +
         '<p>If you want to be quick, you can just watch the gif animations and do what you see, but you\'ll always find the detailed instructions under here.</p>' +
         '<p>Click on the <span class="icon-angle-right"></span> for the first step.</p>';
 }
 
 function getStep1Content() {
 
-    return '<img src="http://zippy.gfycat.com/PoshHighlevelFalcon.gif" style="width:100%;">' +
+    return '<img src="http://i.imgur.com/fiutnXP.gif">' +
         '<p>First select the cookie jar on the screen by clicking on it.</p>' +
         '<p> Than click on the <span class="icon-plus"></span> in the right-left corner of the <a>Dom Picker.<a/></p>';
 }
@@ -211,14 +211,14 @@ function getStep2Content() {
 
 function getStep3Content() {
 
-    return '<img src="http://zippy.gfycat.com/ImpureSplendidHyracotherium.gif" style="width:100%;">' +
+    return '<img src="http://i.imgur.com/i67D1sl.gif" style="width:100%;">' +
         '<p>If you move the pointer on the timeline into an other position and make some other changes with the transform tool, you\'ll have two keys witch is an animation!!:)</p>' +
         '<p>Click on the <span class="icon-play"></span> to see it move!</p>';
 }
 
 function getStep4Content() {
 
-    return '<img src="http://zippy.gfycat.com/ImpureSplendidHyracotherium.gif" style="width:100%;">' +
+    return '<img src="http://i.imgur.com/wv8PaSY.gif" style="width:100%;">' +
         '<p>To save your animation:</p>' +
         '<ul style="list-style-type:disc">' +
         '<li>click ont the menu<span class="icon-menu"></span> / file<span class="icon-floppy"></span> / save<span class="icon-upload-cloud"></span> in the toolbar</li>' +
@@ -231,7 +231,7 @@ function getStep4Content() {
 
 function getStep5Content() {
 
-    return '<img src="http://zippy.gfycat.com/ImpureSplendidHyracotherium.gif" style="width:100%;">' +
+    return '<img src="http://i.imgur.com/9hojhde.gif" style="width:100%;">' +
         '<p>To open your animation:</p>' +
         '<ul style="list-style-type:disc">' +
         '<li>click ont the menu<span class="icon-menu"></span> / file<span class="icon-floppy"></span> / open<span class="icon-download-cloud"></span> in the toolbar</li>' +
@@ -244,8 +244,8 @@ function getStep5Content() {
 
 function getStep6Content() {
 
-    return '<img src="http://zippy.gfycat.com/ImpureSplendidHyracotherium.gif" style="width:100%;">' +
-        '<p>Thanks for trying out animachine! For more information check out the project on <a href="https://github.com/animachine/animachine">github</a></p>';;
+    return '<img src="http://zippy.gfycat.com/MelodicPerfectAlpinegoat.gif" style="width:100%;">' +
+        '<p>Thanks for trying out animachine! For more information check out the project on <a href="https://github.com/animachine/animachine">github</a></p>';
 }
 
 function setupWorkspace() {

@@ -57,7 +57,7 @@ module.exports = KeyLine;
 
 p.wake = function () {
 
-    this.timeline.on(['changeTimescale', 'changeTape'], this._render, this);
+    this.timeline.on(['changeTape'], this._render, this);
 
     _.invoke(this._keys, 'wake');
 
@@ -66,7 +66,7 @@ p.wake = function () {
 
 p.sleep = function () {
 
-    this.timeline.off(['changeTimescale', 'changeTape'], this._render, this);
+    this.timeline.off(['changeTape'], this._render, this);
 
     _.invoke(this._keys, 'sleep');
 };

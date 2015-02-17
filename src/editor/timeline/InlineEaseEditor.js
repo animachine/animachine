@@ -14,7 +14,7 @@ function InlineEaseEditor(opt) {
     this._color = '#00BFFF';
 
     this.timeline = opt.timeline;
-    
+
     this._points = [0, 0, 1, 1];
 
     this._render = amgui.delayWithRAF(this._render, this);
@@ -111,7 +111,7 @@ p._render = function() {
     this._width = w;
 
     this.domElem.style.left = x + 'px';
-    this.domElem.style.top = (brKeyLine.bottom - brParent.top) + 'px';
+    this.domElem.style.top = (brKeyLine.top - brParent.top + h) + 'px';
 
     d += 'M' + (w*p[0]) + ',' + (h*p[1]) + ' ';
     d += 'L0,0 ';
@@ -121,7 +121,7 @@ p._render = function() {
     d += 'L' + (w*p[2]) + ',' + (h*p[3]);
 
     if (ease) {
-        
+
         d += 'M0,0 ';
 
         for (let i = 0; i < w; ++i) {
@@ -129,9 +129,9 @@ p._render = function() {
             d += 'L' + i + ',' + (h*ease.getRatio(i/w));
         }
     }
-    
+
     this._path.setAttribute('d', d);
-  
+
     this._deCp0.refreshPosition();
     this._deCp1.refreshPosition();
 };
@@ -184,7 +184,7 @@ p._createBase = function () {
     this._path.style.stroke = this._color;
     this._path.style.fill = 'none';
     this._svg.appendChild(this._path);
-  
+
     this._deCp0 = this._createCp(0);
     this._deCp1 = this._createCp(2);
 };
@@ -208,7 +208,7 @@ p._createCp = function(pointIdx) {
     deCp.addEventListener('click', function (e) {
         e.stopPropagation();//prevent calling _onClickWindow();
     });
-  
+
     amgui.makeDraggable({
         deTarget: deCp,
         thisArg: this,
@@ -221,14 +221,13 @@ p._createCp = function(pointIdx) {
                 (br.top - my) / this._height);
         }
     });
-  
+
     deCp.refreshPosition = function () {
-        
+
         deCp.style.left = (this._points[pointIdx] * this._width) + 'px';
         deCp.style.top = (this._points[pointIdx+1] * this._height) + 'px';
     }.bind(this);
     deCp.refreshPosition();
-  
+
     return deCp;
 };
-

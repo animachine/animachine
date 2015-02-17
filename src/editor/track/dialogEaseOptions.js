@@ -5,7 +5,8 @@ var amgui = require('../amgui');
 var Dialog = require('../utils/Dialog');
 var OptionLine = require('../utils/OptionLine');
 
-var currEase, 
+var currEase,
+    twinEases = [],
     beizerEditor,
     optRoughEase,
     optRoughStrength,
@@ -13,7 +14,7 @@ var currEase,
     optRoughClamp,
     optRoughRandomise,
     optRoughTaper,
-    optRoughStrength, 
+    optRoughStrength,
     dialog  = new Dialog({
         title: 'Key',
     });
@@ -44,7 +45,20 @@ dialog.show = function (opt={}) {
     if (!('ease' in opt)) throw('opt.ease must be set');
 
     currEase = opt.ease;
+    twinEases = opt.twinEases || [];
+
     beizerEditor.setEase(currEase);
+};
+
+dialog.hide = function (opt={}) {
+
+    if (currEase) {
+
+        let save = currEase.getSave()
+        twinEases.forEach(e => e.useSave(save));
+    }
+
+    Dialog.prototype.hide.call(this, opt);
 };
 
 function createContent() {
@@ -134,7 +148,7 @@ function createContent() {
         optRoughTaper.domElem.style.display = v ? 'block' : 'none';
     }
     setRoughOptionsVisibility(false);
-};
+}
 
 // p._onSelectEase = function (e) {
 
@@ -146,8 +160,5 @@ function createContent() {
 //     this.ease = this._inpEase.value;
 // };
 
-function onChangeBezier(e) {
-    currEase.points = e.detail.points;
-};
 
 module.exports = dialog;

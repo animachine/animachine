@@ -1,8 +1,8 @@
 {
   "name": "animachine",
-  "version": "0.0.0",
+  "version": "0.0.18",
   "description": "",
-  "main": " ",
+  "main": "build/main.js",
   "scripts": {
     "clone-transhand": "cd node_modules && rm -rf transhand && git clone git@github.com:animachine/transhand.git && npm install && cd ..",
     "clone-eventman": "cd node_modules && rm -rf eventman && git clone git@github.com:animachine/EventMan.git eventman && npm install && cd .."

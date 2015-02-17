@@ -19,7 +19,6 @@ function Param (opt={}, timeline) {
     this._defaultValue = opt.defaultValue || 0;
 
     this._onChangeInput = this._onChangeInput.bind(this);
-    this._onChangeKeyLineKeys = this._onChangeKeyLineKeys.bind(this);
     this._onClickTgglKey = this._onClickTgglKey.bind(this);
     this._onClickStepPrevKey = this._onClickStepPrevKey.bind(this);
     this._onClickStepNextKey = this._onClickStepNextKey.bind(this);
@@ -31,6 +30,8 @@ function Param (opt={}, timeline) {
 
     this.deOptionLine = this.optionLine.domElem;
     this.deKeyLine = this.keyLine.domElem;
+
+    this.keyLine.on('change.keys', this._onChangeKeyLineKeys, this);
 
     //hack!
     $([this.optionLine.domElem, this.keyLine.domElem])
@@ -58,6 +59,8 @@ p.wake = function () {
     this.timeline.on('changeTime', this._onChangeTime, this);
 
     this.keyLine.wake();
+
+    this._onChangeTime();
 };
 
 p.sleep = function () {
@@ -288,7 +291,6 @@ p.addKey = function (opt) {
     }
 
     this._refreshInputs();
-    this._refreshTgglKey();
 
     return key;
 };
@@ -299,8 +301,6 @@ p.removeKey = function (key) {
 
         return;
     }
-
-    this._refreshTgglKey();
 };
 
 p.getKey = function (time) {
@@ -412,6 +412,7 @@ p._onChangeInput = function (value) {
 
 p._onChangeKeyLineKeys = function () {
 
+    this._refreshTgglKey();
     this.emit('change.keys');
 };
 
@@ -459,7 +460,7 @@ p._refreshInputs = function () {
 p._refreshTgglKey = function () {
 
     var time = this.timeline.currTime;
-
+    
     this.optionLine.buttons.key.setHighlight(this._isKeySet(time));
     this.optionLine.buttons.key.setSteppers(!!this.getPrevKey(time), !!this.getNextKey(time));
 };
@@ -503,7 +504,6 @@ p._createOptions = function (opt) {
 p._createKeyline = function () {
 
     this.keyLine = new KeyLine({}, this.timeline);
-    this.keyLine.on('change.keys', this._onChangeKeyLineKeys);
 };
 
 

@@ -33,7 +33,7 @@ function createBezierEditor(opt) {
     de.appendChild(c);
 
     var ctx = c.getContext('2d');
-  
+
     var deCp0 = createCp(p0);
     var deCp1 = createCp(p1);
 
@@ -48,9 +48,9 @@ function createBezierEditor(opt) {
         p0.y = points[1];
         p1.x = points[2];
         p1.y = points[3];
-        
+
         render();
-    };
+    }
 
     de.setEase = function (ease) {
 
@@ -65,20 +65,20 @@ function createBezierEditor(opt) {
             onChangeEase();
         }
 
-    }
-    
+    };
+
     render();
 
     if (opt.parent) {
         opt.parent.appendChild(de);
     }
-  
-    return de;
-  
 
-  
+    return de;
+
+
+
     function onChangeEase() {
-        
+
         setPoints(currEase.points);
 
         render();
@@ -90,7 +90,7 @@ function createBezierEditor(opt) {
 
         renderEase();
         renderGuides();
-      
+
         deCp0.refreshPosition();
         deCp1.refreshPosition();
     }
@@ -122,11 +122,11 @@ function createBezierEditor(opt) {
             x(p1.x), y(p1.y),
             x(1), y(1));
         ctx.lineTo(x(p1.x), y(p1.y));
-        
+
         ctx.strokeStyle = '#fff';
         ctx.lineWidth = 2;
         ctx.stroke();
-        
+
         ctx.beginPath();
         ctx.rect(x(0), y(0), x(1), y(1) - y(0));
         ctx.strokeStyle = '#fff';
@@ -146,14 +146,14 @@ function createBezierEditor(opt) {
 
         return h - (((p - min) / full) * h);
     }
-  
+
     function minY() {
-    
+
         return Math.min(0, p0.y, p1.y);
     }
-  
+
     function maxY() {
-    
+
         return Math.max(1, p0.y, p1.y);
     }
 
@@ -178,7 +178,7 @@ function createBezierEditor(opt) {
         deCp.style.borderRadius = r + 'px';
         deCp.style.background = 'rgba(256, 256, 256, 1)';
         de.appendChild(deCp);
-      
+
         amgui.makeDraggable({
             deTarget: deCp,
             onDown: function (e) {
@@ -187,7 +187,7 @@ function createBezierEditor(opt) {
 
                 var md = {};
                 md.minY = minY();
-                md.fullY = maxY() - md.minY;    
+                md.fullY = maxY() - md.minY;
                 return md;
             },
             onMove: function (md, mx, my) {
@@ -196,13 +196,13 @@ function createBezierEditor(opt) {
 
                 point.x = Math.max(0, Math.min(1, (mx - br.left) / w));
                 point.y = (((br.bottom - my) / h) * md.fullY) - md.minY;
-                
+
                 var fix = 1000;
                 point.x = parseInt(point.x * fix) / fix;
                 point.y = parseInt(point.y * fix) / fix;
 
                 render();
-              
+
                 refreshEase();
             },
             onUp: function () {
@@ -210,14 +210,14 @@ function createBezierEditor(opt) {
                 deCp.style.cursor = 'grab';
             }
         });
-      
+
         deCp.refreshPosition = function () {
-            
+
             deCp.style.left = x(point.x) + 'px';
             deCp.style.top = y(point.y) + 'px';
         };
         deCp.refreshPosition();
-      
+
         return deCp;
     }
 }

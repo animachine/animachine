@@ -79,6 +79,12 @@ p.deselect = function () {
 p.setSubkeys = function (newSubkeys) {
 
     this._subkeys.length = 0;
+
+    newSubkeys.forEach(key => {
+
+        this._subkeys.push(key);
+        key.on(['need.render', 'change.ease'], this._onSubkeyNeedRender, this);//TODO use emitter.forward() instead
+    });
     this._subkeys.push.apply(this._subkeys, newSubkeys);
 
     this._refreshSelected();
@@ -86,11 +92,11 @@ p.setSubkeys = function (newSubkeys) {
 
 p.removeSubkey = function (key) {
 
-    var idx = this._subkeys.indexOf(key);
+    if (!_.include(this._subkeys, key)) return;
 
-    if (idx === -1) return;
+    _.pull(this._subkeys, key);
 
-    this._subkeys.splice(idx, 1);
+    key.off(['need.render', 'change.ease'], this._onSubkeyNeedRender, this);
 };
 
 p.remove = function () {
@@ -106,13 +112,31 @@ p.renderEaseToLine = function (ctx) {
     this._subkeys.forEach(key => key.renderEaseToLine(ctx));
 };
 
+p.getEases = function () {
+
+    var ret = [];
+
+    this._subkeys.forEach(function (key) {
+
+        if (key instanceof KeyGroup) {
+
+            ret.push.apply(ret, key.getEases());
+        }
+        else {
+            ret.push(key.ease);
+        }
+    });
+
+    return ret;
+};
 
 
 
 
+p._onSubkeyNeedRender = function () {
 
-
-
+    this.emit('need.render');
+};
 
 p._onSelectDropdown = function (e) {
 
@@ -120,7 +144,12 @@ p._onSelectDropdown = function (e) {
 
     if (selection === 'ease') {
 
-        this.ease.showOptionsDialog();
+        let eases = this.getEases(),
+            ease = eases.splice(0, 1)[0];
+
+        if (ease) {
+            ease.showOptionsDialog({twinEases: eases});
+        }
     }
     else if (selection === 'delete') {
 

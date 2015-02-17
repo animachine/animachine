@@ -94,19 +94,19 @@ p.removeKeyline = function (keyLine) {
 
 
 
-
 p._onChangeKeyLineKeys = function () {
 
     this._refreshHeadKeyline();
+
+    this.emit('change.keys');
 };
 
 p._onDblClick = function (e) {
 
     var time = this.timeline.screenXToTime(e.screenX),
         key = this.getNextKey(time),
-        eases = [];
+        eases = key && key.getEases();
 
-    collectEases(key);
 
     if (key) {
 
@@ -114,20 +114,21 @@ p._onDblClick = function (e) {
     }
 
 
-    function collectEases(key) {
-
-        key._subkeys.forEach(subKey => {
-
-            if (subKey instanceof KeyGroup) {
-
-                collectEases(subKey);
-            }
-            else {
-                eases.push(subKey.ease);
-            }
-        });
-    }
+    // function collectEases(key) {
+    //
+    //     key._subkeys.forEach(subKey => {
+    //
+    //         if (subKey instanceof KeyGroup) {
+    //
+    //             collectEases(subKey);
+    //         }
+    //         else {
+    //             eases.push(subKey.ease);
+    //         }
+    //     });
+    // }
 };
+
 
 
 

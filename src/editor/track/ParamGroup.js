@@ -40,7 +40,7 @@ p.wake = function () {
 p.sleep = function () {
 
     Param.prototype.sleep.call(this);
-        
+
     _.invoke(this._params, 'sleep');
 };
 
@@ -318,8 +318,8 @@ p.removeKeyAll = function (time) {
 p._isKeySet = function (time) {
 
     //empty groups returns true except if this is the root paramGroup
-    return (this.parentGroup || this._params.length !== 0) &&
-        this._params.every(p => p._isKeySet(time));
+    return (this._params.length === 0 && this.parentGroup) ||
+        this._params.every(p => p.hidden || p._isKeySet(time));
 };
 
 

@@ -29,7 +29,7 @@ module.exports = Ease;
 Object.defineProperties(p, {
 
     type: {
-        set: function (v) {
+        set: function () {
 
             //currently the only supproted type is bezier
         },
@@ -43,7 +43,7 @@ Object.defineProperties(p, {
 
             var p = this._points;
 
-            if (p.length === v.length && 
+            if (p.length === v.length &&
                 p.every(function (p, idx) {return p === v[idx];}))
             {
                 return;
@@ -51,8 +51,8 @@ Object.defineProperties(p, {
 
             p.length = 0;
             p.push.apply(this._points, v);
-            
-            this._refreshEaser()
+
+            this._refreshEaser();
 
             this.emit('change');
         },
@@ -79,6 +79,12 @@ p.getSave = function () {
     return {
         type: this.type,
         points: this.points,
+        roughEase: this.roughEase,
+        roughStrength: this.roughStrength,
+        roughPoints: this.roughPoints,
+        roughClamp: this.roughClamp,
+        roughRandomise: this.roughRandomise,
+        roughTaper: this.roughTaper,
     };
 };
 
@@ -88,6 +94,12 @@ p.useSave = function (save) {
 
     if ('type' in save) this.type = save.type;
     if ('points' in save) this.points = save.points;
+    if ('roughEase' in save) this.roughEase = save.roughEase;
+    if ('roughStrength' in save) this.roughStrength = save.roughStrength;
+    if ('roughPoints' in save) this.roughPoints = save.roughPoints;
+    if ('roughClamp' in save) this.roughClamp = save.roughClamp;
+    if ('roughRandomise' in save) this.roughRandomise = save.roughRandomise;
+    if ('roughTaper' in save) this.roughTaper = save.roughTaper;
 };
 
 p.getRatio = function (p) {
@@ -146,10 +158,11 @@ p.match = function (ease) {
 };
 
 
-p.showOptionsDialog = function () {
+p.showOptionsDialog = function (opt={}) {
 
     dialogEaseOptions.show({
         ease: this,
+        twinEases: opt.twinEases,
         on: {
             'change.roughEase': v => this.roughEase = v,
             'change.roughStrength': v => this.roughStrength = v,

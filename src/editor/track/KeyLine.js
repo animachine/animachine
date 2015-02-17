@@ -124,7 +124,7 @@ p.addKey = function (key) {
     });
 
     key.on(['change.value', 'change.time'], this._onChangeKeyValue, this);
-    key.on(['need.render', 'select', 'deselect', 'change.time'], this._onKeyNeedRender, this);
+    key.on(['need.render', 'select', 'deselect', 'change.time', 'change.ease'], this._onKeyNeedRender, this);
     key.on('need.remove', this._onKeyNeedRemove, this);
 
     this._render();
@@ -146,7 +146,7 @@ p.removeKey = function (key) {
     });
 
     key.off(['change.value', 'change.time'], this._onChangeKeyValue, this);
-    key.off(['need.render', 'select', 'deselect', 'change.time'], this._onKeyNeedRender, this);
+    key.off(['need.render', 'select', 'deselect', 'change.time', 'change.ease'], this._onKeyNeedRender, this);
     key.off('need.remove', this._onKeyNeedRemove, this);
 
     this._render();

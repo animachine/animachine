@@ -81,7 +81,7 @@ function walkObj(obj, cb) {
 
 function getStep0Content() {
 
-    return '<img src="http://i.imgur.com/j6tomTs.gif" style="width:100%;">' +
+    return '<img src="http://i.imgur.com/EWLWHV8.gif" style="width:100%;">' +
         '<p>This a quick tutorial to the bezier paths (or motion paths if you like).</p>' +
         '<p>On the timeline you see a track with a simple animation. If you hit the play button you\'ll see that the bullet leaves the cannon. It\'s looks pretty dummy but we can turn this point to point movement into curve</p>';
 }
@@ -94,7 +94,7 @@ function getStep1Content() {
 
 function getStep2Content() {
 
-    return '<img src="http://i.imgur.com/j6tomTs.gif" style="width:100%;">' +
+    return '<img src="http://i.imgur.com/EWLWHV8.gif" style="width:100%;">' +
         '<p>That\'s it. If you click to the translate<span class="icon-chart-line"></span> you can convert bezier param back to linear translate.</p>' +
         '<p>Thanks for trying out animachine! For more information check out the project on <a href="https://github.com/animachine/animachine">github</a></p>';
 }

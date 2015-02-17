@@ -186,7 +186,7 @@ function walkObj(obj, cb) {
 
 function getStep0Content() {
 
-    return '<img src="http://zippy.gfycat.com/MelodicPerfectAlpinegoat.gif" style="width:100%;">' +
+    return '<img src="http://i.imgur.com/KBRfvfD.gif" style="width:100%;">' +
         '<p>Hi! This quick tour shows you how to use Animachine.</p>' +
         '<p>If you want to be quick, you can just watch the gif animations and do what you see, but you\'ll always find the detailed instructions under here.</p>' +
         '<p>Click on the <span class="icon-angle-right"></span> for the first step.</p>';
@@ -240,7 +240,7 @@ function getStep5Content() {
 
 function getStep6Content() {
 
-    return '<img src="http://zippy.gfycat.com/MelodicPerfectAlpinegoat.gif" style="width:100%;">' +
+    return '<img src="http://i.imgur.com/KBRfvfD.gif" style="width:100%;">' +
         '<p>Thanks for trying out animachine! For more information check out the project on <a href="https://github.com/animachine/animachine">github</a></p>';
 }
 

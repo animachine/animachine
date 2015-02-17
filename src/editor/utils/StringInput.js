@@ -15,7 +15,7 @@ function StringInput(opt={}) {
 
     if (opt.suggestions) {
 
-        this._prepareSuggestions(opt.suggestions);
+        this.setSuggestions(opt.suggestions);
     }
 
     this._refreshInput();

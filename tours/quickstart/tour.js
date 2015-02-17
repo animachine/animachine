@@ -1,13 +1,9 @@
 'use strict';
 
 $(function () {
+    // am.open('jumping.am.js');
     am.open();
     setupWorkspace();
-
-    fetch('jumping.am.json')
-        .then(function (response) {return response.json()})
-        .then(function (json) {am.projectMap.load(json)})
-        .catch(function () {console.log('parsing falied')});
 
     var deCookiejar = document.querySelector('#cookie'),
         numberOfSavesAtStart = getNumberOfSaves();

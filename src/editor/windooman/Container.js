@@ -6,7 +6,7 @@ var inherits = require('inherits');
 var amgui = require('../amgui');
 
 function Container(opt) {
-    
+
     Block.call(this, opt);
 
     this._children = [];
@@ -60,17 +60,18 @@ p.addChildAt = function (child, idx) {
     this._refreshHandlers();
 };
 
+p.findPanel = function (name) {
+
+    var ret;
+    this._children.some(child => ret = child.findPanel(name));
+    return ret;
+};
+
 p.findTab = function (name) {
 
-    var tab;
-
-    this._children.some(function (child) {
-
-        tab = child.findTab(name);
-        return tab;
-    });
-
-    return tab;
+    var ret;
+    this._children.some(child => ret = child.findTab(name));
+    return ret;
 };
 
 p.bubbleResize = function () {
@@ -113,14 +114,14 @@ p._getFlexPerPx = function () {
 p._refreshChildren = function () {
 
     this._children.forEach(function (child) {
-        
+
         this.domElem.appendChild(child.domElem);
     }, this);
 };
 
 p._refreshHandlers = function () {
 
-    var i, deHandler, ncBr, 
+    var i, deHandler, ncBr,
         thickness = 4,
         br = this.domElem.getBoundingClientRect();
 

@@ -188,6 +188,8 @@ am._init = function () {
     am.domPicker = new DomPicker();
     am.deHandlerCont.appendChild(am.domPicker.domElem);
     am.domPicker.on('pick', de => am.selectDomElem(de));
+    var panelEmpty = am.workspace.findPanel('hole');
+    am.domPicker.setBounds(() => panelEmpty.getBounds());
 
     amClipboard(am);
     amMenu(am);

@@ -50,6 +50,14 @@ p.load = function (name, workspace) {
     }, this);
 };
 
+p.findPanel = function (name) {
+
+    if (this._root) {
+
+        return this._root.findPanel(name);
+    }
+};
+
 p.findTab = function (name) {
 
     if (this._root) {

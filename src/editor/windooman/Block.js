@@ -53,6 +53,12 @@ p.bubbleResize = function () {
     //for override
 };
 
+p.getBounds = function () {
+
+    var br = this.domElem.getBoundingClientRect();
+    return {x: br.left, y: br.top, w: br.width, h: br.height};
+};
+
 p._refresh = function () {
 
     var flex = '', width = '', height = '';
@@ -62,7 +68,7 @@ p._refresh = function () {
         if (this._direction === 'row') {
 
             width = this.size + 'px';
-        } 
+        }
         else {
             height = this.size + 'px';
         }

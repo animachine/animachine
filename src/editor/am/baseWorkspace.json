@@ -17,6 +17,7 @@
                 {"name": "History"}
             ]
         }, {
+            "name": "hole",
             "type": "panel",
             "empty": true,
             "size": 2.7,

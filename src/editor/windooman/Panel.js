@@ -18,7 +18,8 @@ function Panel(opt) {
     this._empty = false;
     this._collapsed = false;
     this._noHead = false;
-
+    
+    if ('name' in opt) this.name = opt.name;
     if ('empty' in opt) this.empty = opt.empty;
     if ('collapsed' in opt) this.collapsed = opt.collapsed;
     if ('noHead' in opt) this.noHead = opt.noHead;
@@ -94,20 +95,14 @@ p.addTab = function (tData) {
     tab.deEar.addEventListener('click', this.showTab.bind(this, tab));
 };
 
+p.findPanel = function (name) {
+
+    return this.name === name ? this : false;
+};
 
 p.findTab = function (name) {
 
-    var tab;
-
-    this._tabs.some(function (t) {
-
-        if (t.name === name) {
-
-            return (tab = t);
-        }
-    });
-
-    return tab;
+    return this._tabs.find(tab => tab.name === name);
 };
 
 p.showTab = function (tab) {

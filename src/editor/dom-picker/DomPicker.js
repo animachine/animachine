@@ -116,7 +116,7 @@ p.hide = function () {
 
 p.setRightLeftBtn = function (opt) {
 
-    this._btnRightLeft.setIcon(opt.icon)
+    this._btnRightLeft.setIcon(opt.icon);
 
     //TODO remove the previous
     this._btnRightLeft.addEventListener('click', opt.onClick);
@@ -125,6 +125,21 @@ p.setRightLeftBtn = function (opt) {
     tooltip.setContent(opt.tooltip);
 };
 
+p.setBounds = function (fn) {
+
+    this._getBounds = fn;
+};
+
+
+p._getBounds = function () {
+
+    return {
+        x: 0,
+        y: 0,
+        w: window.innerWidth,
+        h: window.innerHeight,
+    };
+};
 
 
 
@@ -150,26 +165,31 @@ p._alignBtnCont = function () {
 
     var {top, left, width, height} = this.domElem.getBoundingClientRect(),
         [oTop, oLeft, oWidth, oHeight] = [top, left, width, height],
-        wWidth = window.innerWidth,
-        wHeight = window.innerHeight,
+        {x: wLeft, y: wTop, w: wWidth, h: wHeight} = this._getBounds(),
         btnSize = 21;
 
-    width = Math.max(btnSize, Math.min(wWidth, oWidth));
-    height = Math.max(btnSize, Math.min(wHeight, oHeight));
+    width = Math.max(btnSize, oWidth);
+    height = Math.max(btnSize, oHeight);
 
-    left = (oWidth - width) / 2;
-    top = (oHeight - height) / 2;
+    left += (oWidth - width) / 2;
+    top += (oHeight - height) / 2;
 
-    if (oLeft + left < 0) left = btnSize - oLeft;
-    if (oTop + top < 0) top = btnSize - oTop;
-    if (oLeft + left + width > wWidth) left = btnSize;
-    if (oTop + top + height > wHeight) top = btnSize;
+    if (left < wLeft + btnSize) {
+        left = wLeft + btnSize;
+        width = Math.max(btnSize, oLeft + oWidth - left);
+    }
+    if (top < wTop + btnSize) {
+        top = wTop + btnSize;
+        height = Math.max(btnSize, oTop + oHeight - top);
+    }
+    if (left + width > wLeft + wWidth - btnSize) width = wLeft + wWidth - btnSize - left;
+    if (top + height > wTop + wHeight - btnSize) height = wTop + wHeight - btnSize - top;
 
-    this._btnCont.style.left = left + 'px';
-    this._btnCont.style.top = top + 'px';
+    this._btnCont.style.left = (left - oLeft) + 'px';
+    this._btnCont.style.top = (top - oTop) + 'px';
     this._btnCont.style.width = width + 'px';
     this._btnCont.style.height = height + 'px';
-}
+};
 
 p._onMMove =  function (e) {
 
@@ -191,7 +211,7 @@ p._onMMove =  function (e) {
 p._onSelectDomElem = function (de) {
 
     this.focusElem(de);
-}
+};
 
 p._createBase = function () {
 
@@ -213,7 +233,7 @@ p._createBase = function () {
     deDashed.style.transform = 'translate(-'+borderSize+',-'+borderSize+')';
     de.appendChild(deDashed);
 
-    this._btnCont = amgui.createDiv({parent: de});
+    this._btnCont = amgui.createDiv({parent: de, position: 'absolute'});
 
     de.addEventListener('mouseenter', this._onMEnter);
     de.addEventListener('mouseleave', this._onMLeave);
@@ -229,7 +249,7 @@ p._createBase = function () {
             parent: this._btnCont,
         });
 
-        deIcon.style.textShadow = '0 0 4px #000';
+        deIcon.style.textShadow = '0 0 6px #000, 0 0 6px #000';
 
         if (onClick) {
 
@@ -237,7 +257,7 @@ p._createBase = function () {
 
                 e.stopPropagation();
                 onClick();
-            })
+            });
         }
 
         amgui.addTooltip({
@@ -249,7 +269,7 @@ p._createBase = function () {
         deIcon.style.pointerEvents = 'auto';
 
         return deIcon;
-    }
+    };
 
     this._btnTop = createBtn('angle-up', 'up one level', function () {
 

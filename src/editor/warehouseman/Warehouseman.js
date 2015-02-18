@@ -5,6 +5,7 @@ var inherits = require('inherits');
 var WebStorageman = require('./storages/WebStorageman');
 var PageScript = require('./storages/PageScript');
 var Download = require('./storages/Download');
+var Copy = require('./storages/Copy');
 var decorDialog = require('./decorDialog');
 
 function Warehouseeman(opt) {
@@ -19,7 +20,7 @@ function Warehouseeman(opt) {
     this.addStorage(new PageScript());
     this.addStorage(new WebStorageman());
     this.addStorage(new Download());
-    // this.addStorage(new Copy());
+    this.addStorage(new Copy());
     this.addStorage({icon: 'hdd', tooltip: 'local file system'});
     this.addStorage({icon: 'git', tooltip: 'Git'});
     this.addStorage({icon: 'google', tooltip: 'Google Drive'});
@@ -39,7 +40,7 @@ Object.defineProperties(p, {
             return this.currStorage && this.currStorage.type;
         }
     }
-})
+});
 
 p.addStorage = function (storage) {
 

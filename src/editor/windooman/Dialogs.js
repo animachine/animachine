@@ -46,8 +46,6 @@ p.hideDialog = function (popup) {
 
     if (!popup) return;
 
-    this.domElem.style.display = 'none';
-
     if (popup.onHide) popup.onHide();
 
     if (_.has(this._dilaogStack, popup)) {
@@ -61,6 +59,9 @@ p.hideDialog = function (popup) {
         if (this._dialogStack.length) {
 
             this.showDialog(this._dialogStack.pop());
+        }
+        else {
+            this.domElem.style.display = 'none';
         }
     }
 };

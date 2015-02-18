@@ -22,7 +22,7 @@ p.features = {
 
 p.save = function (name, data) {
 
-    window.prompt('Press CTRL+C, then ENTER', data);
+    am.clipboard.copy(data);//TODO make this am independent
 };
 
 module.exports = Copy;

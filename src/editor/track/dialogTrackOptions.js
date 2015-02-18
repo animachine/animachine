@@ -36,7 +36,7 @@ function createContent() {
     targetsInput = new TargetsInput({
         parent: dialog.deContent,
         title: 'Selectors',
-        onChange: () => dialog.emit('changeSelectors', targetsInput.value),
+        onChange: value => dialog.emit('change.selectors', value),
     });
 
     amgui.createLinebreak({parent: dialog.deContent});

@@ -23,6 +23,7 @@ We're working for reach the beta state where you can start to use it in your pro
 ###Demos: [marslanding][demo-marspolip], [argh][demo-argh]
 ###Tours:  [quickstart][tour-quickstart], [bezier path][tour-bezier], triggers
 ###Videos:  react.js, WordPress
+(currently only for Chrome and Opera)
 
 <img src="http://i.imgur.com/9X2xUfz.png">
 

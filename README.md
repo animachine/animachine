@@ -20,6 +20,7 @@ If later you want to change your animation, just open the animachine, load that 
 ###What is the state of this?
 We're working for reach the beta state where you can start to use it in your projects, but currently it's in alpha, so things are changing day from day, many of the basic features are just draft and the save files from last week probably don't gonna work in the next week. Although you're wellcomed to play with the [extension], the demos and take the in app tours.
 
+(currently only for Chrome and Opera)
 ###Demos: [marslanding][demo-marspolip], [argh][demo-argh]
 ###Tours:  [quickstart][tour-quickstart], [bezier path][tour-bezier], triggers
 ###Videos:  react.js, WordPress

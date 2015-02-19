@@ -18,7 +18,7 @@ p._onFocus = function (project) {
 
     if (this._currProject) {
 
-        this._currProject.off(['addTimeline', 'removeTimeline'], this._refreshLibrary, this);
+        this._currProject.off(['addTimeline', 'removeTimeline', 'change.currTimeline'], this._refreshLibrary, this);
     }
 
     this._currProject = project;
@@ -26,7 +26,7 @@ p._onFocus = function (project) {
     this._deSelected.text = this._currProject.name;
 
     this._refreshLibrary();
-    this._currProject.on(['addTimeline', 'removeTimeline'], this._refreshLibrary, this);
+    this._currProject.on(['addTimeline', 'removeTimeline', 'change.currTimeline'], this._refreshLibrary, this);
 };
 
 
@@ -49,6 +49,7 @@ p._refreshLibrary = function () {
                 type: 'timeline',
                 value: timeline,
             },
+            highlight: this._currProject.currTimeline === timeline,
         });
 
         optionLine.addButton({
@@ -96,7 +97,7 @@ p._createProjectHandlers = function () {
         parent: this._scrollCont,
         display: 'flex',
         width: '100%'
-    })
+    });
 
     var refreshSelectInput = () => {
 
@@ -157,7 +158,7 @@ p._createProjectHandlers = function () {
                 onClick: () => am.dialogs.WIP.show(),
             }],
         }),
-    })
+    });
 };
 
 p._createLibrary = function () {

@@ -129,6 +129,11 @@ function OptionLine(opt) {
 
         this.data = opt.data;
     }
+
+    if (opt.highlight) {
+
+        this.highlight = opt.highlight;
+    }
 }
 
 inherits(OptionLine, EventEmitter);

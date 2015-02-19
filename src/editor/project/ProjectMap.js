@@ -38,6 +38,12 @@ p.load = function (project) {
     if (!_.include(this._projects, project)) {
 
         this._projects.push(project);
+
+        am.history.save({
+            undo: () => this.unload(project),
+            redo: () => this.load(project),
+            name: 'load ' + project.name,
+        });
     }
 
     this.emit('load', project);
@@ -47,9 +53,15 @@ p.load = function (project) {
 
 p.unload = function (project) {
 
+    if (!_.include(this._projects, project)) return;
+
     _.pull(this._projects, project);
 
-    project.dispose();
+    am.history.save({
+        undo: () => this.load(project),
+        redo: () => this.unload(project),
+        name: 'unload ' + project.name,
+    });
 
     this.emit('unload', project);
 };
@@ -60,12 +72,20 @@ p.focus = function (project) {
 
     if (this._currProject) {
 
-        this._currProject.blur();
-        this._currProject.off('change.currTimeline', am.setTimeline, am);
+        let oldProject = this._currProject;
+
+        am.history.save({
+            undo: () => this.focus(oldProject),
+            redo: () => this.focus(project),
+            name: 'select ' + project.name,
+        });
+
+        oldProject.sleep();
+        oldProject.off('change.currTimeline', am.setTimeline, am);
     }
 
     this._currProject = project;
-    this._currProject.focus();
+    this._currProject.wake();
 
     am.setTimeline(this._currProject.currTimeline);
     this._currProject.on('change.currTimeline', am.setTimeline, am);

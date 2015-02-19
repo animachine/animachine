@@ -22,6 +22,27 @@ module.exports = Project;
 
 defineCompactProperty(p, {name: 'name', type: 'string', startValue: 'new project'});
 
+p.wake = function () {
+
+    if (!this.currTimeline && !_.isEmpty(this._timelines)) {
+
+        this.selectTimeline(this._timelines[0]);
+    }
+
+    if (this.currTimeline) {
+
+        this.currTimeline.wake();
+    }
+};
+
+p.sleep = function () {
+
+    if (this.currTimeline) {
+
+        this.currTimeline.sleep();
+    }
+};
+
 p.useSave = function (save = {}) {
 
     var block = am.history.blockSaving();
@@ -183,35 +204,22 @@ p.selectTimeline = function (timeline) {
 
     if (this.currTimeline) {
 
-        this.currTimeline.blur();
+        let oldTimeline = this.currTimeline;
+
+        am.history.save({
+            undo: () => this.selectTimeline(oldTimeline),
+            redo: () => this.selectTimeline(timeline),
+            name: 'select ' + timeline.name,
+        });
+
+        oldTimeline.sleep();
     }
 
     this.currTimeline = timeline;
 
-    this.currTimeline.focus();
+    this.currTimeline.wake();
 
     this.emit('change.currTimeline', this.currTimeline);
-};
-
-p.focus = function () {
-
-    if (!this.currTimeline && !_.isEmpty(this._timelines)) {
-
-        this.selectTimeline(this._timelines[0]);
-    }
-
-    if (this.currTimeline) {
-
-        this.currTimeline.focus();
-    }
-};
-
-p.blur = function () {
-
-    if (this.currTimeline) {
-
-        this.currTimeline.blur();
-    }
 };
 
 

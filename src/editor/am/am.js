@@ -188,8 +188,22 @@ am._init = function () {
     am.domPicker = new DomPicker();
     am.deHandlerCont.appendChild(am.domPicker.domElem);
     am.domPicker.on('pick', de => am.selectDomElem(de));
-    var panelEmpty = am.workspace.findPanel('hole');
-    am.domPicker.setBounds(() => panelEmpty.getBounds());
+
+    am.domPicker.setBounds(() => {
+
+        var panelEmpty = am.workspace.findPanel('hole');
+        if (panelEmpty) {
+            return panelEmpty.getBounds();
+        }
+        else {
+            return {
+                x: 0,
+                y: 0,
+                width: window.innerWidth,
+                height: window.innerHeight,
+            };
+        }
+    });
 
     amClipboard(am);
     amMenu(am);

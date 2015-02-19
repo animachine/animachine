@@ -131,6 +131,20 @@ defineCompactProperty(p, [
     {name: 'name', type: 'string', startValue: 'timeline'},
 ]);
 
+
+
+p.wake = function () {
+
+    _.invoke(this._tracks, 'wake');
+};
+
+p.sleep = function () {
+
+    _.invoke(this._tracks, 'sleep');
+
+    this.pause();
+};
+
 p.useSave = function (save) {
 
     this.clear();
@@ -210,15 +224,6 @@ p.getScript = function () {
     });
 
     return script;
-};
-
-p.focus = function () {
-    
-};
-
-p.blur = function () {
-
-    this.pause();
 };
 
 p.clear = function () {

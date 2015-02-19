@@ -119,9 +119,15 @@ p.wake = function () {
     this.timeline.project.on('change.inputs', this._onChangeSelectors, this);
 
     _.invoke(this._params, 'wake');
+
+    this.renderTime();
 };
 
 p.sleep = function () {
+
+    this.deselect();
+
+    TweenMax.set(this._selectedElems, {clearProps: 'all'});
 
     this.timeline.off('changeTime', this._onChangeTime, this);
     this.timeline.project.off('change.inputs', this._onChangeSelectors, this);

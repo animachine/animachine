@@ -324,7 +324,7 @@ am.report = function (opt) {
 
 am.isExtension = function () {
 
-    return chrome && chrome.storage;
+    return self.chrome && self.chrome.storage;
 };
 
 am.setVar = function (name, value, cb) {
@@ -513,7 +513,14 @@ function createAmRoot() {
         de.style.zIndex = zIndex + 1000;
     }
 
-    var sr = de.createShadowRoot();
+    var sr;
+    if (false&&typeof(sr.createShadowRoot) === 'function') {
+
+        sr = de.createShadowRoot();
+    }
+    else {
+        sr = de;
+    }
 
     sr.appendChild(amgui.getStyleSheet());
 

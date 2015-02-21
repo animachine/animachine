@@ -2,6 +2,7 @@
 
 var EventEmitter = require('eventman');
 var inherits = require('inherits');
+var Symbol = require('es6-symbol');
 
 function Chronicler() {
 

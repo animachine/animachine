@@ -1,5 +1,7 @@
 'use strict';
 
+var Symbol = require('es6-symbol');
+
 module.exports = function defineCompactProperty(proto, opt) {
 
     if (_.isArray(opt)) {
@@ -46,7 +48,7 @@ module.exports = function defineCompactProperty(proto, opt) {
         if (v === value || isInvalidValue(v)) {
             return;
         }
-        
+
         save.call(this, value, v);
 
         value = v;
@@ -63,10 +65,10 @@ module.exports = function defineCompactProperty(proto, opt) {
         if (!history) return;
 
         am.history.saveChain({
-            id: history.chainId, 
-            undo: [set, this, oldValue], 
-            redo: [set, this, newValue], 
-            name: history.tag, 
+            id: history.chainId,
+            undo: [set, this, oldValue],
+            redo: [set, this, newValue],
+            name: history.tag,
             delay: 312,
         });
     }

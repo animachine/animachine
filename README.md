@@ -12,7 +12,7 @@ You don't need to make any changes to your project to use animachine, just add t
 You have great tools to make animations for the web (like Adobe Edge, Google Webdesigner or Animatron) but all of these are only for making sandboxed animations and embedding the boxes somewhere (usually in an iframe). If you need to animate some inner part of your project (ex. when a dialog appears or a game character jumps and walks) it has to be coded by a programmer. When this animation has to be long, artistic or done by somebody who is not a skilled programmer, this work can be tedious or almost impossible which can prevent us from seeing more fine and sophisticated animations on the web.
 
 ###How is this working?
-In a nutshell, when you click on the extension you'll have an overlay on your page with the animation tools which you'll be familiar with if you ever made animations with programs like Anime Studio, Adobe Edge, Affter Effects, etc.  
+In a nutshell, when you click on the extension you'll have an overlay on your page with the animation tools which you'll be familiar with if you ever made animations with programs like Anime Studio, Adobe Edge, After Effects, etc.  
 Then you can pick elements from your page and start animating them.
 When it's done, you can save your animation as a .js file and include it in your page.  
 If you want to change your animation later, just open the animachine, load that .js file and you can continue where you stopped.  
@@ -38,7 +38,7 @@ We're working to reach the beta state where you can start using it in your proje
 
 ###Milestones
 **1,**  
-Migrate get gui rendering to React and use Flow style
+Migrate the gui rendering to use React
 Add all the the best basic timeline editing features, what we love from the good old animation tools. 
 Make the UI more intuitive.  
 Add more available track types for editing ~~css~~, attributes, mediaelements.  

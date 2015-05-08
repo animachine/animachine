@@ -44,7 +44,7 @@
     "mustache": "^1.0.0",
     "run-sequence": "^0.3.6",
     "stringify": "^2.2.0",
-    "transhand": "git+https://github.com/animachine/transhand#master",
+    "transhand": "0.0.6",
     "typeahead.js": "^0.10.5",
     "uglify-js": "^2.4.15",
     "vinyl-source-stream": "^0.1.1",

@@ -36,27 +36,12 @@ We're working to reach the beta state where you can start using it in your proje
 **inslnie ease editor**   | ![](http://i.imgur.com/hRiwrS2.gif) 
 ![](http://i.imgur.com/d9K7DpQ.gif) | **timeline navigator**
 
-###Milestones
-**1,**  
-Migrate the gui rendering to use React
-Add all the the best basic timeline editing features, what we love from the good old animation tools. 
-Make the UI more intuitive.  
-Add more available track types for editing ~~css~~, attributes, mediaelements.  
-Random key values.  
-Css Transform3D support.  
-
-**2,**  
-Extended support for svg animation. (paths, filters, etc.)  
-Pixi.js, Easel.js, Raphael.js, Snap.svg support.  
-Add resource handling and content creating feuteres.  
-Animate with skeletons.  
-Support sprite sheets.  
-Video file export.  
-
-
-**3,**  
-Three.js support.  
-Create online playground.  
+**Update:** The next version is in progress as these separated modules: 
+- [transhand](https://github.com/azazdeaz/transhand)
+- [react-matterkit](https://github.com/azazdeaz/react-matterkit)
+- [json-vision](https://github.com/azazdeaz/json-vision)
+- [spaceman](https://github.com/azazdeaz/spaceman)
+- [react-theme](https://github.com/azazdeaz/react-theme)
 
 [extension]: https://chrome.google.com/webstore/detail/animachine/gpnfomkfgajaojpakbkikiekmajeojgd
 [demo-marspolip]: http://animachine.github.io/animachine/demos/marspolip/

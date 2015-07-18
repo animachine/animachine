@@ -6,3 +6,5 @@ bower_components
 *.zip
 *.crx
 *.pem
+dist
+.publish

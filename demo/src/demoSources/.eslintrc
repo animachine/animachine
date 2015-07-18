@@ -1,0 +1,10 @@
+{
+  "globals": {
+    "React": true,
+    "gsap": true,
+    "TimelineLite": true,
+    "TimelineMax": true,
+    "GS_GREEN": true,
+    "mountNode": true
+  }
+}

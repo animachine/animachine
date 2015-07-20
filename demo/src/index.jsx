@@ -15,7 +15,7 @@ var routes = (
   <Route handler={App}>
     <Route path="about" handler={About}/>
     <Route path="demo/:name" handler={Demo}/>
-    <Redirect from='*' to='/demo/update-and-animate-transform' />
+    <Redirect from='*' to='/demo/Box' />
   </Route>
 )
 

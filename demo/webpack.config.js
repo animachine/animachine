@@ -1,18 +1,25 @@
 var path = require('path')
+var webpack = require('webpack')
 
 module.exports = {
   context: __dirname,
-  entry: './src/index.jsx',
+  devtool: 'eval',
+  entry: [
+    'webpack-dev-server/client?http://0.0.0.0:5435', // WebpackDevServer host and port
+    'webpack/hot/only-dev-server',
+    './src/index.jsx',
+  ],
   output: {
-    publicPath: '/dist/',
+    publicPath: '/static/',
     path: path.join( __dirname, '/dist'),
     filename: 'index.js'
   },
   resolve: {
-    packageMains: ['main'],
+    // packageMains: ['main'],
     extensions: ['', '.js', '.jsx'],
     alias: {
-      'react-gsap-enhancer': path.join(__dirname, '../src/gsap-enhancer.js'),
+      'animachine': path.join(__dirname, '../src/next/index.js'),
+      'react-animachine-enhancer': path.join(__dirname, '../src/next/react-animachine-enhancer.js'),
     }
   },
   module: {
@@ -20,12 +27,16 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loader: 'babel-loader'
+        loaders: ['react-hot', 'babel']
       }, {
         test: /\.(html|css)/,
         exclude: /node_modules/,
         loader: 'file?name=[name].[ext]'
       }
     ]
-  }
+  },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoErrorsPlugin()
+  ]
 }

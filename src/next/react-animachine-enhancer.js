@@ -5,7 +5,6 @@ export default function (...options) {
 
   return function (TargetComponent) {
     var EnhancedComponent = enhance(TargetComponent)
-
     if (process.env.NODE_ENV !== 'production') {
       decorateFunction(
         EnhancedComponent.prototype,
@@ -28,15 +27,24 @@ export default function (...options) {
 }
 
 function decorateFunction(proto, fnName, fn) {
-
+  var superFn = proto[fnName]
+  proto[fnName] = function (...args) {
+    fn.call(this, ...args)
+    if (superFn) {
+      superFn.call(this, ...args)
+    }
+  }
 }
 
 function listenComponent(component) {
-  if (global.LIVING_ANIMACHINE_COMPONENTS) {
-    global.LIVING_ANIMACHINE_COMPONENTS.set(component)
+  if (global._registerMountedAnimachineComponent) {
+    global._registerMountedAnimachineComponent(component)
   }
   else {
-    setTimeout(listenComponent, 312, component)
+    if (!global._waitingMountedAnimachineComponents) {
+      global._waitingMountedAnimachineComponents = []
+    }
+    global._waitingMountedAnimachineComponents.push(component)
   }
 }
 

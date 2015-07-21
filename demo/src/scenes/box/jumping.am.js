@@ -33,7 +33,7 @@ const project = {
 }
 
 function createGSAPSource(timeline, connect) {
-  var gsTimeline = new TimelineMax()
+  var gsTimeline = new TimelineMax({repeat: -1})
 
   function addParams(params, targets) {
     var headTime = 0

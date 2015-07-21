@@ -1,12 +1,13 @@
 const rockMap = new Map()
-export default const BETON = {
+const BETON = {
   addRock(id, rock) {
     rockMap.set(id, rock)
-  }
+  },
 
   getRock(id) {
-    rockMap.get(id)
+    return rockMap.get(id)
   }
 }
 
+export default BETON
 global.BETON = BETON

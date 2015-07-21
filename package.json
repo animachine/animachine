@@ -20,6 +20,9 @@
     "url": "https://github.com/animachine/animachine/issues"
   },
   "homepage": "https://github.com/animachine/animachine",
+  "dependencies": {
+    "lodash": "*"
+  },
   "devDependencies": {
     "babel": "^5.6.23",
     "babel-core": "^5.6.17",
@@ -34,16 +37,13 @@
     "gulp-size": "^1.2.3",
     "gulp-util": "^3.0.6",
     "gulp-zip": "^3.0.2",
-    "lodash": "^3.10.0",
-    "material-ui": "^0.10.0",
     "node-libs-browser": "^0.5.2",
     "raw-loader": "^0.5.1",
     "react": "^0.13.3",
     "react-hot-loader": "^1.2.8",
-    "react-router": "^0.13.3",
+    "react-router": "*",
     "react-tap-event-plugin": "^0.1.7",
-    "redux": "^0.12.0",
-    "webpack": "^1.10.1",
-    "webpack-dev-server": "^1.10.1"
+    "webpack": "*",
+    "webpack-dev-server": "*"
   }
 }

@@ -1,6 +1,6 @@
 import React from 'react'
-// import gsap from 'animachine-enhancer'
-import scenes from './scenes'
+import animachine from 'animachine'
+import * as scenes from './scenes'
 
 export default class Demo extends React.Component {
   static contextTypes = {
@@ -18,6 +18,8 @@ export default class Demo extends React.Component {
     window.onNameParamChange = name => {
       this.setState({sceneName: name})
     }
+
+    animachine.init()
   }
 
   render() {

@@ -1,11 +1,32 @@
 const rockMap = new Map()
+const waitingHandlers = new Map()
+
 const BETON = {
   addRock(id, rock) {
     rockMap.set(id, rock)
+
+    const waitList = waitingHandlers.get(id)
+    if (waitList) {
+      waitList.forEach(handler => handler(rock))
+      waitingHandlers.delete(id)
+    }
   },
 
-  getRock(id) {
-    return rockMap.get(id)
+  getRock(id, handler) {
+    const rock = rockMap.get(id)
+    if (rock) {
+      handler(rock)
+    }
+    else {
+      let list = waitingHandlers.get(id)
+      if (list) {
+        list.push(handler)
+      }
+      else {
+        list = [handler]
+        waitingHandlers.set(id, list)
+      }
+    }
   }
 }
 

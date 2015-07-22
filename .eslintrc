@@ -4,6 +4,10 @@
     "react",
     "babel"
   ],
+  "globals": {
+    "BETON": true,
+    "TimelineMax": true
+  },
   "ecmaFeatures": {
     "jsx": true
   },

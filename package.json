@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/animachine/animachine",
   "dependencies": {
-    "lodash": "*"
+    "eventman": "0.0.1",
+    "lodash": "^3.10.0"
   },
   "devDependencies": {
     "babel": "^5.6.23",

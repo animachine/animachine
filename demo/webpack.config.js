@@ -21,6 +21,7 @@ module.exports = {
     alias: {
       'animachine': path.join(__dirname, '../src/next/index.js'),
       'react-animachine-enhancer': path.join(__dirname, '../src/next/react-animachine-enhancer.js'),
+      'create-animation-source': path.join(__dirname, '../src/next/create-animation-source.js'),
       'react': path.join(__dirname, '../node_modules/react'),
     }
   },

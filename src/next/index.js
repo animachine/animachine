@@ -1,11 +1,13 @@
 import BETON from './beton'
-// import model from './rocks/model'
+import modelFactory from './rocks/model-factory'
 import componentInspector from './rocks/component-inspector'
+import projectManager from './rocks/project-manager'
 
 const animachine = {
   init() {
-    // BETON.addRock('model', model)
+    BETON.addRock('model-factory', modelFactory)
     BETON.addRock('component-inspector', componentInspector)
+    BETON.addRock('project-manager', projectManager)
   }
 }
 

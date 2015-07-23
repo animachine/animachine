@@ -14,17 +14,19 @@ export default function defineChildren(descriptor) {
       remove: `remove${capitalize(name)}`,
       get: `get${capitalize(name)}`,
       forEach: `forEach${capitalize(name)}s`,
-      select: `select${capitalize(name)}`
+      select: `select${capitalize(name)}`,
+      findBy: `find${capitalize(name)}By`,
     }
+    console.log({name, ChildClass, names})
 
-    handleSetSource(proto, source => {
+    handleSetSource(proto, function (source) {
       const childSources = source[names.source]
       if (childSources) {
-        childSources.forEach(childSource => this[name.add](childSource))
+        childSources.forEach(childSource => this[names.add](childSource))
       }
     })
 
-    handleGetSource(proto, source => {
+    handleGetSource(proto, function (source) {
       source[names.source] = children.map(child => child.getSource())
     })
 
@@ -33,6 +35,19 @@ export default function defineChildren(descriptor) {
         child = new ChildClass(child)
       }
       children.push(child)
+    }
+
+    proto[names.get] = function (index) {
+      return children[index]
+    }
+
+    proto[names.findBy] = function (key, value) {
+      for (var i = 0, l = children.length; i < l; ++i) {
+        let child = children[i]
+        if (child[key] === value) {
+          return child
+        }
+      }
     }
 
     return Class

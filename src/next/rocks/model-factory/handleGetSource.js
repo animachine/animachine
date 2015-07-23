@@ -1,4 +1,4 @@
-export default function defineGetSource(proto, name, func) {
+export default function defineGetSource(proto, func) {
   const superFunc = proto.getSource
   proto.getSource = function (source = {}) {
     if (superFunc) {

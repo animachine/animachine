@@ -37,9 +37,7 @@ const project = {
 const animations = {}
 
 project.timelines.forEach(timeline => {
-  var gsapSource = createAnimationSource.bind(null, timeline, project)
-  gsapSource._animachineProject = project
-  gsapSource._animachineTimelineName = timeline.name
+  var gsapSource = createAnimationSource(project, timeline.name)
   animations[timeline.name] = gsapSource
 })
 

@@ -32,8 +32,12 @@ export default function defineProperties(descriptors) {
     // }
 
     Object.defineProperty(proto, name, {set: set, get: get})
-    handleSetSource(proto, source => set(source[name]))
-    handleGetSource(proto, source => source[name] = get())
+    handleSetSource(proto, function (source) {
+      set.call(this, source[name])
+    })
+    handleGetSource(proto, function (source) {
+      source[name] = get.call(this)
+    })
 
     function get() {
       return valueMap.has(this) ? valueMap.get(this) : initValue

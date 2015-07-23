@@ -1,5 +1,9 @@
 import {Project} from './models'
 
-export function create(projectSource) {
+function create(projectSource) {
   return new Project(projectSource)
+}
+
+export default {
+  create
 }

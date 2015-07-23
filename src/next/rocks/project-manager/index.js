@@ -44,6 +44,7 @@ const projectManager = new class extends EventEmitter {
 
   setCurrentProject(project) {
     console.log({project})
+    global.project = project
     this.currentProject = project
   }
   getCurrentProject() {

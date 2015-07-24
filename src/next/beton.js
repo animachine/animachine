@@ -1,7 +1,7 @@
 const rockMap = new Map()
 const waitingHandlers = new Map()
 
-function addRock(id, rock) {
+function setRock(id, rock) {
   rockMap.set(id, rock)
   resolveWaitingHandlers()
 }
@@ -34,7 +34,7 @@ function resolveWaitingHandlers() {
 }
 
 const BETON = {
-  addRock,
+  setRock,
   getRock,
   hasRock
 }

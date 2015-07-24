@@ -35,8 +35,8 @@ const componentInspector = new class extends EventEmitter {
   }
 
   getComponentsWithProjectSource(projectSource) {
-    var ret = []
-debugger
+    const ret = []
+
     this.livingComponents.forEach(component => {
       const animationSourceMap = component.__animationSourceMap
 

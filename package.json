@@ -23,7 +23,10 @@
   "dependencies": {
     "event-emitter": "^0.3.3",
     "eventman": "0.0.1",
-    "lodash": "^3.10.0"
+    "json-vision": "0.0.34",
+    "lodash": "^3.10.0",
+    "react": "^0.13.3",
+    "spaceman": "0.0.8"
   },
   "devDependencies": {
     "babel": "^5.6.23",

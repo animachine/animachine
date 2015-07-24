@@ -12,6 +12,8 @@ export default function createMountNode() {
       de.style.zIndex = zIndex + 1000
   }
 
+  document.body.appendChild(de)
+
   return de
 }
 

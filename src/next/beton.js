@@ -1,33 +1,42 @@
 const rockMap = new Map()
 const waitingHandlers = new Map()
 
-const BETON = {
-  addRock(id, rock) {
-    rockMap.set(id, rock)
+function addRock(id, rock) {
+  rockMap.set(id, rock)
+  resolveWaitingHandlers()
+}
 
-    const waitList = waitingHandlers.get(id)
-    if (waitList) {
-      waitList.forEach(handler => handler(rock))
-      waitingHandlers.delete(id)
-    }
-  },
-
-  getRock(id, handler) {
-    const rock = rockMap.get(id)
-    if (rock) {
-      handler(rock)
-    }
-    else {
-      let list = waitingHandlers.get(id)
-      if (list) {
-        list.push(handler)
-      }
-      else {
-        list = [handler]
-        waitingHandlers.set(id, list)
-      }
-    }
+function getRock(ids, handler) {
+  if (typeof ids === 'string') {
+    ids = [ids]
   }
+
+  if (hasRock(...ids)) {
+    let rocks = ids.map(id => rockMap.get(id))
+    handler(...rocks)
+  }
+  else {
+    waitingHandlers.set(ids, handler)
+  }
+}
+
+function hasRock(...ids) {
+  return ids.every(id => rockMap.has(id))
+}
+
+function resolveWaitingHandlers() {
+  waitingHandlers.forEach((handler, ids) => {
+    if (hasRock(...ids)) {
+      getRock(ids, handler)
+      waitingHandlers.delete(ids)
+    }
+  })
+}
+
+const BETON = {
+  addRock,
+  getRock,
+  hasRock
 }
 
 export default BETON

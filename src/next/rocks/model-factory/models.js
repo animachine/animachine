@@ -26,6 +26,7 @@ export class Key extends Model {}
 
 
 @defineProperties([
+  {name: 'name', type: 'string'},
   {name: 'currentTime', type: 'float'},
   {name: 'timescale', type: 'float'},
   {name: 'length', type: 'float'},
@@ -36,7 +37,9 @@ export class Key extends Model {}
 @defineChildren({name: 'childParam', ChildClass: Param})
 export class Param extends Model {}
 
-
+@defineProperties([
+  {name: 'selectors'}
+])
 @defineChildren({name: 'param', ChildClass: Param})
 export class Track extends Model {}
 

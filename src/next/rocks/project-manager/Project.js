@@ -1,3 +1,4 @@
+import createAnimationSource from '../../create-animation-source'
 var modelFactory
 BETON.getRock('model-factory', rock => modelFactory = rock)
 
@@ -14,10 +15,15 @@ export default class Project {
   handleSourceChange = () => {
     this.previewComponents.forEach(previewComponent => {
       previewComponent.__runningAnimations.forEach(runningAnimation => {
-        if (runningAnimation._gsapAnimationFactory._animachineProject === this) {
-          var timelineName = runningAnimation._gsapAnimationFactory._animachineTimelineName
-          var animationSource = createAnimationSource(this, timelineName)
-          runningAnimation.replaceGSAPAnimationFactory(animationSource)
+        if (
+          runningAnimation._animationSource._amProject === this ||
+          runningAnimation._animationSource._amProjectSource === this.projectSource
+        ) {
+          runningAnimation._animationSource._amProject = this
+          var timelineName = runningAnimation._animationSource._amTimelineName
+          var projectSource = this.model.getSource()
+          var animationSource = createAnimationSource(projectSource, timelineName)
+          runningAnimation.replaceAnimationSource(animationSource)
         }
       })
     })

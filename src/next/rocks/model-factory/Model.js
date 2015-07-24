@@ -1,6 +1,6 @@
-import events from 'events'
+import EventEmitter from 'eventman'
 
-export default class Model extends events.EventEmitter {
+export default class Model extends EventEmitter {
   constructor(source) {
     super()
     this.setSource(source)

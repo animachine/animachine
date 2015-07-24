@@ -1,9 +1,15 @@
 export default function defineGetSource(proto, func) {
-  const superFunc = proto.getSource
-  proto.getSource = function (source = {}) {
-    if (superFunc) {
-      superFunc.call(this, source)
-    }
-    func.call(this, source)
+  if (!proto.sourceGetters) {
+    proto.sourceGetters = []
   }
+
+  if (!proto.getSource) {
+    proto.getSource = function () {
+      var source = {}
+      proto.sourceGetters.forEach(sourceGetter => sourceGetter.call(this, source))
+      return source
+    }
+  }
+
+  proto.sourceGetters.push(func)
 }

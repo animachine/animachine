@@ -19,7 +19,7 @@ export default function defineProperties(descriptors) {
       initValue,
       eventName = `change.${name}`
     } = descriptor
-    const valueMap = new Map()
+    const valueMap = new WeakMap()
 
     if (!name) {
       throw Error

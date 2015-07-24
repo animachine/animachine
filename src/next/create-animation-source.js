@@ -1,11 +1,11 @@
-export default function createAnimationSource(project, timelineName) {
+export default function createAnimationSource(projectSource, timelineName) {
   function animationSource(connect) {
     const gsTimeline = new TimelineMax({repeat: -1})
 
     var timeline
-    for (let i = 0; i < project.timelines.length; ++i) {
-      if (project.timelines[i].name === timelineName) {
-        timeline = project.timelines[i]
+    for (let i = 0; i < projectSource.timelines.length; ++i) {
+      if (projectSource.timelines[i].name === timelineName) {
+        timeline = projectSource.timelines[i]
         break
       }
     }
@@ -14,9 +14,11 @@ export default function createAnimationSource(project, timelineName) {
       var headTime = 0
       params.forEach(param => {
         if (param.keys) {
-
           param.keys.forEach(key => {
             var duration = key.time - headTime
+console.log(duration,
+{[param.name]: key.value},
+headTime)
             gsTimeline.to(
               targets,
               duration,
@@ -45,8 +47,8 @@ export default function createAnimationSource(project, timelineName) {
     return gsTimeline
   }
 
-  animationSource._animachineProject = project
-  animationSource._animachineTimelineName = timelineName
+  animationSource._amProjectSource = projectSource
+  animationSource._amTimelineName = timelineName
 
   return animationSource
 }

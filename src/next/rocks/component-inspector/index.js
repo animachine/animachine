@@ -23,8 +23,8 @@ const componentInspector = new class extends EventEmitter {
       }
 
       runningAnimations.forEach(animation => {
-        var sourceAnimation = animation._gsapAnimationFactory
-        var projectSource = sourceAnimation && sourceAnimation._animachineProject
+        var sourceAnimation = animation._animationSource
+        var projectSource = sourceAnimation && sourceAnimation._amProjectSource
         if (projectSource && projectSources.indexOf(projectSource) === -1) {
           projectSources.push(projectSource)
         }
@@ -36,14 +36,14 @@ const componentInspector = new class extends EventEmitter {
 
   getComponentsWithProjectSource(projectSource) {
     var ret = []
-
+debugger
     this.livingComponents.forEach(component => {
       const animationSourceMap = component.__animationSourceMap
 
       if (animationSourceMap) {
         forOwn(animationSourceMap, animationSource => {
           if (
-            animationSource._aninmachineProject === projectSource &&
+            animationSource._amProjectSource === projectSource &&
             ret.indexOf(component) === -1
           ) {
             ret.push(component)

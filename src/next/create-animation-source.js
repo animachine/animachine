@@ -30,8 +30,8 @@ headTime)
           })
 
         }
-        if (param.childParams) {
-          addParams(param.childParams, targets)
+        if (param.params) {
+          addParams(param.params, targets)
         }
       })
     }

@@ -7,16 +7,17 @@ export default function defineChildren(descriptor) {
   return (Class) => {
     const proto = Class.prototype
     const childrenMap = new WeakMap()
-    const {name, ChildClass} = descriptor
+    const selectionMap = new WeakMap()
+    const {name, ChildClass, multiselect} = descriptor
     const names = {
-      source: `${name}s`,
+      length: `get${capitalize(name)}sLength`,
       add: `add${capitalize(name)}`,
       remove: `remove${capitalize(name)}`,
       get: `get${capitalize(name)}`,
       forEach: `forEach${capitalize(name)}s`,
       select: `select${capitalize(name)}`,
       findBy: `find${capitalize(name)}By`,
-      debugGetAll: `_get${capitalize(name)}s`,
+      getAll: `get${capitalize(name)}s`,
       eventAdd: `add${capitalize(name)}`,
       eventRemove: `remove${capitalize(name)}`,
       eventChangeChild: `change.${name}`,
@@ -71,9 +72,14 @@ export default function defineChildren(descriptor) {
       }
     }
 
-    proto[names.debugGetAll] = function () {
+    proto[names.getAll] = function () {
       const children = getChildren(this)
       return children
+    }
+
+    proto[names.length] = function () {
+      const children = getChildren(this)
+      return children.length
     }
 
     return Class

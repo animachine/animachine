@@ -35,14 +35,16 @@ export class Key extends Model {}
   {name: 'length', type: 'float'},
   {name: 'width', type: 'float'},
   {name: 'start', type: 'float'},
+  {name: 'openInTimeline', type: 'boolean'},
 ])
 @defineChildren({name: 'key', ChildClass: Key})
-@defineChildren({name: 'childParam', ChildClass: Param})
+@defineChildren({name: 'param', ChildClass: Param})
 @defineType
 export class Param extends Model {}
 
 @defineProperties([
-  {name: 'selectors'}
+  {name: 'selectors'},
+  {name: 'openInTimeline', type: 'boolean'},
 ])
 @defineChildren({name: 'param', ChildClass: Param})
 @defineType
@@ -66,4 +68,8 @@ export class Timeline extends Model {}
 ])
 @defineChildren({name: 'timeline', ChildClass: Timeline})
 @defineType
-export class Project extends Model {}
+export class Project extends Model {
+  getCurrentTimeline() {
+    return this.getTimeline(0)
+  }
+}

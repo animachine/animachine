@@ -150,7 +150,7 @@ p.getNextKey = function () {
 };
 
 p.renderToLine = function (ctx) {
-    
+
     var looks = this.looks || this.parentKeyLine.keyLooks,
         height = this._height,
         keyPos = parseInt(this.timeline.timeToRenderPos(this.time)) + 0.5,

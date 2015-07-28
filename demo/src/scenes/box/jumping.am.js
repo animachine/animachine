@@ -11,7 +11,7 @@ const project = {
           params: [
             {
               name: 'scale',
-              childParams: [
+              params: [
                 {
                   name: 'scaleX',
                   keys: [

@@ -16,6 +16,10 @@ export default function defineChildren(descriptor) {
       forEach: `forEach${capitalize(name)}s`,
       select: `select${capitalize(name)}`,
       findBy: `find${capitalize(name)}By`,
+      debugGetAll: `_get${capitalize(name)}s`,
+      eventAdd: `add${capitalize(name)}`,
+      eventRemove: `remove${capitalize(name)}`,
+      eventChangeChild: `change.${name}`,
     }
     console.log({name, ChildClass, names})
 
@@ -46,6 +50,10 @@ export default function defineChildren(descriptor) {
         child = new ChildClass(child)
       }
       children.push(child)
+
+      child.on('change', () => this.emit(names.eventChangeChild))
+      this.emit(names.eventAdd, child)
+      this.emit(names.eventChangeChild)
     }
 
     proto[names.get] = function (index) {
@@ -61,6 +69,11 @@ export default function defineChildren(descriptor) {
           return child
         }
       }
+    }
+
+    proto[names.debugGetAll] = function () {
+      const children = getChildren(this)
+      return children
     }
 
     return Class

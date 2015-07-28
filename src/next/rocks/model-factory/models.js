@@ -1,6 +1,7 @@
 import Model from './Model'
 import defineProperties from './defineProperties'
 import defineChildren from './defineChildren'
+import defineType from './defineType'
 
 
 
@@ -13,6 +14,7 @@ import defineChildren from './defineChildren'
   {name: 'roughRandomise', type: 'boolean', startValue: true},
   {name: 'roughTaper', type: 'string', startValue: 'none'},
 ])
+@defineType
 export class Ease extends Model {}
 
 
@@ -22,6 +24,7 @@ export class Ease extends Model {}
   {name: 'selected', type: 'boolean'},
   {name: 'ease', type: 'object'},
 ])
+@defineType
 export class Key extends Model {}
 
 
@@ -35,12 +38,14 @@ export class Key extends Model {}
 ])
 @defineChildren({name: 'key', ChildClass: Key})
 @defineChildren({name: 'childParam', ChildClass: Param})
+@defineType
 export class Param extends Model {}
 
 @defineProperties([
   {name: 'selectors'}
 ])
 @defineChildren({name: 'param', ChildClass: Param})
+@defineType
 export class Track extends Model {}
 
 @defineProperties([
@@ -52,6 +57,7 @@ export class Track extends Model {}
   {name: 'start', type: 'float'}
 ])
 @defineChildren({name: 'track', ChildClass: Track})
+@defineType
 export class Timeline extends Model {}
 
 
@@ -59,4 +65,5 @@ export class Timeline extends Model {}
   {name: 'currentTimelineIndex', type: 'int'}
 ])
 @defineChildren({name: 'timeline', ChildClass: Timeline})
+@defineType
 export class Project extends Model {}

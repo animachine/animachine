@@ -31,7 +31,7 @@ export default function defineProperties(descriptors) {
     //   if (!history.hasOwnProperty('chainId')) history.chainId = Symbol();//TODO make this unique per instance
     // }
 
-    Object.defineProperty(proto, name, {set: set, get: get})
+    Object.defineProperty(proto, name, {set, get, enumerable: true})
     handleSetSource(proto, function (source) {
       set.call(this, source[name])
     })

@@ -6,8 +6,8 @@ const projectManager = new class extends EventEmitter {
   constructor() {
     super()
 
-    this.openedProjects = []
-    this.currentProject = null
+    this._openedProjects = []
+    this._currentProject = null
 
     BETON.getRock('component-inspector', componentInspector => {
       this.componentInspector = componentInspector
@@ -43,20 +43,23 @@ const projectManager = new class extends EventEmitter {
   }
 
   setCurrentProject(project) {
-    console.log({project})
     global.project = project
-    this.currentProject = project
+    this._currentProject = project
+    this.emit('change.currentProject')
   }
+
   getCurrentProject() {
-    return this.currentProject
+    return this._currentProject
   }
+
   openProject(project) {
-    this.openedProjects.push(project)
+    this._openedProjects.push(project)
   }
+
   closeProject(project) {
-    pull(this.openedProjects, project)
+    pull(this._openedProjects, project)
     if (this.getCurrentProject() === project) {
-      this.setCurrentProject(this.openedProjects[0])
+      this.setCurrentProject(this._openedProjects[0])
     }
   }
 }()

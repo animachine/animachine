@@ -89,7 +89,7 @@ Object.defineProperties(p, {
         set: function (v) {
 
             v = parseInt(v);
-            
+
             if (!Number.isFinite(v) || this._width === v) return;
 
             this._width = v;

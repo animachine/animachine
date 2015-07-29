@@ -1,14 +1,20 @@
 import React from 'react'
 
+const colors = {
+  selected: '#01FF70',
+  normal: '#eee'
+}
+
 export default class Keyline extends React.Component {
   componentDidMount() {
     this.canvas = React.findDOMNode(this)
-    this.ctx = canvas.getContext('2d')
+    this.ctx = this.canvas.getContext('2d')
 
-    BETON.getRock('config', config => {
-      this.config = config
-      this.postRender()
-    })
+    this.postRender()
+
+    const {model, timeline} = this.props
+    model.on('change', () => this.forceUpdate)
+    timeline.on('change', () => this.forceUpdate)
   }
 
   componentDidUpdate() {
@@ -16,21 +22,25 @@ export default class Keyline extends React.Component {
   }
 
   render() {
-    const {width, height, style} = this.props
-    return <canvas width={width} height={height} style={style}/>
+    const {timeline, height, style} = this.props
+
+    return <canvas
+      width = {timeline.width}
+      height = {height}
+      style = {{position: 'absolute', ...style}}/>
   }
 
   postRender() {
-    const {canvas, ctx, timeline} = this
+    const {canvas, ctx} = this
+    const {model, timeline} = this.props
     const {start, end} = timeline
-    const {model} = this.props
 
-    ctx.clearRect(canvas.width, canvas.height)
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    if (model.type === 'Param' && model.getKeysLength() !== 0) {
-      let visibleKey = []
+    if (model.modelType === 'Param' && model.getKeysLength() !== 0) {
+      let visibleKeys = []
 
-      param.forEachKeys(key => {
+      model.forEachKey(key => {
         if (key.time >= start && key.time <= end) {
           visibleKeys.push(key)
         }
@@ -44,63 +54,55 @@ export default class Keyline extends React.Component {
   }
 
   timeToDrawPos(time) {
-    const {start, width, visibleTime} = this.timeline
-    return (visibleTime / (time - start)) * width
+    const {start, width, timescale} = this.props.timeline
+    return (time + start) * timescale
   }
 
-  drawKey(key, selected) {
-    const {canvas, ctx, timeline} = this
+  drawKey(key, isSelected) {
+    const {ctx} = this
 
-    var looks = this.looks || this.parentKeyLine.keyLooks,
-        height = this.config.size,
-        keyPos = parseInt(this.timeToDrawPos(this.time)) + 0.5,
-        line = looks.line,
-        circle = looks.circle,
-        r = 2,
-        isSelected = this._isSelected;
+    var {height} = this.props
+    var keyPos = parseInt(this.timeToDrawPos(key.time)) + 0.5
+    var r = 2
+    // if (line) {
+      ctx.save()
+      ctx.beginPath()
+      ctx.strokeStyle = isSelected ? colors.selected : colors.normal
+      ctx.lineWidth = 1
+      ctx.moveTo(keyPos, 0)
+      ctx.lineTo(keyPos, height)
+      ctx.stroke()
+      ctx.restore()
+    // }
 
-    if (line) {
-      ctx.save();
-      ctx.beginPath();
-      ctx.strokeStyle = isSelected ? amgui.color.selected : (line.color || '#eee');
-      ctx.lineWidth = line.width || 1;
-      ctx.moveTo(keyPos, 0);
-      ctx.lineTo(keyPos, height);
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    if (circle) {
-      ctx.save();
-      ctx.beginPath();
-      ctx.strokeStyle = isSelected ? amgui.color.selected : (circle.color || '#eee');
-      ctx.fillStyle = isSelected ? amgui.color.selected : (circle.fillColor || '#eee');
-      ctx.lineWidth = circle.width || 1;
-      ctx.arc(keyPos, height/2,
-          'r' in circle ? circle.r : r,
-          'arcStart' in circle ? circle.arcStart : 0,
-          'arcEnd' in circle ? circle.arcEnd : 2 * Math.PI);
-      ctx.fill();
-      ctx.stroke();
-      ctx.restore();
-    }
+    // if (circle) {
+      ctx.save()
+      ctx.beginPath()
+      ctx.strokeStyle = isSelected ? colors.selected : colors.normal
+      ctx.fillStyle = isSelected ? colors.selected : colors.normal
+      ctx.lineWidth = 1
+      ctx.arc(keyPos, height/2, r, 0, 2 * Math.PI)
+      ctx.fill()
+      ctx.stroke()
+      ctx.restore()
+    // }
     //TODO
     // if (this.timeline.currTime === this.time) {
-    //     ctx.save();
-    //     ctx.beginPath();
-    //     ctx.strokeStyle = amgui.color.red;
-    //     ctx.lineWidth = 1;
-    //     ctx.arc(keyPos, height/2, 6, 0, 2 * Math.PI);
-    //     ctx.stroke();
-    //     ctx.restore();
+    //     ctx.save()
+    //     ctx.beginPath()
+    //     ctx.strokeStyle = amgui.color.red
+    //     ctx.lineWidth = 1
+    //     ctx.arc(keyPos, height/2, 6, 0, 2 * Math.PI)
+    //     ctx.stroke()
+    //     ctx.restore()
     // }
   }
 
   drawEase() {
 
-    if (!this.ease) return;
+    if (!this.ease) return
 
-    var looks = this.looks || this.parentKeyLine.keyLooks;
+    var looks = this.looks || this.parentKeyLine.keyLooks
 
     var ease = this.ease,
         color = (looks.ease && looks.ease.color) || 'rgba(225,225,225,.23)',
@@ -108,22 +110,22 @@ export default class Keyline extends React.Component {
         keyPos = this.timeline.timeToRenderPos(this.time),
         prevKey = this.getPrevKey(),
         prevKeyPos = this.timeline.timeToRenderPos(prevKey ? prevKey.time : 0),
-        width = keyPos - prevKeyPos;
+        width = keyPos - prevKeyPos
 
-    if (width === 0) return;
+    if (width === 0) return
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 1.2;
-    ctx.moveTo(prevKeyPos, height);
+    ctx.save()
+    ctx.beginPath()
+    ctx.strokeStyle = color
+    ctx.lineWidth = 1.2
+    ctx.moveTo(prevKeyPos, height)
 
     for (var i = 0; i < width; ++i) {
 
-        ctx.lineTo(prevKeyPos + i, height - height * ease.getRatio(i/width));
+        ctx.lineTo(prevKeyPos + i, height - height * ease.getRatio(i/width))
     }
 
-    ctx.stroke();
-    ctx.restore();
+    ctx.stroke()
+    ctx.restore()
   }
 }

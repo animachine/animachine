@@ -33,7 +33,9 @@ export default function defineProperties(descriptors) {
 
     Object.defineProperty(proto, name, {set, get, enumerable: true})
     handleSetSource(proto, function (source) {
-      set.call(this, source[name])
+      if (source.hasOwnProperty(name)) {
+        set.call(this, source[name])
+      }
     })
     handleGetSource(proto, function (source) {
       source[name] = get.call(this)

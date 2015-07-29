@@ -15,7 +15,7 @@ export default function defineChildren(descriptor) {
       add: `add${capitalize(name)}`,
       remove: `remove${capitalize(name)}`,
       get: `get${capitalize(name)}`,
-      forEach: `forEach${capitalize(name)}s`,
+      forEach: `forEach${capitalize(name)}`,
       findBy: `find${capitalize(name)}By`,
       getAll: `get${capitalize(name)}s`,
       source: `${name}s`,
@@ -78,11 +78,21 @@ export default function defineChildren(descriptor) {
       child.on('change', () => this.emit(names.eventChangeChild))
       this.emit(names.eventAdd, child)
       this.emit(names.eventChangeChild)
+
+
+      if (current && !this[names.getCurrent]()) {
+        this[names.setCurrent](child)
+      }
     }
 
     proto[names.get] = function (index) {
       const children = getChildren(this)
       return children[index]
+    }
+
+    proto[names.forEach] = function (fn) {
+      const children = getChildren(this)
+      children.forEach(fn)
     }
 
     proto[names.findBy] = function (key, value) {

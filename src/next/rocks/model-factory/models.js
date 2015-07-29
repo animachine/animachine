@@ -35,7 +35,7 @@ export class Key extends Model {}
   {name: 'length', type: 'float'},
   {name: 'width', type: 'float'},
   {name: 'start', type: 'float'},
-  {name: 'openInTimeline', type: 'boolean'},
+  {name: 'openInTimeline', type: 'boolean', initValue: true},
 ])
 @defineChildren({name: 'key', ChildClass: Key})
 @defineChildren({name: 'param', ChildClass: Param})
@@ -44,7 +44,7 @@ export class Param extends Model {}
 
 @defineProperties([
   {name: 'selectors'},
-  {name: 'openInTimeline', type: 'boolean'},
+  {name: 'openInTimeline', type: 'boolean', initValue: true},
 ])
 @defineChildren({name: 'param', ChildClass: Param})
 @defineType
@@ -52,24 +52,30 @@ export class Track extends Model {}
 
 @defineProperties([
   {name: 'name', type: 'string'},
-  {name: 'currentTime', type: 'float'},
-  {name: 'timescale', type: 'float'},
-  {name: 'length', type: 'float'},
-  {name: 'width', type: 'float'},
-  {name: 'start', type: 'float'}
+  {name: 'currentTime', type: 'float', initValue: 0},
+  {name: 'timescale', type: 'float', initValue: 1},
+  {name: 'length', type: 'float', initValue: 60000},
+  {name: 'width', type: 'float', initValue: 2000},
+  {name: 'start', type: 'float', initValue: 0},
 ])
 @defineChildren({name: 'track', ChildClass: Track})
 @defineType
-export class Timeline extends Model {}
+export class Timeline extends Model {
+  set visibleTime (v) {
+      this.timescale = this.width / v;
+  }
+  get visibleTime () {
+      return this.width / this.timescale;
+  }
+  get end() {
+    return this.start + this.visibleTime
+  }
+}
 
 
 @defineProperties([
   {name: 'currentTimelineIndex', type: 'int'}
 ])
-@defineChildren({name: 'timeline', ChildClass: Timeline})
+@defineChildren({name: 'timeline', ChildClass: Timeline, current: true})
 @defineType
-export class Project extends Model {
-  getCurrentTimeline() {
-    return this.getTimeline(0)
-  }
-}
+export class Project extends Model {}

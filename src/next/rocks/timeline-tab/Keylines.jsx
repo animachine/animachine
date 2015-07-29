@@ -9,25 +9,29 @@ export default class Keylines extends React.Component {
 
   render() {
     const {timeline}  = this.props
-    const height = this.config.height
+    const height = this.config.size
     const children = []
     var pos = 0
 
     function renderKeyline(model) {
       children.push(<Keyline
+        timeline = {timeline}
         style = {{left: 0, top: pos}}
+        height = {height}
         model = {model}
         key = {model.modelId}/>)
 
       pos += height
 
       if (model.openInTimeline) {
-        prop.forEachProp(prop => renderKeyline(prop))
+        model.forEachParam(param => renderKeyline(param))
       }
     }
 
-    timeline.forEachTrack(prop => renderKeyline(prop))
+    timeline.forEachTrack(param => renderKeyline(param))
 
-    return <div style={{height: pos}}>{children}</div>
+    return <div style={{position: 'relative', height: pos}}>
+      {children}
+    </div>
   }
 }

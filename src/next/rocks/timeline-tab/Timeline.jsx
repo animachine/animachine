@@ -8,31 +8,28 @@ export default class Timeline extends React.Component {
 
     this.state = {
       dividerPos: 300,
-      width: null
+      width: 2000
     }
   }
 
   componentDidMount() {
-    this.canvas = React.findDOMNode(this)
-    this.ctx = canvas.getContext('2d')
+    this.testOwnSize()
+    setInterval(this.testOwnSize, 321)
   }
 
-  componentDidUpdate() {
-    this.postRender()
-  }
-
-  testOwnSize() {
+  testOwnSize = () => {
     const {width} = React.findDOMNode(this).getBoundingClientRect()
 
-    if (width !== this.state.fillWidth) {
-      this.state.timelne.width = width - this.state.dividerPos
-      this.setState({fillWidth: width})
+    if (width !== this.state.fullWidth) {
+      this.props.timeline.width = width - this.state.dividerPos
+      this.setState({fullWidth: width})
     }
   }
 
   render() {
     const {dividerPos} = this.state
-    const {width, height, style, timeline} = this.props
+    const {timeline} = this.props
+    const {width} = this.state
 
     return <div style={{display: 'flex', width, height: '100%'}}>
       <div style={{width: dividerPos}}>

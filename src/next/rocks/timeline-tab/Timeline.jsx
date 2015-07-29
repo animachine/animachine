@@ -1,6 +1,8 @@
 import React from 'react'
+import Controls from './Controls'
+import Keylines from './Keylines'
 
-export default Timeline extends React.Component {
+export default class Timeline extends React.Component {
   constructor() {
     super()
 
@@ -39,7 +41,7 @@ export default Timeline extends React.Component {
       <div style={{flex: 1}}>
         <Keylines timeline={timeline}/>
       </div>
-      <Divider/>
+      <div ref='divider'/>
     </div>
   }
 }

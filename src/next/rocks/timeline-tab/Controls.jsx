@@ -1,9 +1,10 @@
 import React from 'react'
-import JsonVision from './json-vision'
+import JsonVision from 'json-vision'
 import controlsSettings from './controlsSettings'
 
-export default Controls extends React.Component {
+export default class Controls extends React.Component {
   constructor() {
+    super()
     BETON.getRock('config', config => this.config = config)
   }
 

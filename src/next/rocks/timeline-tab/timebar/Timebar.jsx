@@ -1,7 +1,7 @@
 import React from 'react'
 import steps from './steps'
 
-export default Timebar extends React.Component {
+export default class Timebar extends React.Component {
   componentDidMount() {
     this.canvas = React.findDOMNode(this)
     this.ctx = canvas.getContext('2d')

@@ -11,8 +11,9 @@ export default function createAnimationSource(projectSource, timelineName) {
     }
 
     function addParams(params, targets) {
-      var headTime = 0
       params.forEach(param => {
+        var headTime = 0
+
         if (param.keys) {
           param.keys.forEach(key => {
             var duration = key.time - headTime

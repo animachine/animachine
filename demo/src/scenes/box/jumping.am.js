@@ -10,19 +10,19 @@ const project = {
           selectors: [['box']],
           params: [
             {
-              name: 'scale',
+              name: 'translate',
               params: [
                 {
-                  name: 'scaleX',
+                  name: 'x',
                   keys: [
-                    {time: 0, value: 0},
-                    {time: 2, value: 1},
+                    {time: 0, value: 100},
+                    {time: 2, value: 200},
                   ]
                 }, {
-                  name: 'scaleY',
+                  name: 'y',
                   keys: [
-                    {time: 0, value: 0},
-                    {time: 2, value: 2},
+                    {time: 0, value: 300},
+                    {time: 2, value: 300},
                   ]
                 }
               ]

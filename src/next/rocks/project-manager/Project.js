@@ -19,10 +19,10 @@ export default class Project {
           runningAnimation._animationSource._amProject === this ||
           runningAnimation._animationSource._amProjectSource === this.projectSource
         ) {
-          runningAnimation._animationSource._amProject = this
           var timelineName = runningAnimation._animationSource._amTimelineName
           var projectSource = this.model.getSource()
           var animationSource = createAnimationSource(projectSource, timelineName)
+          animationSource._amProject = this
           runningAnimation.replaceAnimationSource(animationSource)
         }
       })

@@ -21,6 +21,7 @@ export default class DebuggerTab extends React.Component {
   }
 
   setCurrentProject(currentProject) {
+    currentProject.model.on('change', () => this.forceUpdate())
     this.setState({currentProject})
   }
 

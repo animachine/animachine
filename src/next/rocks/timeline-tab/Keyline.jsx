@@ -1,7 +1,6 @@
 import React from 'react'
 
-export default Keyline extends React.Component {
-
+export default class Keyline extends React.Component {
   componentDidMount() {
     this.canvas = React.findDOMNode(this)
     this.ctx = canvas.getContext('2d')

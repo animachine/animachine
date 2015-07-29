@@ -1,8 +1,9 @@
 import React from 'react'
 import Keyline from './Keyline'
 
-export default Keylines extends React.Component {
+export default class Keylines extends React.Component {
   constructor() {
+    super()
     BETON.getRock('config', config => this.config = config)
   }
 
@@ -14,7 +15,7 @@ export default Keylines extends React.Component {
 
     function renderKeyline(model) {
       children.push(<Keyline
-        style = {left: 0, top: pos}
+        style = {{left: 0, top: pos}}
         model = {model}
         key = {model.modelId}/>)
 

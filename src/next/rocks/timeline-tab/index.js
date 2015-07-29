@@ -5,5 +5,5 @@ import TimelineTab from './TimelineTab'
 BETON.getRock('workspace', init)
 
 function init(workspace) {
-  workspace.setTabContent('timeline', () => <TimelineTab/>)
+  // workspace.setTabContent('timeline', () => <TimelineTab/>)
 }

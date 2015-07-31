@@ -1,6 +1,7 @@
 import React from 'react'
 import Controls from './Controls'
 import Keylines from './Keylines'
+import Timebar from './timebar/Timebar'
 
 export default class Timeline extends React.Component {
   constructor() {
@@ -12,9 +13,15 @@ export default class Timeline extends React.Component {
     }
   }
 
+  static defaultProps = {
+    headHeight: 32
+  }
+
   componentDidMount() {
     this.testOwnSize()
     setInterval(this.testOwnSize, 321)
+
+    this.props.timeline.on('change', () => this.forceUpdate())
   }
 
   testOwnSize = () => {
@@ -28,14 +35,21 @@ export default class Timeline extends React.Component {
 
   render() {
     const {dividerPos} = this.state
-    const {timeline} = this.props
+    const {timeline, headHeight} = this.props
     const {width} = this.state
+    const styleSide = {
+      display: 'flex',
+      position: 'relative',
+      flexDirection: 'column',
+    }
 
     return <div style={{display: 'flex', width, height: '100%'}}>
-      <div style={{width: dividerPos}}>
+      <div style={{width: dividerPos, ...styleSide}}>
+        <div style={{height: headHeight}}/>
         <Controls timeline={timeline}/>
       </div>
-      <div style={{flex: 1}}>
+      <div style={{flex: 1, ...styleSide}}>
+        <Timebar timeline={timeline} height={headHeight}/>
         <Keylines timeline={timeline}/>
       </div>
       <div ref='divider'/>

@@ -17,9 +17,9 @@ export default function createAnimationSource(projectSource, timelineName) {
         if (param.keys) {
           param.keys.forEach(key => {
             var duration = key.time - headTime
-console.log(duration,
-{[param.name]: key.value},
-headTime)
+// console.log(duration,
+// {[param.name]: key.value},
+// headTime)
             gsTimeline.to(
               targets,
               duration,

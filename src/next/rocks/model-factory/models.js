@@ -57,6 +57,7 @@ export class Track extends Model {}
   {name: 'length', type: 'float', initValue: 60000},
   {name: 'width', type: 'float', initValue: 2000},
   {name: 'start', type: 'float', initValue: 0},
+  {name: 'startMargin', type: 'float', initValue: 6},
 ])
 @defineChildren({name: 'track', ChildClass: Track})
 @defineType

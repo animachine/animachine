@@ -25,6 +25,7 @@
     "eventman": "0.0.1",
     "json-vision": "0.0.34",
     "lodash": "^3.10.0",
+    "putainde-localstorage": "^4.0.0",
     "react": "^0.13.3",
     "react-dnd": "^1.1.4",
     "react-gsap-enhancer": "0.0.0",
@@ -50,6 +51,7 @@
     "react-hot-loader": "^1.2.8",
     "react-router": "*",
     "react-tap-event-plugin": "^0.1.7",
+    "uid": "0.0.2",
     "webpack": "*",
     "webpack-dev-server": "*"
   }

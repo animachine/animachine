@@ -1,6 +1,9 @@
 import EventEmitter from 'eventman'
-import Project from './Project'
+import ProjectNode from './ProjectNode'
 import pull from 'lodash/array/pull'
+import localStorage from 'putainde-localstorage'
+
+const storage = localStorage.create(namespace: 'project-manager')
 
 const projectManager = new class extends EventEmitter {
   constructor() {
@@ -20,20 +23,20 @@ const projectManager = new class extends EventEmitter {
   }
 
   handleRegisterComponent = () => {
-    if (!this.getCurrentProject()) {
+    if (!this.getCurrentProjectNode()) {
       var projectSources = this.componentInspector.getProjectSources()
 
       if (projectSources.length) {
         const projectSource = projectSources[0]
         const previewComponents =
           this.componentInspector.getComponentsWithProjectSource(projectSource)
-        const project = new Project(
+        const projectNode = new ProjectNode(
           projectSource,
           previewComponents
         )
 
-        this.openProject(project)
-        this.setCurrentProject(project)
+        this.openProjectNode(projectNode)
+        this.setCurrentProjectNode(projectNode)
         this.componentInspector.off(
           'register-component',
           this.handleRegisterComponent
@@ -42,25 +45,47 @@ const projectManager = new class extends EventEmitter {
     }
   }
 
-  setCurrentProject(project) {
-    global.project = project
-    this._currentProject = project
+  setCurrentProjectNode(projectNode) {
+    global.projectNode = projectNode
+    this._currentProject = projectNode
     this.emit('change.currentProject')
   }
 
-  getCurrentProject() {
+  getCurrentProjectNode() {
     return this._currentProject
   }
 
-  openProject(project) {
-    this._openedProjects.push(project)
+  openProjectNode(projectNode) {
+    this._openedProjects.push(projectNode)
   }
 
-  closeProject(project) {
-    pull(this._openedProjects, project)
-    if (this.getCurrentProject() === project) {
-      this.setCurrentProject(this._openedProjects[0])
+  closeProjectNode(projectNode) {
+    pull(this._openedProjects, projectNode)
+    if (this.getCurrentProjectNode() === projectNode) {
+      this.setCurrentProjectNode(this._openedProjects[0])
     }
+  }
+
+  storeReopenState() {
+    var reopenState = {
+      openedProjects: this.openedProjects.map(projectNode => {{
+        uid: projectNode.model.uid,
+        currentTimelineName: projectNode.model.getCurrentTimeline().name,
+        previewComponents: projectNode.previewComponents.map(previewComponent => ({
+          reactId: React.fincDOMNode(previewComponent).getAttribute('react-id')
+        }))
+      }})
+    }
+
+    storage.set('reopen-state', reopenState)
+  }
+
+  loadReopenState() {
+    const reopenState = storage.get('reopen-state')
+  }
+
+  showWelcomeDialog() {
+
   }
 }()
 

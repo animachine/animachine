@@ -10,14 +10,14 @@ export default class TimelineTab extends React.Component {
   componentDidMount() {
     BETON.getRock('project-manager', projectManager => {
       this.projectManager = projectManager
-      const currentProject = projectManager.getCurrentProject()
+      const currentProject = projectManager.getCurrentProjectNode()
       currentProject.model.on('change.currentTimeline', this.refreshTimeline)
       this.refreshTimeline()
     })
   }
 
   refreshTimeline = () => {
-    const currentProject = this.projectManager.getCurrentProject()
+    const currentProject = this.projectManager.getCurrentProjectNode()
     const timeline = currentProject.model.getCurrentTimeline()
 
     this.setState({timeline})

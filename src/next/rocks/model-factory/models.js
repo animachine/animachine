@@ -2,6 +2,7 @@ import Model from './Model'
 import defineProperties from './defineProperties'
 import defineChildren from './defineChildren'
 import defineType from './defineType'
+import uid from 'uid'
 
 
 
@@ -63,10 +64,10 @@ export class Track extends Model {}
 @defineType
 export class Timeline extends Model {
   set visibleTime (v) {
-      this.timescale = this.width / v;
+      this.timescale = this.width / v
   }
   get visibleTime () {
-      return this.width / this.timescale;
+      return this.width / this.timescale
   }
   get end() {
     return this.start + this.visibleTime
@@ -78,5 +79,10 @@ export class Timeline extends Model {
   {name: 'currentTimelineIndex', type: 'int'}
 ])
 @defineChildren({name: 'timeline', ChildClass: Timeline, current: true})
+@defineProperties([
+  {name: 'uid', type: 'string', initValue: () => uid()}
+])
 @defineType
-export class Project extends Model {}
+export class Project extends Model {
+
+}

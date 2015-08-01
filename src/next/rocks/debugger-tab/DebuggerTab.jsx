@@ -16,11 +16,11 @@ export default class DebuggerTab extends React.Component {
   }
 
   setProjectManager = (projectManager) => {
-    this.setCurrentProject(projectManager.getCurrentProject())
+    this.setCurrentProjectNode(projectManager.getCurrentProjectNode())
     projectManager.on('change.currentProject', this.setCurrentProject)
   }
 
-  setCurrentProject(currentProject) {
+  setCurrentProjectNode(currentProject) {
     currentProject.model.on('change', () => this.forceUpdate())
     this.setState({currentProject})
   }

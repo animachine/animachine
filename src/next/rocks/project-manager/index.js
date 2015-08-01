@@ -2,8 +2,9 @@ import EventEmitter from 'eventman'
 import ProjectNode from './ProjectNode'
 import pull from 'lodash/array/pull'
 import localStorage from 'putainde-localstorage'
+import React from 'react'
 
-const storage = localStorage.create(namespace: 'project-manager')
+const storage = localStorage.create({namespace: 'project-manager'})
 
 const projectManager = new class extends EventEmitter {
   constructor() {
@@ -68,13 +69,15 @@ const projectManager = new class extends EventEmitter {
 
   storeReopenState() {
     var reopenState = {
-      openedProjects: this.openedProjects.map(projectNode => {{
+      openedProjects: this.openedProjects.map(projectNode => ({
         uid: projectNode.model.uid,
         currentTimelineName: projectNode.model.getCurrentTimeline().name,
-        previewComponents: projectNode.previewComponents.map(previewComponent => ({
-          reactId: React.fincDOMNode(previewComponent).getAttribute('react-id')
-        }))
-      }})
+        previewComponents: projectNode.previewComponents.map(previewComponent => {
+          const node = React.findDOMNode(previewComponent)
+          const reactId = node.getAttribute('react-id')
+          return {reactId}
+        })
+      }))
     }
 
     storage.set('reopen-state', reopenState)
@@ -82,6 +85,7 @@ const projectManager = new class extends EventEmitter {
 
   loadReopenState() {
     const reopenState = storage.get('reopen-state')
+    return reopenState
   }
 
   showWelcomeDialog() {

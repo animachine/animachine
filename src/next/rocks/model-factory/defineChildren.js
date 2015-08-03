@@ -25,9 +25,9 @@ export default function defineChildren(descriptor) {
       //selection
       select: `select${capitalize(name)}`,
       deselect: `deselect${capitalize(name)}`,
-      getSelecteds: `getSelected${capitalize(name)}s`,
       selectAll: `selectAll${capitalize(name)}s`,
       deselectAll: `deselectAll${capitalize(name)}s`,
+      isSelected: `isSelected${capitalize(name)}`,
 
       eventAdd: `add${capitalize(name)}`,
       eventRemove: `remove${capitalize(name)}`,
@@ -160,6 +160,11 @@ export default function defineChildren(descriptor) {
         selection.slice().forEach(child => {
           this[names.deselect](child)
         })
+      }
+
+      proto[names.isSelected] = function (child) {
+        const selection = getSelection(this)
+        return selection.indexOf(child) !== -1
       }
     }
 

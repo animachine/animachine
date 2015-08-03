@@ -9,9 +9,9 @@ const colors = {
 
 const dragOptions = {
   onDown(props, monitor) {
-    const {x: clientX} = monitor.getClientOffset()
+    const {x} = monitor.getSourceClientOffset()
     const {model, timeline} = props
-    const time = timeline.clientXToTime(clientX)
+    const time = timeline.convertPositionToTime(x)
     const {shiftKey, ctrlKey} = monitor.getLastEvent()
     if (shiftKey && ctrlKey) {
       model.selectKeysAtTime(time)
@@ -26,9 +26,9 @@ const dragOptions = {
     })
   },
   onMove(props, monitor) {
-    const {x: clientX} = monitor.getClientOffset()
+    const {x} = monitor.getSourceClientOffset()
     const {model, timeline} = props
-    const time = timeline.clientXToTime(clientX)
+    const time = timeline.convertPositionToTime(x)
     const timeOffset = time - monitor.data.lastTime
 
     model.translateSelectedKeys(timeOffset)

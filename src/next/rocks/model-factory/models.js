@@ -2,6 +2,7 @@ import Model from './Model'
 import defineProperties from './defineProperties'
 import defineChildren from './defineChildren'
 import defineType from './defineType'
+import controlKeys from './controlKeys'
 import uid from 'uid'
 
 
@@ -41,6 +42,7 @@ export class Key extends Model {}
 @defineChildren({name: 'key', ChildClass: Key})
 @defineChildren({name: 'param', ChildClass: Param})
 @defineType
+@controlKeys
 export class Param extends Model {}
 
 @defineProperties([
@@ -49,19 +51,21 @@ export class Param extends Model {}
 ])
 @defineChildren({name: 'param', ChildClass: Param})
 @defineType
+@controlKeys
 export class Track extends Model {}
 
 @defineProperties([
   {name: 'name', type: 'string'},
   {name: 'currentTime', type: 'float', initValue: 0},
   {name: 'timescale', type: 'float', initValue: 1},
-  {name: 'length', type: 'float', initValue: 60000},
+  {name: 'length', type: 'float', initValue: 60000},// px/ms
   {name: 'width', type: 'float', initValue: 2000},
   {name: 'start', type: 'float', initValue: 0},
   {name: 'startMargin', type: 'float', initValue: 6},
 ])
 @defineChildren({name: 'track', ChildClass: Track})
 @defineType
+@controlKeys
 export class Timeline extends Model {
   set visibleTime (v) {
       this.timescale = this.width / v
@@ -72,16 +76,8 @@ export class Timeline extends Model {
   get end() {
     return this.start + this.visibleTime
   }
-  deselectAllKeys() {
-    this.forEachTrack(track => track.forEachParam(param => deselectIn(param)))
-
-    function deselectIn(param) {
-      param.deselectAllKeys()
-      param.forEachParam(param => deselectIn(param))
-    }
-  }
-  convertClientXToTime(clientX) {
-    return this.time
+  convertPositionToTime(position) {
+    return this.start - ((this.width / position) * this.visibleTime)
   }
 }
 

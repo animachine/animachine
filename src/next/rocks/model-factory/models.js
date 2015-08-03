@@ -72,6 +72,17 @@ export class Timeline extends Model {
   get end() {
     return this.start + this.visibleTime
   }
+  deselectAllKeys() {
+    this.forEachTrack(track => track.forEachParam(param => deselectIn(param)))
+
+    function deselectIn(param) {
+      param.deselectAllKeys()
+      param.forEachParam(param => deselectIn(param))
+    }
+  }
+  convertClientXToTime(clientX) {
+    return this.time
+  }
 }
 
 

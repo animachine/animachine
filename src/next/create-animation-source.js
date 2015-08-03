@@ -22,7 +22,7 @@ export default function createAnimationSource(projectSource, timelineName) {
 // headTime)
             gsTimeline.to(
               targets,
-              duration,
+              duration / 1000,
               {[param.name]: key.value},
               headTime
             )

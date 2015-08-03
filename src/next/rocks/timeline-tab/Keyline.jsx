@@ -1,10 +1,45 @@
 import React from 'react'
+import customDrag from 'custom-drag'
 
 const colors = {
   selected: '#01FF70',
   normal: '#eee'
 }
 
+
+const dragOptions = {
+  onDown(props, monitor) {
+    const {x: clientX} = monitor.getClientOffset()
+    const {model, timeline} = props
+    const time = timeline.clientXToTime(clientX)
+    const {shiftKey, ctrlKey} = monitor.getLastEvent()
+    if (shiftKey && ctrlKey) {
+      model.selectKeysAtTime(time)
+    }
+    else {
+      timeline.deselectAllKeys()
+      model.toggleKeysSelectionAtTime(time)
+    }
+
+    monitor.setData({
+      lastTime: time
+    })
+  },
+  onMove(props, monitor) {
+    const {x: clientX} = monitor.getClientOffset()
+    const {model, timeline} = props
+    const time = timeline.clientXToTime(clientX)
+    const timeOffset = time - monitor.data.lastTime
+
+    model.translateSelectedKeys(timeOffset)
+
+    monitor.setData({
+      lastTime: time
+    })
+  }
+}
+
+@customDrag(dragOptions)
 export default class Keyline extends React.Component {
   componentDidMount() {
     this.canvas = React.findDOMNode(this)
@@ -22,9 +57,10 @@ export default class Keyline extends React.Component {
   }
 
   render() {
-    const {timeline, height, style} = this.props
+    const {timeline, height, style, dragRef} = this.props
 
     return <canvas
+      ref = {dragRef}
       width = {timeline.width}
       height = {height}
       style = {{position: 'absolute', ...style}}/>

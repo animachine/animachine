@@ -19,12 +19,13 @@ export default function defineChildren(descriptor) {
       findBy: `find${capitalize(name)}By`,
       getAll: `get${capitalize(name)}s`,
       source: `${name}s`,
-
+      //current
       getCurrent: `getCurrent${capitalize(name)}`,
       setCurrent: `setCurrent${capitalize(name)}`,
-
+      //selection
       select: `select${capitalize(name)}`,
       deselect: `deselect${capitalize(name)}`,
+      getSelecteds: `getSelected${capitalize(name)}s`,
       selectAll: `selectAll${capitalize(name)}s`,
       deselectAll: `deselectAll${capitalize(name)}s`,
 
@@ -122,6 +123,43 @@ export default function defineChildren(descriptor) {
 
       proto[names.setCurrent] = function (item) {
         return currentMap.set(this, item)
+      }
+    }
+
+    if (selection) {
+      proto[names.select] = function (child) {
+        const children = getChildren(this)
+        const selection = getSelection(this)
+
+        if (children.indexOf(child) === -1) {
+          throw Error(`${child} isn't child of ${this}`)
+        }
+
+        if (selection.indexOf(child) === -1) {
+          selection.push(this)
+        }
+      }
+
+      proto[names.deselect] = function (child) {
+        const selection = getSelection(this)
+        const index = selection.indexOf(child)
+        if (index !== -1) {
+          selection.splice(index, 1)
+        }
+      }
+
+      proto[names.selectAll] = function (child) {
+        const children = getChildren(this)
+        children.slice().forEach(child => {
+          this[names.select](child)
+        })
+      }
+
+      proto[names.deselectAll] = function (child) {
+        const selection = getSelection(this)
+        selection.slice().forEach(child => {
+          this[names.deselect](child)
+        })
       }
     }
 

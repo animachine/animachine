@@ -5,7 +5,6 @@ var zip = require('gulp-zip')
 var webpack = require('webpack')
 var WebpackDevServer = require('webpack-dev-server')
 var demoWebpackConfig = require('./demo/webpack.config.js')
-var webpackConfig = {}
 var ghPages = require('gulp-gh-pages')
 
 
@@ -20,25 +19,6 @@ gulp.task('build-demo', function(callback) {
 	webpack(demoWebpackConfig, function(err, stats) {
 		if(err) throw new gutil.PluginError('build-demo', err)
 		gutil.log('[webpack:build]', stats.toString({
-			colors: true
-		}))
-		callback()
-	})
-})
-
-// modify some webpack config options
-var myDevConfig = Object.create(webpackConfig)
-myDevConfig.devtool = 'sourcemap'
-myDevConfig.debug = true
-
-// create a single instance of the compiler to allow caching
-var devCompiler = webpack(myDevConfig)
-
-gulp.task('webpack:build-dev', function(callback) {
-	// run webpack
-	devCompiler.run(function(err, stats) {
-		if(err) throw new gutil.PluginError('webpack:build-dev', err)
-		gutil.log('[webpack:build-dev]', stats.toString({
 			colors: true
 		}))
 		callback()
@@ -66,8 +46,8 @@ gulp.task('webpack-dev-server', function(callback) {
 })
 
 gulp.task('zip', function () {
-    return gulp.src('build_chrome/**/*.*')
-        .pipe(zip('build_chrome.zip'))
-        .pipe(size())
-        .pipe(gulp.dest('./'))
+  return gulp.src('build_chrome/**/*.*')
+    .pipe(zip('build_chrome.zip'))
+    .pipe(size())
+    .pipe(gulp.dest('./'))
 })

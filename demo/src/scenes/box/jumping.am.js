@@ -16,13 +16,13 @@ const project = {
                   name: 'x',
                   keys: [
                     {time: 0, value: 100},
-                    {time: 2, value: 200},
+                    {time: 2000, value: 200},
                   ]
                 }, {
                   name: 'y',
                   keys: [
                     {time: 0, value: 300},
-                    {time: 2, value: 300},
+                    {time: 2000, value: 300},
                   ]
                 }
               ]

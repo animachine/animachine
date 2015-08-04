@@ -25,3 +25,11 @@ matterkitTheme.extendSource('colors', () => ({
 
   selected: '#01FF70',
 }))
+
+// matterkitTheme.extendSource('config', () => ({
+//   lineHeight: 16,
+// }))
+//
+// matterkitTheme.extendSource('font', () => ({
+//   fontSize: '11px',
+// }))

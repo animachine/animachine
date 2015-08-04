@@ -14,7 +14,7 @@ export default class Timeline extends React.Component {
   }
 
   static defaultProps = {
-    headHeight: 32
+    headHeight: 21
   }
 
   componentDidMount() {

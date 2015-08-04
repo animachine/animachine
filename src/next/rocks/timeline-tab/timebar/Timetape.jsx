@@ -68,8 +68,8 @@ export default class Timetape extends React.Component {
   }
 
   render() {
-    const {width, height, style} = this.props
-    return <canvas width={width} height={height} style={style}/>
+    const {width, height, style, dragRef} = this.props
+    return <canvas ref={dragRef}  width={width} height={height} style={style}/>
   }
 
   postRender() {

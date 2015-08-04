@@ -28,6 +28,6 @@ export default class DebuggerTab extends React.Component {
   render() {
     const {currentProject} = this.state
     const model = currentProject && currentProject.model || {}
-    return <JsonVison settings={settings} value={model}/>
+    return <JsonVison style={{overflow:'hidden'}} settings={settings} value={model}/>
   }
 }

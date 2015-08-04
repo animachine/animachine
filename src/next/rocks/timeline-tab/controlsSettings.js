@@ -1,3 +1,6 @@
+import endsWith from 'lodash/string/endsWith'
+import _isFinite from 'lodash/lang/isFinite'
+
 export default [{
   selector: 'root',
   hiddenHead: true,
@@ -43,4 +46,16 @@ export default [{
 
 function handleToggleOpen(connect) {
   connect.value.openInTimeline = !connect.value.openInTimeline
+}
+
+function selectParam(keys) {
+  keys = keys.split(',')
+  return {
+    selector: connect => {
+      return connect.parent &&
+        connect.parent.modelType === 'Param' &&
+        keys.indexOf(connect.value.name) !== -1
+    },
+    label: connect => connect.value.name
+  }
 }

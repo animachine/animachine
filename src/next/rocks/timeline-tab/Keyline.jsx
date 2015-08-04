@@ -56,7 +56,9 @@ const dragOptions = {
   }
 }
 
-@customDrag(dragOptions)
+@customDrag(dragOptions, connect => ({
+  dragRef: connect.getDragRef()
+}))
 export default class Keyline extends React.Component {
   componentDidMount() {
     this.canvas = React.findDOMNode(this)
@@ -102,12 +104,12 @@ export default class Keyline extends React.Component {
       visibleKeys.forEach((key, idx) => {
         this.drawKey(key)
 
-        const startTime = idx === 0 ? 0 : visibleKeys[idx - 1].time
-        this.drawEase(key, startTime)
+        // const startTime = idx === 0 ? 0 : visibleKeys[idx - 1].time
+        // this.drawEase(key, startTime)
       })
     }
     else {
-      
+
     }
   }
 

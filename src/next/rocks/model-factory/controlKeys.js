@@ -38,6 +38,26 @@ export default function (ModelClass) {
   ModelClass.prototype.deselectAllKeys = function () {
     recurseParams(param => param.deselectAllKeys())
   }
+
+  ModelClass.prototype.findClosestKey = function (time) {
+    var closestKey
+
+    recurseKeys(key => {
+      if (!closestKey) {
+        closestKey = key
+      }
+      else {
+        const diffA = Math.abs(closestKey.time - time)
+        const diffB = Math.abs(key.time - time)
+
+        if (diffB < diffA) {
+          closestKey = key
+        }
+      }
+    })
+
+    return closestKey
+  }
 }
 
 function recurseKeys(model, fn) {

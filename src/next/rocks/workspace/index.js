@@ -4,9 +4,7 @@ import createMountNode from './createMountNode'
 import source from './source'
 import HTML5Backend from 'react-dnd/modules/backends/HTML5'
 import { DragDropContext } from 'react-dnd'
-import {createTheme} from 'react-matterkit'
-
-const matterkitTheme = createTheme()
+import matterkitTheme from './matterkitTheme'
 
 const workspace = new SpacemanStore(source)
 export default workspace

@@ -1,48 +1,55 @@
 import React from 'react'
 import customDrag from 'custom-drag'
 
-const getDragOptions = (dragMode) => ({
-  connectReferenceName: `${dragMode}Dragger`,
-  onDown(props, monitor) {
-    const {start, visibleTime, timescale} = props.timeline
-    monitor.setData({start, visibleTime, timescale})
-  },
-  onDrag(props, monitor) {
-    const {timeline} = props
-    const {x: xInit} = monitor.getInitialClientOffset()
-    const {x: xNow} = monitor.getClientOffset()
-    const scale = timeline.width / timeline.length
-    const move = (xNow - xInit) / scale
-    const initial = monitor.data
-    const start = initial.start - move
+const getDragArgs = (dragMode) => {
+  const options = {
+    onDown(props, monitor) {
+      const {start, visibleTime, timescale} = props.timeline
+      monitor.setData({start, visibleTime, timescale})
+    },
+    onDrag(props, monitor) {
+      const {timeline} = props
+      const {x: xInit} = monitor.getInitialClientOffset()
+      const {x: xNow} = monitor.getClientOffset()
+      const scale = timeline.width / timeline.length
+      const move = (xNow - xInit) / scale
+      const initial = monitor.data
+      const start = initial.start - move
 
-    if (dragMode === 'move') {
-      timeline.start = start
-    }
-    else if (dragMode === 'start') {
-      timeline.start = start
-      timeline.visibleTime = initial.visibleTime - move
-    }
-    else if (dragMode === 'end') {
-      timeline.visibleTime = initial.visibleTime + move
+      if (dragMode === 'move') {
+        timeline.start = start
+      }
+      else if (dragMode === 'start') {
+        timeline.start = start
+        timeline.visibleTime = initial.visibleTime - move
+      }
+      else if (dragMode === 'end') {
+        timeline.visibleTime = initial.visibleTime + move
 
-      let mdPos = (initial.start + timeline.currentTime) * initial.timescale
-      timeline.start = -((timeline.currentTime * timeline.timescale) - mdPos) / timeline.timescale
+        let mdPos = (initial.start + timeline.currentTime) * initial.timescale
+        timeline.start = -((timeline.currentTime * timeline.timescale) - mdPos) / timeline.timescale
+      }
+    },
+    onEnter(props, monitor, component) {
+      console.log('enter', dragMode, component)
+      component.setState({hover: dragMode})
+    },
+    onLeave(props, monitor, component) {
+      console.log('leave', dragMode, component)
+      component.setState({hover: false})
     }
-  },
-  onEnter(props, monitor, component) {
-    console.log('enter', dragMode, component)
-    component.setState({hover: dragMode})
-  },
-  onLeave(props, monitor, component) {
-    console.log('leave', dragMode, component)
-    component.setState({hover: false})
   }
-})
 
-@customDrag(getDragOptions('move'))
-@customDrag(getDragOptions('start'))
-@customDrag(getDragOptions('end'))
+  const connect = (connect) => ({
+    [`${dragMode}Dragger`]: connect.getDragRef()
+  })
+
+  return [options, connect]
+}
+
+@customDrag(...getDragArgs('move'))
+@customDrag(...getDragArgs('start'))
+@customDrag(...getDragArgs('end'))
 export default class Pointer extends React.Component {
   constructor(props) {
     super(props)

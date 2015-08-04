@@ -1,18 +1,35 @@
 import React from 'react'
 import customDrag from 'custom-drag'
+import {getTheme} from 'react-matterkit'
 
-const colors = {
-  selected: '#01FF70',
-  normal: '#eee'
-}
+const colors = (() => {
+  const {selected, grey2: normal, red} = getTheme(this).getStyle('colors')
 
+  return {
+    selected,
+    normal,
+    red,
+    ease: 'rgba(225,225,225,.23)'
+  }
+}())
 
 const dragOptions = {
   onDown(props, monitor) {
     const {x} = monitor.getSourceClientOffset()
     const {model, timeline} = props
-    const time = timeline.convertPositionToTime(x)
+    const mouseTime = timeline.convertPositionToTime(x)
+    const closestKey = model.findClosestKey(mouseTime)
+
+    if (
+      !closestKey ||
+      (Math.abs(mouseTime - closestKey.time) * timeline.timescale) > 4
+    ) {
+      return false // prevent draggign
+    }
+
+    const {time} = closestKey
     const {shiftKey, ctrlKey} = monitor.getLastEvent()
+
     if (shiftKey && ctrlKey) {
       model.selectKeysAtTime(time)
     }
@@ -82,24 +99,28 @@ export default class Keyline extends React.Component {
         }
       })
 
-      visibleKeys.forEach(key => this.drawKey(key))
+      visibleKeys.forEach((key, idx) => {
+        this.drawKey(key)
+
+        const startTime = idx === 0 ? 0 : visibleKeys[idx - 1].time
+        this.drawEase(key, startTime)
+      })
     }
     else {
-      //
+      
     }
   }
 
   timeToDrawPos(time) {
-    const {start, width, timescale} = this.props.timeline
+    const {start, timescale} = this.props.timeline
     return (time + start) * timescale
   }
 
   drawKey(key, isSelected) {
     const {ctx} = this
-
-    var {height} = this.props
-    var keyPos = parseInt(this.timeToDrawPos(key.time)) + 0.5
-    var r = 2
+    const {height} = this.props
+    const keyPos = parseInt(this.timeToDrawPos(key.time)) + 0.5
+    const r = 2
     // if (line) {
       ctx.save()
       ctx.beginPath()
@@ -126,7 +147,7 @@ export default class Keyline extends React.Component {
     // if (this.timeline.currTime === this.time) {
     //     ctx.save()
     //     ctx.beginPath()
-    //     ctx.strokeStyle = amgui.color.red
+    //     ctx.strokeStyle = colors.red
     //     ctx.lineWidth = 1
     //     ctx.arc(keyPos, height/2, 6, 0, 2 * Math.PI)
     //     ctx.stroke()
@@ -134,31 +155,26 @@ export default class Keyline extends React.Component {
     // }
   }
 
-  drawEase() {
+  drawEase(key, startTime) {
+    const {ctx} = this
+    const {ease} = key
+    const {height} = this.props
+    const startPos = parseInt(this.timeToDrawPos(startTime)) + 0.5
+    const endPos = parseInt(this.timeToDrawPos(key.time)) + 0.5
+    const width = endPos - startPos
 
-    if (!this.ease) return
-
-    var looks = this.looks || this.parentKeyLine.keyLooks
-
-    var ease = this.ease,
-        color = (looks.ease && looks.ease.color) || 'rgba(225,225,225,.23)',
-        height = this._height,
-        keyPos = this.timeline.timeToRenderPos(this.time),
-        prevKey = this.getPrevKey(),
-        prevKeyPos = this.timeline.timeToRenderPos(prevKey ? prevKey.time : 0),
-        width = keyPos - prevKeyPos
-
-    if (width === 0) return
+    if (width === 0) {
+      return
+    }
 
     ctx.save()
     ctx.beginPath()
-    ctx.strokeStyle = color
+    ctx.strokeStyle = colors.ease
     ctx.lineWidth = 1.2
-    ctx.moveTo(prevKeyPos, height)
+    ctx.moveTo(startPos, height)
 
-    for (var i = 0; i < width; ++i) {
-
-        ctx.lineTo(prevKeyPos + i, height - height * ease.getRatio(i/width))
+    for (let i = 0; i < width; ++i) {
+      ctx.lineTo(startPos + i, height - height * ease.getRatio(i/width))
     }
 
     ctx.stroke()

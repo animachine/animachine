@@ -1,11 +1,62 @@
 import React from 'react'
 import steps from './steps'
+import customDrag from 'custom-drag'
 
 const color = {
   bg3: 'white'
 }
 
-export default class Timebar extends React.Component {
+const dragOptions = {
+  onDown(props, monitor) {
+    const {shiftKey, ctrlKey} = monitor.getLastEvent()
+    const {timeline} = props
+    var dragMode
+
+    if (shiftKey) {
+      dragMode = 'translate'
+    }
+    else if (ctrlKey) {
+      dragMode = 'scale'
+    }
+    else {
+      dragMode = 'seek'
+    }
+
+    monitor.setData({
+      dragMode,
+      initStart: timeline.start,
+      initTimescale: timeline.timescale,
+    })
+  },
+  onDrag(props, monitor) {
+    const {dragMode} = monitor.data
+    const {timeline} = props
+    const {currentTime, timescale} = timeline
+    const {initStart, initTimescale} = monitor.data
+    const offset = monitor.getDifferenceFromInitialOffset().x
+
+    if (dragMode === 'seek') {
+      let {x} = monitor.getSourceClientOffset()
+      let time = timeline.convertPositionToTime(x)
+
+      timeline.currentTime = time
+    }
+    else if (dragMode === 'translate') {
+      timeline.start = initStart + (offset / timescale)
+    }
+    else if (dragMode === 'scale') {
+      timeline.timescale = initTimescale + (offset / 1000)
+      //keep pointer in the same position
+      var mdPos = (initStart + currentTime) * initTimescale
+      timeline.start = -((currentTime * timescale) - mdPos) / timescale
+    }
+  }
+}
+
+@customDrag(dragOptions, connect => ({
+  dragRef: connect.getDragRef()
+}))
+export default class Timetape extends React.Component {
   componentDidMount() {
     this.canvas = React.findDOMNode(this)
     this.ctx = this.canvas.getContext('2d')
@@ -24,7 +75,7 @@ export default class Timebar extends React.Component {
   postRender() {
     const {canvas, ctx} = this
     const {timeline, height} = this.props
-    const {start, length, visibleTime, timescale, width} = timeline
+    const {start, visibleTime, timescale, width} = timeline
     const maxMarkers = width / 4
     var step, text, textW
 
@@ -62,10 +113,5 @@ export default class Timebar extends React.Component {
       }
       ctx.stroke()
     }
-
-    // this._refreshPointer()
-
-    var endWidth = ((visibleTime - (start + length)) * timescale)
-    // this._deEndShadow.style.width = Math.max(0, Math.min(width, endWidth)) + 'px'
   }
 }

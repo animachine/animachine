@@ -1,4 +1,4 @@
-import createAnimationSource from '../../create-animation-source'
+import {createAnimationSource} from 'react-animachine-enhancer'
 var modelFactory
 BETON.getRock('model-factory', rock => modelFactory = rock)
 

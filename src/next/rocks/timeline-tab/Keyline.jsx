@@ -1,6 +1,7 @@
 import React from 'react'
 import customDrag from 'custom-drag'
 import {getTheme} from 'react-matterkit'
+import {createEaser} from 'react-animachine-enhancer'
 
 const colors = (() => {
   const {selected, grey2: normal, red} = getTheme(this).getStyle('colors')
@@ -104,8 +105,8 @@ export default class Keyline extends React.Component {
       visibleKeys.forEach((key, idx) => {
         this.drawKey(key)
 
-        // const startTime = idx === 0 ? 0 : visibleKeys[idx - 1].time
-        // this.drawEase(key, startTime)
+        const startTime = idx === 0 ? 0 : visibleKeys[idx - 1].time
+        this.drawEase(key, startTime)
       })
     }
     else {
@@ -135,15 +136,15 @@ export default class Keyline extends React.Component {
     // }
 
     // if (circle) {
-      ctx.save()
-      ctx.beginPath()
-      ctx.strokeStyle = isSelected ? colors.selected : colors.normal
-      ctx.fillStyle = isSelected ? colors.selected : colors.normal
-      ctx.lineWidth = 1
-      ctx.arc(keyPos, height/2, r, 0, 2 * Math.PI)
-      ctx.fill()
-      ctx.stroke()
-      ctx.restore()
+      // ctx.save()
+      // ctx.beginPath()
+      // ctx.strokeStyle = isSelected ? colors.selected : colors.normal
+      // ctx.fillStyle = isSelected ? colors.selected : colors.normal
+      // ctx.lineWidth = 1
+      // ctx.arc(keyPos, height/2, r, 0, 2 * Math.PI)
+      // ctx.fill()
+      // ctx.stroke()
+      // ctx.restore()
     // }
     //TODO
     // if (this.timeline.currTime === this.time) {
@@ -159,8 +160,8 @@ export default class Keyline extends React.Component {
 
   drawEase(key, startTime) {
     const {ctx} = this
-    const {ease} = key
     const {height} = this.props
+    const easer = createEaser(key.ease)
     const startPos = parseInt(this.timeToDrawPos(startTime)) + 0.5
     const endPos = parseInt(this.timeToDrawPos(key.time)) + 0.5
     const width = endPos - startPos
@@ -176,7 +177,7 @@ export default class Keyline extends React.Component {
     ctx.moveTo(startPos, height)
 
     for (let i = 0; i < width; ++i) {
-      ctx.lineTo(startPos + i, height - height * ease.getRatio(i/width))
+      ctx.lineTo(startPos + i, height - height * easer.getRatio(i/width))
     }
 
     ctx.stroke()

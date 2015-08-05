@@ -4,9 +4,8 @@ import defineChildren from './defineChildren'
 import defineType from './defineType'
 import controlKeys from './controlKeys'
 import uid from 'uid'
-
-
-
+import mandatoryParamGroups from './mandatoryParamGroups'
+import {recurseParams} from './recursers'
 
 @defineProperties([
   {name: 'roughEase', type: 'boolean', startValue: false},
@@ -43,7 +42,16 @@ export class Key extends Model {}
 @defineChildren({name: 'param', ChildClass: Param})
 @defineType
 @controlKeys
-export class Param extends Model {}
+export class Param extends Model {
+  demandKeyLike(keySource) {
+    var demandedKey = this.getKeyBy('time', keySource.time)
+    if (!demandedKey) {
+      demandedKey = new Key(keySource)
+      this.addKey(demandedKey)
+    }
+    return demandedKey
+  }
+}
 
 @defineProperties([
   {name: 'selectors'},
@@ -52,7 +60,30 @@ export class Param extends Model {}
 @defineChildren({name: 'param', ChildClass: Param})
 @defineType
 @controlKeys
-export class Track extends Model {}
+export class Track extends Model {
+  demandParamLike(paramSource) {
+    var demandedParam
+    recurseParams(this, param => {
+      if (param.name === paramSource.name) {
+        demandedParam = param
+      }
+    })
+
+    if (demandedParam) {
+      return demandedParam
+    }
+
+    var parent = this
+    const parentParamName = mandatoryParamGroups.getParentName(demandedParam.name)
+    if (parentParamName) {
+      parent = this.demandParamLike({name: parentParamName})
+    }
+
+    demandedParam = new Param(paramSource)
+    parent.addParam(demandedParam)
+    return demandedParam
+  }
+}
 
 @defineProperties([
   {name: 'name', type: 'string'},

@@ -6,7 +6,7 @@
   ],
   "globals": {
     "BETON": true,
-    "TimelineMax": true
+    "GreenSockGlobals": true
   },
   "ecmaFeatures": {
     "jsx": true

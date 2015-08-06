@@ -2,7 +2,24 @@ import React from 'react'
 import Controls from './Controls'
 import Keylines from './Keylines'
 import Timebar from './timebar/Timebar'
+import DividerLine from './DividerLine'
+import customDrag from 'custom-drag'
 
+const dragOptions = {
+  onDown(props, monitor, component) {
+    monitor.setData({
+      initDividerPos: component.state.dividerPos
+    })
+  },
+  onDrag(props, monitor, component) {
+    const dividerPos = monitor.getDifferenceFromInitialOffset().x
+    component.setState({dividerPos})
+  }
+}
+
+@customDrag(dragOptions, connect => ({
+  dragRef: connect.getDragRef()
+}))
 export default class Timeline extends React.Component {
   constructor() {
     super()
@@ -35,24 +52,19 @@ export default class Timeline extends React.Component {
 
   render() {
     const {dividerPos} = this.state
-    const {timeline, headHeight} = this.props
+    const {timeline, headHeight, dragRef} = this.props
     const {width} = this.state
-    const styleSide = {
-      display: 'flex',
-      position: 'relative',
-      flexDirection: 'column',
-    }
 
     return <div style={{display: 'flex', width, height: '100%'}}>
-      <div style={{width: dividerPos, ...styleSide}}>
-        <div style={{height: headHeight}}/>
-        <Controls timeline={timeline}/>
-      </div>
-      <div style={{flex: 1, ...styleSide}}>
-        <Timebar timeline={timeline} height={headHeight}/>
+      <div style={{display: 'flex', height: headHeight}}/>
+        <div style={{width: dividerPos}}/>
+        <Timebar timeline={timeline}/>
+      <div/>
+      <div style={{display: 'flex', flex: 1}}>
+        <Controls timeline={timeline} style={{width: dividerPos}}/>
         <Keylines timeline={timeline}/>
+        <DividerLine ref={dragRef}/>
       </div>
-      <div ref='divider'/>
     </div>
   }
 }

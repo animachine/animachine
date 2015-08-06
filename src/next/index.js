@@ -1,5 +1,3 @@
-require('babel/polyfill')
-
 import BETON from './beton'
 import modelFactory from './rocks/model-factory'
 import componentInspector from './rocks/component-inspector'

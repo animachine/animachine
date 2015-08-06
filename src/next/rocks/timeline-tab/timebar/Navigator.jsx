@@ -61,6 +61,19 @@ export default class Pointer extends React.Component {
     position: 0,
   }
 
+  componentDidMount() {
+    this.props.timeline.on([
+      'change.start',
+      'change.timescale',
+      'change.width',
+      'change.startMargin',
+    ], () => this.forceUpdate())
+  }
+
+  shouldComponentUpdate() {
+    return false
+  }
+
   renderHandler(side, ref) {
     const style = {
       position: 'absolute',

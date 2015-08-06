@@ -29,14 +29,14 @@ export default function (ModelClass) {
     })
   }
 
-  ModelClass.prototype.translateSelectedKeys = function (offset) {
+  ModelClass.prototype.forEachSelectedKey = function (fn) {
     recurseKeys(this, (key, param) => {
       if (param.isSelectedKey(key)) {
-        key.time += offset
+        fn(key, param)
       }
     })
   }
-
+  
   ModelClass.prototype.deselectAllKeys = function () {
     recurseParams(param => param.deselectAllKeys())
   }
@@ -59,5 +59,27 @@ export default function (ModelClass) {
     })
 
     return closestKey
+  }
+
+  ModelClass.prototype.findNextKey = function (time) {
+    var nextKey
+
+    recurseKeys(key => {
+      if (key.time > time) {
+        if (!nextKey) {
+          nextKey = key
+        }
+        else {
+          const diffA = Math.abs(nextKey.time - time)
+          const diffB = Math.abs(key.time - time)
+
+          if (diffB < diffA) {
+            nextKey = key
+          }
+        }
+      }
+    })
+
+    return nextKey
   }
 }

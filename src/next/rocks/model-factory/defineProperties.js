@@ -15,8 +15,11 @@ export default function defineProperties(descriptors) {
     const {
       name,
       type,
+      min,
+      max,
       history,
       initValue,
+      fixValue,
       eventName = `change.${name}`
     } = descriptor
     const valueMap = new WeakMap()
@@ -47,6 +50,11 @@ export default function defineProperties(descriptors) {
 
     function set(v) {
       v = fixType(v)
+      v = generalFixValue(v)
+      if (fixValue) {
+        v = fixValue(v)
+      }
+
       var value = get.call(this)
 
       if (v === value || isInvalidValue(v)) {
@@ -83,6 +91,17 @@ export default function defineProperties(descriptors) {
       }
 
       return v
+    }
+
+    function generalFixValue(v) {
+      if (type === 'foat' || type === 'int') {
+        if (_isFinite(min)) {
+          v = Math.max(min, v)
+        }
+        if (_isFinite(max)) {
+          v = Math.min(max, v)
+        }
+      }
     }
 
     function isInvalidValue(v) {

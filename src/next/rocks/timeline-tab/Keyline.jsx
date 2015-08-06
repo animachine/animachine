@@ -2,6 +2,7 @@ import React from 'react'
 import customDrag from 'custom-drag'
 import {getTheme} from 'react-matterkit'
 import {createEaser} from 'react-animachine-enhancer'
+import inlineEaseEditorStore from './inline-ease-editor/inlineEaseEditorStore'
 
 const colors = (() => {
   const {selected, grey2: normal, red} = getTheme(this).getStyle('colors')
@@ -49,7 +50,7 @@ const dragOptions = {
     const time = timeline.convertPositionToTime(x)
     const timeOffset = time - monitor.data.lastTime
 
-    model.translateSelectedKeys(timeOffset)
+    model.forEachSelectedKey(key => key.time += timeOffset)
 
     monitor.setData({
       lastTime: time
@@ -74,6 +75,22 @@ export default class Keyline extends React.Component {
 
   componentDidUpdate() {
     this.postRender()
+  }
+
+  handleDoubleClick() {
+    const {timeline, model} = this.props
+    const nextKey = model.getNextKey(timeline.currentTime)
+    if (!nextKey) {
+      return
+    }
+
+    model.selectKeysAtTime(nextKey.time)
+    const controlledEases = []
+    model.forEachSelectedKey(key => controlledEases.push(key.ease))
+    inlineEaseEditorStore.focus({
+      ///???
+      controlledEases,
+    })
   }
 
   render() {

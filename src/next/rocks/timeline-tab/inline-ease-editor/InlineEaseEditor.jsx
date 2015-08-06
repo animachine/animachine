@@ -1,6 +1,4 @@
 import React from 'react'
-import JsonVison from 'json-vision'
-import settings from './settings'
 
 export default class DebuggerTab extends React.Component {
   static propTypes = {
@@ -9,10 +7,12 @@ export default class DebuggerTab extends React.Component {
   }
 
   renderControlPoint(pointIdx, ref) {
+    const {controlledEases} = this.props
+
     const style = {
       position: 'absolute',
-      left: points[pointIdx] * this._width
-      top: points[pointIdx+1] * this._height
+      left: points[pointIdx] * this._width,
+      top: points[pointIdx+1] * this._height,
       cursor: 'grab',
       boxSizing: 'border-box',
       width: r*2,
@@ -24,6 +24,14 @@ export default class DebuggerTab extends React.Component {
     }
 
     return <div style={style} ref={ref}/>
+
+  return <ControlPoint
+    onChange = {(x, y) => {
+      controlledEases.forEach(ease => {
+        ease[`point${pointName}X`] = x
+        ease[`point${pointName}Y`] = y
+      })
+    }}/>
   }
 
   render() {
@@ -44,8 +52,8 @@ export default class DebuggerTab extends React.Component {
       <svg style={rootSvgStyle}>
         <path/>
       </svg>
-      {this.renderControlPoint(0, leftDragRef)}
-      {this.renderControlPoint(2, rightDragRef)}
+      {this.renderControlPoint(0)}
+      {this.renderControlPoint(2)}
     </div>
   }
 }

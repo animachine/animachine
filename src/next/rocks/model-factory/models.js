@@ -8,6 +8,11 @@ import mandatoryParamGroups from './mandatoryParamGroups'
 import {recurseParams} from './recursers'
 
 @defineProperties([
+  {name: 'time', type: 'string', initValue: 'bezier'},
+  {name: 'pointAX', type: 'number', initValue: 0, min: 0, max: 1},
+  {name: 'pointAY', type: 'number', initValue: 0},
+  {name: 'pointBX', type: 'number', initValue: 1, min: 0, max: 1},
+  {name: 'pointBY', type: 'number', initValue: 1},
   {name: 'roughEase', type: 'boolean', startValue: false},
   {name: 'roughStrength', type: 'float', startValue: 1},
   {name: 'roughPoints', type: 'int', startValue: 20},
@@ -21,7 +26,7 @@ export class Ease extends Model {}
 
 @defineProperties([
   {name: 'time', type: 'float'},
-  {name: 'value', },
+  {name: 'value'},
   {name: 'selected', type: 'boolean'},
   {name: 'ease', type: 'object'},
 ])
@@ -87,12 +92,28 @@ export class Track extends Model {
 
 @defineProperties([
   {name: 'name', type: 'string'},
-  {name: 'currentTime', type: 'float', initValue: 0},
-  {name: 'timescale', type: 'float', initValue: 1},
-  {name: 'length', type: 'float', initValue: 60000},// px/ms
+  {
+    name: 'currentTime',
+    type: 'float',
+    initValue: 0,
+    fixValue: value => Math.max(0, value)
+  },
+  {name: 'length', type: 'float', initValue: 60000},
+  //TODO remove these from the model
+  {
+    name: 'timescale', // px/ms
+    type: 'float',
+    initValue: 1,
+    fixValue: value => Math.min(3, Math.max(0.0001, value))
+  },
   {name: 'width', type: 'float', initValue: 2000},
-  {name: 'start', type: 'float', initValue: 0},
-  {name: 'startMargin', type: 'float', initValue: 6},
+  {
+    name: 'start', // start offset in ms
+    type: 'float',
+    initValue: 0,
+    fixValue: value => Math.min(this.startMargin / this.timescale, value)
+  },
+  {name: 'startMargin', type: 'float', initValue: 6},//in pixel
 ])
 @defineChildren({name: 'track', ChildClass: Track})
 @defineType
@@ -108,7 +129,7 @@ export class Timeline extends Model {
     return this.start + this.visibleTime
   }
   convertPositionToTime(position) {
-    return this.start - ((this.width / position) * this.visibleTime)
+    return ((position / this.width) * this.visibleTime) - this.start
   }
 }
 

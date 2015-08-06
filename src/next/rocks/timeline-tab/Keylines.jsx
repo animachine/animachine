@@ -1,5 +1,6 @@
 import React from 'react'
 import Keyline from './Keyline'
+import InlineEaseEditor from './inline-ease-editor/InlineEaseEditor'
 
 export default class Keylines extends React.Component {
   constructor() {
@@ -32,6 +33,7 @@ export default class Keylines extends React.Component {
 
     return <div style={{position: 'relative', height: pos}}>
       {children}
+      <InlineEaseEditor/>
     </div>
   }
 }

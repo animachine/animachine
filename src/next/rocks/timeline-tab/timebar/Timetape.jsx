@@ -8,7 +8,8 @@ const color = {
 
 const dragOptions = {
   onDown(props, monitor) {
-    const {shiftKey, ctrlKey} = monitor.getLastEvent()
+
+    const {shiftKey, ctrlKey} = monitor.getLastEvent().nativeEvent
     const {timeline} = props
     var dragMode
 
@@ -38,14 +39,16 @@ const dragOptions = {
     if (dragMode === 'seek') {
       let {x} = monitor.getSourceClientOffset()
       let time = timeline.convertPositionToTime(x)
-
+console.log('seek', time)
       timeline.currentTime = time
     }
     else if (dragMode === 'translate') {
       timeline.start = initStart + (offset / timescale)
+console.log('translate', timeline.start)
     }
     else if (dragMode === 'scale') {
       timeline.timescale = initTimescale + (offset / 1000)
+console.log('scale', timeline.timescale)
       //keep pointer in the same position
       var mdPos = (initStart + currentTime) * initTimescale
       timeline.start = -((currentTime * timescale) - mdPos) / timescale

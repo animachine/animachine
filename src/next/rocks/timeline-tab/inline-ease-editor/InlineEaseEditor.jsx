@@ -1,37 +1,25 @@
 import React from 'react'
+import ControlPoint from './ControlPoint'
+import InlineEaseEditorStore from './inlineEaseEditorStore'
 
-export default class DebuggerTab extends React.Component {
+export default class InlineEaseEditor extends React.Component {
   static propTypes = {
     store: React.PropTypes.object,
     timelineTab: React.PropTypes.object,
   }
 
-  renderControlPoint(pointIdx, ref) {
-    const {controlledEases} = this.props
+  renderControlPoint(pointName, ref) {
+    const {mainEase, controlledEases} = this.props
+    const x = mainEase[`point${pointName}X`]
+    const y = mainEase[`point${pointName}Y`]
 
-    const style = {
-      position: 'absolute',
-      left: points[pointIdx] * this._width,
-      top: points[pointIdx+1] * this._height,
-      cursor: 'grab',
-      boxSizing: 'border-box',
-      width: r*2,
-      height: r*2,
-      transform: `translate(-${r}px,-${r}px)`,
-      borderRadius: r,
-      background: '#00BFFF',
-      pointerEvents: 'auto',
-    }
-
-    return <div style={style} ref={ref}/>
-
-  return <ControlPoint
-    onChange = {(x, y) => {
-      controlledEases.forEach(ease => {
-        ease[`point${pointName}X`] = x
-        ease[`point${pointName}Y`] = y
-      })
-    }}/>
+    return <ControlPoint
+      onChange = {(x, y) => {
+        controlledEases.forEach(ease => {
+          ease[`point${pointName}X`] = x
+          ease[`point${pointName}Y`] = y
+        })
+      }}/>
   }
 
   render() {

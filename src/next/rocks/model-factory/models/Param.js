@@ -23,8 +23,7 @@ import {createEaser} from 'react-animachine-enhancer'
 @controlKeys
 export default class Param extends Model {
   demandKeyLike(keySource) {
-    debugger
-    var demandedKey = this.getKeyBy('time', keySource.time)
+    var demandedKey = this.findKeyBy('time', keySource.time)
     if (!demandedKey) {
       demandedKey = new Key(keySource)
       this.addKey(demandedKey)

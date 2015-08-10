@@ -2,6 +2,7 @@ import React from 'react'
 import Controls from './Controls'
 import Keylines from './Keylines'
 import Timebar from './timebar/Timebar'
+import Toolbar from './Toolbar'
 import DividerLine from './DividerLine'
 import customDrag from 'custom-drag'
 
@@ -63,7 +64,7 @@ export default class Timeline extends React.Component {
 
     return <div style={rootStyle}>
       <div style={{display: 'flex', height: headHeight}}>
-        <div style={{width: dividerPos}}/>
+        <Toolbar timeline={timeline} style={{width: dividerPos}}/>
         <Timebar timeline={timeline} height={headHeight}/>
       </div>
       <div style={{display: 'flex', flex: 1}}>

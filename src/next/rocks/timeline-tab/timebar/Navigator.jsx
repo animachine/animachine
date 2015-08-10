@@ -31,11 +31,9 @@ const getDragArgs = (dragMode) => {
       }
     },
     onEnter(props, monitor, component) {
-      console.log('enter', dragMode, component)
       component.setState({hover: dragMode})
     },
     onLeave(props, monitor, component) {
-      console.log('leave', dragMode, component)
       component.setState({hover: false})
     }
   }

@@ -10,6 +10,21 @@ export default class Keylines extends React.Component {
     this.inlineEaseEditorStore = new InlineEaseEditorStore()
   }
 
+  renderPointerLine() {
+    const {timeline} = this.props
+    const position = timeline.convertTimeToPosition(timeline.currentTime)
+    const style = {
+      position: 'absolute',
+      transform: `translate(${position}px)`,
+      left: 0,
+      top: 0,
+      width: 1,
+      height: '100%',
+      backgroundColor: '#FF4136',
+    }
+    return <div style={style}/>
+  }
+
   render() {
     const {timeline}  = this.props
     const height = this.config.size
@@ -34,8 +49,9 @@ export default class Keylines extends React.Component {
 
     timeline.forEachTrack(param => renderKeyline(param))
 
-    return <div style={{position: 'relative', height: pos}}>
+    return <div style={{position: 'relative'}}>
       {children}
+      {this.renderPointerLine()}
       <InlineEaseEditor
         timeline = {timeline}
         store = {this.inlineEaseEditorStore}/>

@@ -6,7 +6,7 @@ import Navigator from './Navigator'
 export default class Timebar extends React.Component {
   render() {
     const {height, timeline} = this.props
-    return <div>
+    return <div style={{position: 'relative'}}>
       <Timetape {...{height, timeline}}/>
       <Navigator {...{timeline}}/>
       <Pointer {...{timeline}}/>

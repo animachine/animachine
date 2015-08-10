@@ -92,5 +92,5 @@ const projectManager = new class extends EventEmitter {
 
   }
 }()
-
+global.projectManager = projectManager
 export default projectManager

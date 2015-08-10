@@ -34,7 +34,7 @@ module.exports = {
           path.join(__dirname, '../src'),
           __dirname
         ],
-        loaders: ['react-hot', 'babel']
+        loaders: [/*'react-hot',*/ 'babel']
       }, {
         test: /\.(html|css)/,
         include: __dirname,

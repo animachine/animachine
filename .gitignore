@@ -1,10 +1,8 @@
 node_modules
-bower_components
-*.sublime-workspace
-*.sublime-project
+build
+dist
 *.log
 *.zip
 *.crx
 *.pem
-dist
 .publish

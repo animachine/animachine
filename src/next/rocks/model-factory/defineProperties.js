@@ -35,11 +35,13 @@ export default function defineProperties(descriptors) {
     // }
 
     Object.defineProperty(proto, name, {set, get, enumerable: true})
+
     handleSetSource(proto, function (source) {
       if (source.hasOwnProperty(name)) {
         set.call(this, source[name])
       }
     })
+
     handleGetSource(proto, function (source) {
       source[name] = get.call(this)
     })
@@ -52,7 +54,7 @@ export default function defineProperties(descriptors) {
       v = fixType(v)
       v = generalFixValue(v)
       if (fixValue) {
-        v = fixValue(v)
+        v = fixValue.call(this, v)
       }
 
       var value = get.call(this)
@@ -102,6 +104,7 @@ export default function defineProperties(descriptors) {
           v = Math.min(max, v)
         }
       }
+      return v
     }
 
     function isInvalidValue(v) {

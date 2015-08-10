@@ -53,18 +53,24 @@ export default class Timeline extends React.Component {
   render() {
     const {dividerPos} = this.state
     const {timeline, headHeight, dragRef} = this.props
-    const {width} = this.state
+    const {fullWidth} = this.state
+    const rootStyle = {
+      display: 'flex',
+      flexDirection: 'column',
+      width: fullWidth,
+      // height: '100%'
+    }
 
-    return <div style={{display: 'flex', width, height: '100%'}}>
-      <div style={{display: 'flex', height: headHeight}}/>
+    return <div style={rootStyle}>
+      <div style={{display: 'flex', height: headHeight}}>
         <div style={{width: dividerPos}}/>
-        <Timebar timeline={timeline}/>
-      <div/>
+        <Timebar timeline={timeline} height={headHeight}/>
+      </div>
       <div style={{display: 'flex', flex: 1}}>
         <Controls timeline={timeline} style={{width: dividerPos}}/>
         <Keylines timeline={timeline}/>
-        <DividerLine ref={dragRef}/>
       </div>
+      <DividerLine ref={dragRef} position={dividerPos}/>
     </div>
   }
 }

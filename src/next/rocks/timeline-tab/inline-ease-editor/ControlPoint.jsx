@@ -9,7 +9,7 @@ const dragOptions = {
     })
   },
   onDrag(props, monitor) {
-    const {spaceY, spaceY, onChange} = props
+    const {spaceX, spaceY, onChange} = props
     const {initX, initY} = monitor.data
     const difference = monitor.getDifferenceFromInitialOffset()
     onChange({

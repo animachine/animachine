@@ -1,7 +1,7 @@
 import React from 'react'
 
 export default class DividerLine extends React.Component {
-  static propTypes = {
+  static defaultProps = {
     position: 0
   }
 

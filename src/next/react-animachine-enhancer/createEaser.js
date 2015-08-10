@@ -2,7 +2,7 @@ import createBezierEasing from 'bezier-easing'
 
 export default function (ease) {
   if (!ease) {
-    return null
+    return Power0.easeNone
   }
 
   const bezierEasing = createBezierEasing(...ease.bezierPoints)
@@ -18,4 +18,6 @@ export default function (ease) {
       taper: ease.roughTaper,
     })
   }
+
+  return easer
 }

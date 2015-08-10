@@ -2,7 +2,7 @@ import React from 'react'
 import customDrag from 'custom-drag'
 import {getTheme} from 'react-matterkit'
 import {createEaser} from 'react-animachine-enhancer'
-import inlineEaseEditorStore from './inline-ease-editor/inlineEaseEditorStore'
+import getPreviousSiblingOfKey from './getPreviousSiblingOfKey'
 
 const colors = (() => {
   const {selected, grey2: normal, red} = getTheme(this).getStyle('colors')
@@ -78,29 +78,34 @@ export default class Keyline extends React.Component {
   }
 
   handleDoubleClick() {
-    const {timeline, model} = this.props
+    const {timeline, model, top} = this.props
     const nextKey = model.getNextKey(timeline.currentTime)
     if (!nextKey) {
       return
     }
+    const previousKey = getPreviousSiblingOfKey(nextKey, timeline)
+    const startTime = previousKey ? previousKey.time : 0
 
     model.selectKeysAtTime(nextKey.time)
     const controlledEases = []
     model.forEachSelectedKey(key => controlledEases.push(key.ease))
     inlineEaseEditorStore.focus({
-      ///???
+      top,
+      startTime,
+      endTime: nextKey.time,
+      initialEase: nextKey.ease,
       controlledEases,
     })
   }
 
   render() {
-    const {timeline, height, style, dragRef} = this.props
+    const {timeline, height, top, style, dragRef} = this.props
 
     return <canvas
       ref = {dragRef}
       width = {timeline.width}
       height = {height}
-      style = {{position: 'absolute', ...style}}/>
+      style = {{position: 'absolute', top, ...style}}/>
   }
 
   postRender() {
@@ -131,15 +136,10 @@ export default class Keyline extends React.Component {
     }
   }
 
-  timeToDrawPos(time) {
-    const {start, timescale} = this.props.timeline
-    return (time + start) * timescale
-  }
-
   drawKey(key, isSelected) {
     const {ctx} = this
-    const {height} = this.props
-    const keyPos = parseInt(this.timeToDrawPos(key.time)) + 0.5
+    const {height, timeline} = this.props
+    const keyPos = parseInt(timeline.convertTimeToPosition(key.time)) + 0.5
     const r = 2
     // if (line) {
       ctx.save()
@@ -177,10 +177,10 @@ export default class Keyline extends React.Component {
 
   drawEase(key, startTime) {
     const {ctx} = this
-    const {height} = this.props
+    const {height, timeline} = this.props
     const easer = createEaser(key.ease)
-    const startPos = parseInt(this.timeToDrawPos(startTime)) + 0.5
-    const endPos = parseInt(this.timeToDrawPos(key.time)) + 0.5
+    const startPos = parseInt(timeline.convertTimeToPosition(startTime)) + 0.5
+    const endPos = parseInt(timeline.convertTimeToPosition(key.time)) + 0.5
     const width = endPos - startPos
 
     if (width === 0) {

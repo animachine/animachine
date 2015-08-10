@@ -9,7 +9,10 @@ export default class Controls extends React.Component {
   }
 
   render() {
-    const {timeline} = this.props
-    return <JsonVision settings={controlsSettings} value={timeline}/>
+    const {timeline, style} = this.props
+    return <JsonVision
+      style = {style}
+      settings = {controlsSettings}
+      value = {timeline}/>
   }
 }

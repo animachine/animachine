@@ -69,8 +69,7 @@ export default function defineChildren(descriptor) {
 
     proto[names.add] = function (child) {
       const children = getChildren(this)
-      console.log(`add ${name}`)
-      this[`__debug${name}Children`] = children
+
       if (!(child instanceof ChildClass)) {
         child = new ChildClass(child)
       }

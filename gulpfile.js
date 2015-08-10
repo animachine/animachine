@@ -51,3 +51,19 @@ gulp.task('zip', function () {
     .pipe(size())
     .pipe(gulp.dest('./'))
 })
+
+gulp.task('build-chrome:copy-files', function () {
+  return gulp.src('chrome/src/**/*.*')
+    .pipe(gulp.dest('chrome/build'))
+})
+
+gulp.task('build-chrome', ['build-chrome:copy-files'], function (callback) {
+  var webpackConfig = require('./chrome/webpack.config.js')
+  webpack(webpackConfig, function(err, stats) {
+		if(err) throw new gutil.PluginError('build-demo', err)
+		gutil.log('[webpack:build]', stats.toString({
+			colors: true
+		}))
+		callback()
+	})
+})

@@ -21,7 +21,6 @@
   },
   "homepage": "https://github.com/animachine/animachine",
   "dependencies": {
-    "array.from": "^0.2.0",
     "bezier-easing": "^1.1.0",
     "event-emitter": "^0.3.3",
     "eventman": "0.0.1",

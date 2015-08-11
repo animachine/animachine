@@ -63,7 +63,11 @@ export default class TransformTool extends React.Component {
 
     Object.keys(change).forEach(key => {
       const paramName = key2ParamName[key]
-      track.setValueOfParamAtTime(paramName, change[key])
+      let value = change[key]
+      if (paramName === 'rotationZ') {
+        value = value / Math.PI * 180
+      }
+      track.setValueOfParamAtTime(paramName, currentTime, change[key])
     })
   }
 
@@ -102,6 +106,8 @@ export default class TransformTool extends React.Component {
       ox: getValue('transformOriginX', 0.5),
       oy: getValue('transformOriginY', 0.5),
     }
+
+    transform.rz = transform.rz / 180 * Math.PI
 
     return <CSSTranshand
       transform = {transform}

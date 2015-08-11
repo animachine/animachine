@@ -46,9 +46,10 @@ export default class Track extends Model {
         value = param.getValueAtTime(time)
       }
     })
+    return value
   }
 
-  setValueOfParamAtTime(value, paramName, time) {
+  setValueOfParamAtTime(paramName, time, value) {
     const param = this.demandParamLike({name: paramName})
     const key = param.demandKeyLike({time})
     key.value = value

@@ -11,8 +11,10 @@ export default class TimelineTab extends React.Component {
     BETON.getRock('project-manager', projectManager => {
       this.projectManager = projectManager
       const currentProject = projectManager.getCurrentProjectNode()
-      currentProject.model.on('change.currentTimeline', this.refreshTimeline)
-      this.refreshTimeline()
+      if (currentProject) {
+        currentProject.model.on('change.currentTimeline', this.refreshTimeline)
+        this.refreshTimeline()
+      }
     })
   }
 

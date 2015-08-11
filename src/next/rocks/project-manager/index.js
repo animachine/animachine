@@ -49,7 +49,7 @@ const projectManager = new class extends EventEmitter {
   setCurrentProjectNode(projectNode) {
     global.projectNode = projectNode
     this._currentProject = projectNode
-    this.emit('change.currentProject')
+    this.emit('change.currentProjectNode')
   }
 
   getCurrentProjectNode() {

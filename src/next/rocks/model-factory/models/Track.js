@@ -4,7 +4,7 @@ import defineProperties from '../defineProperties'
 import defineChildren from '../defineChildren'
 import defineType from '../defineType'
 import controlKeys from '../controlKeys'
-import mandatoryParamGroups from '../mandatoryParamGroups'
+import * as mandatoryParamGroups from '../mandatoryParamGroups'
 import {recurseParams} from '../recursers'
 
 @defineProperties([
@@ -29,7 +29,7 @@ export default class Track extends Model {
     }
 
     var parent = this
-    const parentParamName = mandatoryParamGroups.getParentName(demandedParam.name)
+    const parentParamName = mandatoryParamGroups.getParentName(paramSource.name)
     if (parentParamName) {
       parent = this.demandParamLike({name: parentParamName})
     }
@@ -37,5 +37,20 @@ export default class Track extends Model {
     demandedParam = new Param(paramSource)
     parent.addParam(demandedParam)
     return demandedParam
+  }
+
+  getValueOfParamAtTime(paramName, time) {
+    var value
+    recurseParams(this, param => {
+      if (param.name === paramName) {
+        value = param.getValueAtTime(time)
+      }
+    })
+  }
+
+  setValueOfParamAtTime(value, paramName, time) {
+    const param = this.demandParamLike({name: paramName})
+    const key = param.demandKeyLike({time})
+    key.value = value
   }
 }

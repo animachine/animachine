@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/animachine/animachine",
   "dependencies": {
+    "array.from": "^0.2.0",
     "bezier-easing": "^1.1.0",
     "event-emitter": "^0.3.3",
     "eventman": "0.0.1",
@@ -30,7 +31,8 @@
     "react": "^0.13.3",
     "react-dnd": "^1.1.4",
     "react-gsap-enhancer": "0.0.0",
-    "spaceman": "0.0.8"
+    "spaceman": "0.0.8",
+    "transhand": "^0.1.15"
   },
   "devDependencies": {
     "babel": "^5.6.23",

@@ -65,4 +65,5 @@ if (global._waitingMountedAnimachineComponents) {
   delete global._waitingMountedAnimachineComponents
 }
 
+global.componentInspector = componentInspector//HACK for debugging
 export default componentInspector

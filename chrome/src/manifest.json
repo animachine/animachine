@@ -1,9 +1,9 @@
 {
   "name": "animachine (alpha)",
   "short_name": "animachine",
-  "version": "0.0.20",
+  "version": "0.1.0",
   "manifest_version": 2,
-  "description": "An animation tool for HTML and JS projects.",
+  "description": "An animation tool for React components.",
   "homepage_url": "https://github.com/animachine/animachine",
   "icons": {
     "16": "icons/icon16.png",
@@ -15,10 +15,10 @@
     "564": "icons/icon564.png"
   },
   "background": {
-    "scripts": ["src/bg/background.js"],
+    "scripts": ["scripts/bg/background.js"],
     "persistent": true
   },
-  "options_page": "src/options/index.html",
+  "options_page": "scripts/options/index.html",
   "browser_action": {
     "default_icon": "icons/icon19.png",
     "default_title": "open animachine"
@@ -29,5 +29,8 @@
     "tabs",
     "<all_urls>"
   ],
+  "externally_connectable": {
+    "matches": ["*://*.example.com/*"]
+  },
   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
 }

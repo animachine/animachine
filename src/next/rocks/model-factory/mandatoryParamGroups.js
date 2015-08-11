@@ -16,7 +16,7 @@ const mandatoryGroups = {
   boxShadow: ['boxShadowX', 'boxShadowY', 'boxShadowBlur'],
 }
 
-export function getParent(childName) {
+export function getParentName(childName) {
   const groupNames = Object.keys(mandatoryGroups)
   for (let i = 0; i < groupNames.length; ++i) {
     const groupName = groupNames[i]

@@ -6,15 +6,15 @@
 //     "sample_setting": "This is how you use Store.js to remember values"
 // })
 
-var _gaq = _gaq || []
-_gaq.push(['_setAccount', 'UA-58968347-1'])
-_gaq.push(['_trackPageview'])
-
-(function() {
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true
-  ga.src = 'https://ssl.google-analytics.com/ga.js'
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s)
-})()
+// var _gaq = _gaq || []
+// _gaq.push(['_setAccount', 'UA-58968347-1'])
+// _gaq.push(['_trackPageview'])
+//
+// (function() {
+//   var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true
+//   ga.src = 'https://ssl.google-analytics.com/ga.js'
+//   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s)
+// })()
 
 chrome.browserAction.onClicked.addListener(function (tab) {
 
@@ -43,3 +43,8 @@ chrome.runtime.onMessage.addListener(function (request) {
 function isDevMode() {
     return !('update_url' in chrome.runtime.getManifest())
 }
+
+chrome.runtime.onMessageExternal.addListener(
+  function(request, sender, sendResponse) {
+    cosnole.log('onMessageExternal', request, sender, sendResponse)
+  });

@@ -34,7 +34,7 @@ import {recurseParams} from '../recursers'
   },
   {name: 'startMargin', type: 'float', initValue: 6},//in pixel
 ])
-@defineChildren({name: 'track', ChildClass: Track})
+@defineChildren({name: 'track', ChildClass: Track, current: true})
 @defineType
 @controlKeys
 export default class Timeline extends Model {

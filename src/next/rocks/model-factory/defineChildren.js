@@ -22,6 +22,7 @@ export default function defineChildren(descriptor) {
       //current
       getCurrent: `getCurrent${capitalize(name)}`,
       setCurrent: `setCurrent${capitalize(name)}`,
+      eventChangeCurrent: `change.current${capitalize(name)}`,
       //selection
       select: `select${capitalize(name)}`,
       deselect: `deselect${capitalize(name)}`,
@@ -116,12 +117,13 @@ export default function defineChildren(descriptor) {
     }
 
     if (current) {
-      proto[names.getCurrent] = function () {
-        return getCurrent(this)
+      proto[names.setCurrent] = function (item) {
+        currentMap.set(this, item)
+        this.emit(names.eventChangeCurrent, item)
       }
 
-      proto[names.setCurrent] = function (item) {
-        return currentMap.set(this, item)
+      proto[names.getCurrent] = function () {
+        return getCurrent(this)
       }
     }
 

@@ -1,7 +1,9 @@
-import {createTheme} from 'react-matterkit'
+import {createTheme, defaultTheme} from 'react-matterkit'
 
 const matterkitTheme = createTheme()
 export default matterkitTheme
+
+defaultTheme.set(matterkitTheme)
 
 matterkitTheme.extendSource('colors', () => ({
   //https://github.com/mrmrs/colors

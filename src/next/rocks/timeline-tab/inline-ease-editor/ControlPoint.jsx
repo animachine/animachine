@@ -13,12 +13,15 @@ const dragOptions = {
     const {initX, initY} = monitor.data
     const difference = monitor.getDifferenceFromInitialOffset()
     onChange({
-      x: initX + (difference.x / sapceX),
-      y: initY + (difference.y / sapceY),
+      x: initX + (difference.x / spaceX),
+      y: initY + (difference.y / spaceY),
     })
   }
 }
 
+@customDrag(dragOptions, connect => ({
+  dragRef: connect.getDragRef()
+}))
 export default class InlineEaseEditor extends React.Component {
   static propTypes = {
     store: React.PropTypes.object,
@@ -26,7 +29,8 @@ export default class InlineEaseEditor extends React.Component {
   }
 
   render() {
-    const {x, y, spaceX, spaceY} = this.props
+    const {x, y, spaceX, spaceY, dragRef} = this.props
+    const r = 3
 
     const style = {
       position: 'absolute',
@@ -42,6 +46,6 @@ export default class InlineEaseEditor extends React.Component {
       pointerEvents: 'auto',
     }
 
-    return <div style={style} ref={ref}/>
+    return <div style={style} ref={dragRef}/>
   }
 }

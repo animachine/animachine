@@ -1,6 +1,6 @@
 export function recurseKeys(model, fn) {
-  if (model.forEachKeys) {
-    model.forEachKeys(fn)
+  if (model.forEachKey) {
+    model.forEachKey(key => fn(key, model))
   }
 
   if (model.forEachTrack) {

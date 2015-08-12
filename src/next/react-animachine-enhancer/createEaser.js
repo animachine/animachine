@@ -4,9 +4,13 @@ export default function (ease) {
   if (!ease) {
     return Power0.easeNone
   }
-
-  const bezierEasing = createBezierEasing(...ease.bezierPoints)
-  var easer = new GreenSockGlobals.Ease(bezierEasing)
+  const bezierEasing = createBezierEasing([
+    ease.pointAX,
+    ease.pointAY,
+    ease.pointBX,
+    ease.pointBY
+  ])
+  var easer = new GreenSockGlobals.Ease(t => bezierEasing.get(t))
 
   if (ease.roughEase) {
     easer = new GreenSockGlobals.RoughEase({

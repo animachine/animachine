@@ -6,6 +6,29 @@ const color = {
   bg3: 'white'
 }
 
+function handleMouse(props, monitor) {
+  const {dragMode} = monitor.data
+  const {timeline} = props
+  const {currentTime, timescale} = timeline
+  const {initStart, initTimescale} = monitor.data
+  const offset = monitor.getDifferenceFromInitialOffset().x
+
+  if (dragMode === 'seek') {
+    let {x} = monitor.getSourceClientOffset()
+    let time = timeline.convertPositionToTime(x)
+    timeline.currentTime = time
+  }
+  else if (dragMode === 'translate') {
+    timeline.start = initStart + (offset / timescale)
+  }
+  else if (dragMode === 'scale') {
+    timeline.timescale = initTimescale + (offset / 1000)
+    //keep pointer in the same position
+    var mdPos = (initStart + currentTime) * initTimescale
+    timeline.start = -((currentTime * timescale) - mdPos) / timescale
+  }
+}
+
 const dragOptions = {
   onDown(props, monitor) {
 
@@ -28,28 +51,11 @@ const dragOptions = {
       initStart: timeline.start,
       initTimescale: timeline.timescale,
     })
+
+    handleMouse(props, monitor)
   },
   onDrag(props, monitor) {
-    const {dragMode} = monitor.data
-    const {timeline} = props
-    const {currentTime, timescale} = timeline
-    const {initStart, initTimescale} = monitor.data
-    const offset = monitor.getDifferenceFromInitialOffset().x
-
-    if (dragMode === 'seek') {
-      let {x} = monitor.getSourceClientOffset()
-      let time = timeline.convertPositionToTime(x)
-      timeline.currentTime = time
-    }
-    else if (dragMode === 'translate') {
-      timeline.start = initStart + (offset / timescale)
-    }
-    else if (dragMode === 'scale') {
-      timeline.timescale = initTimescale + (offset / 1000)
-      //keep pointer in the same position
-      var mdPos = (initStart + currentTime) * initTimescale
-      timeline.start = -((currentTime * timescale) - mdPos) / timescale
-    }
+    handleMouse(props, monitor)
   }
 }
 

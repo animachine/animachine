@@ -4,6 +4,7 @@ const project = {
   timelines: [
     {
       name: 'jump',
+      length: 2000,
       tracks: [
         {
           name: 'box',

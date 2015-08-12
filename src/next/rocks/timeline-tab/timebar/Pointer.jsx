@@ -11,6 +11,7 @@ export default class Pointer extends React.Component {
     const {start, currentTime, visibleTime, width} = timeline
     const position = ((start + currentTime) / visibleTime) * width
     const styleContainer = {
+      pointerEvents: 'none',
       position: 'absolute',
       bottom: 2*radius + 'px',
       transform: `translate(${position}px)`

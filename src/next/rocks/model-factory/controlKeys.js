@@ -37,6 +37,12 @@ export default function (ModelClass) {
     })
   }
 
+  ModelClass.prototype.collectSelectedKeys = function (fn) {
+    const selectedKeys = []
+    this.forEachSelectedKey(key => selectedKeys.push(key))
+    return selectedKeys
+  }
+
   ModelClass.prototype.deselectAllKeys = function () {
     recurseParams(param => param.deselectAllKeys())
   }
@@ -44,7 +50,7 @@ export default function (ModelClass) {
   ModelClass.prototype.findClosestKey = function (time) {
     var closestKey
 
-    recurseKeys(key => {
+    recurseKeys(this, key => {
       if (!closestKey) {
         closestKey = key
       }
@@ -61,25 +67,47 @@ export default function (ModelClass) {
     return closestKey
   }
 
-  // ModelClass.prototype.findNextKey = function (time) {
-  //   var nextKey
-  //
-  //   recurseKeys(key => {
-  //     if (key.time > time) {
-  //       if (!nextKey) {
-  //         nextKey = key
-  //       }
-  //       else {
-  //         const diffA = Math.abs(nextKey.time - time)
-  //         const diffB = Math.abs(key.time - time)
-  //
-  //         if (diffB < diffA) {
-  //           nextKey = key
-  //         }
-  //       }
-  //     }
-  //   })
-  //
-  //   return nextKey
-  // }
+  ModelClass.prototype.findNextKey = function (time) {
+    var nextKey
+
+    recurseKeys(this, key => {
+      if (key.time > time) {
+        if (!nextKey) {
+          nextKey = key
+        }
+        else {
+          const diffA = Math.abs(nextKey.time - time)
+          const diffB = Math.abs(key.time - time)
+
+          if (diffB < diffA) {
+            nextKey = key
+          }
+        }
+      }
+    })
+
+    return nextKey
+  }
+
+  ModelClass.prototype.findPreviousKey = function (time) {
+    var previousKey
+
+    recurseKeys(this, key => {
+      if (key.time < time) {
+        if (!previousKey) {
+          previousKey = key
+        }
+        else {
+          const diffA = Math.abs(previousKey.time - time)
+          const diffB = Math.abs(key.time - time)
+
+          if (diffB < diffA) {
+            previousKey = key
+          }
+        }
+      }
+    })
+
+    return previousKey
+  }
 }

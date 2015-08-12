@@ -1,12 +1,15 @@
 import React from 'react'
 import customDrag from 'custom-drag'
-import {Input} from 'react-matterkit'
+import {Button, Input} from 'react-matterkit'
 
 export default class Toolbar extends React.Component {
   render() {
     const {timeline, style} = this.props
 
     return <div style = {style}>
+      <Button
+        icon = {timeline.playing ? 'pause' : 'play'}
+        onClick = {() => timeline.playing = !timeline.playing}/>
       <Input
         type = 'number'
         value = {timeline.currentTime}

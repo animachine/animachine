@@ -7,9 +7,10 @@ export default class Project {
     this.projectSource = projectSource
     this.previewComponents = previewComponents
     this.model = modelFactory.create(projectSource)
+    this.wrapAnimationSource = createAnimationSourceWrapper()
 
     this.model.on('change', this.handleSourceChange)
-    // this.model = BETON.getRock('model-factory').create(projectSource)
+    this.handleSourceChange()//initial call for wrap all the animations
   }
 
   handleSourceChange = () => {
@@ -23,7 +24,7 @@ export default class Project {
           var timeline = this.model.findTimelineBy('name', timelineName)
 
           var projectSource = this.model.getSource()
-          var animationSource = wrapAnimationSource(
+          var animationSource = this.wrapAnimationSource(
             createAnimationSource(projectSource, timelineName),
             timeline
           )
@@ -36,10 +37,11 @@ export default class Project {
   }
 }
 
-const wrapAnimationSource = (() => {
+function createAnimationSourceWrapper() {
   var disposeLast
 
   return (animationSource, timeline) => {
+    console.log('wrap')
     return (...args) => {
       const gsTimeline = animationSource(...args)
       const setTime = () => gsTimeline.time(timeline.currentTime / 1000)
@@ -55,4 +57,4 @@ const wrapAnimationSource = (() => {
       return gsTimeline
     }
   }
-}())
+}

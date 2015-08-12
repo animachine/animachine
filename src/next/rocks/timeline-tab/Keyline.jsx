@@ -1,11 +1,12 @@
 import React from 'react'
 import customDrag from 'custom-drag'
+import sortBy from 'lodash/collection/sortBy'
 import {getTheme} from 'react-matterkit'
 import {createEaser} from 'react-animachine-enhancer'
 import getPreviousSiblingOfKey from './getPreviousSiblingOfKey'
 
 const colors = (() => {
-  const {selected, grey2: normal, red} = getTheme(this).getStyle('colors')
+  const {selected, grey2: normal, red} = getTheme().getStyle('colors')
 
   return {
     selected,
@@ -15,11 +16,16 @@ const colors = (() => {
   }
 }())
 
+function getMouseTime(props, monitor) {
+  const {x} = monitor.getSourceClientOffset()
+  const {model, timeline} = props
+  return timeline.convertPositionToTime(x)
+}
+
 const dragOptions = {
   onDown(props, monitor) {
-    const {x} = monitor.getSourceClientOffset()
     const {model, timeline} = props
-    const mouseTime = timeline.convertPositionToTime(x)
+    const mouseTime = getMouseTime(props, monitor)
     const closestKey = model.findClosestKey(mouseTime)
 
     if (
@@ -32,28 +38,52 @@ const dragOptions = {
     const {time} = closestKey
     const {shiftKey, ctrlKey} = monitor.getLastEvent()
 
-    if (shiftKey && ctrlKey) {
-      model.selectKeysAtTime(time)
+    if (!shiftKey && !ctrlKey) {
+      timeline.deselectAllKeys()
+    }
+
+    if (shiftKey || ctrlKey) {
+      model.toggleKeysSelectionAtTime(time)
     }
     else {
-      timeline.deselectAllKeys()
-      model.toggleKeysSelectionAtTime(time)
+      model.selectKeysAtTime(time)
     }
 
     monitor.setData({
-      lastTime: time
+      lastMouseTime: mouseTime
     })
   },
-  onMove(props, monitor) {
-    const {x} = monitor.getSourceClientOffset()
-    const {model, timeline} = props
-    const time = timeline.convertPositionToTime(x)
-    const timeOffset = time - monitor.data.lastTime
+
+  onDrag(props, monitor) {
+    const {model} = props
+    const mouseTime = getMouseTime(props, monitor)
+    const timeOffset = mouseTime - monitor.data.lastMouseTime
 
     model.forEachSelectedKey(key => key.time += timeOffset)
 
     monitor.setData({
-      lastTime: time
+      lastMouseTime: mouseTime
+    })
+  },
+
+  onClick(props, monitor) {
+    const {model, timeline, inlineEaseEditorStore, top, height} = props
+    const mouseTime = getMouseTime(props, monitor)
+    const nextKey = model.findNextKey(mouseTime)
+    if (!nextKey) {
+      return
+    }
+    const previousKey = model.findPreviousKey(mouseTime)
+    timeline.deselectAllKeys()
+    model.selectKeysAtTime(nextKey.time)
+    const selectedKeys = model.collectSelectedKeys()
+    inlineEaseEditorStore.set({
+      top,
+      height,
+      startTime: previousKey ? previousKey.time : 0,
+      endTime: nextKey.time,
+      initialEase: nextKey.ease,
+      controlledEases: selectedKeys.map(key => key.ease),
     })
   }
 }
@@ -77,26 +107,26 @@ export default class Keyline extends React.Component {
     this.postRender()
   }
 
-  handleDoubleClick() {
-    const {timeline, model, top} = this.props
-    const nextKey = model.getNextKey(timeline.currentTime)
-    if (!nextKey) {
-      return
-    }
-    const previousKey = getPreviousSiblingOfKey(nextKey, timeline)
-    const startTime = previousKey ? previousKey.time : 0
-
-    model.selectKeysAtTime(nextKey.time)
-    const controlledEases = []
-    model.forEachSelectedKey(key => controlledEases.push(key.ease))
-    inlineEaseEditorStore.focus({
-      top,
-      startTime,
-      endTime: nextKey.time,
-      initialEase: nextKey.ease,
-      controlledEases,
-    })
-  }
+  // handleDoubleClick() {
+  //   const {timeline, model, top} = this.props
+  //   const nextKey = model.getNextKey(timeline.currentTime)
+  //   if (!nextKey) {
+  //     return
+  //   }
+  //   const previousKey = getPreviousSiblingOfKey(nextKey, timeline)
+  //   const startTime = previousKey ? previousKey.time : 0
+  //
+  //   model.selectKeysAtTime(nextKey.time)
+  //   const controlledEases = []
+  //   model.forEachSelectedKey(key => controlledEases.push(key.ease))
+  //   inlineEaseEditorStore.focus({
+  //     top,
+  //     startTime,
+  //     endTime: nextKey.time,
+  //     initialEase: nextKey.ease,
+  //     controlledEases,
+  //   })
+  // }
 
   render() {
     const {timeline, height, top, style, dragRef} = this.props
@@ -124,10 +154,10 @@ export default class Keyline extends React.Component {
         }
       })
 
-      visibleKeys.forEach((key, idx) => {
-        this.drawKey(key)
+      sortBy(visibleKeys, 'time').forEach((key, idx, arr) => {
+        this.drawKey(key, model.isSelectedKey(key))
 
-        const startTime = idx === 0 ? 0 : visibleKeys[idx - 1].time
+        const startTime = idx === 0 ? 0 : arr[idx - 1].time
         this.drawEase(key, startTime)
       })
     }

@@ -1,5 +1,5 @@
 import React from 'react'
-import Controls from './Controls'
+import Controls from './controls/Controls'
 import Keylines from './Keylines'
 import Timebar from './timebar/Timebar'
 import Toolbar from './Toolbar'

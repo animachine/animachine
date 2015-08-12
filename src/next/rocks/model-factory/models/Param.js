@@ -17,7 +17,7 @@ import {createEaser} from 'react-animachine-enhancer'
   {name: 'start', type: 'float'},
   {name: 'openInTimeline', type: 'boolean', initValue: true},
 ])
-@defineChildren({name: 'key', ChildClass: Key})
+@defineChildren({name: 'key', ChildClass: Key, selection: true})
 @defineChildren({name: 'param', ChildClass: Param})
 @defineType
 @controlKeys

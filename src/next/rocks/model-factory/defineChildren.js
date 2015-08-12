@@ -33,6 +33,7 @@ export default function defineChildren(descriptor) {
       eventAdd: `add${capitalize(name)}`,
       eventRemove: `remove${capitalize(name)}`,
       eventChangeChild: `change.${name}`,
+      eventChangeSelection: `change.${name}Selection`,
     }
 
     handleSetSource(proto, function (source) {
@@ -137,8 +138,10 @@ export default function defineChildren(descriptor) {
         }
 
         if (selection.indexOf(child) === -1) {
-          selection.push(this)
+          selection.push(child)
+          this.emit(names.eventChangeSelection)
         }
+
       }
 
       proto[names.deselect] = function (child) {
@@ -146,6 +149,7 @@ export default function defineChildren(descriptor) {
         const index = selection.indexOf(child)
         if (index !== -1) {
           selection.splice(index, 1)
+          this.emit(names.eventChangeSelection)
         }
       }
 

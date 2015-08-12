@@ -34,7 +34,7 @@ export default class InlineEaseEditor extends React.Component {
       pointBY: pay,
       pointBX: pbx,
       pointBY: pby,
-    } = this.props.initialEase
+    } = this.props.store.initialEase
 
     const d = [
       `M${w*pax},${h*pay}`,

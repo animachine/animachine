@@ -7,11 +7,12 @@ export default class InlineEaseEditorStore extends EventEmitter {
 
   set(options) {
     this.top = options.top
+    this.height = options.height
     this.startTime = options.startTime
     this.endTime = options.endTime
     this.initialEase = options.initialEase
     this.controlledEases = options.controlledEases
-    
+
     this.emit('change')
   }
 }

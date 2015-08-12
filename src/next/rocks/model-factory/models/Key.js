@@ -1,4 +1,5 @@
 import Model from '../Model'
+import Ease from './Ease'
 import defineProperties from '../defineProperties'
 import defineChildren from '../defineChildren'
 import defineType from '../defineType'
@@ -13,4 +14,11 @@ import {recurseParams} from '../recursers'
   {name: 'ease', type: 'object'},
 ])
 @defineType
-export default class Key extends Model {}
+export default class Key extends Model {
+  constructor(...args) {
+    super(...args)
+    if (!this.ease) {
+      this.ease = new Ease()
+    }
+  }
+}

@@ -50,12 +50,21 @@ export default class TransformTool extends React.Component {
     this.setState({timeline: this._currentTimeline})
   }
 
+  trackCurrentTrack = (nextCurrentTrack) => {
+    if (this._currentTrack) {
+      this._currentTrack.off('change', this.handleCurrentTrackChange)
+    }
+    this._currentTrack = nextCurrentTrack
+    this._currentTrack.on('change', this.handleCurrentTrackChange)
+    this.setState({track: nextCurrentTrack})
+  }
+
   trackCurrentTime = (currentTime) => {
     this.setState({currentTime})
   }
 
-  trackCurrentTrack = (nextCurrentTrack) => {
-    this.setState({track: nextCurrentTrack})
+  handleCurrentTrackChange = () => {
+    this.forceUpdate()
   }
 
   handleChange = (change) => {
@@ -67,7 +76,7 @@ export default class TransformTool extends React.Component {
       if (paramName === 'rotationZ') {
         value = value / Math.PI * 180
       }
-      track.setValueOfParamAtTime(paramName, currentTime, change[key])
+      track.setValueOfParamAtTime(paramName, currentTime, value)
     })
   }
 
@@ -112,6 +121,7 @@ export default class TransformTool extends React.Component {
     return <CSSTranshand
       transform = {transform}
       deTarget = {selectedTarget}
-      onChange = {this.handleChange}/>
+      onChange = {this.handleChange}
+      autoUpdateCoordinatorFrequency={1234}/>
   }
 }

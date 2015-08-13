@@ -9,8 +9,17 @@ export default class Project {
     this.model = modelFactory.create(projectSource)
     this.wrapAnimationSource = createAnimationSourceWrapper()
 
-    this.model.on('change', this.handleSourceChange)
-    this.handleSourceChange()//initial call for wrap all the animations
+    this.model.on('change.currentTimeline', this.trackCurrentTimeline)
+    this.trackCurrentTimeline()
+  }
+
+  trackCurrentTimeline = () => {
+    if (this._currentTimeline) {
+      this._currentTimeline.off('change.track', this.handleSourceChange)
+    }
+    this._currentTimeline = this.model.getCurrentTimeline()
+    this._currentTimeline.on('change.track', this.handleSourceChange)
+    this.handleSourceChange()
   }
 
   handleSourceChange = () => {

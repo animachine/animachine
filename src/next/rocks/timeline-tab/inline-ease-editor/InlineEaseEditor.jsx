@@ -20,7 +20,8 @@ export default class InlineEaseEditor extends React.Component {
 
     return <ControlPoint
       {...{x, y, spaceX, spaceY}}
-      onChange = {(x, y) => {
+      onChange = {({x, y}) => {
+        console.log(x, y)
         controlledEases.forEach(ease => {
           ease[`point${pointName}X`] = x
           ease[`point${pointName}Y`] = y
@@ -40,7 +41,7 @@ export default class InlineEaseEditor extends React.Component {
       `M${w*pax},${h*pay}`,
       `L0,0`,
       `C${w*pax},${h*pay} ${w*pbx},${h*pby} ${w},${h}`,
-      `L${w*pax},${h*pay}`
+      `L${w*pbx},${h*pby}`
     ].join(' ')
 
     const style = {

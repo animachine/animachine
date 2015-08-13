@@ -20,5 +20,6 @@ export default class Key extends Model {
     if (!this.ease) {
       this.ease = new Ease()
     }
+    this.ease.on('change', () => this.emit('change.ease'))
   }
 }

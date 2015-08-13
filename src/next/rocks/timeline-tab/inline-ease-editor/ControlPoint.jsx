@@ -12,9 +12,10 @@ const dragOptions = {
     const {spaceX, spaceY, onChange} = props
     const {initX, initY} = monitor.data
     const difference = monitor.getDifferenceFromInitialOffset()
+
     onChange({
       x: initX + (difference.x / spaceX),
-      y: initY + (difference.y / spaceY),
+      y: initY - (difference.y / spaceY),
     })
   }
 }

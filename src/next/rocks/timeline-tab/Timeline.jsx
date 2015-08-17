@@ -5,6 +5,7 @@ import Timebar from './timebar/Timebar'
 import Toolbar from './Toolbar'
 import DividerLine from './DividerLine'
 import customDrag from 'custom-drag'
+import {connect} from 'react-redux'
 
 const dragOptions = {
   onDown(props, monitor, component) {
@@ -21,6 +22,7 @@ const dragOptions = {
 @customDrag(dragOptions, connect => ({
   dragRef: connect.getDragRef()
 }))
+// @connect(mapTimelineData)
 export default class Timeline extends React.Component {
   constructor() {
     super()

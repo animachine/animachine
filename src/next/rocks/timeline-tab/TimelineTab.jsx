@@ -1,5 +1,6 @@
 import React from 'react'
 import Timeline from './Timeline'
+import {Provider} from 'react-redux'
 
 export default class TimelineTab extends React.Component {
   constructor() {
@@ -27,8 +28,13 @@ export default class TimelineTab extends React.Component {
 
   render() {
     const {timeline} = this.state
+    // return timeline ?
+    //     (<Provider>
+    //       <Timeline timeline={timeline} key={timeline.modelId}/>
+    //     </Provider>)
+    //     : <div hidden>mount</div>
     return timeline ?
-      <Timeline timeline={timeline} key={timeline.modelId}/> :
-      <div hidden>mount</div>
+          <Timeline timeline={timeline} key={timeline.modelId}/>
+        : <div hidden>mount</div>
   }
 }

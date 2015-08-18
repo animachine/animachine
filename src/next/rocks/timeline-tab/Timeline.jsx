@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {PropTypes} from 'react'
 import Controls from './controls/Controls'
 import Keylines from './Keylines'
 import Timebar from './timebar/Timebar'
@@ -24,6 +24,15 @@ const dragOptions = {
 }))
 // @connect(mapTimelineData)
 export default class Timeline extends React.Component {
+  static propTypes = {
+    timeline: PropTypes.object.isRequired,
+    headHeight: PropTypes.number,
+  }
+
+  static defaultProps = {
+    headHeight: 21
+  }
+
   constructor() {
     super()
 
@@ -31,10 +40,6 @@ export default class Timeline extends React.Component {
       dividerPos: 300,
       width: 2000
     }
-  }
-
-  static defaultProps = {
-    headHeight: 21
   }
 
   componentDidMount() {

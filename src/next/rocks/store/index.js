@@ -1,14 +1,18 @@
-import {Project} from './models'
+import {createStore} from 'redux'
 
-function create(projectSource) {
-  return new Project(projectSource)
-}
+BETON.define('store', [], () => {
+  const reducers = new Map()
 
-export default {
-  create
-}
+  function reducerSwitch(state = {}, action) {
+    reducers.forEach(reducer, path) {
+      reducer(state[path], action)
+    }
+  }
 
-import {createStore} from 'redux';
-import app from '../reducers';
-
-export default createStore(app);
+  return {
+    store,
+    setReducer(path, reducer) {
+      reducers.set(path, reducer)
+    }
+  }
+})

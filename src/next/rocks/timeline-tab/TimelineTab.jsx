@@ -28,13 +28,13 @@ export default class TimelineTab extends React.Component {
 
   render() {
     const {timeline} = this.state
-    // return timeline ?
-    //     (<Provider>
-    //       <Timeline timeline={timeline} key={timeline.modelId}/>
-    //     </Provider>)
-    //     : <div hidden>mount</div>
     return timeline ?
+        (<Provider>
           <Timeline timeline={timeline} key={timeline.modelId}/>
+        </Provider>)
         : <div hidden>mount</div>
+    // return timeline ?
+    //       <Timeline timeline={timeline} key={timeline.modelId}/>
+    //     : <div hidden>mount</div>
   }
 }

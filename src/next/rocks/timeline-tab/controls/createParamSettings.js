@@ -2,14 +2,22 @@ import React from 'react'
 import KeyStepper from './KeyStepper'
 import find from 'lodash/collection/find'
 import ifit from './ifit'
+import {getParamValueAtTime} from '../utils'
 
 export default function createParamSettings(connect) {
-  if (connect.value.modelType !== 'Param') {
+  if (connect.value.modelType !== 'param') {
     return null
   }
 
   const param = connect.value
   const timeline = findParentTimeline(connect)
+  const toggleKeys = () => {
+    const {store, actions} = BETON.getRockAsync('store')
+    store.dispatch(actions.toggleKeysAtTime({
+      itemId: param.itemId,
+      time: timelien.currentTime,
+    }))
+  }
 
   const input = {
     value: getParamValue,
@@ -19,7 +27,7 @@ export default function createParamSettings(connect) {
     selector: 'all',
     extraInputs: [input],
     buttons: [{
-      getElement: () => <KeyStepper {...{param, timeline}}/>
+      getElement: () => <KeyStepper {...{param, timeline, toggleKeys}}/>
     }]
   }
 
@@ -73,18 +81,22 @@ export default function createParamSettings(connect) {
 }
 
 function findParentTimeline(connect) {
-  return find(connect.path, model => model.modelType === 'Timeline')
+  return find(connect.path, model => model.modelType === 'timeline')
 }
 
 function getParamValue(connect) {
   const param = connect.value
-  const timeline = findParentTimeline(connect)
-  return param.getValueAtTime(timeline.currentTime)
+  const {currentTime} = findParentTimeline(connect)
+  return getParamValueAtTime({param, time: currentTime})
 }
 
 function setParamValue(value, connect) {
+  const {store, actions} = BETON.getRockAsync('store')
   const param = connect.value
-  const timeline = findParentTimeline(connect)
-  const key = param.demandKeyLike({time: timeline.currentTime})
-  key.value = value
+  const {currentTime} = findParentTimeline(connect)
+  store.dispatch(actions.setValueOfParamAtTime({
+    paramId: param.itemId,
+    time: currentTime,
+    value,
+  }))
 }

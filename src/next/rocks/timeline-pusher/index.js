@@ -1,21 +1,15 @@
-BETON.getRock('project-manager', projectManager => {
+BETON.define('timeline-pusher', ['project'], project => {
   var lastTime = performance.now()
-
-  function findCurrentTimeilne() {
-    const currentProjectNode = projectManager.getCurrentProjectNode()
-    if (!currentProjectNode) {
-      return
-    }
-    return currentProjectNode.model.getCurrentTimeline()
-  }
 
   function push() {
     const time = performance.now()
-    const timeline = findCurrentTimeilne()
+    const timeline = project.getCurrentTimeline()
     if (timeline && timeline.playing) {
       let nextTime = timeline.currentTime + time - lastTime
-      nextTime %= timeline.length
-      timeline.currentTime = nextTime
+      project.actions.setTimelineCurrentTime({
+        timelineId: timeline.itemId,
+        currentTime: nextTime
+      })
     }
     lastTime = time
     window.requestAnimationFrame(push)

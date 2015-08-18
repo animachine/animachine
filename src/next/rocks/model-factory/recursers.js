@@ -13,7 +13,7 @@ export function recurseKeys(model, fn) {
 }
 
 export function recurseParams(model, fn) {
-  if (model.modelType === 'Param') {
+  if (model.modelType === 'param') {
     fn(model)
   }
 

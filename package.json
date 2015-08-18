@@ -38,13 +38,13 @@
     "transhand": "^0.1.15"
   },
   "devDependencies": {
-    "babel": "^5.6.23",
+    "babel": "^5.8.21",
     "babel-core": "^5.6.17",
-    "babel-eslint": "^4.0.5",
+    "babel-eslint": "^4.0.10",
     "babel-loader": "^5.3.1",
-    "eslint": "^1.0.0",
+    "eslint": "^1.1.0",
     "eslint-plugin-babel": "^1.2.0",
-    "eslint-plugin-react": "^3.2.0",
+    "eslint-plugin-react": "^3.2.3",
     "file-loader": "^0.8.4",
     "gulp": "^3.9.0",
     "gulp-gh-pages": "^0.5.2",

@@ -1,5 +1,6 @@
 import BETON from './beton'
-import modelFactory from './rocks/model-factory'
+import store from './rocks/store'
+import currentProject from './rocks/current-project'
 import componentInspector from './rocks/component-inspector'
 import projectManager from './rocks/project-manager'
 import workspace from './rocks/workspace'
@@ -11,7 +12,8 @@ import timelinePusher from './rocks/timeline-pusher'
 
 const animachine = {
   init() {
-    BETON.setRock('model-factory', modelFactory)
+    BETON.setRock('store', store)
+    BETON.setRock('currentProject', currentProject)
     BETON.setRock('component-inspector', componentInspector)
     BETON.setRock('project-manager', projectManager)
     BETON.setRock('workspace', workspace)

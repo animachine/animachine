@@ -49,7 +49,7 @@ export default class Timeline extends Model {
     return this.start + this.visibleTime
   }
   convertPositionToTime(position) {
-    return ((position / this.width) * this.visibleTime) - this.start
+    return ((position / this.width) * this.width / this.timescale) - this.start
   }
   convertTimeToPosition(time) {
     return (time + this.start) * this.timescale

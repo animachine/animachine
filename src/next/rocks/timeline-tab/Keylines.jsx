@@ -44,11 +44,11 @@ export default class Keylines extends React.Component {
       pos += height
 
       if (model.openInTimeline) {
-        model.forEachParam(param => renderKeyline(param))
+        model.params.forEach(param => renderKeyline(param))
       }
     }
 
-    timeline.forEachTrack(param => renderKeyline(param))
+    timeline.tracks.forEach(param => renderKeyline(param))
 
     return <div style={{position: 'relative'}}>
       {children}

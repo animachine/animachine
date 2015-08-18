@@ -145,7 +145,7 @@ export default class Keyline extends React.Component {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    if (model.modelType === 'Param' && model.getKeysLength() !== 0) {
+    if (model.modelType === 'param' && model.getKeysLength() !== 0) {
       let visibleKeys = []
 
       model.forEachKey(key => {

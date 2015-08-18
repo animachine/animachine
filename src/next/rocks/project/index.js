@@ -1,12 +1,39 @@
-import ProjectNode from './ProjectNode'
-import pull from 'lodash/array/pull'
-import localStorage from 'putainde-localstorage'
-import React from 'react'
+import actions from './actions'
+import reducer from './reducer'
 
-const storage = localStorage.create({namespace: 'project-manager'})
-const [store, componentInspector] = BETON.getRockAsync(
-  ['store', 'component-inspector']
-)
+BETON.define('project', ['store', 'project-manager'], (store, projectManager) {
+  store.setReducer('project', reducer)
+
+  function getCurrentProject() {
+    const currentProjectManager = projectManager.getCurrentProjectManager()
+    if (currentProjectManager) {
+      return currentProjectManager.project
+    }
+  }
+
+  function getCurrentTimeline() {
+    const currentProject = getCurrentProject()
+    if (currentProject) {
+      {currentTimelineId} = currentProject
+      return getItemById(currentTimelineId)
+    }
+  }
+
+  function getItemById(id) {
+    return store.getState().project.items.find(item => item.id === id)
+  }
+
+  return {
+    ...actions({store}),
+    getCurrentProject,
+    getCurrentTimeline,
+    getItemById,
+  }
+})
+
+
+
+
 
 store.subscribe(() => {
   if (!getCurrnetProjectContainer()) {

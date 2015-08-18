@@ -6,49 +6,10 @@ export default class KeyStepper extends React.Component {
     super(props)
     this.state = {}
   }
+
   handleKeyClick = () => {
-    const hasKeyNow = this.hasKeyNow()
     const {param, timeline} = this.props
-    const time = timeline.currentTime
-
-    if (param.getParamsLength() > 0) {
-      param.forEachParam(childParam => {
-        toggle(childParam)
-      })
-    }
-    else {
-      toggle(param)
-    }
-
-    function toggle(param) {
-      if (hasKeyNow) {
-        let key = param.getKeyBy('time', time)
-        param.removeKey(key)
-      }
-      else {
-        let value = param.getValueAtTime(time)
-        let key = param.demandKeyLike({time})
-        key.value = param.getValueAtTime(time)
-      }
-    }
-  }
-
-  hasKeyNow() {
-    const {param, timeline} = this.props
-    const time = timeline.currentTime
-
-    if (param.getParamsLength() > 0) {
-      let allHas = true
-      param.forEachParam(childParam => {
-        if (!childParam.findKeyBy('time', time)) {
-          allHas = false
-        }
-      })
-      return allHas
-    }
-    else {
-      return param.findKeyBy('time', time)
-    }
+    this.props.toggleKeys({param, timeline})
   }
 
   render() {

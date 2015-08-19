@@ -1,6 +1,10 @@
 var path = require('path')
 var webpack = require('webpack')
 
+var definePlugin = new webpack.DefinePlugin({
+  __DEV__: JSON.stringify(JSON.parse(process.env.BUILD_DEV || 'true')),
+  __PRERELEASE__: JSON.stringify(JSON.parse(process.env.BUILD_PRERELEASE || 'false'))
+})
 
 module.exports = {
   context: __dirname,
@@ -42,6 +46,7 @@ module.exports = {
     ]
   },
   plugins: [
+    definePlugin
     // new webpack.HotModuleReplacementPlugin(),
     // new webpack.NoErrorsPlugin()
   ]

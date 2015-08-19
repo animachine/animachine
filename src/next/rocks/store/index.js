@@ -2,17 +2,22 @@ import {createStore} from 'redux'
 
 BETON.define('store', [], () => {
   const reducers = new Map()
+  const store = createStore(reducerSwitch)
 
   function reducerSwitch(state = {}, action) {
-    reducers.forEach(reducer, path) {
-      reducer(state[path], action)
-    }
+    const nextState = {...state}
+    reducers.forEach((reducer, path) => {
+      nextState[path] = reducer(nextState[path], action)
+    })
+    return nextState
   }
 
-  return {
-    store,
-    setReducer(path, reducer) {
-      reducers.set(path, reducer)
-    }
+  store.addReducer = (path, reducer) => {
+    reducers.set(path, reducer)
+    store.dispatch({type: ''})
   }
+
+  store.subscribe(() => console.log(store.getState()))
+
+  return store
 })

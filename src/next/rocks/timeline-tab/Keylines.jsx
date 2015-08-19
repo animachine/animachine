@@ -26,7 +26,7 @@ export default class Keylines extends React.Component {
   }
 
   render() {
-    const {timeline}  = this.props
+    const {timeline, actions}  = this.props
     const height = this.config.size
     const children = []
     var pos = 0
@@ -34,6 +34,7 @@ export default class Keylines extends React.Component {
     const renderKeyline = model => {
       children.push(<Keyline
         timeline = {timeline}
+        actions = {actions}
         inlineEaseEditorStore = {this.inlineEaseEditorStore}
         top = {pos}
         style = {{left: 0, top: pos}}

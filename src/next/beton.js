@@ -3,18 +3,40 @@ const resolvedRocks = new Map()
 const waitingRocks = new Map()
 
 function define(id, dependencies, resolve) {
-  resolvedRocks.set(id, {})
   waitingRocks.set(id, {dependencies, resolve})
   tryToResolve()
+  
+  if (!resolvedRocks.get(id)) {
+    resolvedRocks.set(id, {isWaitingToResolve: true})
+  }
 }
 
-tryToResolve() {
-  waitingRocks.forEach({resolve, dependencies}, id) {
-    if (dependencies.every(depId => hasRock(depId))) {
-      const rock = resolve(dependencies.map(depId => getRock(depId)))
+function tryToResolve() {
+  let resolvedANewRock = false
+
+  waitingRocks.forEach(({resolve, dependencies}, id) => {
+    if (dependencies.every(depId => {
+      var result = hasRock(depId)
+      return result
+    })) {
+      const rock = resolve(...dependencies.map(depId => getRock(depId)))
+      const placeholderRock = resolvedRocks.get(id)
       waitingRocks.delete(id)
-      assign(getRock(id), rock)
+
+      if (placeholderRock) {
+        delete placeholderRock.isWaitingToResolve
+        placeholderRock.__proto__ = rock
+      }
+      else {
+        resolvedRocks.set(id, rock)
+      }
+
+      resolvedANewRock = true
     }
+  })
+
+  if (resolvedANewRock) {
+    tryToResolve()
   }
 }
 
@@ -22,61 +44,23 @@ function getRock(id) {
   return resolvedRocks.get(id)
 }
 
-// function setRock(id, rock) {
-//   rockMap.set(id, rock)
-//   resolveWaitingHandlers()
-// }
-//
-// function getRock(ids, handler) {
-//   if (typeof ids === 'string') {
-//     ids = [ids]
-//   }
-//
-//   const promise = new Promise(function (resolve) {
-//     resolveQuery(ids, (...rocks) => {
-//       resolve(...rocks)
-//       if (handler) {
-//         handler(...rocks)
-//       }
-//     })
-//   })
-//
-//   return promise
-// }
-//
-// async function getRockAsync(...args) {
-//   return await getRock(...args)
-// }
-
 function hasRock(...ids) {
-  return ids.every(id => rockMap.has(id))
+  return ids.every(id => {
+    return resolvedRocks.has(id) &&
+      !resolvedRocks.get(id).isWaitingToResolve
+  })
 }
-
-// function resolveQuery(ids, resolve) {
-//   if (hasRock(...ids)) {
-//     let rocks = ids.map(id => rockMap.get(id))
-//     resolve(...rocks)
-//   }
-//   else {
-//     waitingHandlers.set(ids, resolve)
-//   }
-// }
-//
-// function resolveWaitingHandlers() {
-//   waitingHandlers.forEach((resolve, ids) => {
-//     if (hasRock(...ids)) {
-//       resolveQuery(ids, resolve)
-//       waitingHandlers.delete(ids)
-//     }
-//   })
-// }
 
 const BETON = {
-  setRock,
+  define,
   getRock,
-  getRockAsync,
   hasRock,
 }
+
+setTimeout(() => {
+  // resolvedRocks.forEach((rock, id) => console.log(id, rock))
+  waitingRocks.forEach((rock, id) => console.log(`${id} is still waiting!`))
+}, 1234)
 
 export default BETON
 global.BETON = BETON

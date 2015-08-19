@@ -7,6 +7,8 @@ import DividerLine from './DividerLine'
 import customDrag from 'custom-drag'
 import {connect} from 'react-redux'
 
+const projectManager = BETON.getRock('project-manager')
+
 const dragOptions = {
   onDown(props, monitor, component) {
     monitor.setData({
@@ -19,10 +21,17 @@ const dragOptions = {
   }
 }
 
+@connect(
+  (state, props) => ({
+    timeline: projectManager.selectors.combineTimeline(props.timelineId)
+  }),
+  () => ({
+    actions: projectManager.actions
+  })
+)
 @customDrag(dragOptions, connect => ({
   dragRef: connect.getDragRef()
 }))
-// @connect(mapTimelineData)
 export default class Timeline extends React.Component {
   static propTypes = {
     timeline: PropTypes.object.isRequired,
@@ -33,12 +42,11 @@ export default class Timeline extends React.Component {
     headHeight: 21
   }
 
-  constructor() {
-    super()
-
+  constructor(props) {
+    super(props)
     this.state = {
       dividerPos: 300,
-      width: 2000
+      fullWidth: 2000
     }
   }
 
@@ -71,12 +79,12 @@ export default class Timeline extends React.Component {
 
     return <div style={rootStyle}>
       <div style={{display: 'flex', height: headHeight}}>
-        <Toolbar timeline={timeline} style={{width: dividerPos}}/>
-        <Timebar timeline={timeline} height={headHeight}/>
+        <Toolbar {...{timeline, actions}} style={{width: dividerPos}}/>
+        <Timebar {...{timeline, actions}} height={headHeight}/>
       </div>
       <div style={{display: 'flex', flex: 1}}>
-        <Controls timeline={timeline} style={{width: dividerPos}}/>
-        <Keylines timeline={timeline}/>
+        <Controls {...{timeline, actions}} style={{width: dividerPos}}/>
+        <Keylines {...{timeline, actions}}/>
       </div>
       <DividerLine ref={dragRef} position={dividerPos}/>
     </div>

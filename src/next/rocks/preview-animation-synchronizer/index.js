@@ -1,39 +1,93 @@
-import actions from './actions'
-import reducer from './reducer'
+BETON.define(
+  'preview-animation-synchronizer',
+  ['store', 'project-manager'],
+  (store, projectManager) => {
+    let prevTimelineTree
+    store.subscribe(() => {
+      const previewComponents = projectManager.selectors.getCurrentPreviewComponents()
+      const timelneTree = projectManager.selectors.combineCurrentTimeline()
 
-BETON.define('project', ['store', 'project-manager'], (store, projectManager) {
-  store.setReducer('project', reducer)
+      if (testTimelinesForAnimationChange(prevTimelineTree, timelneTree)) {
+        previewComponents.forEach(previewComponent => {
+          const animationSource = runningAnimation._animationSource
 
-  function getCurrentProject() {
-    const currentProjectManager = projectManager.getCurrentProjectManager()
-    if (currentProjectManager) {
-      return currentProjectManager.project
+          previewComponent.__runningAnimations.forEach(runningAnimation => {
+            if (
+              (
+                animationSource._amProjectId === this ||
+                animationSource._amProjectSource === this.projectSource
+              )
+              && animationSource._amTimelineName === timelneTree.name
+            ) {
+
+            }
+        })
+      }
+    })
+  }
+)
+
+testTimelinesForAnimationChange(prev, next) {
+  return !prev ||
+    prev.tracks.length === next.tracks.length ||
+    prev.tracks.some((track, i) => track !== next.tracks[i])
+}
+
+handleSourceChange = () => {
+  this.previewComponents.forEach(previewComponent => {
+    previewComponent.__runningAnimations.forEach(runningAnimation => {
+      if (
+        runningAnimation._animationSource._amProject === this ||
+        runningAnimation._animationSource._amProjectSource === this.projectSource
+      ) {
+        var timelineName = runningAnimation._animationSource._amTimelineName
+        var timeline = this.model.findTimelineBy('name', timelineName)
+
+        var projectSource = this.model.getSource()
+        var animationSource = this.wrapAnimationSource(
+          createAnimationSource(projectSource, timelineName),
+          timeline
+        )
+        animationSource._amProject = this
+        animationSource._amTimelineName = timelineName
+        runningAnimation.replaceAnimationSource(animationSource)
+      }
+    })
+  })
+}
+}
+
+function createAnimationSourceWrapper() {
+var disposeLast
+
+return (animationSource, timeline) => {
+  console.log('wrap')
+  return (...args) => {
+    const gsTimeline = animationSource(...args)
+    const setTime = () => gsTimeline.time(timeline.currentTime / 1000)
+    gsTimeline.pause()
+    setTime()
+    timeline.on('change.currentTime', setTime)
+
+    if (disposeLast) {
+      disposeLast()
     }
+    disposeLast = () => timeline.off('change.currentTime', setTime)
+
+    return gsTimeline
   }
+}
+}
 
-  function getCurrentTimeline() {
-    const currentProject = getCurrentProject()
-    if (currentProject) {
-      {currentTimelineId} = currentProject
-      return getItemById(currentTimelineId)
-    }
-  }
+import ProjectNode from './ProjectNode'
+import pull from 'lodash/array/pull'
+import localStorage from 'putainde-localstorage'
+import React from 'react'
 
-  function getItemById(id) {
-    return store.getState().project.items.find(item => item.id === id)
-  }
-
-  return {
-    ...actions({store}),
-    getCurrentProject,
-    getCurrentTimeline,
-    getItemById,
-  }
-})
-
-
-
-
+const storage = localStorage.create({namespace: 'project-manager'})
+const [store, componentInspector] = BETON.getRockAsync(
+  ['store', 'component-inspector']
+)
 
 store.subscribe(() => {
   if (!getCurrnetProjectContainer()) {
@@ -53,6 +107,8 @@ store.subscribe(() => {
     }
   }
 })
+
+
 
 export function getCurrnetProjectContainer() {
   const {projectContainer} = store.getState()

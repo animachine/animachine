@@ -1,11 +1,10 @@
-import selectors from './selectors'
-import actions from './actions'
+import * as selectors from './selectors'
+import * as actions from './actions'
 import reducer from './reducer'
 
 
 BETON.define('component-inspector', ['store'], (store) => {
-  store.setReducer('componentInspector', reducer)
-
+  store.addReducer('componentInspector', reducer)
   connectToComponents()
 
   return {
@@ -14,7 +13,9 @@ BETON.define('component-inspector', ['store'], (store) => {
   }
 
   function connectToComponents() {
-    global._registerMountedAnimachineComponent = registerComponent
+    global._registerMountedAnimachineComponent = component => {
+      actions.registerComponent({component})
+    }
 
     if (global._waitingMountedAnimachineComponents) {
       global._waitingMountedAnimachineComponents.forEach(component => {

@@ -22,6 +22,6 @@ export default [{
 
 function handleToggleOpen(connect) {
   const {store, actions} = BETON.getRockAsync('store')
-  const {itemId} = connect.value
-  store.dispatch(actions.toggleOpenInTimelnie({itemId}))
+  const {id} = connect.value
+  store.dispatch(actions.toggleOpenInTimelnie({id}))
 }

@@ -1,13 +1,15 @@
-BETON.define('timeline-pusher', ['project'], project => {
-  var lastTime = performance.now()
+BETON.define('timeline-pusher', ['project-manager'], projectManager => {
+  const {setCurrentTimeOfTimeline} = projectManager.actions
+  const {getCurrentTimeline} = projectManager.selectors
+  let lastTime = performance.now()
 
   function push() {
     const time = performance.now()
-    const timeline = project.getCurrentTimeline()
-    if (timeline && timeline.playing) {
+    const timeline = getCurrentTimeline()
+    if (timeline && timeline.isPlaying) {
       let nextTime = timeline.currentTime + time - lastTime
-      project.actions.setTimelineCurrentTime({
-        timelineId: timeline.itemId,
+      setCurrentTimeOfTimeline({
+        timelineId: timeline.id,
         currentTime: nextTime
       })
     }

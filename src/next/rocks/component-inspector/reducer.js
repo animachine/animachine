@@ -9,10 +9,15 @@ const initialState = {
 export default function (componentInspector = initialState, action) {
   switch (action.type) {
     case ADD_COMPONENT_TO_INSPECTED_COMPONENTS: {
-      componentInspector.inspectedComponents = [
-        ...componentInspector.inspectedComponents,
-        action.component
-      ]
+      return {
+        ...componentInspector,
+        inspectedComponents: [
+          ...componentInspector.inspectedComponents,
+          action.component
+        ]
+      }
     }
+    default:
+      return componentInspector
   }
 }

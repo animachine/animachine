@@ -28,13 +28,14 @@ export default class TimelineTab extends React.Component {
 
   render() {
     const {timeline} = this.state
-    return timeline ?
-        (<Provider>
-          <Timeline timeline={timeline} key={timeline.modelId}/>
+    const store = BETON.getRock('store')
+    const projectManager = BETON.getRock('project-manager')
+    const {getCurrentTimelineId} = projectManager.selectors
+    const timelineId = getCurrentTimelineId()
+    return timelineId ?
+        (<Provider store={store}>
+          {() => <Timeline timelineId={timelineId}/>}
         </Provider>)
         : <div hidden>mount</div>
-    // return timeline ?
-    //       <Timeline timeline={timeline} key={timeline.modelId}/>
-    //     : <div hidden>mount</div>
   }
 }

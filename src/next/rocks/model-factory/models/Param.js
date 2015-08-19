@@ -10,11 +10,6 @@ import {createEaser} from 'react-animachine-enhancer'
 
 @defineProperties([
   {name: 'name', type: 'string'},
-  {name: 'currentTime', type: 'float'},
-  {name: 'timescale', type: 'float'},
-  {name: 'length', type: 'float'},
-  {name: 'width', type: 'float'},
-  {name: 'start', type: 'float'},
   {name: 'openInTimeline', type: 'boolean', initValue: true},
 ])
 @defineChildren({name: 'key', ChildClass: Key, selection: true})

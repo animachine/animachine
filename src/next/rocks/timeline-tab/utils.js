@@ -1,5 +1,3 @@
-
-
 export function convertPositionToTime({timeline, position}) {
   const {width, timescale, start} = timeline
   const time = position / width

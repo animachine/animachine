@@ -2,12 +2,16 @@ import forOwn from 'lodash/object/forOwn'
 
 const store = BETON.getRock('store')
 
+export function getInspectedComponents() {
+  return store.getState().componentInspector.inspectedComponents
+}
+
 export function getProjectSources({component}) {
   const result = []
 
   const runningAnimations = component.__runningAnimations
   if (!runningAnimations) {
-    return
+    return result
   }
 
   runningAnimations.forEach(animation => {

@@ -8,24 +8,28 @@ const color = {
 
 function handleMouse(props, monitor) {
   const {dragMode} = monitor.data
-  const {timeline} = props
+  const {timeline, actions} = props
+  const timelineId = timeline.id
   const {currentTime, timescale} = timeline
   const {initStart, initTimescale} = monitor.data
   const offset = monitor.getDifferenceFromInitialOffset().x
 
   if (dragMode === 'seek') {
     let {x} = monitor.getSourceClientOffset()
-    let time = timeline.convertPositionToTime(x)
-    timeline.currentTime = time
+    let currentTime = timeline.convertPositionToTime(x)
+    actions.setCurrentTimeOfTimeline({timelineId, currentTime})
   }
   else if (dragMode === 'translate') {
-    timeline.start = initStart + (offset / timescale)
+    let start = initStart + (offset / timescale)
+    actions.setStartOfTimeline({timelineId, start})
   }
   else if (dragMode === 'scale') {
-    timeline.timescale = initTimescale + (offset / 1000)
+    let timescale = initTimescale + (offset / 1000)
+    actions.setTimescaleOfTimeline({timelineId, timescale})
     //keep pointer in the same position
-    var mdPos = (initStart + currentTime) * initTimescale
-    timeline.start = -((currentTime * timescale) - mdPos) / timescale
+    let mdPos = (initStart + currentTime) * initTimescale
+    let start = -((currentTime * timescale) - mdPos) / timescale
+    actions.setStartOfTimeline({timelineId, start})
   }
 }
 

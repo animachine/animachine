@@ -4,6 +4,7 @@ import sortBy from 'lodash/collection/sortBy'
 import {getTheme} from 'react-matterkit'
 import {createEaser} from 'react-animachine-enhancer'
 import getPreviousSiblingOfKey from './getPreviousSiblingOfKey'
+import {convertPositionToTime} from './utils'
 
 const colors = (() => {
   const {selected, grey2: normal, red} = getTheme().getStyle('colors')
@@ -17,16 +18,18 @@ const colors = (() => {
 }())
 
 function getMouseTime(props, monitor) {
-  const {x} = monitor.getSourceClientOffset()
-  const {model, timeline} = props
-  return timeline.convertPositionToTime(x)
+  const {x: position} = monitor.getSourceClientOffset()
+  const {timeline} = props
+  return convertPositionToTime({timeline, position})
 }
 
 const dragOptions = {
   onDown(props, monitor) {
-    const {model, timeline} = props
+    const {model, timeline, actions} = props
     const mouseTime = getMouseTime(props, monitor)
-    const closestKey = model.findClosestKey(mouseTime)
+    const projectManager = BETON.getRock('project-manager')
+    const {findClosestKey} = projectManager.selectors
+    const closestKey = findClosestKey({keyHolder, time: mouseTime})
 
     if (
       !closestKey ||
@@ -43,10 +46,10 @@ const dragOptions = {
     }
 
     if (shiftKey || ctrlKey) {
-      model.toggleKeysSelectionAtTime(time)
+      projectManager.selectors.toggleKeySelectionAtTime({time, keyHolderId})
     }
     else {
-      model.selectKeysAtTime(time)
+      projectManager.selectors.selectKeysAtTime({time, keyHolderId})
     }
 
     monitor.setData({
@@ -67,24 +70,24 @@ const dragOptions = {
   },
 
   onClick(props, monitor) {
-    const {model, timeline, inlineEaseEditorStore, top, height} = props
-    const mouseTime = getMouseTime(props, monitor)
-    const nextKey = model.findNextKey(mouseTime)
-    if (!nextKey) {
-      return
-    }
-    const previousKey = model.findPreviousKey(mouseTime)
-    timeline.deselectAllKeys()
-    model.selectKeysAtTime(nextKey.time)
-    const selectedKeys = model.collectSelectedKeys()
-    inlineEaseEditorStore.set({
-      top,
-      height,
-      startTime: previousKey ? previousKey.time : 0,
-      endTime: nextKey.time,
-      initialEase: nextKey.ease,
-      controlledEases: selectedKeys.map(key => key.ease),
-    })
+  //   const {model, timeline, inlineEaseEditorStore, top, height} = props
+  //   const mouseTime = getMouseTime(props, monitor)
+  //   const nextKey = model.findNextKey(mouseTime)
+  //   if (!nextKey) {
+  //     return
+  //   }
+  //   const previousKey = model.findPreviousKey(mouseTime)
+  //   timeline.deselectAllKeys()
+  //   model.selectKeysAtTime(nextKey.time)
+  //   const selectedKeys = model.collectSelectedKeys()
+  //   inlineEaseEditorStore.set({
+  //     top,
+  //     height,
+  //     startTime: previousKey ? previousKey.time : 0,
+  //     endTime: nextKey.time,
+  //     initialEase: nextKey.ease,
+  //     controlledEases: selectedKeys.map(key => key.ease),
+  //   })
   }
 }
 

@@ -14,7 +14,7 @@ export default function createParamSettings(connect) {
   const toggleKeys = () => {
     const {store, actions} = BETON.getRockAsync('store')
     store.dispatch(actions.toggleKeysAtTime({
-      itemId: param.itemId,
+      id: param.id,
       time: timelien.currentTime,
     }))
   }
@@ -95,7 +95,7 @@ function setParamValue(value, connect) {
   const param = connect.value
   const {currentTime} = findParentTimeline(connect)
   store.dispatch(actions.setValueOfParamAtTime({
-    paramId: param.itemId,
+    paramId: param.id,
     time: currentTime,
     value,
   }))

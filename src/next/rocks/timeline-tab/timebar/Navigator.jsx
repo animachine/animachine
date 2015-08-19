@@ -8,7 +8,8 @@ const getDragArgs = (dragMode) => {
       monitor.setData({start, visibleTime, timescale})
     },
     onDrag(props, monitor) {
-      const {timeline} = props
+      const {timeline, actions} = props
+      const timelineId = timeline.id
       const {x: xInit} = monitor.getInitialClientOffset()
       const {x: xNow} = monitor.getClientOffset()
       const scale = timeline.width / timeline.length
@@ -17,17 +18,22 @@ const getDragArgs = (dragMode) => {
       const start = initial.start - move
 
       if (dragMode === 'move') {
-        timeline.start = start
+        actions.setStartOfTimeline({timelineId, start})
       }
       else if (dragMode === 'start') {
-        timeline.start = start
-        timeline.visibleTime = initial.visibleTime - move
+        let visibleTime = initial.visibleTime - move
+        actions.setStartOfTimeline({timelineId, start})
+        actions.setVisibleTimeOfTimeline({timelineId, visibleTime})
       }
       else if (dragMode === 'end') {
-        timeline.visibleTime = initial.visibleTime + move
+        let visibleTime = initial.visibleTime + move
+        actions.setVisibleTimeOfTimeline({timelineId, visibleTime})
 
         let mdPos = (initial.start + timeline.currentTime) * initial.timescale
-        timeline.start = -((timeline.currentTime * timeline.timescale) - mdPos) / timeline.timescale
+        actions.setStartOfTimeline({
+          timelineId,
+          start: -((timeline.currentTime * timeline.timescale) - mdPos) / timeline.timescale
+        })
       }
     },
     onEnter(props, monitor, component) {

@@ -19,7 +19,7 @@ module.exports = KeyGroup;
 
 
 
-//overwrite listening for timelne:deselectAllKeys & translateSelectedKeys event
+//overwrite listening for timeline:deselectAllKeys & translateSelectedKeys event
 p.wake = function () {};
 
 p.sleep = function () {};

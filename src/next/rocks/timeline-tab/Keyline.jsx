@@ -4,7 +4,11 @@ import sortBy from 'lodash/collection/sortBy'
 import {getTheme} from 'react-matterkit'
 import {createEaser} from 'react-animachine-enhancer'
 import getPreviousSiblingOfKey from './getPreviousSiblingOfKey'
-import {convertPositionToTime} from './utils'
+import {
+  convertPositionToTime,
+  convertTimeToPosition,
+  getVisibleTime
+} from './utils'
 
 const colors = (() => {
   const {selected, grey2: normal, red} = getTheme().getStyle('colors')
@@ -100,10 +104,6 @@ export default class Keyline extends React.Component {
     this.ctx = this.canvas.getContext('2d')
 
     this.postRender()
-
-    const {model, timeline} = this.props
-    model.on('change', () => this.forceUpdate)
-    timeline.on('change', () => this.forceUpdate)
   }
 
   componentDidUpdate() {
@@ -148,7 +148,7 @@ export default class Keyline extends React.Component {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    if (model.modelType === 'param' && model.getKeysLength() !== 0) {
+    if (model.type === 'param' && model.getKeysLength() !== 0) {
       let visibleKeys = []
 
       model.forEachKey(key => {
@@ -172,7 +172,10 @@ export default class Keyline extends React.Component {
   drawKey(key, isSelected) {
     const {ctx} = this
     const {height, timeline} = this.props
-    const keyPos = parseInt(timeline.convertTimeToPosition(key.time)) + 0.5
+    const keyPos = parseInt(convertTimeToPosition({
+      timeline,
+      time: key.time
+    })) + 0.5
     const r = 2
     // if (line) {
       ctx.save()

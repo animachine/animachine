@@ -1,6 +1,7 @@
 import React from 'react'
 import steps from './steps'
 import customDrag from 'custom-drag'
+import {convertPositionToTime, getVisibleTime} from '../utils'
 
 const color = {
   bg3: 'white'
@@ -15,8 +16,8 @@ function handleMouse(props, monitor) {
   const offset = monitor.getDifferenceFromInitialOffset().x
 
   if (dragMode === 'seek') {
-    let {x} = monitor.getSourceClientOffset()
-    let currentTime = timeline.convertPositionToTime(x)
+    let {x: position} = monitor.getSourceClientOffset()
+    let currentTime = convertPositionToTime({position, timeline})
     actions.setCurrentTimeOfTimeline({timelineId, currentTime})
   }
   else if (dragMode === 'translate') {
@@ -85,7 +86,8 @@ export default class Timetape extends React.Component {
   postRender() {
     const {canvas, ctx} = this
     const {timeline, height} = this.props
-    const {start, visibleTime, timescale, width} = timeline
+    const {start, timescale, width} = timeline
+    const visibleTime = getVisibleTime({timeline})
     const maxMarkers = width / 4
     var step, text, textW
 

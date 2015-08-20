@@ -5,18 +5,18 @@ import ifit from './ifit'
 import {getParamValueAtTime} from '../utils'
 
 export default function createParamSettings(connect) {
-  if (connect.value.modelType !== 'param') {
+  if (!connect.value || connect.value.type !== 'param') {
     return null
   }
 
   const param = connect.value
   const timeline = findParentTimeline(connect)
   const toggleKeys = () => {
-    const {store, actions} = BETON.getRockAsync('store')
-    store.dispatch(actions.toggleKeysAtTime({
-      id: param.id,
+    const {actions} = BETON.getRock('project-manager')
+    actions.toggleKeysAtTime({
+      keyHolderId: param.id,
       time: timelien.currentTime,
-    }))
+    })
   }
 
   const input = {
@@ -81,22 +81,23 @@ export default function createParamSettings(connect) {
 }
 
 function findParentTimeline(connect) {
-  return find(connect.path, model => model.modelType === 'timeline')
+  return find(connect.path, model => model.type === 'timeline')
 }
 
 function getParamValue(connect) {
   const param = connect.value
   const {currentTime} = findParentTimeline(connect)
-  return getParamValueAtTime({param, time: currentTime})
+  const {selectors} = BETON.getRock('project-manager')
+  return selectors.getParamValueAtTime({paramId: param.id, time: currentTime})
 }
 
 function setParamValue(value, connect) {
-  const {store, actions} = BETON.getRockAsync('store')
+  const {actions} = BETON.getRock('project-manager')
   const param = connect.value
   const {currentTime} = findParentTimeline(connect)
-  store.dispatch(actions.setValueOfParamAtTime({
+  actions.setValueOfParamAtTime({
     paramId: param.id,
     time: currentTime,
     value,
-  }))
+  })
 }

@@ -21,7 +21,7 @@ export default [{
   whitelist: ['time', 'value'],
 }]
 
-function select(modelType) {
+function select(type) {
   return connect => typeof connect.value === 'object' &&
-                    connect.value.modelType === modelType
+                    connect.value.type === type
 }

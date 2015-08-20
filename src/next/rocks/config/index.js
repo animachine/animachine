@@ -1,3 +1,3 @@
-export default {
+BETON.define('config', [], () => ({
   size: 21
-}
+}))

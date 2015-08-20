@@ -1,21 +1,25 @@
 import createParamSettings from './createParamSettings'
 
+const createTypeSelector = type => connect => {
+  return connect.value && connect.value.type === type
+}
+
 export default [{
     selector: 'root',
     hiddenHead: true,
-    children: connect => connect.value.getTracks(),
+    children: connect => connect.value.tracks,
   }, {
-    selector: connect => connect.value.modelType === 'track',
+    selector: createTypeSelector('track'),
     label: connect => connect.value.name,
     open: connect => connect.value.openInTimeline,
     onToggleOpen: handleToggleOpen,
-    children: connect => connect.value.getParams()
+    children: connect => connect.value.params
   }, {
-    selector: connect => connect.value.modelType === 'param',
+    selector: createTypeSelector('param'),
     label: connect => connect.value.name,
     open: connect => connect.value.openInTimeline,
     onToggleOpen: handleToggleOpen,
-    children: connect => connect.value.getParams()
+    children: connect => connect.value.params || null
   },
   createParamSettings
 ]

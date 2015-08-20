@@ -1,3 +1,5 @@
+import isArray from 'lodash/lang/isArray'
+
 const combineds = new WeakMap()
 
 function matchExtras(a, b) {
@@ -9,7 +11,7 @@ function matchExtras(a, b) {
     const bValue = b[key]
 
     if (isArray(aValue)) {
-      return aValue.every((aValueChild, index) => aValueChild === bValue[child])
+      return aValue.every((aValueChild, index) => aValueChild === bValue[index])
     }
     else {
       return aValue === bValue
@@ -29,5 +31,6 @@ export default function combine(item, nextExtra) {
   else {
     const combined = {...item, ...nextExtra}
     combineds.set(item, combined)
+    return combined
   }
 }

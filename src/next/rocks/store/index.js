@@ -5,6 +5,7 @@ BETON.define('store', [], () => {
   const store = createStore(reducerSwitch)
 
   function reducerSwitch(state = {}, action) {
+    console.log(action.type, action)
     const nextState = {...state}
     reducers.forEach((reducer, path) => {
       nextState[path] = reducer(nextState[path], action)

@@ -5,9 +5,9 @@ BETON.define(
     let prevTimelineTree
     store.subscribe(() => {
       const previewComponents = projectManager.selectors.getCurrentPreviewComponents()
-      const timelneTree = projectManager.selectors.combineCurrentTimeline()
+      const timelineTree = projectManager.selectors.combineCurrentTimeline()
 
-      if (testTimelinesForAnimationChange(prevTimelineTree, timelneTree)) {
+      if (testTimelinesForAnimationChange(prevTimelineTree, timelineTree)) {
         previewComponents.forEach(previewComponent => {
           const animationSource = runningAnimation._animationSource
 
@@ -17,7 +17,7 @@ BETON.define(
                 animationSource._amProjectId === this ||
                 animationSource._amProjectSource === this.projectSource
               )
-              && animationSource._amTimelineName === timelneTree.name
+              && animationSource._amTimelineName === timelineTree.name
             ) {
 
             }

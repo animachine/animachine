@@ -13,6 +13,7 @@ export default class KeyStepper extends React.Component {
   }
 
   render() {
+    return <div hidden/>
     const {param, timeline, style} = this.props
     const time = timeline.currentTime
     const {hover} = this.state

@@ -1,32 +1,89 @@
-import {getHighestId} from './selectors'
+import {getHighestItemId} from './selectors'
+
+const defaults = {
+  ease: {
+    easeType: 'bezier',
+    pointAX: 0,
+    pointAY: 0,
+    pointBX: 1,
+    pointBY: 1,
+    roughEase: false,
+    roughStrength: 1,
+    roughPoints: 20,
+    roughClamp: false,
+    roughRandomise: true,
+    roughTaper: 'none',
+  },
+  key: {
+    time: 0,
+    value: 0,
+    selected: false,
+  },
+  param: {
+    name: '',
+    openInTimeline: false
+  },
+  track: {
+    name: '',
+    selectors: [],
+    openInTimeline: false
+  },
+  timeline: {
+    name: '',
+    isPlaying: false,
+    currentTime: 0,
+    length: 60000,
+    timescale: 1,
+    width: 2000,
+    start: 0,
+    startMargin: 6,
+  },
+  project: {
+    currentTimelineId: undefined
+  }
+}
 
 export default function (projectTree) {
-  let lastId = getHighestId()
-  const items = []
+  let lastId = getHighestItemId()
+  let items = []
 
-  const createNormalizer = mod => tree => {
+  const createNormalizer = (type, mod) => tree => {
     const id = ++lastId
-    items.push({...tree, ...mod(tree), id})
+    const item = {...defaults[type], ...tree, ...mod(tree), id, type}
+    items.push(Object.freeze(item))
     return id
   }
 
-  const normalizeEase = createNormalizer(tree => ({}))
-  const normalizeKey = createNormalizer(tree => ({
+  const map = (items, normalizer) =>{
+    return items && items.map(normalizer)
+  }
+
+  const normalizeEase = createNormalizer('ease', tree => ({}))
+  const normalizeKey = createNormalizer('key', tree => ({
     ease: normalizeEase(tree.ease)
   }))
-  const normalizeParam = createNormalizer(tree => ({
-    keys: tree.keys.map(normalizeKey),
-    params: tree.params.map(normalizeParam)
+  const normalizeParam = createNormalizer('param', tree => ({
+    keys: map(tree.keys, normalizeKey),
+    params: map(tree.params, normalizeParam)
   }))
-  const normalizeTrack = createNormalizer(tree => ({
-    params: tree.params.map(normalizeParam)
+  const normalizeTrack = createNormalizer('track', tree => ({
+    params: map(tree.params, normalizeParam)
   }))
-  const normalizeTimeline = createNormalizer(tree => ({
-    tracks: tree.tracks.map(normalizeTrack)
+  const normalizeTimeline = createNormalizer('timeline', tree => ({
+    tracks: map(tree.tracks, normalizeTrack)
   }))
-  const normalizeProject = createNormalizer(tree => ({
-    timelines: tree.timelines.map(normalizeTimeline)
+  const normalizeProject = createNormalizer('project', tree => ({
+    timelines: map(tree.timelines, normalizeTimeline)
   }))
 
-  return items
+  normalizeProject(projectTree)
+  let project = items[items.length - 1]
+  if (!project.currentTimelineId) {
+    const timeline = items.find(item => item.type === 'timeline')
+    if (timeline) {
+      project = {...project, currentTimelineId: timeline.id}
+      items = [...items.slice(0, items.length - 1), project]
+    }
+  }
+  return {items, projectId: project.id}
 }

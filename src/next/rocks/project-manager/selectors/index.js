@@ -1,3 +1,4 @@
+import {createEaser} from 'react-animachine-enhancer'
 const store = BETON.getRock('store')
 
 export * from './combine'
@@ -14,10 +15,6 @@ export function getItemById({id}) {
   return getItems().find(item => item.id === id)
 }
 
-export function findItemById ({id}) {
-  return getItems().find(item => item.id = id)
-}
-
 export function getCurrentProjectId() {
   return getProjectManager().currentProjectId
 }
@@ -29,6 +26,54 @@ export function getCurrentTimelineId() {
 
 export function getCurrentTimeline() {
   return getItemById({id: getCurrentTimelineId()})
+}
+
+export function getParamValueAtTime({paramId, time}) {
+  const param = getItemById({id: paramId})
+  let previousKey, nextKey, rightKey
+  param.keys && param.keys.forEach(key => {
+    if (key.time === time) {
+      rightKey = key
+    }
+    else if (key.time < time) {
+      if (!previousKey) {
+        previousKey = key
+      }
+      else if (previousKey.time < key.time) {
+        previousKey = key
+      }
+    }
+    else if (key.time > time) {
+      if (!nextKey) {
+        nextKey = key
+      }
+      else if (nextKey.time > key.time) {
+        nextKey = key
+      }
+    }
+  })
+
+  if (rightKey) {
+    return rightKey.value
+  }
+  else {
+    if (previousKey && nextKey) {
+      const fullTime = nextKey.time - previousKey.time
+      const percent = (time - previousKey.time) / fullTime
+      const easer = createEaser(nextKey.ease)
+      const ratio = easer.getRatio(percent)
+      return previousKey.value + (nextKey.value - previousKey.value) * ratio
+    }
+    else if (previousKey) {
+      return previousKey.value
+    }
+    else if (nextKey) {
+      return nextKey.value
+    }
+    else {
+      return 0
+    }
+  }
 }
 
 export function getHighestItemId () {
@@ -83,7 +128,7 @@ export function recurseKeys({keyHolder, fn}) {
 }
 
 export function recurseParams({keyHolder, fn}) {
-  if (keyHolder.modelType === 'param') {
+  if (keyHolder.type === 'param') {
     fn(keyHolder)
   }
 

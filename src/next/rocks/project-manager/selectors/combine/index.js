@@ -1,28 +1,35 @@
 import combine from './combine'
-import {findItemById} from '../'
+import {getItemById} from '../'
 
 const createCombiner = mod => id => {
   const item = getItemById({id})
+  if (__DEV__) {
+    if (!item) {
+      throw Error(`Can't find item with id: ${id}`)
+    }
+  }
   return combine(item, mod(item))
 }
 
+const map = (item, fn) => item && item.map(fn)
+
 export const combineKey = createCombiner(item => ({
-  ease: findItemById({id: item.ease.id})
+  ease: getItemById({id: item.ease})
 }))
 
 export const combineParam = createCombiner(item => ({
-  keys: item.keys.map(combineKey),
-  params: item.params.map(combineParam)
+  keys: map(item.keys, combineKey),
+  params: map(item.params, combineParam)
 }))
 
 export const combineTrack = createCombiner(item => ({
-  params: item.params.map(combineParam)
+  params: map(item.params, combineParam)
 }))
 
 export const combineTimeline = createCombiner(item => ({
-  tracks: item.tracks.map(combineTrack)
+  tracks: map(item.tracks, combineTrack)
 }))
 
 export const combineProject = createCombiner(item => ({
-  timelines: item.timelines.map(combineTimeline)
+  timelines: map(item.timelines, combineTimeline)
 }))

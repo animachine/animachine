@@ -7,7 +7,7 @@ BETON.define('hack-open',
       getComponentsWithProjectSource
     } = componentInspector.selectors
 
-    store.subscribe(test)
+    // store.subscribe(test)
     test()
 
     function test() {
@@ -22,6 +22,8 @@ BETON.define('hack-open',
             projectManager.actions.openProject({projectSource, previewComponents})
           }
         })
+
+        setTimeout(test, 312)
       }
     }
   }

@@ -8,8 +8,8 @@ export default class Toolbar extends React.Component {
 
     return <div style = {style}>
       <Button
-        icon = {timeline.playing ? 'pause' : 'play'}
-        onClick = {() => timeline.playing = !timeline.playing}/>
+        icon = {timeline.isPlaying ? 'pause' : 'play'}
+        onClick = {() => timeline.isPlaying = !timeline.isPlaying}/>
       <Input
         type = 'number'
         value = {timeline.currentTime}

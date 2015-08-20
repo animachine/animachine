@@ -65,19 +65,6 @@ export default class Pointer extends React.Component {
     position: 0,
   }
 
-  componentDidMount() {
-    this.props.timeline.on([
-      'change.start',
-      'change.timescale',
-      'change.width',
-      'change.startMargin',
-    ], () => this.forceUpdate())
-  }
-
-  shouldComponentUpdate() {
-    return false
-  }
-
   renderHandler(side, ref) {
     const style = {
       position: 'absolute',
@@ -97,7 +84,6 @@ export default class Pointer extends React.Component {
   render() {
     const {timeline, startDragger, endDragger, moveDragger} = this.props
     const {hover} = this.state
-    console.log(hover)
     const {start, length, visibleTime, width, startMargin} = timeline
     const scale = width / length
     const styleContainer = {

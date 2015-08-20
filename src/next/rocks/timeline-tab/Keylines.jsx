@@ -1,18 +1,20 @@
 import React from 'react'
 import Keyline from './Keyline'
 import InlineEaseEditor from './inline-ease-editor/InlineEaseEditor'
-import InlineEaseEditorStore from './inline-ease-editor/InlineEaseEditorStore'
+import {convertTimeToPosition} from './utils'
 
 export default class Keylines extends React.Component {
   constructor() {
     super()
-    BETON.getRock('config', config => this.config = config)
     this.inlineEaseEditorStore = new InlineEaseEditorStore()
   }
 
   renderPointerLine() {
     const {timeline} = this.props
-    const position = timeline.convertTimeToPosition(timeline.currentTime)
+    const position = convertTimeToPosition({
+      timeline,
+      time: timeline.currentTime
+    })
     const style = {
       position: 'absolute',
       transform: `translate(${position}px)`,
@@ -27,7 +29,7 @@ export default class Keylines extends React.Component {
 
   render() {
     const {timeline, actions}  = this.props
-    const height = this.config.size
+    const height = BETON.getRock('config').size
     const children = []
     var pos = 0
 
@@ -35,7 +37,6 @@ export default class Keylines extends React.Component {
       children.push(<Keyline
         timeline = {timeline}
         actions = {actions}
-        inlineEaseEditorStore = {this.inlineEaseEditorStore}
         top = {pos}
         style = {{left: 0, top: pos}}
         height = {height}
@@ -54,9 +55,9 @@ export default class Keylines extends React.Component {
     return <div style={{position: 'relative'}}>
       {children}
       {this.renderPointerLine()}
-      <InlineEaseEditor
+      {/*<InlineEaseEditor
         timeline = {timeline}
-        store = {this.inlineEaseEditorStore}/>
+        store = {this.inlineEaseEditorStore}/>*/}
     </div>
   }
 }

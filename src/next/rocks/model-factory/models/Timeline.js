@@ -9,7 +9,7 @@ import {recurseParams} from '../recursers'
 
 @defineProperties([
   {name: 'name', type: 'string'},
-  {name: 'playing', type: 'boolean'},
+  {name: 'isPlaying', type: 'boolean'},
   {
     name: 'currentTime',
     type: 'float',

@@ -25,7 +25,12 @@ export default [{
 ]
 
 function handleToggleOpen(connect) {
-  const {store, actions} = BETON.getRockAsync('store')
-  const {id} = connect.value
-  store.dispatch(actions.toggleOpenInTimelnie({id}))
+  const {actions} = BETON.getRockAsync('store')
+  const {type, id} = connect.value
+  if (type === 'param') {
+    actions.toggleOpenInTimelnieOfParam({paramId: id})
+  }
+  else if (type === 'track') {
+    actions.toggleOpenInTimelnieOfTrack({trackId: id})
+  }
 }

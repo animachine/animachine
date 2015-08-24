@@ -1,10 +1,12 @@
 import React from 'react'
 import customDrag from 'custom-drag'
+import getVisibleTime from '../utils'
 
 const getDragArgs = (dragMode) => {
   const options = {
     onDown(props, monitor) {
-      const {start, visibleTime, timescale} = props.timeline
+      const {start, timescale} = props.timeline
+      const visibleTime = getVisibleTime({timeline: props.timeline})
       monitor.setData({start, visibleTime, timescale})
     },
     onDrag(props, monitor) {
@@ -26,13 +28,14 @@ const getDragArgs = (dragMode) => {
         actions.setVisibleTimeOfTimeline({timelineId, visibleTime})
       }
       else if (dragMode === 'end') {
+        const {currentTime, timescale} = timeline
         let visibleTime = initial.visibleTime + move
         actions.setVisibleTimeOfTimeline({timelineId, visibleTime})
 
-        let mdPos = (initial.start + timeline.currentTime) * initial.timescale
+        let mdPos = (initial.start + currentTime) * initial.timescale
         actions.setStartOfTimeline({
           timelineId,
-          start: -((timeline.currentTime * timeline.timescale) - mdPos) / timeline.timescale
+          start: -((currentTime * timescale) - mdPos) / timescale
         })
       }
     },
@@ -84,7 +87,8 @@ export default class Pointer extends React.Component {
   render() {
     const {timeline, startDragger, endDragger, moveDragger} = this.props
     const {hover} = this.state
-    const {start, length, visibleTime, width, startMargin} = timeline
+    const {start, length, width, startMargin} = timeline
+    const visibleTime = getVisibleTime({timeline})
     const scale = width / length
     const styleContainer = {
       left: ((-start * scale) + startMargin) + 'px',

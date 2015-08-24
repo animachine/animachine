@@ -1,4 +1,5 @@
 import React from 'react'
+import {getVisibleTime} from '../utils'
 
 export default class Pointer extends React.Component {
   static defaultProps = {
@@ -8,7 +9,8 @@ export default class Pointer extends React.Component {
 
   render() {
     const {radius, timeline} = this.props
-    const {start, currentTime, visibleTime, width} = timeline
+    const {start, currentTime, width} = timeline
+    const visibleTime = getVisibleTime({timeline})
     const position = ((start + currentTime) / visibleTime) * width
     const styleContainer = {
       pointerEvents: 'none',

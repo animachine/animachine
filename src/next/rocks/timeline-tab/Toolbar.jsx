@@ -3,17 +3,36 @@ import customDrag from 'custom-drag'
 import {Button, Input} from 'react-matterkit'
 
 export default class Toolbar extends React.Component {
+
+  handlePlayPauseClick = () => {
+    const {actions, timeline} = this.props
+
+    actions.setIsPlayingOfTimeline({
+      timelineId: timeline.id,
+      isPlaying: !timeline.isPlaying
+    })
+  }
+
+  handleTimeInputChange = (time) => {
+    const {actions, timeline} = this.props
+
+    actions.setCurrentTimeOfTimeline({
+      timelineId: timeline.id,
+      currentTime: time
+    })
+  }
+
   render() {
     const {timeline, style} = this.props
 
     return <div style = {style}>
       <Button
         icon = {timeline.isPlaying ? 'pause' : 'play'}
-        onClick = {() => timeline.isPlaying = !timeline.isPlaying}/>
+        onClick = {this.handlePlayPauseClick}/>
       <Input
         type = 'number'
         value = {timeline.currentTime}
-        onChange = {value => timeline.currentTime = value}
+        onChange = {this.handleTimeInputChange}
         prettifyValue = {formatTime}/>
     </div>
   }

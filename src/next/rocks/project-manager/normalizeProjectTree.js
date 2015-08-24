@@ -1,57 +1,12 @@
-import {getHighestItemId} from './selectors'
-
-const defaults = {
-  ease: {
-    easeType: 'bezier',
-    pointAX: 0,
-    pointAY: 0,
-    pointBX: 1,
-    pointBY: 1,
-    roughEase: false,
-    roughStrength: 1,
-    roughPoints: 20,
-    roughClamp: false,
-    roughRandomise: true,
-    roughTaper: 'none',
-  },
-  key: {
-    time: 0,
-    value: 0,
-    selected: false,
-  },
-  param: {
-    name: '',
-    openInTimeline: false
-  },
-  track: {
-    name: '',
-    selectors: [],
-    openInTimeline: false
-  },
-  timeline: {
-    name: '',
-    isPlaying: false,
-    currentTime: 0,
-    length: 60000,
-    timescale: 1,
-    width: 2000,
-    start: 0,
-    startMargin: 6,
-  },
-  project: {
-    currentTimelineId: undefined
-  }
-}
+import createItem from './createItem'
 
 export default function (projectTree) {
-  let lastId = getHighestItemId()
   let items = []
 
   const createNormalizer = (type, mod) => tree => {
-    const id = ++lastId
-    const item = {...defaults[type], ...tree, ...mod(tree), id, type}
+    const item = createItem({type, data: {...tree, ...mod(tree)}})
     items.push(Object.freeze(item))
-    return id
+    return item.id
   }
 
   const map = (items, normalizer) =>{

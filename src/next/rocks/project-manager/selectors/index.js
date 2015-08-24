@@ -76,15 +76,15 @@ export function getParamValueAtTime({paramId, time}) {
   }
 }
 
-export function getHighestItemId () {
-  let result = 0
-  getItems().forEach(item => {
-    if (item.id > result) {
-      result = item.id
-    }
-  })
-  return result
-}
+// export function getHighestItemId () {
+//   let result = 0
+//   getItems().forEach(item => {
+//     if (item.id > result) {
+//       result = item.id
+//     }
+//   })
+//   return result
+// }
 
 export function findClosestKey({keyHolder, time}) {
   let result
@@ -107,36 +107,10 @@ export function findClosestKey({keyHolder, time}) {
   return result
 }
 
-export function collectSelectedKeys() {
-  const result = []
-  this.forEachSelectedKey(key => result.push(key))
-  return result
-}
-
-export function recurseKeys({keyHolder, fn}) {
-  if (keyHolder.keys.forEach) {
-    keyHolder.keys.forEach(key => fn(key, keyHolder))
-  }
-
-  if (keyHolder.tracks.forEach) {
-    keyHolder.tracks.forEach(track => recurseKeys(track, fn))
-  }
-
-  if (keyHolder.params.forEach) {
-    keyHolder.params.forEach(param => recurseKeys(param, fn))
-  }
-}
-
-export function recurseParams({keyHolder, fn}) {
-  if (keyHolder.type === 'param') {
-    fn(keyHolder)
-  }
-
-  if (keyHolder.tracks.forEach) {
-    keyHolder.tracks.forEach(track => recurseParams(track, fn))
-  }
-
-  if (keyHolder.params.forEach) {
-    keyHolder.params.forEach(param => recurseParams(param, fn))
+export function getKeyOfParamAtTime({paramId, time}) {
+  const param = getItemById({id: paramId})
+  const keyId = param.keys.find(id => getItemById({id}).time === time)
+  if (keyId) {
+    return getItemById({id: keyId})
   }
 }

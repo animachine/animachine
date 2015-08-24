@@ -12,14 +12,74 @@ export default class KeyStepper extends React.Component {
     this.props.toggleKeys({param, timeline})
   }
 
+  forEachEndParam(callback) {
+    function handle(item) {
+      if (item.type === 'track') {
+        item.params.forEach(handle)
+      }
+      else if (item.type === 'param') {
+        if (item.params.length) {
+          item.params.forEach(handle)
+        }
+        else {
+          callback(param)
+        }
+      }
+    }
+
+    handle(this.props.keyHolder)
+  }
+
+  forEachKey(callback) {
+    this.forEachEndParam(param => {
+      param.keys.forEach(callback)
+    })
+  }
+
+  findNextKey() {
+    const {currentTime} = this.props.timeline
+    let result
+    this.forEachKeys(key => {
+      if (key.time > currentTime) {
+        if (!result || result.time > key.time) {
+          result = time
+        }
+      }
+    })
+    return result
+  }
+
+  findPreviewKey() {
+    const {currentTime} = this.props.timeline
+    let result
+    this.forEachKeys(key => {
+      if (key.time < currentTime) {
+        if (!result || result.time < key.time) {
+          result = time
+        }
+      }
+    })
+    return result
+  }
+
+  hasKeyNow() {
+    const {currentTime} = this.props.timeline
+    let allHaveKey = true
+    this.forEachEndParam(param => {
+      if (!param.keys.find(key => key.time === currentTime)) {
+        allHaveKey = false
+      }
+    })
+    return allHaveKey
+  }
+
   render() {
     return <div hidden/>
     const {param, timeline, style} = this.props
-    const time = timeline.currentTime
     const {hover} = this.state
     const hasKeyNow = this.hasKeyNow()
-    const previousKey = param.findPreviousKey(time)
-    const nextKey = param.findNextKey(time)
+    const previousKey = this.findPreviousKey()
+    const nextKey = this.findNextKey()
     const stepperW = 9
     const stepperStyle = {
       position: 'absolute',

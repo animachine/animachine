@@ -55,11 +55,13 @@ autoAddAction('set', 'roughTaper', 'ease')
 
 addAction('OPEN_PROJECT', ['projectSource', 'previewComponents'])
 
+addAction('SET_VISIBLE_TIME_OF_TIMELINE', ['timelineId', 'visibleTime'])
 addAction('SET_VALUE_OF_PARAM_AT_TIME', ['paramId', 'time', 'value'])
 addAction('SELECT_KEYS_AT_TIME', ['keyHolderId', 'time'])
+addAction('TOGGLE_KEYS_AT_TIME', ['keyHolderId', 'time'])
 addAction('DESELECT_ALL_KEYS', ['keyHolderId', 'time'])
 addAction('TOGGLE_KEYS_SELECTION_AT_TIME', ['keyHolderId', 'time'])
-addAction('TRANSLATE_SELECTED_KEYS', ['keyHolderId', 'time'])
+addAction('TRANSLATE_SELECTED_KEYS', ['keyHolderId', 'time', 'offset')
 
 function addAction(type, params) {
   actions[type] = type

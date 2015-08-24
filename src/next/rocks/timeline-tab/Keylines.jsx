@@ -4,11 +4,6 @@ import InlineEaseEditor from './inline-ease-editor/InlineEaseEditor'
 import {convertTimeToPosition} from './utils'
 
 export default class Keylines extends React.Component {
-  constructor() {
-    super()
-    this.inlineEaseEditorStore = new InlineEaseEditorStore()
-  }
-
   renderPointerLine() {
     const {timeline} = this.props
     const position = convertTimeToPosition({

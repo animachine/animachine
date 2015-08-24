@@ -2,7 +2,6 @@ import React from 'react'
 import KeyStepper from './KeyStepper'
 import find from 'lodash/collection/find'
 import ifit from './ifit'
-import {getParamValueAtTime} from '../utils'
 
 export default function createParamSettings(connect) {
   if (!connect.value || connect.value.type !== 'param') {
@@ -15,7 +14,7 @@ export default function createParamSettings(connect) {
     const {actions} = BETON.getRock('project-manager')
     actions.toggleKeysAtTime({
       keyHolderId: param.id,
-      time: timelien.currentTime,
+      time: timeline.currentTime,
     })
   }
 

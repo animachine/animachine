@@ -1,7 +1,7 @@
-import getItemById from '../../selectors'
+import {getItemById} from '../selectors'
 
 export function recurseKeys({keyHolderId, callback}) {
-  recurseParams({keyKolderId, callback: param => {
+  recurseParams({keyHolderId, callback: param => {
     param.keys.forEach(keyId => callback(getItemById({id: keyId})))
   }})
 }
@@ -13,13 +13,13 @@ export function recurseParams({keyHolderId, callback}) {
     callback(keyHolder)
   }
 
-  if (keyHolder.tracks.forEach) {
+  if (keyHolder.tracks) {
     keyHolder.tracks.forEach(
       track => recurseParams({keyHolderId: track, callback})
     )
   }
 
-  if (keyHolder.params.forEach) {
+  if (keyHolder.params) {
     keyHolder.params.forEach(
       param => recurseParams({keyHolderId: param, callback})
     )

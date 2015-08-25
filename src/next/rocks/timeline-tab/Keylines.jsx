@@ -23,15 +23,14 @@ export default class Keylines extends React.Component {
   }
 
   render() {
-    const {timeline, actions}  = this.props
+    const {timeline, actions, selectors} = this.props
     const height = BETON.getRock('config').size
     const children = []
     var pos = 0
 
     const renderKeyline = model => {
       children.push(<Keyline
-        timeline = {timeline}
-        actions = {actions}
+        {...{timeline, actions, selectors}}
         top = {pos}
         style = {{left: 0, top: pos}}
         height = {height}

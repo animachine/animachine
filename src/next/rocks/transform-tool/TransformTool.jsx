@@ -1,6 +1,7 @@
 import React from 'react'
 import {CSSTranshand} from 'transhand'
 import {getTargetByKeys} from 'react-animachine-enhancer'
+import {connect} from 'react-redux'
 
 const key2ParamName = {
   tx: 'x',
@@ -12,78 +13,60 @@ const key2ParamName = {
   oy: 'transformOriginY',
 }
 
-export default class TransformTool extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {}
-  }
-
-  componentDidMount() {
-    BETON.getRock('project-manager', projectManager => {
-      this.trackCurrentProjectNode(projectManager.getCurrentProjectNode())
-      projectManager.on('change.currentProjectNode', this.trackCurrentProjectNode)
+@connect(
+  (state) => {
+    const {selectors} = BETON.getRock('project-manager')
+    const project = selectors.getCurrentProject()
+    const timelne = selectors.getCurrentTimeline()
+    if (!timeline) {
+      return {}
+    }
+    const previewComponents = selectors.getPreviewComponentsOfProject({
+      projectId: project.id
     })
-  }
-
-  trackCurrentProjectNode = (nextCurrentProjectNode) => {
-    if (this._currentProjectNode) {
-      this._currentProjectNode.model.off('change.currentTimeilne', this.trackCurrentTimeline)
+    const trackId = timeline.tracks.find(trackId => {
+      const track = selectors.getItemById({id: trackId})
+      return track.selected
+    })
+    if (!trackId) {
+      return {}
     }
-    this._currentProjectNode = nextCurrentProjectNode
-    this._currentProjectNode.model.on('change.currentTimeilne', this.trackCurrentTimeline)
-
-    this.trackCurrentTimeline(this._currentProjectNode.model.getCurrentTimeline())
-    this.setState({previewComponents: this._currentProjectNode.previewComponents})
-  }
-
-  trackCurrentTimeline = (nextCurrentTimeline) => {
-    if (this._currentTimeline) {
-      this._currentTimeline.off('change.currentTrack', this.trackCurrentTrack)
-      this._currentTimeline.off('change.currentTime', this.trackCurrentTime)
+    return {
+      trackId,
+      currentTime: timeline.currentTime,
+      previewComponents,
     }
-    this._currentTimeline = nextCurrentTimeline
-    this._currentTimeline.on('change.currentTrack', this.trackCurrentTrack)
-    this._currentTimeline.on('change.currentTime', this.trackCurrentTime)
-
-    this.trackCurrentTrack(this._currentTimeline.getCurrentTrack())
-    this.trackCurrentTime(this._currentTimeline.currentTime)
-    this.setState({timeline: this._currentTimeline})
-  }
-
-  trackCurrentTrack = (nextCurrentTrack) => {
-    if (this._currentTrack) {
-      this._currentTrack.off('change', this.handleCurrentTrackChange)
+  },
+  () => {
+    const projectManager = BETON.getRock('project-manager')
+    return {
+      actions: projectManager.actions,
+      selectors: projectManager.selectors,
     }
-    this._currentTrack = nextCurrentTrack
-    this._currentTrack.on('change', this.handleCurrentTrackChange)
-    this.setState({track: nextCurrentTrack})
   }
-
-  trackCurrentTime = (currentTime) => {
-    this.setState({currentTime})
-  }
-
-  handleCurrentTrackChange = () => {
-    this.forceUpdate()
-  }
-
+)
+export default class TransformTool extends React.Component {
   handleChange = (change) => {
-    const {track, currentTime} = this.state
+    const {trackId, currentTime, actions, selectors} = this.props
 
     Object.keys(change).forEach(key => {
       const paramName = key2ParamName[key]
+      const {id: paramId} = selectors.getParamOfTrackByName({
+        trackId,
+        name: paramName
+      })
       let value = change[key]
       if (paramName === 'rotationZ') {
         value = value / Math.PI * 180
       }
-      track.setValueOfParamAtTime(paramName, currentTime, value)
+      actions.setValueOfParamAtTime({paramId, time: currentTime, value})
     })
   }
 
   render() {
-    const {previewComponents, currentTime, track} = this.state
+    const {previewComponents, currentTime, trackId, selectors} = this.props
 
-    if (!previewComponents || previewComponents.length === 0 || !track) {
+    if (!previewComponents || previewComponents.length === 0 || !trackId) {
       return <div hidden/>
     }
 
@@ -102,7 +85,14 @@ export default class TransformTool extends React.Component {
     }
 
     const getValue = (paramName, defaultValue) => {
-      var value = track.getValueOfParamAtTime(paramName, currentTime)
+      const param = selectors.getParamOfTrackByName({
+        trackId,
+        name: paramName
+      })
+      const value = selectors.getValueOfParamAtTime({
+        paramId: param.id,
+        time: currentTime
+      })
       return value === undefined ? defaultValue : value
     }
 

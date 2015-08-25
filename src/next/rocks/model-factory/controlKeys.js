@@ -47,7 +47,7 @@ export default function (ModelClass) {
     recurseParams(param => param.deselectAllKeys())
   }
 
-  ModelClass.prototype.findClosestKey = function (time) {
+  ModelClass.prototype.getClosestKey = function (time) {
     var closestKey
 
     recurseKeys(this, key => {
@@ -67,7 +67,7 @@ export default function (ModelClass) {
     return closestKey
   }
 
-  ModelClass.prototype.findNextKey = function (time) {
+  ModelClass.prototype.getNextKey = function (time) {
     var nextKey
 
     recurseKeys(this, key => {
@@ -89,7 +89,7 @@ export default function (ModelClass) {
     return nextKey
   }
 
-  ModelClass.prototype.findPreviousKey = function (time) {
+  ModelClass.prototype.getPreviousKey = function (time) {
     var previousKey
 
     recurseKeys(this, key => {

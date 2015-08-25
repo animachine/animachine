@@ -19,14 +19,14 @@ const defaults = {
   },
   param: {
     name: '',
-    openInTimeline: false,
+    openInTimeline: true,
     params: [],
     keys: []
   },
   track: {
     name: '',
     selectors: [],
-    openInTimeline: false,
+    openInTimeline: true,
     params: []
   },
   timeline: {
@@ -38,12 +38,13 @@ const defaults = {
     width: 2000,
     start: 0,
     startMargin: 6,
-    tracks: []
+    tracks: [],
+    inlineEaseEditor: false,
   },
   project: {
     currentTimelineId: undefined,
     timelines: []
-  }
+  },
 }
 
 let lastId = 0

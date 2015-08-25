@@ -12,7 +12,7 @@ import {
   recurseKeys,
   recurseParams,
   getKeysAtTime,
-} from './utils'
+} from '../utils'
 
 const rxSet = /^SET_([A-Z_]+?)_OF_([A-Z]+?)$/
 const rxAdd = /^ADD_([A-Z_]+?)_TO_([A-Z]+?)$/
@@ -57,14 +57,14 @@ export default function (projectManager = initialState, action) {
       const isEndParam = param => param.params.length === 0
       let allHasKey = true
 
-      recurseParams({keyKolderId, callback: param => {
+      recurseParams({keyHolderId, callback: param => {
         const key = getKeyOfParamAtTime({paramId: param.id, time})
         if (isEndParam(param) && !key) {
           allHasKey = false
         }
       }})
 
-      recurseParams({keyKolderId, callback: param => {
+      recurseParams({keyHolderId, callback: param => {
         if (isEndParam(param)) {
           if (allHasKey) {
             const key = getKeyOfParamAtTime({paramId: param.id, time})
@@ -149,6 +149,8 @@ export default function (projectManager = initialState, action) {
       }
     })
   }
+
+  return projectManager
 }
 
 function setItem({projectManager, item}) {

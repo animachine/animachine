@@ -1,20 +1,17 @@
 import React from 'react'
 import ControlPoint from './ControlPoint'
+import {convertTimeToPosition} from '../utils'
 
 export default class InlineEaseEditor extends React.Component {
   static propTypes = {
-    store: React.PropTypes.object,
     timeline: React.PropTypes.object,
-  }
-
-  componentDidMount() {
-    const {timeline, store} = this.props
-    timeline.on('change', () => this.forceUpdate())
-    store.on('change', () => this.forceUpdate())
+    actions: React.PropTypes.object,
+    selectors: React.PropTypes.object,
   }
 
   renderControlPoint(pointName, spaceX, spaceY) {
-    const {initialEase, controlledEases} = this.props.store
+    const {timeline, actions} = this.props
+    const {initialEase, controlledEases} = timeline.inlineEaseEditor
     const x = initialEase[`point${pointName}X`]
     const y = initialEase[`point${pointName}Y`]
 
@@ -23,8 +20,9 @@ export default class InlineEaseEditor extends React.Component {
       onChange = {({x, y}) => {
         console.log(x, y)
         controlledEases.forEach(ease => {
-          ease[`point${pointName}X`] = x
-          ease[`point${pointName}Y`] = y
+          const easeId = ease.id
+          actions[`setPoint${pointName}XOfEase`]({easeId, [`${pointName}X`]: x})
+          actions[`setPoint${pointName}YOfEase`]({easeId, [`${pointName}Y`]: y})
         })
       }}/>
   }
@@ -35,7 +33,7 @@ export default class InlineEaseEditor extends React.Component {
       pointBY: pay,
       pointBX: pbx,
       pointBY: pby,
-    } = this.props.store.initialEase
+    } = this.props.timeline.inlineEaseEditor.initialEase
 
     const d = [
       `M${w*pax},${h*pay}`,
@@ -53,15 +51,16 @@ export default class InlineEaseEditor extends React.Component {
   }
 
   render() {
-    const {timeline, store} = this.props
+    const {timeline} = this.props
+    const {inlineEaseEditor} = timeline
 
     if (!store.isFocused) {
       return <div hidden/>
     }
 
-    const {top, height, startTime, endTime, initialEase} = store
-    const left = timeline.convertTimeToPosition(startTime)
-    const right = timeline.convertTimeToPosition(endTime)
+    const {top, height, startTime, endTime, initialEase} = inlineEaseEditor
+    const left = convertTimeToPosition({timeline, time: startTime})
+    const right = convertTimeToPosition({timeline, time: endTime})
     const width = right - left
     const rootStyle = {
       position: 'absolute',

@@ -7,7 +7,7 @@ import getPreviousSiblingOfKey from './getPreviousSiblingOfKey'
 import {
   convertPositionToTime,
   convertTimeToPosition,
-  getVisibleTime
+  getVisibleTime,
 } from './utils'
 
 const colors = (() => {
@@ -29,11 +29,12 @@ function getMouseTime(props, monitor) {
 
 const dragOptions = {
   onDown(props, monitor) {
-    const {model, timeline, actions} = props
+    const {model, timeline, actions, selectors} = props
     const mouseTime = getMouseTime(props, monitor)
-    const projectManager = BETON.getRock('project-manager')
-    const {findClosestKey} = projectManager.selectors
-    const closestKey = findClosestKey({keyHolder, time: mouseTime})
+    const closestKey = selectors.getClosestKey({
+      keyHolderId: model.id,
+      time: mouseTime
+    })
 
     if (
       !closestKey ||
@@ -74,24 +75,28 @@ const dragOptions = {
   },
 
   onClick(props, monitor) {
-  //   const {model, timeline, inlineEaseEditorStore, top, height} = props
-  //   const mouseTime = getMouseTime(props, monitor)
-  //   const nextKey = model.findNextKey(mouseTime)
-  //   if (!nextKey) {
-  //     return
-  //   }
-  //   const previousKey = model.findPreviousKey(mouseTime)
-  //   timeline.deselectAllKeys()
-  //   model.selectKeysAtTime(nextKey.time)
-  //   const selectedKeys = model.collectSelectedKeys()
-  //   inlineEaseEditorStore.set({
-  //     top,
-  //     height,
-  //     startTime: previousKey ? previousKey.time : 0,
-  //     endTime: nextKey.time,
-  //     initialEase: nextKey.ease,
-  //     controlledEases: selectedKeys.map(key => key.ease),
-  //   })
+    const {model, timeline, actions, selectors, top, height} = props
+    const keyHolderId = model.id
+    const mouseTime = getMouseTime(props, monitor)
+    const nextKey = selectors.getNextKey({keyHolderId, time: mouseTime})
+    if (!nextKey) {
+      return
+    }
+    const previousKey = selectors.getPreviousKey({keyHolderId, time: mouseTime})
+    actions.deselectAllKeys({keyHolderId})
+    actions.selectKeysAtTime({keyHolderId, time: nextKey.time})
+    const selectedKeys = selectors.collectSelectedKeys({keyHolderId})
+    actions.setInlineEaseEditorOfTimeline({
+      timelineId: timeline.id,
+      inlineEaseEditor: {
+        top,
+        height,
+        startTime: previousKey ? previousKey.time : 0,
+        endTime: nextKey.time,
+        initialEase: nextKey.ease,
+        controlledEases: selectedKeys.map(key => key.ease),
+      }
+    })
   }
 }
 
@@ -110,27 +115,6 @@ export default class Keyline extends React.Component {
     this.postRender()
   }
 
-  // handleDoubleClick() {
-  //   const {timeline, model, top} = this.props
-  //   const nextKey = model.getNextKey(timeline.currentTime)
-  //   if (!nextKey) {
-  //     return
-  //   }
-  //   const previousKey = getPreviousSiblingOfKey(nextKey, timeline)
-  //   const startTime = previousKey ? previousKey.time : 0
-  //
-  //   model.selectKeysAtTime(nextKey.time)
-  //   const controlledEases = []
-  //   model.forEachSelectedKey(key => controlledEases.push(key.ease))
-  //   inlineEaseEditorStore.focus({
-  //     top,
-  //     startTime,
-  //     endTime: nextKey.time,
-  //     initialEase: nextKey.ease,
-  //     controlledEases,
-  //   })
-  // }
-
   render() {
     const {timeline, height, top, style, dragRef} = this.props
 
@@ -144,21 +128,22 @@ export default class Keyline extends React.Component {
   postRender() {
     const {canvas, ctx} = this
     const {model, timeline} = this.props
-    const {start, end} = timeline
+    const {start} = timeline
+    const end = start + getVisibleTime({timeline})
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    if (model.type === 'param' && model.getKeysLength() !== 0) {
+    if (model.type === 'param' && model.keys.length !== 0) {
       let visibleKeys = []
 
-      model.forEachKey(key => {
+      model.keys.forEach(key => {
         if (key.time >= start && key.time <= end) {
           visibleKeys.push(key)
         }
       })
 
       sortBy(visibleKeys, 'time').forEach((key, idx, arr) => {
-        this.drawKey(key, model.isSelectedKey(key))
+        this.drawKey(key)
 
         const startTime = idx === 0 ? 0 : arr[idx - 1].time
         this.drawEase(key, startTime)
@@ -169,7 +154,7 @@ export default class Keyline extends React.Component {
     }
   }
 
-  drawKey(key, isSelected) {
+  drawKey(key) {
     const {ctx} = this
     const {height, timeline} = this.props
     const keyPos = parseInt(convertTimeToPosition({
@@ -180,7 +165,7 @@ export default class Keyline extends React.Component {
     // if (line) {
       ctx.save()
       ctx.beginPath()
-      ctx.strokeStyle = isSelected ? colors.selected : colors.normal
+      ctx.strokeStyle = key.selected ? colors.selected : colors.normal
       ctx.lineWidth = 1
       ctx.moveTo(keyPos, 0)
       ctx.lineTo(keyPos, height)
@@ -191,8 +176,8 @@ export default class Keyline extends React.Component {
     // if (circle) {
       // ctx.save()
       // ctx.beginPath()
-      // ctx.strokeStyle = isSelected ? colors.selected : colors.normal
-      // ctx.fillStyle = isSelected ? colors.selected : colors.normal
+      // ctx.strokeStyle = key.selected ? colors.selected : colors.normal
+      // ctx.fillStyle = key.selected ? colors.selected : colors.normal
       // ctx.lineWidth = 1
       // ctx.arc(keyPos, height/2, r, 0, 2 * Math.PI)
       // ctx.fill()
@@ -215,8 +200,8 @@ export default class Keyline extends React.Component {
     const {ctx} = this
     const {height, timeline} = this.props
     const easer = createEaser(key.ease)
-    const startPos = parseInt(timeline.convertTimeToPosition(startTime)) + 0.5
-    const endPos = parseInt(timeline.convertTimeToPosition(key.time)) + 0.5
+    const startPos = parseInt(convertTimeToPosition({timeline, time: startTime})) + 0.5
+    const endPos = parseInt(convertTimeToPosition({timeline, time: key.time})) + 0.5
     const width = endPos - startPos
 
     if (width === 0) {

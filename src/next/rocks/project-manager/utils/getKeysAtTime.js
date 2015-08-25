@@ -1,11 +1,11 @@
 import {recurseKeys} from './recursers'
 
-export function getKeysAtTime({keyHolder, time}) {
+export function getKeysAtTime({keyHolderId, time}) {
   const result = []
-  recurseKeys(keyHolder, key => {
+  recurseKeys({keyHolderId, callback: key => {
     if (key.time === time) {
       result.push(key)
     }
-  })
+  }})
   return result
 }

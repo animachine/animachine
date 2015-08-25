@@ -1,10 +1,13 @@
+import omit from 'lodash/object/omit'
+import isUndefined from 'lodash/lang/isUndefined'
 import createItem from './createItem'
 
 export default function (projectTree) {
   let items = []
 
   const createNormalizer = (type, mod) => tree => {
-    const item = createItem({type, data: {...tree, ...mod(tree)}})
+    const spec = omit(mod(tree), isUndefined)
+    const item = createItem({type, data: {...tree, ...spec}})
     items.push(Object.freeze(item))
     return item.id
   }
@@ -40,5 +43,6 @@ export default function (projectTree) {
       items = [...items.slice(0, items.length - 1), project]
     }
   }
+  console.log('normalizer', {items, projectId: project.id})
   return {items, projectId: project.id}
 }

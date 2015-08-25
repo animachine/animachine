@@ -8,78 +8,19 @@ export default class KeyStepper extends React.Component {
   }
 
   handleKeyClick = () => {
-    const {param, timeline} = this.props
-    this.props.toggleKeys({param, timeline})
-  }
-
-  forEachEndParam(callback) {
-    function handle(item) {
-      if (item.type === 'track') {
-        item.params.forEach(handle)
-      }
-      else if (item.type === 'param') {
-        if (item.params.length) {
-          item.params.forEach(handle)
-        }
-        else {
-          callback(param)
-        }
-      }
-    }
-
-    handle(this.props.keyHolder)
-  }
-
-  forEachKey(callback) {
-    this.forEachEndParam(param => {
-      param.keys.forEach(callback)
-    })
-  }
-
-  findNextKey() {
-    const {currentTime} = this.props.timeline
-    let result
-    this.forEachKeys(key => {
-      if (key.time > currentTime) {
-        if (!result || result.time > key.time) {
-          result = time
-        }
-      }
-    })
-    return result
-  }
-
-  findPreviewKey() {
-    const {currentTime} = this.props.timeline
-    let result
-    this.forEachKeys(key => {
-      if (key.time < currentTime) {
-        if (!result || result.time < key.time) {
-          result = time
-        }
-      }
-    })
-    return result
-  }
-
-  hasKeyNow() {
-    const {currentTime} = this.props.timeline
-    let allHaveKey = true
-    this.forEachEndParam(param => {
-      if (!param.keys.find(key => key.time === currentTime)) {
-        allHaveKey = false
-      }
-    })
-    return allHaveKey
+    const {actions} = BETON.getRock('project-manager')
+    const {keyHolderId, timeline} = this.props
+    actions.toggleKeysAtTime({keyHolderId, time: timeline.currentTime})
   }
 
   render() {
-    return <div hidden/>
-    const {param, timeline, style} = this.props
+    const {selectors, actions} = BETON.getRock('project-manager')
+    const {keyHolderId, timeline, style} = this.props
     const {hover} = this.state
-    const hasKeyNow = this.hasKeyNow()
-    const previousKey = this.findPreviousKey()
-    const nextKey = this.findNextKey()
+    const time = timeline.currentTime
+    const hasKeyNow = selectors.getKeysAtTime({keyHolderId, time})
+    const previousKey = selectors.getPreviousKey({keyHolderId, time})
+    const nextKey = selectors.getNextKey({keyHolderId, time})
     const stepperW = 9
     const stepperStyle = {
       position: 'absolute',
@@ -94,13 +35,19 @@ export default class KeyStepper extends React.Component {
       {hover && previousKey && <Button
         icon = 'angle-left'
         style = {{...stepperStyle, left: -stepperW}}
-        onClick = {() => {timeline.currentTime = previousKey.time}}/>
+        onClick = {() => {actions.setCurrentTimeOfTimeline({
+          timelineId: timeline.id,
+          currentTime: previousKey.time
+        })}}/>
       }
 
       {hover && nextKey && <Button
         icon = 'angle-right'
         style = {{...stepperStyle, right: -stepperW}}
-        onClick = {() => {timeline.currentTime = nextKey.time}}/>
+        onClick = {() => {actions.setCurrentTimeOfTimeline({
+          timelineId: timeline.id,
+          currentTime: nextKey.time
+        })}}/>
       }
 
       <Button

@@ -59,13 +59,13 @@ addAction('SET_VISIBLE_TIME_OF_TIMELINE', ['timelineId', 'visibleTime'])
 addAction('SET_VALUE_OF_PARAM_AT_TIME', ['paramId', 'time', 'value'])
 addAction('SELECT_KEYS_AT_TIME', ['keyHolderId', 'time'])
 addAction('TOGGLE_KEYS_AT_TIME', ['keyHolderId', 'time'])
-addAction('DESELECT_ALL_KEYS', ['keyHolderId', 'time'])
+addAction('DESELECT_ALL_KEYS', ['keyHolderId'])
 addAction('TOGGLE_KEYS_SELECTION_AT_TIME', ['keyHolderId', 'time'])
-addAction('TRANSLATE_SELECTED_KEYS', ['keyHolderId', 'time', 'offset')
+addAction('TRANSLATE_SELECTED_KEYS', ['keyHolderId', 'time', 'offset'])
 
 function addAction(type, params) {
   actions[type] = type
-  actions[camelCase(type)] = function (payload) {
+  actions[camelCase(type)] = function (payload = {}) {
     if (__DEV__) {
       let payloadKeys = Object.keys(payload)
       let missingParam = params.find(param => payloadKeys.indexOf(param) === -1)

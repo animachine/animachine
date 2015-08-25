@@ -24,11 +24,6 @@ const dragOptions = {
   dragRef: connect.getDragRef()
 }))
 export default class InlineEaseEditor extends React.Component {
-  static propTypes = {
-    store: React.PropTypes.object,
-    timelineTab: React.PropTypes.object,
-  }
-
   render() {
     const {x, y, spaceX, spaceY, dragRef} = this.props
     const r = 3

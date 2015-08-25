@@ -10,13 +10,6 @@ export default function createParamSettings(connect) {
 
   const param = connect.value
   const timeline = findParentTimeline(connect)
-  const toggleKeys = () => {
-    const {actions} = BETON.getRock('project-manager')
-    actions.toggleKeysAtTime({
-      keyHolderId: param.id,
-      time: timeline.currentTime,
-    })
-  }
 
   const input = {
     value: getParamValue,
@@ -26,7 +19,7 @@ export default function createParamSettings(connect) {
     selector: 'all',
     extraInputs: [input],
     buttons: [{
-      getElement: () => <KeyStepper {...{param, timeline, toggleKeys}}/>
+      getElement: () => <KeyStepper {...{keyHolderId: param.id, timeline}}/>
     }]
   }
 

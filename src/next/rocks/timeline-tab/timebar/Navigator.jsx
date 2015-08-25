@@ -1,6 +1,6 @@
 import React from 'react'
 import customDrag from 'custom-drag'
-import getVisibleTime from '../utils'
+import {getVisibleTime} from '../utils'
 
 const getDragArgs = (dragMode) => {
   const options = {

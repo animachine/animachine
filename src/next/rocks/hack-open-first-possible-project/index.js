@@ -17,8 +17,7 @@ BETON.define('hack-open',
           if (projectSources.length) {
             const projectSource = projectSources[0]
             const previewComponents =
-              getComponentsWithProjectSource(projectSource)
-
+              getComponentsWithProjectSource({projectSource})
             projectManager.actions.openProject({projectSource, previewComponents})
           }
         })

@@ -30,6 +30,7 @@ function getMouseTime(props, monitor) {
 const dragOptions = {
   onDown(props, monitor) {
     const {model, timeline, actions, selectors} = props
+    const keyHolderId = model.id
     const mouseTime = getMouseTime(props, monitor)
     const closestKey = selectors.getClosestKey({
       keyHolderId: model.id,
@@ -43,18 +44,20 @@ const dragOptions = {
       return false // prevent draggign
     }
 
+    monitor.setData({hitKeys: true})
+
     const {time} = closestKey
-    const {shiftKey, ctrlKey} = monitor.getLastEvent()
+    const {shiftKey, ctrlKey} = monitor.getLastEvent().nativeEvent
 
     if (!shiftKey && !ctrlKey) {
-      timeline.deselectAllKeys()
+      actions.deselectAllKeys({keyHolderId: timeline.id})
     }
 
     if (shiftKey || ctrlKey) {
-      projectManager.selectors.toggleKeySelectionAtTime({time, keyHolderId})
+      actions.toggleKeysSelectionAtTime({time, keyHolderId})
     }
     else {
-      projectManager.selectors.selectKeysAtTime({time, keyHolderId})
+      actions.selectKeysAtTime({time, keyHolderId})
     }
 
     monitor.setData({
@@ -63,18 +66,23 @@ const dragOptions = {
   },
 
   onDrag(props, monitor) {
-    const {model} = props
+    const {model, actions} = props
+    const keyHolderId = model.id
     const mouseTime = getMouseTime(props, monitor)
-    const timeOffset = mouseTime - monitor.data.lastMouseTime
-
-    model.forEachSelectedKey(key => key.time += timeOffset)
+    const offset = mouseTime - monitor.data.lastMouseTime
 
     monitor.setData({
       lastMouseTime: mouseTime
     })
+
+    actions.translateSelectedKeys({keyHolderId, offset})
   },
 
   onClick(props, monitor) {
+    if (monitor.data.hitKeys) {
+      return
+    }
+
     const {model, timeline, actions, selectors, top, height} = props
     const keyHolderId = model.id
     const mouseTime = getMouseTime(props, monitor)
@@ -83,9 +91,10 @@ const dragOptions = {
       return
     }
     const previousKey = selectors.getPreviousKey({keyHolderId, time: mouseTime})
-    actions.deselectAllKeys({keyHolderId})
+    actions.deselectAllKeys({keyHolderId: timeline.id})
     actions.selectKeysAtTime({keyHolderId, time: nextKey.time})
     const selectedKeys = selectors.collectSelectedKeys({keyHolderId})
+    
     actions.setInlineEaseEditorOfTimeline({
       timelineId: timeline.id,
       inlineEaseEditor: {
@@ -93,8 +102,8 @@ const dragOptions = {
         height,
         startTime: previousKey ? previousKey.time : 0,
         endTime: nextKey.time,
-        initialEase: nextKey.ease,
-        controlledEases: selectedKeys.map(key => key.ease),
+        controlEaseId: nextKey.ease,
+        controlledEaseIds: selectedKeys.map(key => key.ease),
       }
     })
   }

@@ -17,17 +17,14 @@ const key2ParamName = {
   (state) => {
     const {selectors} = BETON.getRock('project-manager')
     const project = selectors.getCurrentProject()
-    const timelne = selectors.getCurrentTimeline()
+    const timeline = selectors.getCurrentTimeline()
     if (!timeline) {
       return {}
     }
     const previewComponents = selectors.getPreviewComponentsOfProject({
       projectId: project.id
     })
-    const trackId = timeline.tracks.find(trackId => {
-      const track = selectors.getItemById({id: trackId})
-      return track.selected
-    })
+    const trackId = timeline.currentTrackId
     if (!trackId) {
       return {}
     }
@@ -67,9 +64,10 @@ export default class TransformTool extends React.Component {
     const {previewComponents, currentTime, trackId, selectors} = this.props
 
     if (!previewComponents || previewComponents.length === 0 || !trackId) {
-      return <div hidden/>
+      return <div hidden />
     }
 
+    const track = selectors.getItemById({id: trackId})
     var selectedTarget
     track.selectors.forEach(selector => {
       previewComponents.forEach(previewComponent => {
@@ -89,7 +87,7 @@ export default class TransformTool extends React.Component {
         trackId,
         name: paramName
       })
-      const value = selectors.getValueOfParamAtTime({
+      const value = param && selectors.getValueOfParamAtTime({
         paramId: param.id,
         time: currentTime
       })

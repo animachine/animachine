@@ -28,6 +28,10 @@ export function getCurrentProjectId() {
   return getProjectManager().currentProjectId
 }
 
+export function getCurrentProject() {
+  return getItemById({id: getCurrentProjectId()})
+}
+
 export function getCurrentTimelineId() {
   const project = getItemById({id: getCurrentProjectId()})
   return project && project.currentTimelineId
@@ -37,7 +41,7 @@ export function getCurrentTimeline() {
   return getItemById({id: getCurrentTimelineId()})
 }
 
-export function getParamValueAtTime({paramId, time}) {
+export function getValueOfParamAtTime({paramId, time}) {
   const param = getItemById({id: paramId})
   let previousKey, nextKey, rightKey
   param.keys && param.keys.forEach(key => {
@@ -95,7 +99,7 @@ export function getKeyOfParamAtTime({paramId, time}) {
 
 export function getParamOfTrackByName({trackId, name}) {
   let result
-  recurseParams({keyHolderId: trackId, calback: param => {
+  recurseParams({keyHolderId: trackId, callback: param => {
     if (param.name === name) {
       result = param
     }
@@ -104,7 +108,7 @@ export function getParamOfTrackByName({trackId, name}) {
 }
 
 export function getPreviewComponentsOfProject({projectId}) {
-  return getProjectManager.previewComponentsByProjectId[projectId]
+  return getProjectManager().previewComponentsByProjectId[projectId]
 }
 
 export function getClosestKey({keyHolderId, time}) {

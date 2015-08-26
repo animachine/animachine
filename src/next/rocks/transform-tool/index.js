@@ -1,10 +1,13 @@
 import React from 'react'
 import TransformTool from './TransformTool'
+import {Provider} from 'react-redux'
 
-BETON.getRock('workspace', init)
-
-function init(workspace) {
+BETON.define('transform-tool', ['workspace', 'store'], (workspace, store) => {
   workspace.overlays.setOverlay('transform-tool', {
-    getElement: () => <TransformTool/>
+    getElement: () => {
+      return <Provider store={store}>
+        {() => <TransformTool/>}
+      </Provider>
+    }
   })
-}
+})

@@ -6,7 +6,7 @@ import createItem from '../createItem'
 import {
   getItemById,
   getKeyOfParamAtTime,
-  getParamValueAtTime,
+  getValueOfParamAtTime,
 } from '../selectors'
 import {
   recurseKeys,
@@ -76,7 +76,7 @@ export default function (projectManager = initialState, action) {
             })
           }
           else {
-            const value = getParamValueAtTime({paramId: param.id, time})
+            const value = getValueOfParamAtTime({paramId: param.id, time})
             return setValueOfParamAtTime({
               projectManager,
               value,
@@ -192,13 +192,14 @@ function setValueOfParamAtTime({projectManager, value, paramId, time}) {
     return setItem({projectManager, item: {...key, value}})
   }
 
-  key = createItem({
-    type: 'key',
-    data: {value, time}
-  })
+  key = createItem({type: 'key', data: {value, time}})
+  const ease = createItem({type: 'ease'})
+  key.ease = ease.id
+  projectManager = setItem({projectManager, item: ease})
   projectManager = setItem({projectManager, item: key})
+
   return addChild({
-    projectManager,
+    projectManager: projectManager,
     parentId: paramId,
     childId: key.id,
     childrenKey: 'keys'

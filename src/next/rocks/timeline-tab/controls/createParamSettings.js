@@ -1,7 +1,7 @@
 import React from 'react'
 import KeyStepper from './KeyStepper'
-import find from 'lodash/collection/find'
 import ifit from './ifit'
+import {getParentTimeline, getParentTrack} from './utils'
 
 export default function createParamSettings(connect) {
   if (!connect.value || connect.value.type !== 'param') {
@@ -9,7 +9,7 @@ export default function createParamSettings(connect) {
   }
 
   const param = connect.value
-  const timeline = findParentTimeline(connect)
+  const timeline = getParentTimeline(connect)
 
   const input = {
     value: getParamValue,
@@ -18,6 +18,12 @@ export default function createParamSettings(connect) {
   const settings = {
     selector: 'all',
     extraInputs: [input],
+    onClick: connect => {
+      const {actions} = BETON.getRock('project-manager')
+      const {id: currentTrackId} = getParentTrack(connect)
+      const {id: timelineId} = getParentTimeline(connect)
+      actions.setCurrentTrackIdOfTimeline({timelineId, currentTrackId})
+    },
     buttons: [{
       getElement: () => <KeyStepper {...{keyHolderId: param.id, timeline}}/>
     }]
@@ -72,21 +78,17 @@ export default function createParamSettings(connect) {
   return settings
 }
 
-function findParentTimeline(connect) {
-  return find(connect.path, model => model.type === 'timeline')
-}
-
 function getParamValue(connect) {
   const param = connect.value
-  const {currentTime} = findParentTimeline(connect)
+  const {currentTime} = getParentTimeline(connect)
   const {selectors} = BETON.getRock('project-manager')
-  return selectors.getParamValueAtTime({paramId: param.id, time: currentTime})
+  return selectors.getValueOfParamAtTime({paramId: param.id, time: currentTime})
 }
 
 function setParamValue(value, connect) {
   const {actions} = BETON.getRock('project-manager')
   const param = connect.value
-  const {currentTime} = findParentTimeline(connect)
+  const {currentTime} = getParentTimeline(connect)
   actions.setValueOfParamAtTime({
     paramId: param.id,
     time: currentTime,

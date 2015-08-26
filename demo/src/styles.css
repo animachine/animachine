@@ -6,6 +6,10 @@
   flex: 1;
 }
 
+body {
+  opacity: 0.1;
+}
+
 /*.playgroundPreview {
   position: relative;
 }*/

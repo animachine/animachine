@@ -1,9 +1,15 @@
 import camelCase from 'lodash/string/camelCase'
-import snakeCase from 'lodash/string/snakeCase'
 
 const store = BETON.getRock('store')
 
-const constantCase = str => snakeCase(str).toUpperCase()
+const constantCase = str => {
+  return str.replace(/[A-Z]/g, cap => `_${cap.toLowerCase()}`)
+            .toUpperCase()
+}
+const min = minValue => value => Math.max(minValue, value)
+const max = maxValue => value => Math.min(minValue, value)
+const minmax = (minValue, maxValue) => value =>
+  Math.min(maxValue, Math.max(minValue, value))
 
 const actions = {}
 export default actions
@@ -14,13 +20,14 @@ autoAddAction('remove', 'timeline', 'project')
 
 autoAddAction('set', 'name', 'timeline')
 autoAddAction('set', 'isPlaying', 'timeline')
-autoAddAction('set', 'currentTime', 'timeline')
+autoAddAction('set', 'currentTime', 'timeline', min(0))
+autoAddAction('set', 'timescale', 'timeline', minmax(0.0001, 3))
 autoAddAction('set', 'length', 'timeline')
 autoAddAction('set', 'width', 'timeline')
 autoAddAction('set', 'start', 'timeline')
 autoAddAction('set', 'startMargin', 'timeline')
-autoAddAction('set', 'visibleTime', 'timeline')
-autoAddAction('set', 'end', 'timeline')
+autoAddAction('set', 'currentTrackId', 'timeline')
+autoAddAction('set', 'inlineEaseEditor', 'timeline')
 autoAddAction('add', 'track', 'timeline')
 autoAddAction('remove', 'track', 'timeline')
 
@@ -41,14 +48,14 @@ autoAddAction('set', 'time', 'key')
 autoAddAction('set', 'value', 'key')
 autoAddAction('set', 'selected', 'key')
 
-autoAddAction('set', 'type', 'ease')
-autoAddAction('set', 'pointAX', 'ease')
+autoAddAction('set', 'pointAX', 'ease', minmax(0, 1))
 autoAddAction('set', 'pointAY', 'ease')
-autoAddAction('set', 'pointBX', 'ease')
+autoAddAction('set', 'pointBX', 'ease', minmax(0, 1))
 autoAddAction('set', 'pointBY', 'ease')
 autoAddAction('set', 'roughEase', 'ease')
 autoAddAction('set', 'roughStrength', 'ease')
 autoAddAction('set', 'roughPoints', 'ease')
+autoAddAction('set', 'type', 'ease')
 autoAddAction('set', 'roughClamp', 'ease')
 autoAddAction('set', 'roughRandomise', 'ease')
 autoAddAction('set', 'roughTaper', 'ease')
@@ -61,22 +68,27 @@ addAction('SELECT_KEYS_AT_TIME', ['keyHolderId', 'time'])
 addAction('TOGGLE_KEYS_AT_TIME', ['keyHolderId', 'time'])
 addAction('DESELECT_ALL_KEYS', ['keyHolderId'])
 addAction('TOGGLE_KEYS_SELECTION_AT_TIME', ['keyHolderId', 'time'])
-addAction('TRANSLATE_SELECTED_KEYS', ['keyHolderId', 'time', 'offset'])
+addAction('TRANSLATE_SELECTED_KEYS', ['keyHolderId', 'offset'])
 
-function addAction(type, params) {
+function addAction(type, params, fixPayload) {
   actions[type] = type
   actions[camelCase(type)] = function (payload = {}) {
     if (__DEV__) {
       let payloadKeys = Object.keys(payload)
       let missingParam = params.find(param => payloadKeys.indexOf(param) === -1)
       if (missingParam) {
-        console.warn(
+        throw Error(
           `Missing param "${missingParam}" in action "${type}"\n` +
           `expected params: ${params} \n` +
           `provided params: ${payloadKeys}`
         )
       }
     }
+
+    if (fixPayload) {
+      payload = fixPayload(payload)
+    }
+
     store.dispatch({
       type,
       ...payload
@@ -95,8 +107,13 @@ function addAction(type, params) {
   }
 }
 
-function autoAddAction(command, value, target) {
-  addAction(getType(), getParams())
+function autoAddAction(command, value, target, fixValue) {
+  const fixPayload = fixValue ? payload => ({
+    ...payload,
+    [value]: fixValue(payload[value])
+  }) : undefined
+
+  addAction(getType(), getParams(), fixPayload)
 
   function getType() {
     switch (command) {

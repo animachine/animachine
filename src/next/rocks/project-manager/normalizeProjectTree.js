@@ -12,7 +12,7 @@ export default function (projectTree) {
     return item.id
   }
 
-  const map = (items, normalizer) =>{
+  const map = (items, normalizer) => {
     return items && items.map(normalizer)
   }
 
@@ -36,6 +36,8 @@ export default function (projectTree) {
 
   normalizeProject(projectTree)
   let project = items[items.length - 1]
+
+  //if there is no current timeline set the first
   if (!project.currentTimelineId) {
     const timeline = items.find(item => item.type === 'timeline')
     if (timeline) {
@@ -43,6 +45,7 @@ export default function (projectTree) {
       items = [...items.slice(0, items.length - 1), project]
     }
   }
+
   console.log('normalizer', {items, projectId: project.id})
   return {items, projectId: project.id}
 }

@@ -9,20 +9,34 @@ export default class InlineEaseEditor extends React.Component {
     selectors: React.PropTypes.object,
   }
 
+  getControlEase() {
+    const {timeline, selectors} = this.props
+
+    return selectors.getItemById({
+      id: timeline.inlineEaseEditor.controlEaseId
+    })
+  }
+
   renderControlPoint(pointName, spaceX, spaceY) {
     const {timeline, actions} = this.props
-    const {initialEase, controlledEases} = timeline.inlineEaseEditor
-    const x = initialEase[`point${pointName}X`]
-    const y = initialEase[`point${pointName}Y`]
+    const {controlledEaseIds} = timeline.inlineEaseEditor
+    const controlEase = this.getControlEase()
+    const x = controlEase[`point${pointName}X`]
+    const y = controlEase[`point${pointName}Y`]
 
     return <ControlPoint
       {...{x, y, spaceX, spaceY}}
       onChange = {({x, y}) => {
         console.log(x, y)
-        controlledEases.forEach(ease => {
-          const easeId = ease.id
-          actions[`setPoint${pointName}XOfEase`]({easeId, [`${pointName}X`]: x})
-          actions[`setPoint${pointName}YOfEase`]({easeId, [`${pointName}Y`]: y})
+        controlledEaseIds.forEach(easeId => {
+          actions[`setPoint${pointName}XOfEase`]({
+            easeId,
+            [`point${pointName}X`]: x
+          })
+          actions[`setPoint${pointName}YOfEase`]({
+            easeId,
+            [`point${pointName}Y`]: y
+          })
         })
       }}/>
   }
@@ -30,10 +44,10 @@ export default class InlineEaseEditor extends React.Component {
   renderPath(w, h) {
     const {
       pointAX: pax,
-      pointBY: pay,
+      pointAY: pay,
       pointBX: pbx,
       pointBY: pby,
-    } = this.props.timeline.inlineEaseEditor.initialEase
+    } = this.getControlEase()
 
     const d = [
       `M${w*pax},${h*pay}`,
@@ -54,17 +68,18 @@ export default class InlineEaseEditor extends React.Component {
     const {timeline} = this.props
     const {inlineEaseEditor} = timeline
 
-    if (!store.isFocused) {
+    if (!inlineEaseEditor) {
       return <div hidden/>
     }
 
-    const {top, height, startTime, endTime, initialEase} = inlineEaseEditor
+    const {top, height, startTime, endTime} = inlineEaseEditor
     const left = convertTimeToPosition({timeline, time: startTime})
     const right = convertTimeToPosition({timeline, time: endTime})
     const width = right - left
     const rootStyle = {
       position: 'absolute',
-      top,
+      left,
+      top: top + height,
       transform: 'scaleY(-1)',
       pointerEvents: 'none',
     }

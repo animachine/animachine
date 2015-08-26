@@ -49,9 +49,7 @@ export default class Keylines extends React.Component {
     return <div style={{position: 'relative'}}>
       {children}
       {this.renderPointerLine()}
-      {/*<InlineEaseEditor
-        timeline = {timeline}
-        store = {this.inlineEaseEditorStore}/>*/}
+      <InlineEaseEditor {...{timeline, actions, selectors}}/>
     </div>
   }
 }

@@ -1,10 +1,10 @@
 const defaults = {
   ease: {
     easeType: 'bezier',
-    pointAX: 0,
-    pointAY: 0,
-    pointBX: 1,
-    pointBY: 1,
+    pointAX: 0.3,
+    pointAY: 0.3,
+    pointBX: 0.7,
+    pointBY: 0.7,
     roughEase: false,
     roughStrength: 1,
     roughPoints: 20,
@@ -38,8 +38,9 @@ const defaults = {
     width: 2000,
     start: 0,
     startMargin: 6,
-    tracks: [],
+    currentTrackId: undefined,
     inlineEaseEditor: false,
+    tracks: [],
   },
   project: {
     currentTimelineId: undefined,

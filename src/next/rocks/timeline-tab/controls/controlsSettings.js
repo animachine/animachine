@@ -1,4 +1,5 @@
 import createParamSettings from './createParamSettings'
+import {getParentTimeline, getParentTrack} from './utils'
 
 const createTypeSelector = type => connect => {
   return connect.value && connect.value.type === type
@@ -13,7 +14,12 @@ export default [{
     label: connect => connect.value.name,
     open: connect => connect.value.openInTimeline,
     onToggleOpen: handleToggleOpen,
-    children: connect => connect.value.params
+    children: connect => connect.value.params,
+    highlighted: connect => {
+      const track = getParentTrack(connect)
+      const timeline = getParentTimeline(connect)
+      return timeline.currentTrackId === track.id
+    },
   }, {
     selector: createTypeSelector('param'),
     label: connect => connect.value.name,

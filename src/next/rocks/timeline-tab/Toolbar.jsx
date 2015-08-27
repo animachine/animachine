@@ -25,11 +25,13 @@ export default class Toolbar extends React.Component {
   render() {
     const {timeline, style} = this.props
 
-    return <div style = {style}>
+    return <div style={{...style, display: 'flex'}}>
       <Button
         icon = {timeline.isPlaying ? 'pause' : 'play'}
         onClick = {this.handlePlayPauseClick}/>
+      <div style={{flex: 1}}/>
       <Input
+        style={{maxWidth: 88}}
         type = 'number'
         value = {timeline.currentTime}
         onChange = {this.handleTimeInputChange}

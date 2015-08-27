@@ -1,8 +1,8 @@
 import {recurseKeys} from './recursers'
 
-export function getKeysAtTime({keyHolderId, time}) {
+export function getKeysAtTime({projectManager, keyHolderId, time}) {
   const result = []
-  recurseKeys({keyHolderId, callback: key => {
+  recurseKeys({projectManager, keyHolderId, callback: key => {
     if (key.time === time) {
       result.push(key)
     }

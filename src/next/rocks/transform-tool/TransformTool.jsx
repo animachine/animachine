@@ -48,15 +48,16 @@ export default class TransformTool extends React.Component {
 
     Object.keys(change).forEach(key => {
       const paramName = key2ParamName[key]
-      const {id: paramId} = selectors.getParamOfTrackByName({
-        trackId,
-        name: paramName
-      })
       let value = change[key]
       if (paramName === 'rotationZ') {
         value = value / Math.PI * 180
       }
-      actions.setValueOfParamAtTime({paramId, time: currentTime, value})
+      actions.setValueOfTrackAtTime({
+        trackId,
+        paramName,
+        time: currentTime,
+        value
+      })
     })
   }
 

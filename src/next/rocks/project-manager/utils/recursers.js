@@ -1,13 +1,16 @@
 import {getItemById} from '../selectors'
 
-export function recurseKeys({keyHolderId, callback}) {
-  recurseParams({keyHolderId, callback: param => {
-    param.keys.forEach(keyId => callback(getItemById({id: keyId})))
+export function recurseKeys({projectManager, keyHolderId, callback}) {
+  recurseParams({projectManager, keyHolderId, callback: param => {
+    param.keys.forEach(keyId => callback(getItemById({
+      projectManager,
+      id: keyId
+    })))
   }})
 }
 
-export function recurseParams({keyHolderId, callback}) {
-  const keyHolder = getItemById({id: keyHolderId})
+export function recurseParams({projectManager, keyHolderId, callback}) {
+  const keyHolder = getItemById({projectManager, id: keyHolderId})
 
   if (keyHolder.type === 'param') {
     callback(keyHolder)
@@ -15,13 +18,13 @@ export function recurseParams({keyHolderId, callback}) {
 
   if (keyHolder.tracks) {
     keyHolder.tracks.forEach(
-      track => recurseParams({keyHolderId: track, callback})
+      track => recurseParams({projectManager, keyHolderId: track, callback})
     )
   }
 
   if (keyHolder.params) {
     keyHolder.params.forEach(
-      param => recurseParams({keyHolderId: param, callback})
+      param => recurseParams({projectManager, keyHolderId: param, callback})
     )
   }
 }

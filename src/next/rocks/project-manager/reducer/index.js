@@ -3,10 +3,12 @@ import without from 'lodash/array/without'
 import normalizeProjectTree from '../normalizeProjectTree'
 import actions from '../actions'
 import createItem from '../createItem'
+import * as mandatoryParamGroups from './mandatoryParamGroups'
 import {
   getItemById,
   getKeyOfParamAtTime,
   getValueOfParamAtTime,
+  getParamOfTrackByName,
 } from '../selectors'
 import {
   recurseKeys,
@@ -47,6 +49,78 @@ export default function (projectManager = initialState, action) {
         },
         currentProjectId: projectManager.currentProjectId || projectId
       }
+    }
+    case actions.SET_VALUE_OF_TRACK_AT_TIME: {
+      const {value, trackId, paramName, time} = action
+      let param = getParamOfTrackByName({trackId, paramName})
+
+      if (param) {
+        return setValueOfParamAtTime({
+          projectManager,
+          paramId: param.id,
+          time,
+          value
+        })
+      }
+      else {
+        const parentParamName = mandatoryParamGroups
+          .getParentParamName(paramName)
+
+        if (parentParamName) {
+          const childParamNames = mandatoryParamGroups
+            .getChildParamNames(parentParamName)
+          const parentParam = createItem({
+            type: 'param',
+            data: {name: parentParamName}
+          })
+
+          projectManager = setItem({projectManager, item: parentParam})
+          projectManager = addChild({
+            projectManager,
+            parentId: trackId,
+            childId: parentParam.id,
+            childrenKey: 'params'
+          })
+
+          childParamNames.forEach(childParamName => {
+            let childParam = createItem({
+              type: 'param',
+              data: {name: childParamName}
+            })
+            projectManager = setItem({projectManager, item: childParam})
+            projectManager = addChild({
+              projectManager,
+              parentId: parentParam.id,
+              childId: childParam.id,
+              childrenKey: 'params'
+            })
+
+            if (childParamName === paramName) {
+              projectManager = setValueOfParamAtTime({
+                projectManager,
+                paramId: childParam.id,
+                time,
+                value
+              })
+            }
+          })
+        }
+        else {
+          param = createItem({
+            type: 'param',
+            data: {name: paramName}
+          })
+          projectManager = setItem({projectManager, item: param})
+          projectManager = addChild({
+            projectManager,
+            parentId: trackId,
+            childId: param.id,
+            childrenKey: 'params'
+          })
+        }
+      }
+
+      return projectManager
     }
     case actions.SET_VALUE_OF_PARAM_AT_TIME: {
       const {value, paramId, time} = action
@@ -169,7 +243,7 @@ function setItem({projectManager, item}) {
 }
 
 function addChild({projectManager, childId, parentId, childrenKey}) {
-  const parent = getItemById({id: parentId})
+  const parent = projectManager.items.find(item => item.id === parentId)
   return setItem({projectManager, item: {
     ...parent,
     [childrenKey]: [...parent[childrenKey], childId]
@@ -177,7 +251,7 @@ function addChild({projectManager, childId, parentId, childrenKey}) {
 }
 
 function removeChild({projectManager, childId, parentId, childrenKey}) {
-  const parent = getItemById({id: parentId})
+  const parent = projectManager.items.find(item => item.id === parentId)
   return setItem({projectManager, item: {
     ...parent,
     [childrenKey]: without(parent[childrenKey], childId)
@@ -186,7 +260,7 @@ function removeChild({projectManager, childId, parentId, childrenKey}) {
 
 
 function setValueOfParamAtTime({projectManager, value, paramId, time}) {
-  let key = getKeyOfParamAtTime({time, paramId})
+  let key = getKeyOfParamAtTime({projectManager, time, paramId})
 
   if (key) {
     return setItem({projectManager, item: {...key, value}})

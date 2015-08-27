@@ -18,12 +18,6 @@ export default function createParamSettings(connect) {
   const settings = {
     selector: 'all',
     extraInputs: [input],
-    onClick: connect => {
-      const {actions} = BETON.getRock('project-manager')
-      const {id: currentTrackId} = getParentTrack(connect)
-      const {id: timelineId} = getParentTimeline(connect)
-      actions.setCurrentTrackIdOfTimeline({timelineId, currentTrackId})
-    },
     buttons: [{
       getElement: () => <KeyStepper {...{keyHolderId: param.id, timeline}}/>
     }]

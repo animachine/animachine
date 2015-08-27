@@ -64,6 +64,7 @@ addAction('OPEN_PROJECT', ['projectSource', 'previewComponents'])
 
 addAction('SET_VISIBLE_TIME_OF_TIMELINE', ['timelineId', 'visibleTime'])
 addAction('SET_VALUE_OF_PARAM_AT_TIME', ['paramId', 'time', 'value'])
+addAction('SET_VALUE_OF_TRACK_AT_TIME', ['trackId', 'paramName', 'time', 'value'])
 addAction('SELECT_KEYS_AT_TIME', ['keyHolderId', 'time'])
 addAction('TOGGLE_KEYS_AT_TIME', ['keyHolderId', 'time'])
 addAction('DESELECT_ALL_KEYS', ['keyHolderId'])

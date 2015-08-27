@@ -1,8 +1,8 @@
 import {recurseKeys} from './recursers'
 
-export function collectSelectedKeys({keyHolderId}) {
+export function collectSelectedKeys({projectManager, keyHolderId}) {
   const result = []
-  recurseKeys({keyHolderId, callback: key => {
+  recurseKeys({projectManager, keyHolderId, callback: key => {
     if (key.selected) {
       result.push(key)
     }

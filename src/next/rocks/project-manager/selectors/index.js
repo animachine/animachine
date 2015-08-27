@@ -12,39 +12,43 @@ export {
   collectSelectedKeys,
 } from '../utils'
 
-export function getProjectManager() {
-  return store.getState().projectManager
+export function getProjectManager({projectManager} = {}) {
+  return projectManager || store.getState().projectManager
 }
 
-export function getItems () {
-  return getProjectManager().items
+export function getItems ({projectManager} = {}) {
+  return getProjectManager({projectManager}).items
 }
 
-export function getItemById({id}) {
-  return getItems().find(item => item.id === id)
+export function getItemById({projectManager, id}) {
+  return getItems({projectManager}).find(item => item.id === id)
 }
 
-export function getCurrentProjectId() {
-  return getProjectManager().currentProjectId
+export function getCurrentProjectId({projectManager} = {}) {
+  return getProjectManager({projectManager}).currentProjectId
 }
 
-export function getCurrentProject() {
-  return getItemById({id: getCurrentProjectId()})
+export function getCurrentProject({projectManager} = {}) {
+  const currentProjectId = getCurrentProjectId({projectManager})
+  return getItemById({projectManager, id: currentProjectId})
 }
 
-export function getCurrentTimelineId() {
-  const project = getItemById({id: getCurrentProjectId()})
+export function getCurrentTimelineId({projectManager} = {}) {
+  const project = getCurrentProject({projectManager})
   return project && project.currentTimelineId
 }
 
-export function getCurrentTimeline() {
+export function getCurrentTimeline({projectManager} = {}) {
+  const currentTimelineId = getCurrentProjectId({projectManager})
   return getItemById({id: getCurrentTimelineId()})
 }
 
-export function getValueOfParamAtTime({paramId, time}) {
-  const param = getItemById({id: paramId})
+export function getValueOfParamAtTime({projectManager, paramId, time}) {
+  const param = getItemById({projectManager, id: paramId})
   let previousKey, nextKey, rightKey
-  param.keys && param.keys.forEach(key => {
+  param.keys && param.keys.forEach(keyId => {
+    const key = getItemById({projectManager, id: keyId})
+
     if (key.time === time) {
       rightKey = key
     }
@@ -73,7 +77,8 @@ export function getValueOfParamAtTime({paramId, time}) {
     if (previousKey && nextKey) {
       const fullTime = nextKey.time - previousKey.time
       const percent = (time - previousKey.time) / fullTime
-      const easer = createEaser(nextKey.ease)
+      const ease = getItemById({projectManager, id: nextKey.ease})
+      const easer = createEaser(ease)
       const ratio = easer.getRatio(percent)
       return previousKey.value + (nextKey.value - previousKey.value) * ratio
     }
@@ -89,31 +94,33 @@ export function getValueOfParamAtTime({paramId, time}) {
   }
 }
 
-export function getKeyOfParamAtTime({paramId, time}) {
-  const param = getItemById({id: paramId})
-  const keyId = param.keys.find(id => getItemById({id}).time === time)
+export function getKeyOfParamAtTime({projectManager, paramId, time}) {
+  const param = getItemById({projectManager, id: paramId})
+  const keyId = param.keys.find(id =>
+    getItemById({projectManager, id}).time === time
+  )
   if (keyId) {
-    return getItemById({id: keyId})
+    return getItemById({projectManager, id: keyId})
   }
 }
 
-export function getParamOfTrackByName({trackId, name}) {
+export function getParamOfTrackByName({projectManager, trackId, paramName}) {
   let result
-  recurseParams({keyHolderId: trackId, callback: param => {
-    if (param.name === name) {
+  recurseParams({projectManager, keyHolderId: trackId, callback: param => {
+    if (param.name === paramName) {
       result = param
     }
   }})
   return result
 }
 
-export function getPreviewComponentsOfProject({projectId}) {
+export function getPreviewComponentsOfProject({projectManager, projectId}) {
   return getProjectManager().previewComponentsByProjectId[projectId]
 }
 
-export function getClosestKey({keyHolderId, time}) {
+export function getClosestKey({projectManager, keyHolderId, time}) {
   let result
-  recurseKeys({keyHolderId, callback: key => {
+  recurseKeys({projectManager, keyHolderId, callback: key => {
     if (!result) {
       result = key
     }
@@ -129,9 +136,9 @@ export function getClosestKey({keyHolderId, time}) {
   return result
 }
 
-export function getNextKey({keyHolderId, time}) {
+export function getNextKey({projectManager, keyHolderId, time}) {
   let result
-  recurseKeys({keyHolderId, callback: key => {
+  recurseKeys({projectManager, keyHolderId, callback: key => {
     if (key.time > time && (!result || result.time > key.time)) {
       result = key
     }
@@ -139,9 +146,9 @@ export function getNextKey({keyHolderId, time}) {
   return result
 }
 
-export function getPreviousKey({keyHolderId, time}) {
+export function getPreviousKey({projectManager, keyHolderId, time}) {
   let result
-  recurseKeys({keyHolderId, callback: key => {
+  recurseKeys({projectManager, keyHolderId, callback: key => {
     if (key.time < time && (!result || result.time < key.time)) {
       result = key
     }

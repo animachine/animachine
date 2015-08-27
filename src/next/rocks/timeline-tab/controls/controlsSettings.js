@@ -13,6 +13,7 @@ export default [{
     selector: createTypeSelector('track'),
     label: connect => connect.value.name,
     open: connect => connect.value.openInTimeline,
+    onClick: handleSelectClick,
     onToggleOpen: handleToggleOpen,
     children: connect => connect.value.params,
     highlighted: connect => {
@@ -24,6 +25,7 @@ export default [{
     selector: createTypeSelector('param'),
     label: connect => connect.value.name,
     open: connect => connect.value.openInTimeline,
+    onClick: handleSelectClick,
     onToggleOpen: handleToggleOpen,
     children: connect => connect.value.params || null
   },
@@ -39,4 +41,11 @@ function handleToggleOpen(connect) {
   else if (type === 'track') {
     actions.toggleOpenInTimelnieOfTrack({trackId: id})
   }
+}
+
+function handleSelectClick(connect) {
+  const {actions} = BETON.getRock('project-manager')
+  const {id: currentTrackId} = getParentTrack(connect)
+  const {id: timelineId} = getParentTimeline(connect)
+  actions.setCurrentTrackIdOfTimeline({timelineId, currentTrackId})
 }

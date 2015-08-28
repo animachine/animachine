@@ -1,6 +1,7 @@
 require('./beton')
 require('./rocks/store')
 require('./rocks/hack-open-first-possible-project')
+require('./rocks/preview-animation-synchronizer')
 require('./rocks/component-inspector')
 require('./rocks/project-manager')
 require('./rocks/workspace')

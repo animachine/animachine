@@ -37,7 +37,7 @@
     "redux": "^1.0.1",
     "reselect": "0.0.2",
     "spaceman": "0.0.8",
-    "transhand": "^0.1.15"
+    "transhand": "^0.1.16"
   },
   "devDependencies": {
     "babel": "^5.8.21",

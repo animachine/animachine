@@ -24,7 +24,8 @@ const initialState = {
   currentProjectId: undefined,
   openedProjectIds: [],
   previewComponentsByProjectId: {},
-  items: []
+  originalSourcesByProjectId: {},
+  items: [],
 }
 
 export default function (projectManager = initialState, action) {
@@ -46,6 +47,10 @@ export default function (projectManager = initialState, action) {
         previewComponentsByProjectId: {
           ...projectManager.previewComponentsByProjectId,
           [projectId]: action.previewComponents
+        },
+        originalSourcesByProjectId: {
+          ...projectManager.originalSourcesByProjectId,
+          [projectId]: action.projectSource
         },
         currentProjectId: projectManager.currentProjectId || projectId
       }

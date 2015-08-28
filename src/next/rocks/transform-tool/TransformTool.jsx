@@ -62,6 +62,7 @@ export default class TransformTool extends React.Component {
   }
 
   render() {
+    console.log('RENENENERNEN')
     const {previewComponents, currentTime, trackId, selectors} = this.props
 
     if (!previewComponents || previewComponents.length === 0 || !trackId) {
@@ -80,6 +81,7 @@ export default class TransformTool extends React.Component {
     })
 
     if (!selectedTarget) {
+    console.log('EXIERXXEXXEXIt')
       return <div hidden/>
     }
 
@@ -106,7 +108,7 @@ export default class TransformTool extends React.Component {
     }
 
     transform.rz = transform.rz / 180 * Math.PI
-
+console.log({transform})
     return <CSSTranshand
       transform = {transform}
       deTarget = {selectedTarget}

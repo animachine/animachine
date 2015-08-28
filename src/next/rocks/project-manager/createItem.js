@@ -54,7 +54,7 @@ export default function createItem({type, data}) {
   return {
     ...defaults[type],
     ...data,
-    id: ++lastId,
+    id: (++lastId).toString(),
     type
   }
 }

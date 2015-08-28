@@ -115,7 +115,13 @@ export function getParamOfTrackByName({projectManager, trackId, paramName}) {
 }
 
 export function getPreviewComponentsOfProject({projectManager, projectId}) {
-  return getProjectManager().previewComponentsByProjectId[projectId]
+  return getProjectManager({projectManager})
+    .previewComponentsByProjectId[projectId]
+}
+
+export function getOriginalSourceOfProject({projectManager, projectId}) {
+  return getProjectManager({projectManager})
+    .originalSourcesByProjectId[projectId]
 }
 
 export function getClosestKey({projectManager, keyHolderId, time}) {

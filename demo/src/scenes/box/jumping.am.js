@@ -1,6 +1,6 @@
 import {createAnimationSource} from 'react-animachine-enhancer'
 
-const project = {
+const projectSource = {
   timelines: [
     {
       name: 'jump',
@@ -22,7 +22,7 @@ const project = {
                 }, {
                   name: 'y',
                   keys: [
-                    {time: 0, value: 300},
+                    {time: 0, value: 100},
                     {time: 2000, value: 300},
                   ]
                 }
@@ -37,8 +37,8 @@ const project = {
 
 const animations = {}
 
-project.timelines.forEach(timeline => {
-  var gsapSource = createAnimationSource(project, timeline.name)
+projectSource.timelines.forEach(timeline => {
+  var gsapSource = createAnimationSource({projectSource, timeline})
   animations[timeline.name] = gsapSource
 })
 

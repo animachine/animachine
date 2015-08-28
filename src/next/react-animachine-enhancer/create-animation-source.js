@@ -1,28 +1,22 @@
 import createEaser from './createEaser'
 
-export default function createAnimationSource(projectSource, timelineName) {
-  function animationSource(connect) {
-    const gsTimeline = new TimelineMax({repeat: -1})
+const sortKeys = (a, b) => a.time - b.time
 
-    var timeline
-    for (let i = 0; i < projectSource.timelines.length; ++i) {
-      if (projectSource.timelines[i].name === timelineName) {
-        timeline = projectSource.timelines[i]
-        break
-      }
-    }
+export default function createAnimationSource({projectSource, timeline}) {
+  function animationSource(connect) {
+    const tlRoot = new TimelineMax()
 
     function addParams(params, targets) {
       params.forEach(param => {
-        var headTime = 0
+        const tlParam = new TimelineMax()
+        let headTime = 0
 
-        if (param.keys) {
-          param.keys.forEach(key => {
-            var duration = key.time - headTime
-// console.log(duration,
-// {[param.name]: key.value},
-// headTime)
-            gsTimeline.to(
+        if (param.keys && param.keys.length) {
+          // let log = param.name
+          param.keys.sort(sortKeys).forEach(key => {
+            const duration = key.time - headTime
+
+            tlParam.to(
               targets,
               duration / 1000,
               {
@@ -31,11 +25,13 @@ export default function createAnimationSource(projectSource, timelineName) {
               },
               headTime
             )
-
+            // log += ` > ${key.value}@${key.time}`
             headTime = key.time
           })
-
+// console.log(log)
         }
+        tlRoot.add(tlParam, 0)
+
         if (param.params) {
           addParams(param.params, targets)
         }
@@ -43,18 +39,18 @@ export default function createAnimationSource(projectSource, timelineName) {
     }
 
     timeline.tracks.forEach(track => {
-      var targets = track.selectors.map(selector => {
+      const targets = track.selectors.map(selector => {
         return connect.getTargetByKeys(selector)
       })
 
       addParams(track.params, targets)
     })
 
-    return gsTimeline
+    return tlRoot
   }
 
   animationSource._amProjectSource = projectSource
-  animationSource._amTimelineName = timelineName
+  animationSource._amTimelineName = timeline.name
 
   return animationSource
 }

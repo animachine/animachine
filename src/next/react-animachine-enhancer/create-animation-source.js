@@ -9,10 +9,10 @@ export default function createAnimationSource({projectSource, timeline}) {
     function addParams(params, targets) {
       params.forEach(param => {
         const tlParam = new TimelineMax()
+        tlRoot.add(tlParam, 0)
         let headTime = 0
 
         if (param.keys && param.keys.length) {
-          // let log = param.name
           param.keys.sort(sortKeys).forEach(key => {
             const duration = key.time - headTime
 
@@ -23,14 +23,11 @@ export default function createAnimationSource({projectSource, timeline}) {
                 [param.name]: key.value,
                 ease: createEaser(key.ease)
               },
-              headTime
+              headTime / 1000
             )
-            // log += ` > ${key.value}@${key.time}`
             headTime = key.time
           })
-// console.log(log)
         }
-        tlRoot.add(tlParam, 0)
 
         if (param.params) {
           addParams(param.params, targets)

@@ -1,7 +1,14 @@
 import React from 'react'
 import customDrag from 'custom-drag'
 import {Button, Input} from 'react-matterkit'
+import {connect} from 'react-redux'
 
+@connect(store => {
+  const {selectors} = BETON.getRock('toolbar')
+  return {
+    toolbar: selectors.getToolbar()
+  }
+})
 export default class Toolbar extends React.Component {
 
   handlePlayPauseClick = () => {
@@ -22,6 +29,11 @@ export default class Toolbar extends React.Component {
     })
   }
 
+  renderToolbarItems() {
+    const {toolbar} = this.props
+    return toolbar && toolbar.map(toolbarItem => toolbarItem.getElement())
+  }
+
   render() {
     const {timeline, style} = this.props
 
@@ -29,13 +41,14 @@ export default class Toolbar extends React.Component {
       <Button
         icon = {timeline.isPlaying ? 'pause' : 'play'}
         onClick = {this.handlePlayPauseClick}/>
-      <div style={{flex: 1}}/>
       <Input
         style={{maxWidth: 88}}
         type = 'number'
         value = {timeline.currentTime}
         onChange = {this.handleTimeInputChange}
         prettifyValue = {formatTime}/>
+      <div style={{flex: 1}}/>
+      {this.renderToolbarItems()}
     </div>
   }
 }

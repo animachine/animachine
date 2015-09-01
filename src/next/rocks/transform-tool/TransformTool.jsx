@@ -25,26 +25,60 @@ const key2ParamName = {
       projectId: project.id
     })
     const trackId = timeline.currentTrackId
-    if (!trackId) {
+    if (!trackId || previewComponents.length === 0) {
       return {}
     }
+
+    const track = selectors.getItemById({id: trackId})
+    let selectedTarget
+    track.selectors.forEach(selector => {
+      previewComponents.forEach(previewComponent => {
+        const target = getTargetByKeys(previewComponent.__itemTree, selector)
+        if (target) {
+          selectedTarget = target
+        }
+      })
+    })
+
+    if (!selectedTarget) {
+      return {}
+    }
+
+    const getValue = (paramName, defaultValue) => {
+      const param = selectors.getParamOfTrackByName({
+        trackId,
+        paramName
+      })
+      const value = param && selectors.getValueOfParamAtTime({
+        paramId: param.id,
+        time: timeline.currentTime
+      })
+      return value === undefined ? defaultValue : value
+    }
+
     return {
+      selectedTarget,
+      tx: getValue('x', 0),
+      ty: getValue('y', 0),
+      sx: getValue('scaleX', 1),
+      sy: getValue('scaleY', 1),
+      rz: getValue('rotationZ', 0),
+      ox: getValue('transformOriginX', 0.5),
+      oy: getValue('transformOriginY', 0.5),
       trackId,
-      currentTime: timeline.currentTime,
-      previewComponents,
+      currentTime: timeline.currentTime
     }
   },
   () => {
     const projectManager = BETON.getRock('project-manager')
     return {
-      actions: projectManager.actions,
-      selectors: projectManager.selectors,
+      actions: projectManager.actions
     }
   }
 )
 export default class TransformTool extends React.Component {
   handleChange = (change) => {
-    const {trackId, currentTime, actions, selectors} = this.props
+    const {trackId, currentTime, actions} = this.props
 
     Object.keys(change).forEach(key => {
       const paramName = key2ParamName[key]
@@ -62,53 +96,22 @@ export default class TransformTool extends React.Component {
   }
 
   render() {
-    console.log('RENENENERNEN')
-    const {previewComponents, currentTime, trackId, selectors} = this.props
+    const {selectedTarget, tx, ty, sx, sy, rz, ox, oy} = this.props
 
-    if (!previewComponents || previewComponents.length === 0 || !trackId) {
+    if (!selectedTarget) {
       return <div hidden />
     }
 
-    const track = selectors.getItemById({id: trackId})
-    var selectedTarget
-    track.selectors.forEach(selector => {
-      previewComponents.forEach(previewComponent => {
-        const target = getTargetByKeys(previewComponent.__itemTree, selector)
-        if (target) {
-          selectedTarget = target
-        }
-      })
-    })
-
-    if (!selectedTarget) {
-    console.log('EXIERXXEXXEXIt')
-      return <div hidden/>
-    }
-
-    const getValue = (paramName, defaultValue) => {
-      const param = selectors.getParamOfTrackByName({
-        trackId,
-        name: paramName
-      })
-      const value = param && selectors.getValueOfParamAtTime({
-        paramId: param.id,
-        time: currentTime
-      })
-      return value === undefined ? defaultValue : value
-    }
-
     const transform = {
-      tx: getValue('x', 0),
-      ty: getValue('y', 0),
-      sx: getValue('scaleX', 1),
-      sy: getValue('scaleY', 1),
-      rz: getValue('rotationZ', 0),
-      ox: getValue('transformOriginX', 0.5),
-      oy: getValue('transformOriginY', 0.5),
+      tx,
+      ty,
+      sx,
+      sy,
+      rz: rz / 180 * Math.PI,
+      ox,
+      oy
     }
 
-    transform.rz = transform.rz / 180 * Math.PI
-console.log({transform})
     return <CSSTranshand
       transform = {transform}
       deTarget = {selectedTarget}

@@ -89,7 +89,7 @@ export default class Timetape extends React.Component {
     const {start, timescale, width} = timeline
     const visibleTime = getVisibleTime({timeline})
     const maxMarkers = width / 4
-    var step, text, textW
+    let step
 
     canvas.width = width
     canvas.height = height
@@ -119,9 +119,10 @@ export default class Timetape extends React.Component {
       ctx.stroke()
 
       for (let i = start % step.time; i < visibleTime; i += step.time) {
-        text = step.format(i - start)
-        textW = ctx.measureText(text).width / 2
-        ctx.fillText(text, i * timescale - textW, 12)
+        const text = step.format(Math.floor(i - start))
+        const textW = ctx.measureText(text).width
+        const textLeft = i * timescale - (textW / 2)
+        ctx.fillText(text, textLeft < 0 ? 0 : textLeft, 12)
       }
       ctx.stroke()
     }

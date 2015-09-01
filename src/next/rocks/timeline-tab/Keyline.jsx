@@ -94,7 +94,7 @@ const dragOptions = {
     actions.deselectAllKeys({keyHolderId: timeline.id})
     actions.selectKeysAtTime({keyHolderId, time: nextKey.time})
     const selectedKeys = selectors.collectSelectedKeys({keyHolderId})
-    
+
     actions.setInlineEaseEditorOfTimeline({
       timelineId: timeline.id,
       inlineEaseEditor: {
@@ -159,7 +159,7 @@ export default class Keyline extends React.Component {
       })
     }
     else {
-
+      
     }
   }
 

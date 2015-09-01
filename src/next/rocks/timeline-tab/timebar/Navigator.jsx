@@ -5,9 +5,9 @@ import {getVisibleTime} from '../utils'
 const getDragArgs = (dragMode) => {
   const options = {
     onDown(props, monitor) {
-      const {start, timescale} = props.timeline
+      const {start, pxpms} = props.timeline
       const visibleTime = getVisibleTime({timeline: props.timeline})
-      monitor.setData({start, visibleTime, timescale})
+      monitor.setData({start, visibleTime, pxpms})
     },
     onDrag(props, monitor) {
       const {timeline, actions} = props
@@ -28,14 +28,14 @@ const getDragArgs = (dragMode) => {
         actions.setVisibleTimeOfTimeline({timelineId, visibleTime})
       }
       else if (dragMode === 'end') {
-        const {currentTime, timescale} = timeline
+        const {currentTime, pxpms} = timeline
         let visibleTime = initial.visibleTime + move
         actions.setVisibleTimeOfTimeline({timelineId, visibleTime})
 
-        let mdPos = (initial.start + currentTime) * initial.timescale
+        let mdPos = (initial.start + currentTime) * initial.pxpms
         actions.setStartOfTimeline({
           timelineId,
-          start: -((currentTime * timescale) - mdPos) / timescale
+          start: -((currentTime * pxpms) - mdPos) / pxpms
         })
       }
     },

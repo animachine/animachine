@@ -39,7 +39,7 @@ const dragOptions = {
 
     if (
       !closestKey ||
-      (Math.abs(mouseTime - closestKey.time) * timeline.timescale) > 4
+      (Math.abs(mouseTime - closestKey.time) * timeline.pxpms) > 4
     ) {
       return false // prevent draggign
     }

@@ -19,7 +19,7 @@ import {recurseParams} from '../recursers'
   {name: 'length', type: 'float', initValue: 60000},
   //TODO remove these from the model
   {
-    name: 'timescale', // px/ms
+    name: 'pxpms', // px/ms
     type: 'float',
     initValue: 1,
     fixValue: value => Math.min(3, Math.max(0.0001, value))
@@ -30,7 +30,7 @@ import {recurseParams} from '../recursers'
     type: 'float',
     initValue: 0,
     fixValue: function (value) {
-      return Math.min(this.startMargin / this.timescale, value)
+      return Math.min(this.startMargin / this.pxpms, value)
     }
   },
   {name: 'startMargin', type: 'float', initValue: 6},//in pixel
@@ -40,18 +40,18 @@ import {recurseParams} from '../recursers'
 @controlKeys
 export default class Timeline extends Model {
   set visibleTime (v) {
-      this.timescale = this.width / v
+      this.pxpms = this.width / v
   }
   get visibleTime () {
-      return this.width / this.timescale
+      return this.width / this.pxpms
   }
   get end() {
     return this.start + this.visibleTime
   }
   convertPositionToTime(position) {
-    return ((position / this.width) * this.width / this.timescale) - this.start
+    return ((position / this.width) * this.width / this.pxpms) - this.start
   }
   convertTimeToPosition(time) {
-    return (time + this.start) * this.timescale
+    return (time + this.start) * this.pxpms
   }
 }

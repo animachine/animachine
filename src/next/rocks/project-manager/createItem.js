@@ -34,7 +34,7 @@ const defaults = {
     isPlaying: false,
     currentTime: 0,
     length: 60000,
-    timescale: 1,
+    pxpms: 1,
     width: 2000,
     start: 0,
     startMargin: 6,

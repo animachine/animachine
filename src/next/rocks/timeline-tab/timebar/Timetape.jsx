@@ -11,8 +11,8 @@ function handleMouse(props, monitor) {
   const {dragMode} = monitor.data
   const {timeline, actions} = props
   const timelineId = timeline.id
-  const {currentTime, timescale} = timeline
-  const {initStart, initTimescale} = monitor.data
+  const {currentTime, pxpms} = timeline
+  const {initStart, initPxpms} = monitor.data
   const offset = monitor.getDifferenceFromInitialOffset().x
 
   if (dragMode === 'seek') {
@@ -21,15 +21,15 @@ function handleMouse(props, monitor) {
     actions.setCurrentTimeOfTimeline({timelineId, currentTime})
   }
   else if (dragMode === 'translate') {
-    let start = initStart + (offset / timescale)
+    let start = initStart + (offset / pxpms)
     actions.setStartOfTimeline({timelineId, start})
   }
   else if (dragMode === 'scale') {
-    let timescale = initTimescale + (offset / 1000)
-    actions.setTimescaleOfTimeline({timelineId, timescale})
+    let pxpms = initPxpms + (offset / 1000)
+    actions.setPxpmsOfTimeline({timelineId, pxpms})
     //keep pointer in the same position
-    let mdPos = (initStart + currentTime) * initTimescale
-    let start = -((currentTime * timescale) - mdPos) / timescale
+    let mdPos = (initStart + currentTime) * initPxpms
+    let start = -((currentTime * pxpms) - mdPos) / pxpms
     actions.setStartOfTimeline({timelineId, start})
   }
 }
@@ -54,7 +54,7 @@ const dragOptions = {
     monitor.setData({
       dragMode,
       initStart: timeline.start,
-      initTimescale: timeline.timescale,
+      initPxpms: timeline.pxpms,
     })
 
     handleMouse(props, monitor)
@@ -86,7 +86,7 @@ export default class Timetape extends React.Component {
   postRender() {
     const {canvas, ctx} = this
     const {timeline, height} = this.props
-    const {start, timescale, width} = timeline
+    const {start, pxpms, width} = timeline
     const visibleTime = getVisibleTime({timeline})
     const maxMarkers = width / 4
     let step
@@ -94,11 +94,14 @@ export default class Timetape extends React.Component {
     canvas.width = width
     canvas.height = height
 
+      console.log({visibleTime, steps})
     steps.forEach(s => {
+      console.log(s, visibleTime / s.small, maxMarkers)
       if ((visibleTime / s.small) < maxMarkers && (!step || step.small > s.small)) {
         step = s
       }
     })
+    console.log('step', step)
 
     if (step) {
       ctx.linweidth = 0.5
@@ -107,22 +110,23 @@ export default class Timetape extends React.Component {
       ctx.font = ~~(height * 0.5) + 'px "Open Sans"'
 
       for (let i = start % step.small; i < visibleTime; i += step.small) {
-        ctx.moveTo(~~(i * timescale) + 0.5, height)
-        ctx.lineTo(~~(i * timescale) + 0.5, height * 0.75)
+        ctx.moveTo(~~(i * pxpms) + 0.5, height)
+        ctx.lineTo(~~(i * pxpms) + 0.5, height * 0.75)
       }
       ctx.stroke()
 
       for (let i = start % step.big; i < visibleTime; i += step.big) {
-        ctx.moveTo(~~(i * timescale) + 0.5, height)
-        ctx.lineTo(~~(i * timescale) + 0.5, height * 0.62)
+        ctx.moveTo(~~(i * pxpms) + 0.5, height)
+        ctx.lineTo(~~(i * pxpms) + 0.5, height * 0.62)
       }
       ctx.stroke()
 
       for (let i = start % step.time; i < visibleTime; i += step.time) {
-        const text = step.format(Math.floor(i - start))
+        const time = Math.floor(i - start)
+        const text = step.format(time)
         const textW = ctx.measureText(text).width
-        const textLeft = i * timescale - (textW / 2)
-        ctx.fillText(text, textLeft < 0 ? 0 : textLeft, 12)
+        const textLeft = i * pxpms - (time === 0 ? 0 : (textW / 2))
+        ctx.fillText(text, textLeft, 12)
       }
       ctx.stroke()
     }

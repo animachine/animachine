@@ -211,7 +211,7 @@ export default function (projectManager = initialState, action) {
         projectManager,
         item: {
           ...timeline,
-          timescale: timeline.width / visibleTime
+          pxpms: timeline.width / visibleTime
         }
       })
     }

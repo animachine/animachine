@@ -22,8 +22,8 @@ export default function createParamSettings(connect) {
       getElement: () => <KeyStepper {...{keyHolderId: param.id, timeline}}/>
     }]
   }
-
-  ifit(connect)
+  
+  ifit(connect.value.name)
     .is('x,y,z,transformOriginZ', () => {
       input.type = 'number'
       input.addonLabel = 'px'

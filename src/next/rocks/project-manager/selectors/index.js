@@ -161,3 +161,8 @@ export function getPreviousKey({projectManager, keyHolderId, time}) {
   }})
   return result
 }
+
+export function getMaxTimelineStart({projectManager, timelineId}) {
+  const timeline = getItemById({projectManager, id: timelineId})
+  return timeline.startMargin / timeline.timescale
+}

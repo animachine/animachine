@@ -1,4 +1,5 @@
 import camelCase from 'lodash/string/camelCase'
+import {getMaxTimelineStart} from './selectors'
 
 const store = BETON.getRock('store')
 
@@ -7,7 +8,7 @@ const constantCase = str => {
             .toUpperCase()
 }
 const min = minValue => value => Math.max(minValue, value)
-const max = maxValue => value => Math.min(minValue, value)
+const max = maxValue => value => Math.min(maxValue, value)
 const minmax = (minValue, maxValue) => value =>
   Math.min(maxValue, Math.max(minValue, value))
 
@@ -20,11 +21,11 @@ autoAddAction('remove', 'timeline', 'project')
 
 autoAddAction('set', 'name', 'timeline')
 autoAddAction('set', 'isPlaying', 'timeline')
-autoAddAction('set', 'currentTime', 'timeline', min(0))
+autoAddAction('set', 'currentTime', 'timeline', value => min(0)(parseInt(value)))
 autoAddAction('set', 'timescale', 'timeline', minmax(0.0001, 3))
 autoAddAction('set', 'length', 'timeline')
 autoAddAction('set', 'width', 'timeline')
-autoAddAction('set', 'start', 'timeline')
+autoAddAction('set', 'start', 'timeline', (value, {timelineId}) => max(getMaxTimelineStart({timelineId}))(value))
 autoAddAction('set', 'startMargin', 'timeline')
 autoAddAction('set', 'currentTrackId', 'timeline')
 autoAddAction('set', 'inlineEaseEditor', 'timeline')
@@ -111,7 +112,7 @@ function addAction(type, params, fixPayload) {
 function autoAddAction(command, value, target, fixValue) {
   const fixPayload = fixValue ? payload => ({
     ...payload,
-    [value]: fixValue(payload[value])
+    [value]: fixValue(payload[value], payload)
   }) : undefined
 
   addAction(getType(), getParams(), fixPayload)

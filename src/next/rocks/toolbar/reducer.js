@@ -1,12 +1,12 @@
 import {
-  ADD_TOOLBAR_ITEM
+  ADD_ITEM_TO_TOOLBAR
 } from './actions'
 
 const initialState = []
 
 export default function (toolbar = initialState, action) {
   switch (action.type) {
-    case ADD_TOOLBAR_ITEM:
+    case ADD_ITEM_TO_TOOLBAR:
       return [
         ...toolbar,
         action.item

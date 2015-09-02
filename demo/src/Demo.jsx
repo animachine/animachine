@@ -18,8 +18,6 @@ export default class Demo extends React.Component {
     window.onNameParamChange = name => {
       this.setState({sceneName: name})
     }
-
-    animachine.init()
   }
 
   render() {

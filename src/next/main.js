@@ -11,6 +11,8 @@ require('./rocks/debugger-tab')
 require('./rocks/timeline-tab')
 require('./rocks/transform-tool')
 require('./rocks/timeline-pusher')
+require('./rocks/file-save')
+require('./rocks/create-source-file')
 
 const animachine = {
   init() {}

@@ -8,7 +8,8 @@
   },
   "scripts": {
     "lib": "babel ./src --out-dir lib  --source-maps --source-maps",
-    "lib-watch": "npm run lib && babel ./src --out-dir lib  --source-maps --source-maps --watch"
+    "lib-watch": "npm run lib && babel ./src --out-dir lib  --source-maps --source-maps --watch",
+    "serve-browser": "http-server ./browser -p 9876"
   },
   "repository": {
     "type": "git",
@@ -34,6 +35,7 @@
     "react-dnd": "^1.1.4",
     "react-gsap-enhancer": "0.0.0",
     "react-redux": "^0.9.0",
+    "react-zeroclipboard": "^2.0.1",
     "redux": "^1.0.1",
     "reselect": "0.0.2",
     "spaceman": "0.0.8",
@@ -53,6 +55,7 @@
     "gulp-size": "^1.2.3",
     "gulp-util": "^3.0.6",
     "gulp-zip": "^3.0.2",
+    "http-server": "^0.8.0",
     "node-libs-browser": "^0.5.2",
     "raw-loader": "^0.5.1",
     "react": "^0.13.3",

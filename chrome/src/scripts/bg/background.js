@@ -28,15 +28,12 @@ chrome.browserAction.setBadgeText({text: 'α'})
 chrome.browserAction.setBadgeBackgroundColor({color: isDevMode() ? '#F00' : '#000'})
 
 chrome.runtime.onMessage.addListener(function (request) {
-
-    if (request.subject === 'embed') {
-
-        chrome.tabs.executeScript(request.id, {file: "scripts/content-script.js"})
-    }
-    if (request.subject === 'track') {
-
-        _gaq.push(['_trackEvent', request.evtName, request.value])
-    }
+  if (request.subject === 'embed') {
+    chrome.tabs.executeScript(request.id, {file: 'scripts/content-script.js'})
+  }
+  if (request.subject === 'track') {
+    _gaq.push(['_trackEvent', request.evtName, request.value])
+  }
 })
 
 
@@ -47,4 +44,5 @@ function isDevMode() {
 chrome.runtime.onMessageExternal.addListener(
   function(request, sender, sendResponse) {
     cosnole.log('onMessageExternal', request, sender, sendResponse)
-  });
+  }
+)

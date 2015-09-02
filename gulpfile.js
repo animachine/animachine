@@ -5,6 +5,7 @@ var zip = require('gulp-zip')
 var webpack = require('webpack')
 var WebpackDevServer = require('webpack-dev-server')
 var demoWebpackConfig = require('./demo/webpack.config.js')
+var browserWebpackConfig = require('./webpack.browser.config.js')
 var ghPages = require('gulp-gh-pages')
 
 
@@ -45,7 +46,7 @@ gulp.task('webpack-dev-server', function(callback) {
 	})
 })
 
-gulp.task('zip', function () {
+gulp.task('pack-extension', ['build-chrome'], function () {
   return gulp.src('build_chrome/**/*.*')
     .pipe(zip('build_chrome.zip'))
     .pipe(size())
@@ -57,9 +58,13 @@ gulp.task('build-chrome:copy-files', function () {
     .pipe(gulp.dest('chrome/build'))
 })
 
-gulp.task('build-chrome', ['build-chrome:copy-files'], function (callback) {
-  var webpackConfig = require('./chrome/webpack.config.js')
-  webpack(webpackConfig, function(err, stats) {
+gulp.task('build-chrome', [
+  'build-browser',
+  'build-chrome:copy-files'
+])
+
+gulp.task('build-browser', function (callback) {
+  webpack(browserWebpackConfig, function(err, stats) {
 		if(err) throw new gutil.PluginError('build-demo', err)
 		gutil.log('[webpack:build]', stats.toString({
 			colors: true

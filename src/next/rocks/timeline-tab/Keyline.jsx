@@ -142,13 +142,17 @@ export default class Keyline extends React.Component {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    if (model.type === 'param' && model.keys.length !== 0) {
+    const renderAllParam = model => {
       let visibleKeys = []
 
-      model.keys.forEach(key => {
+      model.keys && model.keys.forEach(key => {
         if (key.time >= start && key.time <= end) {
           visibleKeys.push(key)
         }
+      })
+
+      model.params.forEach(childParam => {
+        renderAllParam(childParam)
       })
 
       sortBy(visibleKeys, 'time').forEach((key, idx, arr) => {
@@ -158,9 +162,8 @@ export default class Keyline extends React.Component {
         this.drawEase(key, startTime)
       })
     }
-    else {
-      
-    }
+
+    renderAllParam(model)
   }
 
   drawKey(key) {

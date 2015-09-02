@@ -9,6 +9,7 @@ export default function createParamSettings(connect) {
   }
 
   const param = connect.value
+  const track = getParentTrack(connect)
   const timeline = getParentTimeline(connect)
 
   const input = {
@@ -22,7 +23,7 @@ export default function createParamSettings(connect) {
       getElement: () => <KeyStepper {...{keyHolderId: param.id, timeline}}/>
     }]
   }
-  
+
   ifit(connect.value.name)
     .is('x,y,z,transformOriginZ', () => {
       input.type = 'number'
@@ -65,8 +66,10 @@ export default function createParamSettings(connect) {
     .is('transformOriginX,perspectiveOriginX,scaleX,rotateX,textShadowX,boxShadowX,skeewX', () => opt.label = 'x')
     .is('transformOriginY,perspectiveOriginY,scaleY,rotateY,textShadowY,boxShadowY,skeewY', () => opt.label = 'y')
     .is('transformOriginZ,perspectiveOriginZ,scaleZ,rotateZ', () => opt.label = 'z')
-    .is('bezier', () => {
-        opt.optionLine.inputs = []
+    .is('z,rotationX,rotationY,scaleZ', () => {
+      if(!track.show3d) {
+        settings.hidden = true
+      }
     })
 
   return settings

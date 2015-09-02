@@ -94,14 +94,11 @@ export default class Timetape extends React.Component {
     canvas.width = width
     canvas.height = height
 
-      console.log({visibleTime, steps})
     steps.forEach(s => {
-      console.log(s, visibleTime / s.small, maxMarkers)
       if ((visibleTime / s.small) < maxMarkers && (!step || step.small > s.small)) {
         step = s
       }
     })
-    console.log('step', step)
 
     if (step) {
       ctx.linweidth = 0.5

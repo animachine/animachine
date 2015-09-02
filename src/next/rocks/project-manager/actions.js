@@ -35,6 +35,7 @@ autoAddAction('remove', 'track', 'timeline')
 autoAddAction('set', 'name', 'track')
 autoAddAction('set', 'selectors', 'track')
 autoAddAction('set', 'openedInTimeline', 'track')
+autoAddAction('set', 'showThreeDimensionalParams', 'track')
 autoAddAction('add', 'param', 'track')
 autoAddAction('remove', 'param', 'track')
 

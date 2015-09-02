@@ -27,6 +27,7 @@ const defaults = {
     name: '',
     selectors: [],
     openInTimeline: true,
+    showThreeDimensionalParams: false,
     params: []
   },
   timeline: {

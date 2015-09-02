@@ -31,7 +31,18 @@ export default class Toolbar extends React.Component {
 
   renderToolbarItems() {
     const {toolbar} = this.props
-    return toolbar && toolbar.map(toolbarItem => toolbarItem.getElement())
+    return toolbar && toolbar.map(toolbarItem => {
+      if (toolbarItem.getElement) {
+        return toolbarItem.getElement()
+      }
+      else {
+        const props = {
+          ...toolbarItem,
+          mod: {kind: 'stamp', ...toolbarItem.mod}
+        }
+        return <Button {...props}/>
+      }
+    })
   }
 
   render() {

@@ -53,7 +53,8 @@ export default class KeyStepper extends React.Component {
       <Button
         icon = 'key'
         style = {{opacity: hasKeyNow ? 1 : 0.4}}
-        onClick = {this.handleKeyClick}/>
+        onClick = {this.handleKeyClick}
+        mod = {{kind: 'stamp'}}/>
     </div>
   }
 }

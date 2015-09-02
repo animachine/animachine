@@ -16,6 +16,13 @@ export default [{
     onClick: handleSelectClick,
     onToggleOpen: handleToggleOpen,
     children: connect => connect.value.params,
+    buttons: connect => [
+      {
+        icon: 'cube',
+        style: {opacity: connect.value.show3d ? 1 : 0.4},
+        onClick: handleToggle3d
+      }
+    ],
     highlighted: connect => {
       const track = getParentTrack(connect)
       const timeline = getParentTimeline(connect)
@@ -32,8 +39,17 @@ export default [{
   createParamSettings
 ]
 
+function handleToggle3d(connect) {
+  const {actions} = BETON.getRock('project-manager')
+  const {showThreeDimensionalParams, id} = connect.value
+  actions.setShowThreeDimensionalParamsOfTrack({
+    trackId: id,
+    showThreeDimensionalParams: !showThreeDimensionalParams
+  })
+}
+
 function handleToggleOpen(connect) {
-  const {actions} = BETON.getRockAsync('store')
+  const {actions} = BETON.getRock('project-manager')
   const {type, id} = connect.value
   if (type === 'param') {
     actions.toggleOpenInTimelnieOfParam({paramId: id})

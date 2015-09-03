@@ -16,8 +16,9 @@ const dragOptions = {
     })
   },
   onDrag(props, monitor, component) {
-    const dividerPos = monitor.getDifferenceFromInitialOffset().x
-    component.setState({dividerPos})
+    const offset = monitor.getDifferenceFromInitialOffset().x
+    const {initDividerPos} = monitor.data
+    component.setState({dividerPos: initDividerPos + offset})
   }
 }
 

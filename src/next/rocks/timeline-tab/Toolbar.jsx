@@ -50,6 +50,7 @@ export default class Toolbar extends React.Component {
 
     return <div style={{...style, display: 'flex'}}>
       <Button
+        mod = {{kind: 'stamp'}}
         icon = {timeline.isPlaying ? 'pause' : 'play'}
         onClick = {this.handlePlayPauseClick}/>
       <Input

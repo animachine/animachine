@@ -1,13 +1,12 @@
 export function convertPositionToTime({timeline, position}) {
-  const {width, pxpms, start} = timeline
-  const time = position / width
-  const visibleTime = width / pxpms
-  return (time * visibleTime) - start
+  const {pxpms, start} = timeline
+  const time = position / pxpms
+  return time - start
 }
 
 export function convertTimeToPosition({timeline, time}) {
   const {start, pxpms} = timeline
-  return (time + start) / pxpms
+  return (time + start) * pxpms
 }
 
 export function getVisibleTime({timeline}) {

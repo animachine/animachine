@@ -1,12 +1,22 @@
 import React from 'react'
 import ControlPoint from './ControlPoint'
 import {convertTimeToPosition} from '../utils'
+import ClickAway from 'react-matterkit/lib/utils/ClickAway'
 
+//@ClickAway
 export default class InlineEaseEditor extends React.Component {
   static propTypes = {
     timeline: React.PropTypes.object,
     actions: React.PropTypes.object,
     selectors: React.PropTypes.object,
+  }
+
+  handleClickAway() {
+    const {actions, timeline} = this.props
+    actions.setInlineEaseEditorOfTimeline({
+      timelineId: timeline.id,
+      inlineEaseEditor: false,
+    })
   }
 
   getControlEase() {

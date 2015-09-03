@@ -1,6 +1,6 @@
 import React from 'react'
-import Timeline from './Timeline'
 import {Provider} from 'react-redux'
+import Timeline from './Timeline'
 
 export default class TimelineTab extends React.Component {
   constructor() {

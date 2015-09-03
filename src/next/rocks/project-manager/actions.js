@@ -72,6 +72,7 @@ addAction('TOGGLE_KEYS_AT_TIME', ['keyHolderId', 'time'])
 addAction('DESELECT_ALL_KEYS', ['keyHolderId'])
 addAction('TOGGLE_KEYS_SELECTION_AT_TIME', ['keyHolderId', 'time'])
 addAction('TRANSLATE_SELECTED_KEYS', ['keyHolderId', 'offset'])
+addAction('DELETE_SELECTED_KEYS', ['keyHolderId'])
 
 function addAction(type, params, fixPayload) {
   actions[type] = type

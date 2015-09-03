@@ -6,6 +6,8 @@ import Toolbar from './Toolbar'
 import DividerLine from './DividerLine'
 import customDrag from 'custom-drag'
 import {connect} from 'react-redux'
+import Hotkeys from 'react-hotkeys'
+import hotkeyMap from './hotkeyMap'
 
 const projectManager = BETON.getRock('project-manager')
 
@@ -99,6 +101,12 @@ export default class Timeline extends React.Component {
 
     if (!timeline) {
       return <div hidden/>
+    }
+
+    const hotkeyHandlers = {
+      delete() {
+        actions.deleteSelectedKeys({keyHolderId: timeline.id})
+      }
     }
 
     const commonProps = {timeline, actions, selectors}

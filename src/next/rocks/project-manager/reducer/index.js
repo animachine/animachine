@@ -9,11 +9,12 @@ import {
   getKeyOfParamAtTime,
   getValueOfParamAtTime,
   getParamOfTrackByName,
+  getKeysAtTime,
+  collectSelectedKeys,
 } from '../selectors'
 import {
   recurseKeys,
   recurseParams,
-  getKeysAtTime,
 } from '../utils'
 
 const rxSet = /^SET_([A-Z_]+?)_OF_([A-Z]+?)$/
@@ -196,12 +197,24 @@ export default function (projectManager = initialState, action) {
     }
     case actions.TRANSLATE_SELECTED_KEYS: {
       const {keyHolderId, offset} = action
-      recurseKeys({keyHolderId, callback: key => {
-        if (key.selected) {
-          const time = key.time + offset
-          projectManager = setItem({projectManager, item: {...key, time}})
-        }
-      }})
+      collectSelectedKeys({keyHolderId}).forEach(key => {
+        const time = key.time + offset
+        projectManager = setItem({projectManager, item: {...key, time}})
+      })
+      return projectManager
+    }
+    case actions.DELETE_SELECTED_KEYS: {
+      const {keyHolderId} = action
+      collectSelectedKeys({keyHolderId}).forEach(key => {
+        const param = getParentParamOfKey({keyId: key.id})
+        projectManager = removeChild({
+          projectManager,
+          parentId: param.id,
+          childId: key.id,
+          childrenKey: 'keys',
+        })
+        projectManager = removeItem({projectManager, item: key})
+      })
       return projectManager
     }
     case actions.SET_VISIBLE_TIME_OF_TIMELINE: {
@@ -242,6 +255,20 @@ function setItem({projectManager, item}) {
       : [
         ...items.slice(0, index),
         item,
+        ...items.slice(index + 1)
+      ]
+  }
+}
+
+function removeItem({item}) {
+  const {items} = projectManager
+  const index = items.findIndex(({id}) => id === item.id)
+  return {
+    ...projectManager,
+    items: index === -1 ?
+      items
+      : [
+        ...items.slice(0, index),
         ...items.slice(index + 1)
       ]
   }

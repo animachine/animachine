@@ -6,11 +6,8 @@ import {
 } from '../utils'
 
 export * from './combine'
-
-export {
-  getKeysAtTime,
-  collectSelectedKeys,
-} from '../utils'
+export * from './getKeysAtTime'
+export * from './collectSelectedKeys'
 
 export function getProjectManager({projectManager} = {}) {
   return projectManager || store.getState().projectManager

@@ -1,4 +1,4 @@
-import {recurseKeys} from './recursers'
+import {recurseKeys} from '../utils/recursers'
 
 export function getKeysAtTime({projectManager, keyHolderId, time}) {
   const result = []

@@ -1,4 +1,4 @@
-import {recurseKeys} from './recursers'
+import {recurseKeys} from '../utils/recursers'
 
 export function collectSelectedKeys({projectManager, keyHolderId}) {
   const result = []

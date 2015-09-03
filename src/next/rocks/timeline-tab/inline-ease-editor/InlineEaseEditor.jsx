@@ -3,7 +3,6 @@ import ControlPoint from './ControlPoint'
 import {convertTimeToPosition} from '../utils'
 import ClickAway from 'react-matterkit/lib/utils/ClickAway'
 
-//@ClickAway
 export default class InlineEaseEditor extends React.Component {
   static propTypes = {
     timeline: React.PropTypes.object,
@@ -11,12 +10,14 @@ export default class InlineEaseEditor extends React.Component {
     selectors: React.PropTypes.object,
   }
 
-  handleClickAway() {
-    const {actions, timeline} = this.props
-    actions.setInlineEaseEditorOfTimeline({
-      timelineId: timeline.id,
-      inlineEaseEditor: false,
-    })
+  handleClickAway = () => {
+    // const {actions, timeline} = this.props
+    // if (timeline.inlineEaseEditor) {
+    //   actions.setInlineEaseEditorOfTimeline({
+    //     timelineId: timeline.id,
+    //     inlineEaseEditor: false,
+    //   })
+    // }
   }
 
   getControlEase() {
@@ -100,12 +101,14 @@ export default class InlineEaseEditor extends React.Component {
       overflow: 'visible',
     }
 
-    return <div style={rootStyle}>
-      <svg style={rootSvgStyle}>
-        {this.renderPath(width, height)}
-      </svg>
-      {this.renderControlPoint('A', width, height)}
-      {this.renderControlPoint('B', width, height)}
-    </div>
+    return <ClickAway onClickAway={this.handleClickAway}>
+      <div style={rootStyle}>
+        <svg style={rootSvgStyle}>
+          {this.renderPath(width, height)}
+        </svg>
+        {this.renderControlPoint('A', width, height)}
+        {this.renderControlPoint('B', width, height)}
+      </div>
+    </ClickAway>
   }
 }

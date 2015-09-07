@@ -60,7 +60,8 @@ export default class Timeline extends React.Component {
     super(props)
     this.state = {
       dividerPos: 300,
-      fullWidth: 2000
+      fullWidth: 2000,
+      scrollPosition: 0
     }
   }
 
@@ -89,6 +90,10 @@ export default class Timeline extends React.Component {
     }
   }
 
+  handleChangeScrollPosition = (scroll) => {
+    this.setState({scrollPosition: scroll})
+  }
+
   render() {
     const {dividerPos, fullWidth} = this.state
     const {timeline, actions, selectors, headHeight, dragRef} = this.props
@@ -111,15 +116,24 @@ export default class Timeline extends React.Component {
 
     const commonProps = {timeline, actions, selectors}
 
+    function scrollable(element) {
+      return element
+      // return <Scrollable
+      //   verticalScroll = {scrollPosition}
+      //   onChangeVerticalScroll = {this.handleChangeScrollPosition}>
+      //   {element}
+      // </Scrollable>
+    }
+
     return <div style={rootStyle}>
-      <div style={{display: 'flex', height: headHeight}}>
+      scrollable(<div style={{display: 'flex', height: headHeight}}>
         <Toolbar {...commonProps} style={{width: dividerPos}}/>
         <Timebar {...commonProps} height={headHeight}/>
-      </div>
-      <div style={{display: 'flex', flex: 1}}>
+      </div>)
+      scrollable(<div style={{display: 'flex', flex: 1}}>
         <Controls {...commonProps} style={{width: dividerPos}}/>
         <Keylines {...commonProps}/>
-      </div>
+      </div>)
       <DividerLine ref={dragRef} position={dividerPos}/>
     </div>
   }

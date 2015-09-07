@@ -34,7 +34,7 @@ function makeScrollable(opt) {
     deTargets.forEach(deT => {
         var pos = deT.style.position;
         if (pos !== 'absolute' && pos !== 'fixed' && pos !== 'relative') {
-            
+
             deT.style.position = 'relative';
         };
     });
@@ -69,7 +69,7 @@ function makeScrollable(opt) {
 
         var way = e.deltaY/3,
             maxH = getTargetMaxH();
-        
+
         pos = Math.max(0, Math.min(maxH, pos + way));
 
         if (deRange) {
@@ -128,7 +128,7 @@ function makeScrollable(opt) {
 
                 deRange.style.display = isShowing ? saveDisplay : 'none';
             }
-        }, 312); 
+        }, 312);
 
         var saveDispose = ret.dispose;
         ret.dispose = function dispose () {
@@ -156,7 +156,7 @@ function makeScrollable(opt) {
 function createRange(opt) {
 
     opt = opt || {};
-  
+
     var value = 0, cursorWidth = 0, isVertical = !!opt.vertical;
 
     var de = document.createElement('div');
@@ -184,7 +184,7 @@ function createRange(opt) {
         deCursor.style[d('height','width')] = w + 'px';
         cursorWidth = w;
     };
-    de.setCursorWidth(opt.cursorWidth || 12);   
+    de.setCursorWidth(opt.cursorWidth || 12);
 
     amgui.makeDraggable({
         deTarget: de,
@@ -204,7 +204,7 @@ function createRange(opt) {
         if (v === value) return;
 
         value = v;
-        
+
         var width = de.getBoundingClientRect()[d('height','width')];
         deCursor.style[d('top','left')] = ((width - cursorWidth) * value) + 'px';
 

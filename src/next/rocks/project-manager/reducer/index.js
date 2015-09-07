@@ -16,6 +16,12 @@ import {
   recurseKeys,
   recurseParams,
 } from '../utils'
+import {
+  setItem,
+  addChild,
+  removeChild,
+  setValueOfParamAtTime,
+} from './utils'
 
 const rxSet = /^SET_([A-Z_]+?)_OF_([A-Z]+?)$/
 const rxAdd = /^ADD_([A-Z_]+?)_TO_([A-Z]+?)$/
@@ -30,6 +36,10 @@ const initialState = {
 }
 
 export default function (projectManager = initialState, action) {
+  history(projectManager, action, reducer)
+}
+
+function reducer (projectManager, action) {
   const {type} = action
   switch (type) {
     case actions.OPEN_PROJECT: {
@@ -244,6 +254,7 @@ export default function (projectManager = initialState, action) {
 
   return projectManager
 }
+<<<<<<< HEAD
 
 function setItem({projectManager, item}) {
   const {items} = projectManager
@@ -311,3 +322,5 @@ function setValueOfParamAtTime({projectManager, value, paramId, time}) {
     childrenKey: 'keys'
   })
 }
+=======
+>>>>>>> wip: history

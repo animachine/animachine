@@ -28,6 +28,7 @@ const key2ParamName = {
     if (!trackId || previewComponents.length === 0) {
       return {}
     }
+<<<<<<< HEAD
 
     const track = selectors.getItemById({id: trackId})
     let selectedTarget
@@ -65,6 +66,15 @@ const key2ParamName = {
       rz: getValue('rotationZ', 0),
       ox: getValue('transformOriginX', 0.5),
       oy: getValue('transformOriginY', 0.5),
+=======
+    console.log('##########', {
+      trackId,
+      currentTime: timeline.currentTime,
+      previewComponents,
+    })
+    return {
+      // x: Math.random(),
+>>>>>>> wip: history
       trackId,
       currentTime: timeline.currentTime
     }

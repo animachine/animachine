@@ -9,7 +9,9 @@
   "scripts": {
     "lib": "babel ./src --out-dir lib  --source-maps --source-maps",
     "lib-watch": "npm run lib && babel ./src --out-dir lib  --source-maps --source-maps --watch",
-    "serve-browser": "http-server ./browser -p 9876"
+    "serve-browser": "http-server ./browser -p 9876",
+    "test": "mocha --compilers js:babel/register",
+    "test-debug": "node-debug _mocha --compilers js:babel/register"
   },
   "repository": {
     "type": "git",

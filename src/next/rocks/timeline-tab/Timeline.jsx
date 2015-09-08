@@ -8,6 +8,7 @@ import customDrag from 'custom-drag'
 import {connect} from 'react-redux'
 import Hotkeys from 'react-hotkeys'
 import hotkeyMap from './hotkeyMap'
+import {Scrollable} from 'react-matterkit'
 
 const projectManager = BETON.getRock('project-manager')
 
@@ -95,7 +96,7 @@ export default class Timeline extends React.Component {
   }
 
   render() {
-    const {dividerPos, fullWidth} = this.state
+    const {dividerPos, fullWidth, scrollPosition} = this.state
     const {timeline, actions, selectors, headHeight, dragRef} = this.props
     const rootStyle = {
       display: 'flex',
@@ -113,27 +114,24 @@ export default class Timeline extends React.Component {
         actions.deleteSelectedKeys({keyHolderId: timeline.id})
       }
     }
-
     const commonProps = {timeline, actions, selectors}
-
-    function scrollable(element) {
-      return element
-      // return <Scrollable
-      //   verticalScroll = {scrollPosition}
-      //   onChangeVerticalScroll = {this.handleChangeScrollPosition}>
-      //   {element}
-      // </Scrollable>
+    const scrollable = (content) => {
+      return <Scrollable
+        verticalScroll = {scrollPosition}
+        onChangeVerticalScroll = {this.handleChangeScrollPosition}>
+        {content}
+      </Scrollable>
     }
 
     return <div style={rootStyle}>
-      scrollable(<div style={{display: 'flex', height: headHeight}}>
+      <div style={{display: 'flex', height: headHeight}}>
         <Toolbar {...commonProps} style={{width: dividerPos}}/>
         <Timebar {...commonProps} height={headHeight}/>
-      </div>)
-      scrollable(<div style={{display: 'flex', flex: 1}}>
+      </div>
+      <Scrollable style={{display: 'flex', flex: 1}}>
         <Controls {...commonProps} style={{width: dividerPos}}/>
         <Keylines {...commonProps}/>
-      </div>)
+      </Scrollable>
       <DividerLine ref={dragRef} position={dividerPos}/>
     </div>
   }

@@ -23,7 +23,7 @@ export default class Keylines extends React.Component {
   }
 
   render() {
-    const {timeline, actions, selectors} = this.props
+    const {timeline, actions, selectors, style} = this.props
     const height = BETON.getRock('config').size
     const children = []
     var pos = 0
@@ -46,7 +46,7 @@ export default class Keylines extends React.Component {
 
     timeline.tracks.forEach(param => renderKeyline(param))
 
-    return <div style={{position: 'relative'}}>
+    return <div style={{...style, position: 'relative'}}>
       {children}
       {this.renderPointerLine()}
       <InlineEaseEditor {...{timeline, actions, selectors}}/>

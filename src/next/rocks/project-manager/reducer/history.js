@@ -2,6 +2,8 @@ import {getItemById} from '../selectors'
 import {setItem} from './utils'
 
 export default (projectManager, action, next) => {
+  return next(projectManager, action)
+  //TODO
   if (action.historyInfo) {
     const {historyInfo, ...redo} = action
     const timeline = getItemById({id: historyInfo.timelineId})
@@ -12,7 +14,7 @@ export default (projectManager, action, next) => {
       historyPosition: historyPosition + 1,
       historyStack: [
         ...historyStack.slice(timeline.historyPosition),
-        {historyInfo.undo, redo}
+        {undo: historyInfo.undo, redo}
       ]
     }})
   }
@@ -35,5 +37,7 @@ export default (projectManager, action, next) => {
       }})
       return next(projectManager, historyReg.undo)
     }
+    default:
+      return next(projectManager, action)
   }
 }

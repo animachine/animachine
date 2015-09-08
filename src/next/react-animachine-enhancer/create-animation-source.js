@@ -3,7 +3,7 @@ import createEaser from './createEaser'
 const sortKeys = (a, b) => a.time - b.time
 
 export default function createAnimationSource({projectSource, timeline}) {
-  function animationSource(connect) {
+  function animationSource({target}) {
     const tlRoot = new TimelineMax()
 
     function addParams(params, targets) {
@@ -36,8 +36,8 @@ export default function createAnimationSource({projectSource, timeline}) {
     }
 
     timeline.tracks.forEach(track => {
-      const targets = track.selectors.map(selector => {
-        return connect.getTargetByKeys(selector)
+      const targets = track.selectors.map(selectorCommands => {
+        return target.findWithCommands(selectorCommands)
       })
 
       addParams(track.params, targets)

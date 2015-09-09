@@ -101,8 +101,7 @@ export default class Timeline extends React.Component {
     const rootStyle = {
       display: 'flex',
       flexDirection: 'column',
-      width: fullWidth,
-      // height: '100%'
+      flex: 1,
     }
 
     if (!timeline) {
@@ -117,8 +116,8 @@ export default class Timeline extends React.Component {
     const commonProps = {timeline, actions, selectors}
     const scrollable = (content) => {
       return <Scrollable
-        verticalScroll = {scrollPosition}
         onChangeVerticalScroll = {this.handleChangeScrollPosition}>
+        verticalScroll = {scrollPosition}
         {content}
       </Scrollable>
     }
@@ -128,7 +127,7 @@ export default class Timeline extends React.Component {
         <Toolbar {...commonProps} style={{width: dividerPos}}/>
         <Timebar {...commonProps} height={headHeight}/>
       </div>
-      <Scrollable style={{display: 'flex', flex: 1}}>
+      <Scrollable style={{display: 'flex', flex: 1, alignItems: 'flex-start'}}>
         <Controls {...commonProps} style={{width: dividerPos}}/>
         <Keylines {...commonProps}/>
       </Scrollable>

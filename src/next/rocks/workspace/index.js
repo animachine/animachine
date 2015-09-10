@@ -7,7 +7,7 @@ import { DragDropContext } from 'react-dnd'
 import matterkitTheme from './matterkitTheme'
 
 const workspace = new SpacemanStore(source)
-BETON.define('workspace', [], () => workspace)
+BETON.define({id: 'workspace', init: () => workspace})
 
 @DragDropContext(HTML5Backend)
 class App {

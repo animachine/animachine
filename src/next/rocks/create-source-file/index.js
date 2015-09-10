@@ -1,6 +1,10 @@
-BETON.define('create-source-file', ['project-manager'], init)
+BETON.define({
+  id: 'create-source-file',
+  dependencies: ['project-manager'],
+  init
+})
 
-function init(projectManager) {
+function init({projectManager}) {
   return function() {
     const {selectors} = projectManager
     const currentProject = selectors.getCurrentProject()

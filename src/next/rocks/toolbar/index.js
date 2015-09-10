@@ -3,11 +3,15 @@ import * as actions from './actions'
 import reducer from './reducer'
 
 
-BETON.define('toolbar', ['store'], (store) => {
-  store.addReducer('toolbar', reducer)
+BETON.define({
+  id: 'toolbar',
+  dependencies: ['store'],
+  init: ({store}) => {
+    store.addReducer('toolbar', reducer)
 
-  return {
-    selectors,
-    actions,
+    return {
+      selectors,
+      actions,
+    }
   }
 })

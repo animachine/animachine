@@ -1,6 +1,7 @@
-BETON.define('hack-open',
-  ['store', 'component-inspector', 'project-manager'],
-  (store, componentInspector, projectManager) => {
+BETON.define({
+  id: 'hack-open',
+  dependencies: ['store', 'component-inspector', 'project-manager'],
+  init: ({store, componentInspector, projectManager}) => {
     const {
       getInspectedComponents,
       getProjectSources,
@@ -26,4 +27,4 @@ BETON.define('hack-open',
       }
     }
   }
-)
+})

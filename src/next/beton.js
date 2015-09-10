@@ -1,11 +1,12 @@
 import assign from 'lodash/object/assign'
+import camelCase from 'lodash/string/camelCase'
 const resolvedRocks = new Map()
 const waitingRocks = new Map()
 
-function define(id, dependencies, resolve) {
-  waitingRocks.set(id, {dependencies, resolve})
+function define({id, dependencies = [], init = () => {}}) {
+  waitingRocks.set(id, {dependencies, init})
   tryToResolve()
-  
+
   if (!resolvedRocks.get(id)) {
     resolvedRocks.set(id, {isWaitingToResolve: true})
   }
@@ -14,12 +15,15 @@ function define(id, dependencies, resolve) {
 function tryToResolve() {
   let resolvedANewRock = false
 
-  waitingRocks.forEach(({resolve, dependencies}, id) => {
+  waitingRocks.forEach(({init, dependencies}, id) => {
     if (dependencies.every(depId => {
       var result = hasRock(depId)
       return result
     })) {
-      const rock = resolve(...dependencies.map(depId => getRock(depId)))
+      const dependencyMap = dependencies.reduce((depId, map) => {
+        return {...map, [camelCase(depId)]: getRock(depId)}
+      }, {})
+      const rock = init(dependencyMap)
       const placeholderRock = resolvedRocks.get(id)
       waitingRocks.delete(id)
 
@@ -30,6 +34,8 @@ function tryToResolve() {
       else {
         resolvedRocks.set(id, rock)
       }
+
+      BETON[camelCase(id)] = rock
 
       resolvedANewRock = true
     }

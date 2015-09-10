@@ -1,7 +1,7 @@
-BETON.define('select-track-on-click-preview-component',
-  ['workspace', 'project-manager', 'toolbar', 'cursor-type'],
-  (projectManager, toolbar) => {
-
+BETON.define({
+  id: 'select-track-on-click-preview-component',
+  dependencies: ['workspace', 'project-manager', 'toolbar', 'cursor-type'],
+  init: ({projectManager, toolbar}) => {
     function handlePick() {
 
     }
@@ -11,4 +11,4 @@ BETON.define('select-track-on-click-preview-component',
       getElement: () => <ContactLayer/>
     })
   }
-)
+})

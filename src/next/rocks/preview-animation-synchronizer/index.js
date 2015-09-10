@@ -12,10 +12,10 @@ function getAnimationSourceWrapper(timelineId) {
   return animationSourceWrapper
 }
 
-BETON.define(
-  'preview-animation-synchronizer',
-  ['store', 'project-manager'],
-  (store, projectManager) => {
+BETON.define({
+  init: 'preview-animation-synchronizer',
+  dependencies: ['store', 'project-manager'],
+  init: ({store, projectManager}) => {
     const {selectors} = projectManager
 
     store.subscribe(() => {
@@ -76,7 +76,7 @@ BETON.define(
       }
     })
   }
-)
+})
 
 function matchCombinedTimelines(prev, next) {
   return prev &&
@@ -94,7 +94,7 @@ function createAnimationSourceWrapper() {
         const state = store.getState()
         const isMyTimeline = item => item.id === timelineId
         const timeline = state.projectManager.items.find(isMyTimeline)
-        
+
         gsTimeline.time(timeline.currentTime / 1000)
       }
 

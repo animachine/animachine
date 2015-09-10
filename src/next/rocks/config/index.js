@@ -1,3 +1,6 @@
-BETON.define('config', [], () => ({
-  size: 21
-}))
+BETON.define({
+  id: 'config',
+  init: () => ({
+    size: 21
+  })
+})

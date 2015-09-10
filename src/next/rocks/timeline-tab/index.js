@@ -2,12 +2,12 @@ import React from 'react'
 import TimelineTab from './TimelineTab'
 
 
-BETON.define(
-  'timeline-tab',
-  ['workspace', 'store', 'project-manager', 'toolbar'],
+BETON.define({
+  id: 'timeline-tab',
+  dependencies: ['workspace', 'store', 'project-manager', 'toolbar'],
   init
-)
+})
 
-function init(workspace) {
+function init({workspace}) {
   workspace.setTabContent('timeline', () => <TimelineTab/>)
 }

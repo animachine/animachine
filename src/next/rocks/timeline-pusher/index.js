@@ -1,4 +1,10 @@
-BETON.define('timeline-pusher', ['project-manager'], projectManager => {
+BETON.define({
+  id: 'timeline-pusher',
+  dependencies: ['project-manager'],
+  init
+})
+
+function init({projectManager}) {
   const {setCurrentTimeOfTimeline} = projectManager.actions
   const {getCurrentTimeline} = projectManager.selectors
   let lastTime = performance.now()
@@ -17,4 +23,4 @@ BETON.define('timeline-pusher', ['project-manager'], projectManager => {
     window.requestAnimationFrame(push)
   }
   window.requestAnimationFrame(push)
-})
+}

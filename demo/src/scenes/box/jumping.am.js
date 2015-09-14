@@ -8,7 +8,7 @@ const projectSource = {
       tracks: [
         {
           name: 'box',
-          selectors: [['box']],
+          selectors: [[{type: 'find', selector: 'box'}]],
           params: [
             {
               name: 'translate',

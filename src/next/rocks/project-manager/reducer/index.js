@@ -30,6 +30,7 @@ const rxRemove = /^REMOVE_([A-Z_]+?)_FROM_([A-Z]+?)$/
 
 const initialState = {
   currentProjectId: undefined,
+  lastSelectedItemId: undefined,
   openedProjectIds: [],
   previewComponentsByProjectId: {},
   originalSourcesByProjectId: {},
@@ -65,6 +66,12 @@ function reducer (projectManager, action) {
           [projectId]: action.projectSource
         },
         currentProjectId: projectManager.currentProjectId || projectId
+      }
+    }
+    case actions.SET_LAST_SELECTED_ITEM_ID: {
+      return {
+        ...projectManager,
+        lastSelectedItemId: action.itemId
       }
     }
     case actions.SET_VALUE_OF_TRACK_AT_TIME: {

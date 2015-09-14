@@ -72,16 +72,16 @@ export default class Timeline extends React.Component {
   }
 
   testOwnSize = () => {
-    const {width} = React.findDOMNode(this).getBoundingClientRect()
+    const {width: nodeWidth} = React.findDOMNode(this).getBoundingClientRect()
     const {dividerPos, fullWidth} = this.state
     const {timeline} = this.props
     const {setWidthOfTimeline} = this.props.actions
 
-    if (width !== fullWidth) {
-      this.setState({width: fullWidth})
+    if (nodeWidth !== fullWidth) {
+      this.setState({fullWidth: nodeWidth})
     }
 
-    const timelineWidth = width - dividerPos
+    const timelineWidth = nodeWidth - dividerPos
     if (timeline && timeline.width !== timelineWidth) {
       console.log({timelineWidth, timeline})
       setWidthOfTimeline({

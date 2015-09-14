@@ -4,7 +4,13 @@ import TimelineTab from './TimelineTab'
 
 BETON.define({
   id: 'timeline-tab',
-  dependencies: ['workspace', 'store', 'project-manager', 'toolbar'],
+  dependencies: [
+    'workspace',
+    'store',
+    'project-manager',
+    'toolbar',
+    'item-settings-dialog'
+  ],
   init
 })
 

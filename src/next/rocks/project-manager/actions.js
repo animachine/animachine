@@ -1,8 +1,6 @@
 import camelCase from 'lodash/string/camelCase'
 import {getMaxTimelineStart} from './selectors'
 
-const store = BETON.getRock('store')
-
 const constantCase = str => {
   return str.replace(/[A-Z]/g, cap => `_${cap.toLowerCase()}`)
             .toUpperCase()
@@ -64,6 +62,7 @@ autoAddAction('set', 'roughTaper', 'ease')
 
 addAction('OPEN_PROJECT', ['projectSource', 'previewComponents'])
 
+addAction('SET_LAST_SELECTED_ITEM_ID', ['itemId'])
 addAction('SET_VISIBLE_TIME_OF_TIMELINE', ['timelineId', 'visibleTime'])
 addAction('SET_VALUE_OF_PARAM_AT_TIME', ['paramId', 'time', 'value'])
 addAction('SET_VALUE_OF_TRACK_AT_TIME', ['trackId', 'paramName', 'time', 'value'])
@@ -79,6 +78,8 @@ addAction('REDO', ['timelineId'])
 function addAction(type, params, fixPayload) {
   actions[type] = type
   actions[camelCase(type)] = function (payload = {}) {
+    const store = BETON.getRock('store')
+
     if (__DEV__) {
       let payloadKeys = Object.keys(payload)
       let missingParam = params.find(param => payloadKeys.indexOf(param) === -1)
@@ -94,7 +95,6 @@ function addAction(type, params, fixPayload) {
     if (fixPayload) {
       payload = fixPayload(payload)
     }
-
     store.dispatch({
       type,
       ...payload

@@ -10,7 +10,7 @@ export default class Box extends React.Component {
 
   render() {
     var style = {
-      backgroundColor: '#88ce02',
+      backgroundColor: '#0074D9',
       width: '160px',
       height: '160px',
     }

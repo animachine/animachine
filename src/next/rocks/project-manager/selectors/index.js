@@ -1,5 +1,4 @@
 import {createEaser} from 'react-animachine-enhancer'
-const store = BETON.getRock('store')
 import {
   recurseParams,
   recurseKeys,
@@ -10,6 +9,7 @@ export * from './getKeysAtTime'
 export * from './collectSelectedKeys'
 
 export function getProjectManager({projectManager} = {}) {
+  const store = BETON.getRock('store')
   return projectManager || store.getState().projectManager
 }
 

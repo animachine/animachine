@@ -1,8 +1,8 @@
 import forOwn from 'lodash/object/forOwn'
 
-const store = BETON.getRock('store')
 
 export function getInspectedComponents() {
+  const store = BETON.getRock('store')
   return store.getState().componentInspector.inspectedComponents
 }
 
@@ -26,6 +26,7 @@ export function getProjectSources({component}) {
 }
 
 export function getComponentsWithProjectSource({projectSource}) {
+  const store = BETON.getRock('store')
   const {inspectedComponents} = store.getState().componentInspector
   const result = []
 

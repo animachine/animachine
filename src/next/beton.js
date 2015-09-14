@@ -16,13 +16,11 @@ function tryToResolve() {
   let resolvedANewRock = false
 
   waitingRocks.forEach(({init, dependencies}, id) => {
-    if (dependencies.every(depId => {
-      var result = hasRock(depId)
-      return result
-    })) {
-      const dependencyMap = dependencies.reduce((depId, map) => {
+    if (dependencies.every(depId => hasRock(depId))) {
+      const dependencyMap = dependencies.reduce((map, depId) => {
         return {...map, [camelCase(depId)]: getRock(depId)}
       }, {})
+      console.log({dependencyMap, dependencies})
       const rock = init(dependencyMap)
       const placeholderRock = resolvedRocks.get(id)
       waitingRocks.delete(id)
@@ -65,7 +63,7 @@ const BETON = {
 
 setTimeout(() => {
   // resolvedRocks.forEach((rock, id) => console.log(id, rock))
-  waitingRocks.forEach((rock, id) => console.log(`${id} is still waiting!`))
+  waitingRocks.forEach((rock, id) => console.log(`${id} is still waiting!`, rock.dependencies.filter(id => !hasRock(id))))
 }, 1234)
 
 export default BETON

@@ -1,6 +1,6 @@
 import React from 'react'
 import {CSSTranshand} from 'transhand'
-import {getTargetByKeys} from 'react-animachine-enhancer'
+import {createTarget} from 'react-animachine-enhancer'
 import {connect} from 'react-redux'
 
 const key2ParamName = {
@@ -33,9 +33,11 @@ const key2ParamName = {
     let selectedTarget
     track.selectors.forEach(selector => {
       previewComponents.forEach(previewComponent => {
-        const target = getTargetByKeys(previewComponent.__itemTree, selector)
-        if (target) {
-          selectedTarget = target
+        // debugger
+        const target = createTarget(previewComponent.__itemTree)
+          .findWithCommands(selector)
+        if (target.length !== 0) {
+          selectedTarget = target[0]
         }
       })
     })

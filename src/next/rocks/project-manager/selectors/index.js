@@ -7,6 +7,7 @@ import {
 export * from './combine'
 export * from './getKeysAtTime'
 export * from './collectSelectedKeys'
+export * from './getParentTimelineIdByChildId'
 
 export function getProjectManager({projectManager} = {}) {
   const store = BETON.getRock('store')

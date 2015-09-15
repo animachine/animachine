@@ -1,5 +1,9 @@
 import camelCase from 'lodash/string/camelCase'
-import {getMaxTimelineStart} from './selectors'
+import {
+  getMaxTimelineStart,
+  getItemById,
+  getParentTimelineIdByChildId,
+} from './selectors'
 
 const constantCase = str => {
   return str.replace(/[A-Z]/g, cap => `_${cap.toLowerCase()}`)
@@ -13,17 +17,17 @@ const minmax = (minValue, maxValue) => value =>
 const actions = {}
 export default actions
 
-autoAddAction('set', 'currentTimelineId', 'project')
 autoAddAction('add', 'timeline', 'project')
 autoAddAction('remove', 'timeline', 'project')
 
+autoAddAction('set', 'currentTimelineId', 'project')
 autoAddAction('set', 'name', 'timeline')
 autoAddAction('set', 'isPlaying', 'timeline')
-autoAddAction('set', 'currentTime', 'timeline', value => min(0)(parseInt(value)))
-autoAddAction('set', 'pxpms', 'timeline', minmax(0.0001, 3))
+autoAddAction('set', 'currentTime', 'timeline',null,  value => min(0)(parseInt(value)))
+autoAddAction('set', 'pxpms', 'timeline', null, minmax(0.0001, 3))
 autoAddAction('set', 'length', 'timeline')
 autoAddAction('set', 'width', 'timeline')
-autoAddAction('set', 'start', 'timeline', (value, {timelineId}) => max(getMaxTimelineStart({timelineId}))(value))
+autoAddAction('set', 'start', 'timeline', null, (value, {timelineId}) => max(getMaxTimelineStart({timelineId}))(value))
 autoAddAction('set', 'startMargin', 'timeline')
 autoAddAction('set', 'currentTrackId', 'timeline')
 autoAddAction('set', 'inlineEaseEditor', 'timeline')
@@ -44,13 +48,13 @@ autoAddAction('remove', 'param', 'param')
 autoAddAction('add', 'key', 'param')
 autoAddAction('remove', 'key', 'param')
 
-autoAddAction('set', 'time', 'key')
-autoAddAction('set', 'value', 'key')
-autoAddAction('set', 'selected', 'key')
+autoAddAction('set', 'time', 'key', true)
+autoAddAction('set', 'value', 'key', true)
+autoAddAction('set', 'selected', 'key', true)
 
-autoAddAction('set', 'pointAX', 'ease', minmax(0, 1))
+autoAddAction('set', 'pointAX', 'ease', null, minmax(0, 1))
 autoAddAction('set', 'pointAY', 'ease')
-autoAddAction('set', 'pointBX', 'ease', minmax(0, 1))
+autoAddAction('set', 'pointBX', 'ease', null, minmax(0, 1))
 autoAddAction('set', 'pointBY', 'ease')
 autoAddAction('set', 'roughEase', 'ease')
 autoAddAction('set', 'roughStrength', 'ease')
@@ -100,46 +104,63 @@ function addAction(type, params, fixPayload) {
       ...payload
     })
   }
-
-  function getConstant() {
-    switch (command) {
-      case 'set':
-        return `SET_${constantCase(value)}_OF_${constantCase(target)}`
-      case 'add':
-        return `ADD_${constantCase(value)}_TO_${constantCase(target)}`
-      case 'remove':
-        return `REMOVE_${constantCase(value)}_FROM_${constantCase(target)}`
-    }
-  }
 }
 
-function autoAddAction(command, value, target, fixValue) {
-  const fixPayload = fixValue ? payload => ({
-    ...payload,
-    [value]: fixValue(payload[value], payload)
-  }) : undefined
+function autoAddAction(command, valueKey, targetKey, history, fixValue) {
+  const fixPayload = payload => {
+    const value = fixValue
+      ? fixValue(payload[valueKey], payload)
+      : payload[valueKey]
+
+    return {
+      ...payload,
+      [valueKey]: value,
+      historyInfo: getHistoryInfo()
+    }
+
+    function getHistoryInfo() {
+      if (!history) {
+        return
+      }
+
+      const itemId = payload[getTargetIdKey()]
+      const item = getItemById({id: itemId})
+
+      return {
+        timelineId: getParentTimelineIdByChildId({itemId}),
+        redo: {
+          type: payload.type,
+          [valueKey]: item.value
+        }
+      }
+    }
+  }
 
   addAction(getType(), getParams(), fixPayload)
 
   function getType() {
     switch (command) {
       case 'set':
-        return `SET_${constantCase(value)}_OF_${constantCase(target)}`
+        return `SET_${constantCase(valueKey)}_OF_${constantCase(targetKey)}`
       case 'add':
-        return `ADD_${constantCase(value)}_TO_${constantCase(target)}`
+        return `ADD_${constantCase(valueKey)}_TO_${constantCase(targetKey)}`
       case 'remove':
-        return `REMOVE_${constantCase(value)}_FROM_${constantCase(target)}`
+        return `REMOVE_${constantCase(valueKey)}_FROM_${constantCase(targetKey)}`
     }
   }
 
   function getParams() {
     switch (command) {
       case 'set':
-        return [value, `${target}Id`]
+        return [valueKey, getTargetIdKey()]
       case 'add':
-        return [value, `${target}Id`]
+        return [valueKey, getTargetIdKey()]
       case 'remove':
-        return [`${value}`, `${target}Id`]
+        return [`${valueKey}`, getTargetIdKey()]
     }
+  }
+
+  function getTargetIdKey() {
+    return `${targetKey}Id`
   }
 }

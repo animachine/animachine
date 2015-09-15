@@ -1,3 +1,6 @@
+import createItem from '../createItem'
+import {getKeyOfParamAtTime} from '../selectors'
+
 export function setItem({projectManager, item}) {
   const {items} = projectManager
   const index = items.findIndex(({id}) => id === item.id)

@@ -66,5 +66,5 @@ setTimeout(() => {
   waitingRocks.forEach((rock, id) => console.log(`${id} is still waiting!`, rock.dependencies.filter(id => !hasRock(id))))
 }, 1234)
 
-export default BETON
 global.BETON = BETON
+export default BETON

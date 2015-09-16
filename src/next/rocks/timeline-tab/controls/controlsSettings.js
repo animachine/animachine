@@ -71,6 +71,7 @@ function handleSelectClick(connect) {
   const {actions} = BETON.getRock('project-manager')
   const {id: currentTrackId} = getParentTrack(connect)
   const {id: timelineId} = getParentTimeline(connect)
+
   actions.setLastSelectedItemId({itemId: connect.value.id})
   actions.setCurrentTrackIdOfTimeline({timelineId, currentTrackId})
 }

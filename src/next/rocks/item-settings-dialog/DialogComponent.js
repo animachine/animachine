@@ -1,9 +1,20 @@
 import React from 'react'
+import {connect} from 'react-redux'
 import JsonVision from 'json-vision'
 import {DialogComp} from 'spaceman'
 import treeSettings from './treeSettings'
 import itemSettings from './itemSettings'
 
+@connect(() => {
+  const projectManager = BETON.getRock('project-manager')
+  const pmStore = projectManager.selectors.getProjectManager()
+  const {items, lastSelectedItemId} = pmStore
+  return {
+    lastSelectedItemId,
+    items,
+    actions: projectManager.actions,
+  }
+})
 export default class DialogComponent extends React.Component {
   render() {
     const {items, lastSelectedItemId, actions, onClose} = this.props
@@ -14,10 +25,10 @@ export default class DialogComponent extends React.Component {
         title = 'Item settigns'
         buttons = {[{label: 'close', onClick: 'close'}]}
         onClose = {onClose}>
-      <div style={{display: 'flex', width: 432}}>
+      <div style={{display: 'flex', width: 432, height: 643}}>
         <JsonVision
           settings={treeSettings}
-          value={items}
+          value={{}}
           style={{flex: 1}}
         />
       <JsonVision

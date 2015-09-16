@@ -5,7 +5,12 @@ const createTypeSelector = type => connect => {
   return connect.value && connect.value.type === type
 }
 
-const getItems = connect => connect.path[1]
+const getItems = () => BETON.getRock('project-manager').selectors.getItems()
+const isTheLastSelected = connect => {
+  const {selectors} = BETON.getRock('project-manager')
+  const {lastSelectedItemId} = selectors.getProjectManager()
+  return lastSelectedItemId === (connect.value && connect.value.id)
+}
 
 const getProjects = connect => {
   const items = getItems(connect)
@@ -17,32 +22,29 @@ const getChildren = (connect, name) => {
   return connect.value[name].map(id => find(items, {id}))
 }
 
-const getLabel = connect => connect.value.name
+const getLabel = connect => `${connect.value.type}: ${connect.value.name}`
+
+function handleSelectClick(connect) {
+  const {actions} = BETON.getRock('project-manager')
+  actions.setLastSelectedItemId({itemId: connect.value.id})
+}
+
+const createSettings = (type, childrenName) => ({
+    selector: createTypeSelector(type),
+    children: connect => getChildren(connect, childrenName),
+    label: connect => getLabel(connect),
+    highlighted: connect => isTheLastSelected(connect),
+    onClick: connect => handleSelectClick(connect),
+})
 
 export default [
   {
-    selector: 'ROOT',
+    selector: 'root',
     label: 'Projects',
     children: connect => getProjects(connect)
   },
-  {
-    selector: createTypeSelector('project'),
-    children: connect => getChildren(connect, 'timelines'),
-    label: connect => getLabel(connect),
-  },
-  {
-    selector: createTypeSelector('timeline'),
-    children: connect => getChildren(connect, 'tracks'),
-    label: connect => getLabel(connect),
-  },
-  {
-    selector: createTypeSelector('track'),
-    children: connect => getChildren(connect, 'props'),
-    label: connect => getLabel(connect),
-  },
-  {
-    selector: createTypeSelector('prop'),
-    children: connect => getChildren(connect, 'props'),
-    label: connect => getLabel(connect),
-  }
+  createSettings('project', 'timelines'),
+  createSettings('timeline', 'tracks'),
+  createSettings('track', 'params'),
+  createSettings('param', 'params'),
 ]

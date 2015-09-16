@@ -1,4 +1,5 @@
 import React from 'react'
+import {Provider} from 'react-redux'
 import DialogComponent from './DialogComponent'
 
 BETON.define({
@@ -8,16 +9,13 @@ BETON.define({
 })
 
 function init({store, projectManager, workspace}) {
-  const {items, lastSelectedItemId} = projectManager.selectors.getProjectManager()
   return {
     show() {
       workspace.dialogs.show({
         getElement() {
-          return <DialogComponent
-            lastSelectedItemId = {lastSelectedItemId}
-            items = {items}
-            actions = {projectManager.actions}
-          />
+          return <Provider store={store}>
+            {() => <DialogComponent/>}
+          </Provider>
         }
       })
     }

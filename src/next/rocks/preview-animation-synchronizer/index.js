@@ -40,6 +40,7 @@ BETON.define({
         previousCombinedTimeline,
         combinedTimeline
       )) {
+        console.log({previewComponents})
         previewComponents.forEach(previewComponent => {
           previewComponent.__runningAnimations.forEach(runningAnimation => {
             //filter the components to the ones that actually running

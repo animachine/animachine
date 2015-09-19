@@ -25,7 +25,7 @@ function handleMouse(props, monitor) {
     actions.setStartOfTimeline({timelineId, start})
   }
   else if (dragMode === 'scale') {
-    let pxpms = initPxpms + (offset / 1000)
+    let pxpms = initPxpms + (offset / 100)
     actions.setPxpmsOfTimeline({timelineId, pxpms})
     //keep pointer in the same position
     let mdPos = (initStart + currentTime) * initPxpms
@@ -119,10 +119,11 @@ export default class Timetape extends React.Component {
       ctx.stroke()
 
       for (let i = start % step.time; i < visibleTime; i += step.time) {
-        const time = Math.floor(i - start)
+        const time = Math.floor((i - start) / step.time) * step.time//HACK
         const text = step.format(time)
         const textW = ctx.measureText(text).width
         const textLeft = i * pxpms - (time === 0 ? 0 : (textW / 2))
+        console.log({i, start, step, time, text})
         ctx.fillText(text, textLeft, 12)
       }
       ctx.stroke()

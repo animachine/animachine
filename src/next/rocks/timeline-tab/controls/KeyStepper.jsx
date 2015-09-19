@@ -26,6 +26,9 @@ export default class KeyStepper extends React.Component {
       position: 'absolute',
       top: 0,
       cursor: 'pointer',
+      width: 14,
+      paddingLeft: 0,
+      paddingRight: 0,
     }
     return <div
       style = {{position: 'relative'}}

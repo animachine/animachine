@@ -10,17 +10,6 @@ import {
   getVisibleTime,
 } from './utils'
 
-const colors = (() => {
-  const {selected, grey2: normal, red} = getTheme().getStyle('colors')
-
-  return {
-    selected,
-    normal,
-    red,
-    ease: 'rgba(225,225,225,.23)'
-  }
-}())
-
 function getMouseTime(props, monitor) {
   const {x: position} = monitor.getSourceClientOffset()
   const {timeline} = props
@@ -124,6 +113,17 @@ export default class Keyline extends React.Component {
     this.postRender()
   }
 
+  getColors() {
+    const {selected, grey2: normal, red} = getTheme(this).getStyle('colors')
+
+    return {
+      selected,
+      normal,
+      red,
+      ease: 'rgba(225,225,225,.23)'
+    }
+  }
+
   render() {
     const {timeline, height, top, style, dragRef} = this.props
 
@@ -169,6 +169,7 @@ export default class Keyline extends React.Component {
   drawKey(key) {
     const {ctx} = this
     const {height, timeline} = this.props
+    const colors = this.getColors()
     const keyPos = parseInt(convertTimeToPosition({
       timeline,
       time: key.time
@@ -211,6 +212,7 @@ export default class Keyline extends React.Component {
   drawEase(key, startTime) {
     const {ctx} = this
     const {height, timeline} = this.props
+    const colors = this.getColors()
     const easer = createEaser(key.ease)
     const startPos = parseInt(convertTimeToPosition({timeline, time: startTime})) + 0.5
     const endPos = parseInt(convertTimeToPosition({timeline, time: key.time})) + 0.5

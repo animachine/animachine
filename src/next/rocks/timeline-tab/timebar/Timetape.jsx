@@ -123,7 +123,7 @@ export default class Timetape extends React.Component {
         const text = step.format(time)
         const textW = ctx.measureText(text).width
         const textLeft = i * pxpms - (time === 0 ? 0 : (textW / 2))
-        console.log({i, start, step, time, text})
+
         ctx.fillText(text, textLeft, 12)
       }
       ctx.stroke()

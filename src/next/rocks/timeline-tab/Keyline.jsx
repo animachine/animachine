@@ -146,7 +146,7 @@ export default class Keyline extends React.Component {
       let visibleKeys = []
 
       model.keys && model.keys.forEach(key => {
-        if (key.time >= start && key.time <= end) {
+        if (key.time >= -start && key.time <= end) {
           visibleKeys.push(key)
         }
       })

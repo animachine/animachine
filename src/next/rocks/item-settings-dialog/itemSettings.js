@@ -19,11 +19,30 @@ const getWhitelist = type => {
   }
 }
 
+function createInputSettingsNode(itemType, key, onChange) {
+  return {
+    selector: connect => (
+      connect.parent &&
+      connect.parent.type === itemType &&
+      connect.key === key
+    ),
+    input: {
+      onChange(value, connect) {
+        const {actions} = BETON.getRock('project-manager')
+        onChange(value, connect.parent.id, actions)
+      }
+    }
+  }
+}
+
 export default [
   {
-    selector: 'ROOT',
+    selector: 'root',
     label: connect => connect.value.type,
     whitelist: connect => getWhitelist(connect.value.type),
-    children: connect => getProjects(connect),
-  }
+  },
+  createInputSettingsNode('track', 'name', (value, itemId, actions) =>
+    actions.setNameOfTrack({name: value, trackId: itemId})),
+  createInputSettingsNode('param', 'name', (value, itemId, actions) =>
+    actions.setNameOfParam({name: value, paramId: itemId})),
 ]

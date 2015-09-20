@@ -25,7 +25,7 @@ export default class DialogComponent extends React.Component {
         title = 'Item settigns'
         buttons = {[{label: 'close', onClick: 'close'}]}
         onClose = {onClose}>
-      <div style={{display: 'flex', width: 432, height: 643}}>
+      <div style={{display: 'flex', width: 432, height: 453}}>
         <JsonVision
           settings={treeSettings}
           value={{}}

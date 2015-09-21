@@ -246,6 +246,24 @@ function reducer (projectManager, action) {
         }
       })
     }
+    case actions.ADD_TIMELINE_TO_PROJECT:
+    case actions.ADD_TRACK_TO_TIMELINE:
+    case actions.ADD_PARAM_TO_TRACK:
+    case actions.ADD_PARAM_TO_PARAM:
+    case actions.ADD_KEY_TO_PARAM:
+    {
+      const [childType, targetKey] = type.match(rxAdd).slice(1, 3).map(camelCase)
+      const targetItem = getItemById({id: action[`${targetKey}Id`]})
+      const childItem = createItem({type: childType})
+      // debugger
+      projectManager = setItem({projectManager, item: childItem})
+      return addChild({
+        projectManager,
+        childId: childItem.id,
+        parentId: targetItem.id,
+        childrenKey: `${childType}s`
+      })
+    }
   }
 
   if (rxSet.test(type)) {

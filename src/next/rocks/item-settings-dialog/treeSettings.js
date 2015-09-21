@@ -1,5 +1,6 @@
 import filter from 'lodash/collection/filter'
 import find from 'lodash/collection/find'
+import capitalize from 'lodash/string/capitalize'
 
 const createTypeSelector = type => connect => {
   return connect.value && connect.value.type === type
@@ -35,6 +36,21 @@ const createSettings = (type, childrenName) => ({
     label: connect => getLabel(connect),
     highlighted: connect => isTheLastSelected(connect),
     onClick: connect => handleSelectClick(connect),
+    buttons: connect => {
+      const childrenType = childrenName.slice(0, -1)
+      return [
+        {
+          icon: 'plus',
+          tooltip: 'add new ${childrenType}',
+          onClick: connect => {
+            const {actions} = BETON.getRock('project-manager')
+            actions[`add${capitalize(childrenType)}To${capitalize(type)}`]({
+              [`${type}Id`]: connect.value.id
+            })
+          }
+        }
+      ]
+    }
 })
 
 export default [

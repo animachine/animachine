@@ -1,4 +1,5 @@
 import camelCase from 'lodash/string/camelCase'
+import capitalize from 'lodash/string/capitalize'
 import {
   getMaxTimelineStart,
   getItemById,
@@ -79,6 +80,8 @@ addAction('DELETE_SELECTED_KEYS', ['keyHolderId'])
 addAction('UNDO', ['timelineId'])
 addAction('REDO', ['timelineId'])
 
+console.log({actions})
+
 function addAction(type, params, fixPayload) {
   actions[type] = type
   actions[camelCase(type)] = function (payload = {}) {
@@ -154,9 +157,9 @@ function autoAddAction(command, valueKey, targetKey, history, fixValue) {
       case 'set':
         return [valueKey, getTargetIdKey()]
       case 'add':
-        return [valueKey, getTargetIdKey()]
+        return [getTargetIdKey()]
       case 'remove':
-        return [`${valueKey}`, getTargetIdKey()]
+        return [`child${capitalize(valueKey)}Id`, getTargetIdKey()]
     }
   }
 

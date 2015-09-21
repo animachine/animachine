@@ -6,7 +6,7 @@ import Toolbar from './Toolbar'
 import DividerLine from './DividerLine'
 import customDrag from 'custom-drag'
 import {connect} from 'react-redux'
-import Hotkeys from 'react-hotkeys'
+import {HotKeys} from 'react-hotkeys'
 import hotkeyMap from './hotkeyMap'
 import {Scrollable} from 'react-matterkit'
 
@@ -110,6 +110,7 @@ export default class Timeline extends React.Component {
 
     const hotkeyHandlers = {
       delete() {
+        console.log('fsdfsdfsDDD')
         actions.deleteSelectedKeys({keyHolderId: timeline.id})
       }
     }
@@ -122,16 +123,18 @@ export default class Timeline extends React.Component {
       </Scrollable>
     }
 
-    return <div style={rootStyle}>
-      <div style={{display: 'flex', height: headHeight}}>
-        <Toolbar {...commonProps} style={{width: dividerPos}}/>
-        <Timebar {...commonProps} height={headHeight}/>
+    return <HotKeys  handlers={hotkeyHandlers}>
+      <div style={rootStyle}>
+        <div style={{display: 'flex', height: headHeight}}>
+          <Toolbar {...commonProps} style={{width: dividerPos}}/>
+          <Timebar {...commonProps} height={headHeight}/>
+        </div>
+        <Scrollable style={{display: 'flex', flex: 1, alignItems: 'flex-start'}}>
+          <Controls {...commonProps} style={{width: dividerPos}}/>
+          <Keylines {...commonProps}/>
+        </Scrollable>
+        <DividerLine ref={dragRef} position={dividerPos}/>
       </div>
-      <Scrollable style={{display: 'flex', flex: 1, alignItems: 'flex-start'}}>
-        <Controls {...commonProps} style={{width: dividerPos}}/>
-        <Keylines {...commonProps}/>
-      </Scrollable>
-      <DividerLine ref={dragRef} position={dividerPos}/>
-    </div>
+    </HotKeys>
   }
 }

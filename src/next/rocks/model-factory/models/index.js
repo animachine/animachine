@@ -1,6 +1,0 @@
-export {default as Ease} from './Ease'
-export {default as Key} from './Key'
-export {default as Param} from './Param'
-export {default as Track} from './Track'
-export {default as Timeline} from './Timeline'
-export {default as Project} from './Project'

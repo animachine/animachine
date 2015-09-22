@@ -1,9 +1,6 @@
 import filter from 'lodash/collection/filter'
 import find from 'lodash/collection/find'
-
-const createTypeSelector = type => connect => {
-  return connect.value && connect.value.type === type
-}
+import selectorSettings from './selectorSettings'
 
 const getWhitelist = type => {
   switch (type) {
@@ -12,7 +9,7 @@ const getWhitelist = type => {
     case 'timeline':
       return ['name']
     case 'track':
-      return ['name']
+      return ['name', 'selectors']
     case 'param':
       return ['name', 'params']
 
@@ -58,4 +55,5 @@ export default [
     actions.setNameOfTrack({name: value, trackId: itemId})),
   createInputSettingsNode('param', 'name', (value, itemId, actions) =>
     actions.setNameOfParam({name: value, paramId: itemId})),
+  ...selectorSettings
 ]

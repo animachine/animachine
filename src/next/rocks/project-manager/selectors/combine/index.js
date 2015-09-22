@@ -13,17 +13,25 @@ const createCombiner = mod => id => {
 
 const map = (item, fn) => item && item.map(fn)
 
+export const combineSelectorCommand = createCombiner(item =>
+  item.selectorCommandParams.reduce((a, b) => ({...a, [b.key]: b.value}), {})
+)
+
+export const combineSelector = createCombiner(item => {
+  return map(item.selectorCommands, combineSelectorCommand)
+})
+
 export const combineKey = createCombiner(item => ({
   ease: getItemById({id: item.ease})
 }))
 
 export const combineParam = createCombiner(item => ({
-  keys: map(item.keys, combineKey),
   params: map(item.params, combineParam)
 }))
 
 export const combineTrack = createCombiner(item => ({
-  params: map(item.params, combineParam)
+  params: map(item.params, combineParam),
+  selectors: map(item.selectors, combineSelector)
 }))
 
 export const combineTimeline = createCombiner(item => ({

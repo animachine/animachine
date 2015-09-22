@@ -65,6 +65,16 @@ autoAddAction('set', 'roughClamp', 'ease')
 autoAddAction('set', 'roughRandomise', 'ease')
 autoAddAction('set', 'roughTaper', 'ease')
 
+autoAddAction('add', 'selector', 'track')
+autoAddAction('remove', 'selector', 'track')
+autoAddAction('add', 'selectorCommand', 'selector')
+autoAddAction('remove', 'selectorCommand', 'selector')
+autoAddAction('remove', 'selector', 'track')
+autoAddAction('add', 'selectorCommandParam', 'selectorCommand')
+autoAddAction('remove', 'selectorCommandParam', 'selectorCommand')
+autoAddAction('set', 'key', 'selectorCommandParam')
+autoAddAction('set', 'value', 'selectorCommandParam')
+
 addAction('OPEN_PROJECT', ['projectSource', 'previewComponents'])
 
 addAction('SET_LAST_SELECTED_ITEM_ID', ['itemId'])

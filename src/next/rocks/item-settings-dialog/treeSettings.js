@@ -1,12 +1,10 @@
 import filter from 'lodash/collection/filter'
 import find from 'lodash/collection/find'
 import capitalize from 'lodash/string/capitalize'
-
-const createTypeSelector = type => connect => {
-  return connect.value && connect.value.type === type
-}
+import createTypeSelector from './createTypeSelector'
 
 const getItems = () => BETON.getRock('project-manager').selectors.getItems()
+
 const isTheLastSelected = connect => {
   const {selectors} = BETON.getRock('project-manager')
   const {lastSelectedItemId} = selectors.getProjectManager()
@@ -14,7 +12,7 @@ const isTheLastSelected = connect => {
 }
 
 const getProjects = connect => {
-  const items = getItems(connect)
+  const items = getItems()
   return filter(items, {type: 'project'})
 }
 

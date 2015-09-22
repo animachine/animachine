@@ -30,7 +30,7 @@ BETON.define({
       const originalSource = selectors.getOriginalSourceOfProject({projectId})
       //get the combined timeline which is also the animation source
       const combinedTimeline = selectors.combineTimeline(timelineId)
-
+console.log({combinedTimeline})
       const animationSourceWrapper = getAnimationSourceWrapper(timelineId)
       const previousCombinedTimeline =
         previousCombinedTimelinesByTimelineId[timelineId]

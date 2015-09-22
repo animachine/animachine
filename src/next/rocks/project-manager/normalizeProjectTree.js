@@ -8,7 +8,7 @@ export default function (projectTree) {
   const createNormalizer = (type, mod) => tree => {
     const spec = omit(mod(tree), isUndefined)
     const item = createItem({type, data: {...tree, ...spec}})
-    items.push(Object.freeze(item))
+    items.push(Object.freeze(item))//DEBUG
     return item.id
   }
 
@@ -16,20 +16,39 @@ export default function (projectTree) {
     return items && items.map(normalizer)
   }
 
+  const normalizeSelectorCommandParam =
+    createNormalizer('selectorCommandParam', tree => ({}))
+
+  const normalizeSelectorCommand = createNormalizer('selectorCommand', tree => ({
+    selectorCommands: Object.keys(tree).map(
+      key => normalizeSelectorCommandParam({[key]: tree[key]})
+    ),
+  }))
+
+  const normalizeSelector = createNormalizer('selector', tree => ({
+    selectorCommands: map(tree, normalizeSelectorCommand),
+  }))
+
   const normalizeEase = createNormalizer('ease', tree => ({}))
+
   const normalizeKey = createNormalizer('key', tree => ({
     ease: normalizeEase(tree.ease)
   }))
+
   const normalizeParam = createNormalizer('param', tree => ({
     keys: map(tree.keys, normalizeKey),
     params: map(tree.params, normalizeParam)
   }))
+
   const normalizeTrack = createNormalizer('track', tree => ({
-    params: map(tree.params, normalizeParam)
+    params: map(tree.params, normalizeParam),
+    selectors: map(tree.selectors, normalizeSelector)
   }))
+
   const normalizeTimeline = createNormalizer('timeline', tree => ({
     tracks: map(tree.tracks, normalizeTrack)
   }))
+
   const normalizeProject = createNormalizer('project', tree => ({
     timelines: map(tree.timelines, normalizeTimeline)
   }))

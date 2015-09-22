@@ -25,7 +25,7 @@ const defaults = {
   },
   track: {
     name: '',
-    selectors: [],
+    selectors: [[]],
     openInTimeline: true,
     showThreeDimensionalParams: false,
     params: []
@@ -47,6 +47,18 @@ const defaults = {
     currentTimelineId: undefined,
     timelines: []
   },
+  selector: {
+    selectorType: 'react-element',
+    commands: []
+  },
+  selectorCommand: {
+    commandType: 'find',
+    params: []
+  },
+  selectorCommandParam: {
+    key: '',
+    value: '',
+  }
 }
 
 let lastId = 0

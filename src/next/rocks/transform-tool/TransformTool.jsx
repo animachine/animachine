@@ -31,11 +31,11 @@ const key2ParamName = {
 
     const track = selectors.getItemById({id: trackId})
     let selectedTarget
-    track.selectors.forEach(selector => {
+    track.selectors.forEach(selectorId => {
       previewComponents.forEach(previewComponent => {
-        // debugger
+        const combinedSelector = selectors.combineSelector(selectorId)
         const target = createTarget(previewComponent.__itemTree)
-          .findWithCommands(selector)
+          .findWithCommands(combinedSelector)
         if (target.length !== 0) {
           selectedTarget = target[0]
         }

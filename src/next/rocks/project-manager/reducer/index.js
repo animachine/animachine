@@ -251,6 +251,9 @@ function reducer (projectManager, action) {
     case actions.ADD_PARAM_TO_TRACK:
     case actions.ADD_PARAM_TO_PARAM:
     case actions.ADD_KEY_TO_PARAM:
+    case actions.ADD_SELECTOR_TO_TRACK:
+    case actions.ADD_SELECTOR_COMMAND_TO_SELECTOR:
+    case actions.ADD_SELECTOR_COMMAND_PARAM_TO_SELECTOR_COMMAND:
     {
       const [childType, targetKey] = type.match(rxAdd).slice(1, 3).map(camelCase)
       const targetItem = getItemById({id: action[`${targetKey}Id`]})

@@ -123,8 +123,8 @@ export default class Timeline extends React.Component {
       </Scrollable>
     }
 
-    return <HotKeys  handlers={hotkeyHandlers}>
-      <div style={rootStyle}>
+    //return <HotKeys  keyMap={hotkeyMap} handlers={hotkeyHandlers}>
+      return <div style={rootStyle}>
         <div style={{display: 'flex', height: headHeight}}>
           <Toolbar {...commonProps} style={{width: dividerPos}}/>
           <Timebar {...commonProps} height={headHeight}/>
@@ -135,6 +135,6 @@ export default class Timeline extends React.Component {
         </Scrollable>
         <DividerLine ref={dragRef} position={dividerPos}/>
       </div>
-    </HotKeys>
+    //</HotKeys>
   }
 }

@@ -1,7 +1,6 @@
 import filter from 'lodash/collection/filter'
 import find from 'lodash/collection/find'
 import without from 'lodash/array/without'
-import update from 'react-addons-update'
 import createTypeSelector from './createTypeSelector'
 
 
@@ -15,17 +14,17 @@ function actions() {
 }
 
 function addNewSelector(connect/*selectors[]*/) {
-  actions().addSelectorToTrack({trackId: connect.value.id})
+  actions().addSelectorToTrack({trackId: connect.parent.id})
 }
 
-function removeSelector(connect/*selector[]*/) {
+function removeSelector(connect/*selector{}*/) {
   actions().removeSelectorFromTrack({
-    trackId: connect.parent.id,
+    trackId: connect.nthParent(1).id,
     selector: connect.value
   })
 }
 
-function addNewSelectorCommand(connect/*selector[]*/) {
+function addNewSelectorCommand(connect/*selector{}*/) {
   actions().addSelectorCommandToSelector({selectorId: connect.value.id})
 }
 
@@ -70,21 +69,6 @@ function handleChangeSelectorCommandParamValue(connect/*selectorCommandParam.val
   })
 }
 
-function addNewSelectorCommandParam(connect/*selector commad*/) {
-  const newSelectorCommand = {type: 'find', selector: {}}
-  const selectors = update(connect.nthParent(1), {
-    [connect.key]: {$push: [newSelectorCommand]}
-  })
-  updateSelectors(connect, selectors)
-}
-
-function removeSelectorCommandParam(connect/*selectorCommand{}*/) {
-  const selectors = update(connect.nthParent(2), {
-    [connect.nthKey(1)]: {$splice: [[connect.key, 1]]}
-  })
-  updateSelectors(connect, selectors)
-}
-
 export default [
   {
     //selectors
@@ -120,7 +104,8 @@ export default [
     buttons: [
       {icon: 'plus', onClick: addNewSelectorCommandParam},
       {icon: 'close', onClick: removeSelectorCommand}
-    ]
+    ],
+    children: connect => getItemsByIds(connect.value.selectorCommandParams)
   },
   {
     //selector command param

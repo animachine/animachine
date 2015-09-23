@@ -1,25 +1,32 @@
 import combine from './combine'
 import {getItemById} from '../'
 
-const createCombiner = mod => id => {
+const createCombiner = (mod, {dontMerge}={}) => id => {
   const item = getItemById({id})
+
   if (__DEV__) {
     if (!item) {
       throw Error(`Can't find item with id: ${id}`)
     }
   }
-  return combine(item, mod(item))
+
+  return combine(item, mod(item), {dontMerge})
 }
 
 const map = (item, fn) => item && item.map(fn)
 
-export const combineSelectorCommand = createCombiner(item =>
-  item.selectorCommandParams.reduce((a, b) => ({...a, [b.key]: b.value}), {})
-)
+export const combineSelectorCommand = createCombiner(item => {
+  const reducer = (a, b) => ({...a, [b.key]: b.value})
+  const selector = item.selectorCommandParams.reduce(reducer, {})
+  return {
+    type: item.commandType,
+    selector
+  }
+}, {dontMerge: true})
 
 export const combineSelector = createCombiner(item => {
   return map(item.selectorCommands, combineSelectorCommand)
-})
+}, {dontMerge: true})
 
 export const combineKey = createCombiner(item => ({
   ease: getItemById({id: item.ease})

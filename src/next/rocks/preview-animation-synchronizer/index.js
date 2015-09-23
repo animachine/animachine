@@ -79,6 +79,8 @@ console.log({combinedTimeline})
   }
 })
 
+//only returns false if the tracks are changed so this filters out changes
+// like currentTime or pxpms which aren't relevant for render
 function matchCombinedTimelines(prev, next) {
   return prev &&
     prev.tracks.length === next.tracks.length &&

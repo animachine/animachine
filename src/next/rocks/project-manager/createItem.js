@@ -49,11 +49,11 @@ const defaults = {
   },
   selector: {
     selectorType: 'react-element',
-    commands: []
+    selectorCommands: []
   },
   selectorCommand: {
     commandType: 'find',
-    params: []
+    selectorCommandParams: []
   },
   selectorCommandParam: {
     key: '',

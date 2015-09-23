@@ -6,22 +6,29 @@ function matchExtras(a, b) {
   const aKeys = Object.keys(a)
   const bKeys = Object.keys(b)
 
-  return aKeys.every(key => {
-    const aValue = a[key]
-    const bValue = b[key]
+  return aKeys.length === aKeys.length &&
+    aKeys.every(key => {
+      const aValue = a[key]
+      const bValue = b[key]
 
-    if (isArray(aValue)) {
-      return aValue.every((aValueChild, index) => aValueChild === bValue[index])
-    }
-    else {
-      return aValue === bValue
-    }
-  })
+      if (isArray(aValue)) {
+        return aValue.every((aValueChild, index) => aValueChild === bValue[index])
+      }
+      else {
+        return aValue === bValue
+      }
+    })
 }
 
-export default function combine(item, nextExtra) {
+//merges two objects
+//memorize the result
+//if it's called with the same item and a shallowly equal extra item return the
+// memorized result (so the result can be tested for change with ===)
+//if dontMerge is true it's only returns the nextExtra
+// or the memorized version of it
+export default function combine(item, nextExtra, {dontMerge}) {
   if (!combineds.has(item)) {
-    combineds.set(item, item)
+    combineds.set(item, dontMerge ? nextExtra : item)
   }
   const memorized = combineds.get(item)
 
@@ -29,7 +36,7 @@ export default function combine(item, nextExtra) {
     return memorized
   }
   else {
-    const combined = {...item, ...nextExtra}
+    const combined = dontMerge ? nextExtra : {...item, ...nextExtra}
     combineds.set(item, combined)
     return combined
   }

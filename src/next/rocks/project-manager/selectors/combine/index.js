@@ -33,7 +33,8 @@ export const combineKey = createCombiner(item => ({
 }))
 
 export const combineParam = createCombiner(item => ({
-  params: map(item.params, combineParam)
+  params: map(item.params, combineParam),
+  keys: map(item.keys, combineKey)
 }))
 
 export const combineTrack = createCombiner(item => ({

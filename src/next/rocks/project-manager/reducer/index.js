@@ -1,5 +1,5 @@
 import camelCase from 'lodash/string/camelCase'
-import without from 'lodash/array/without'
+import capitalize from 'lodash/string/capitalize'
 import normalizeProjectTree from '../normalizeProjectTree'
 import actions from '../actions'
 import createItem from '../createItem'
@@ -24,9 +24,9 @@ import {
   setValueOfParamAtTime,
 } from './utils'
 
-const rxSet = /^SET_([A-Z_]+?)_OF_([A-Z]+?)$/
-const rxAdd = /^ADD_([A-Z_]+?)_TO_([A-Z]+?)$/
-const rxRemove = /^REMOVE_([A-Z_]+?)_FROM_([A-Z]+?)$/
+const rxSet = /^SET_([A-Z_]+?)_OF_([A-Z_]+?)$/
+const rxAdd = /^ADD_([A-Z_]+?)_TO_([A-Z_]+?)$/
+const rxRemove = /^REMOVE_([A-Z_]+?)_FROM_([A-Z_]+?)$/
 
 const initialState = {
   currentProjectId: undefined,
@@ -255,12 +255,41 @@ function reducer (projectManager, action) {
     case actions.ADD_SELECTOR_COMMAND_TO_SELECTOR:
     case actions.ADD_SELECTOR_COMMAND_PARAM_TO_SELECTOR_COMMAND:
     {
-      const [childType, targetKey] = type.match(rxAdd).slice(1, 3).map(camelCase)
+      const [childType, targetKey] = type
+        .match(rxAdd)
+        .slice(1, 3)
+        .map(camelCase)
       const targetItem = getItemById({id: action[`${targetKey}Id`]})
       const childItem = createItem({type: childType})
-      // debugger
+
       projectManager = setItem({projectManager, item: childItem})
       return addChild({
+        projectManager,
+        childId: childItem.id,
+        parentId: targetItem.id,
+        childrenKey: `${childType}s`
+      })
+    }
+    case actions.REMOVE_TIMELINE_FROM_PROJECT:
+    case actions.REMOVE_TRACK_FROM_TIMELINE:
+    case actions.REMOVE_PARAM_FROM_TRACK:
+    case actions.REMOVE_PARAM_FROM_PARAM:
+    case actions.REMOVE_KEY_FROM_PARAM:
+    case actions.REMOVE_SELECTOR_FROM_TRACK:
+    case actions.REMOVE_SELECTOR_COMMAND_FROM_SELECTOR:
+    case actions.REMOVE_SELECTOR_COMMAND_PARAM_FROM_SELECTOR_COMMAND:
+    {
+      const [childType, targetKey] = type
+        .match(rxRemove)
+        .slice(1, 3)
+        .map(camelCase)
+      const targetItem = getItemById({id: action[`${targetKey}Id`]})
+      const childItem = getItemById({
+        id: action[`child${capitalize(childType)}Id`]
+      })
+
+      projectManager = setItem({projectManager, item: childItem})
+      return removeChild({
         projectManager,
         childId: childItem.id,
         parentId: targetItem.id,

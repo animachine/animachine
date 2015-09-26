@@ -56,8 +56,8 @@ const defaults = {
     selectorCommandParams: []
   },
   selectorCommandParam: {
-    key: '',
-    value: '',
+    key: 'key',
+    value: 'value',
   }
 }
 

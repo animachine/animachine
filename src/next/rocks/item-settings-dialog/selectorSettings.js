@@ -20,7 +20,7 @@ function addNewSelector(connect/*selectors[]*/) {
 function removeSelector(connect/*selector{}*/) {
   actions().removeSelectorFromTrack({
     trackId: connect.nthParent(1).id,
-    selector: connect.value
+    childSelectorId: connect.value.id
   })
 }
 
@@ -31,21 +31,14 @@ function addNewSelectorCommand(connect/*selector{}*/) {
 function removeSelectorCommand(connect/*selectorCommand{}*/) {
   actions().removeSelectorCommandFromSelector({
     selectorId: connect.parent.id,
-    selectorCommand: connect.value
+    childSelectorCommandId: connect.value.id
   })
 }
 
-function handleChangeSelectorCommandType(connect/*selectorCommand.type*/, value) {
+function handleChangeSelectorCommandType(value, connect/*selectorCommand.type*/) {
   actions().setTypeOfSelectorCommand({
-    selectorCommandId: connect.parenet.id,
+    selectorCommandId: connect.parent.id,
     type: value
-  })
-}
-
-function handleChangeSelectorCommandParamKey(connect/*selectorCommandParam.key*/, value) {
-  actions().setKeyOfSelectorCommandParam({
-    selectorCommandParamId: connect.parenet.id,
-    key: value
   })
 }
 
@@ -58,13 +51,20 @@ function addNewSelectorCommandParam(connect/*selectorCommand[]*/) {
 function removeSelectorCommandParam(connect/*selectorCommandParam{}*/) {
   actions().removeSelectorCommandParamFromSelectorCommand({
     selectorCommandId: connect.parent.id,
-    selectorCommandParam: connect.value
+    childSelectorCommandParamId: connect.value.id
   })
 }
 
-function handleChangeSelectorCommandParamValue(connect/*selectorCommandParam.value*/, value) {
+function handleChangeSelectorCommandParamKey(value, connect/*selectorCommandParam.key*/) {
+  actions().setKeyOfSelectorCommandParam({
+    selectorCommandParamId: connect.parent.id,
+    key: value
+  })
+}
+
+function handleChangeSelectorCommandParamValue(value, connect/*selectorCommandParam.value*/) {
   actions().setValueOfSelectorCommandParam({
-    selectorCommandParamId: connect.parenet.id,
+    selectorCommandParamId: connect.parent.id,
     value
   })
 }
@@ -111,13 +111,14 @@ export default [
     //selector command param
     selector: createTypeSelector('selectorCommandParam'),
     label: null,
-    inputs: [
+    children: null,
+    extraInputs: [
       {
-        value: connect => connect.key,
+        value: connect => connect.value.key,
         onChange: handleChangeSelectorCommandParamKey
       },
       {
-        value: connect => connect.value,
+        value: connect => connect.value.value,
         onChange: handleChangeSelectorCommandParamValue
       }
     ],

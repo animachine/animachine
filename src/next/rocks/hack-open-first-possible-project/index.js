@@ -4,8 +4,8 @@ BETON.define({
   init: ({store, componentInspector, projectManager}) => {
     const {
       getInspectedComponents,
-      getProjectSources,
-      getComponentsWithProjectSource
+      getProjectSourcesOfComponent,
+      getMountedComponentsOfProjectSource
     } = componentInspector.selectors
 
     // store.subscribe(test)
@@ -14,11 +14,11 @@ BETON.define({
     function test() {
       if (!projectManager.selectors.getCurrentProjectId()) {
         getInspectedComponents().forEach(component => {
-          const projectSources = getProjectSources({component})
+          const projectSources = getProjectSourcesOfComponent({component})
           if (projectSources.length) {
             const projectSource = projectSources[0]
             const previewComponents =
-              getComponentsWithProjectSource({projectSource})
+              getMountedComponentsOfProjectSource({projectSource})
             projectManager.actions.openProject({projectSource, previewComponents})
           }
         })

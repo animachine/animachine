@@ -57,14 +57,14 @@ function removeSelectorCommandParam(connect/*selectorCommandParam{}*/) {
 
 function handleChangeSelectorCommandParamKey(value, connect/*selectorCommandParam.key*/) {
   actions().setKeyOfSelectorCommandParam({
-    selectorCommandParamId: connect.parent.id,
+    selectorCommandParamId: connect.value.id,
     key: value
   })
 }
 
 function handleChangeSelectorCommandParamValue(value, connect/*selectorCommandParam.value*/) {
   actions().setValueOfSelectorCommandParam({
-    selectorCommandParamId: connect.parent.id,
+    selectorCommandParamId: connect.value.id,
     value
   })
 }

@@ -301,6 +301,13 @@ function reducer (projectManager, action) {
   if (rxSet.test(type)) {
     const [valueKey, targetKey] = type.match(rxSet).slice(1, 3).map(camelCase)
     const item = getItemById({id: action[`${targetKey}Id`]})
+
+    if (__DEV__) {
+      if (item.type !== targetKey) {
+        throw Error(`[${type}] got the id of "${item.type}" but expected the id of "${targetKey}" type item`, item)
+      }
+    }
+
     return setItem({
       projectManager,
       item: {

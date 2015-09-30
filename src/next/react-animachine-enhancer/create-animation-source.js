@@ -1,46 +1,100 @@
 import createEaser from './createEaser'
+import find from 'lodash/collection/find'
+import uniq from 'lodash/array/uniq'
+import flatten from 'lodash/array/flatten'
+import startsWith from 'lodash/string/startsWith'
 
 const sortKeys = (a, b) => a.time - b.time
+
+const mergeTransformOriginParams = next => (params, targets, tlRoot) => {
+  const transformOriginX = find(params, {name: 'transformOriginX'})
+  const transformOriginY = find(params, {name: 'transformOriginY'})
+  const transformOriginZ = find(params, {name: 'transformOriginZ'})
+
+  if (transformOriginX || transformOriginY || transformOriginZ) {
+    //remove all the transform origin params
+    params = params.filter(({name}) => !startsWith(name, 'transformOrigin'))
+    const getKeys = param => param ? pluck(param.keys, 'time') : []
+    const times = uniq(flatten(
+      getKeys(transformOriginX),
+      getKeys(transformOriginY),
+      getKeys(transformOriginZ),
+    ))
+    let previousTransformOrigin = {x: 50, y: 50, z: 0}
+    const getValue = (param, time, previousValue) => {
+      const key = param && find(param.keys, {time})
+      return key ? key.value : previousValue
+    }
+    const keys = times.map(time => {
+      const to = {
+        x: getValue(transformOriginX, time, previousTransformOrigin.x),
+        y: getValue(transformOriginY, time, previousTransformOrigin.y),
+        z: getValue(transformOriginZ, time, previousTransformOrigin.z),
+      }
+
+      previousTransformOrigin = transformOrigin
+
+      return {time, value: `${to.x}% ${to.y}% ${to.z}`}
+    })
+
+    params = [...params, {name: 'transformOrigin', keys}]
+  }
+
+  next(params, targets, tlRoot)
+}
+
+const fixTransformOriginForSvgNodes = next => (params, targets, tlRoot) => {
+  //TODO do this only if targets contains an svg
+  tlRoot.set(targets, {transformOrigin: '50% 50% 0'}, 0)
+
+  next(params, targets, tlRoot)
+}
+
+
+const addParamTimelines =
+mergeTransformOriginParams(
+fixTransformOriginForSvgNodes(
+  (params, targets, tlRoot) => {
+    params.forEach(param => {
+      const tlParam = new TimelineMax()
+      tlRoot.add(tlParam, 0)
+      let headTime = 0
+
+      if (param.keys && param.keys.length) {
+        param.keys.sort(sortKeys).forEach(key => {
+          const duration = key.time - headTime
+
+          tlParam.to(
+            targets,
+            duration / 1000,
+            {
+              [param.name]: key.value,
+              ease: createEaser(key.ease)
+            },
+            headTime / 1000
+          )
+          headTime = key.time
+        })
+      }
+
+      if (param.params) {
+        addParams(param.params, targets)
+      }
+    })
+  }
+))
+
 
 export default function createAnimationSource({projectSource, timeline}) {
   function animationSource({target}) {
     const tlRoot = new TimelineMax()
-
-    function addParams(params, targets) {
-      params.forEach(param => {
-        const tlParam = new TimelineMax()
-        tlRoot.add(tlParam, 0)
-        let headTime = 0
-
-        if (param.keys && param.keys.length) {
-          param.keys.sort(sortKeys).forEach(key => {
-            const duration = key.time - headTime
-
-            tlParam.to(
-              targets,
-              duration / 1000,
-              {
-                [param.name]: key.value,
-                ease: createEaser(key.ease)
-              },
-              headTime / 1000
-            )
-            headTime = key.time
-          })
-        }
-
-        if (param.params) {
-          addParams(param.params, targets)
-        }
-      })
-    }
 
     timeline.tracks.forEach(track => {
       const targets = track.selectors.map(selectorCommands => {
         return target.findWithCommands(selectorCommands)
       })
 
-      addParams(track.params, targets)
+      addParamTimelines(track.params, targets, tlRoot)
     })
 
     return tlRoot

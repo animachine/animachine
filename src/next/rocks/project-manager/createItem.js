@@ -18,11 +18,11 @@ const defaults = {
     time: 0,
     value: 0,
     selected: false,
+    ease: {}
   },
   param: {
     name: '',
     openInTimeline: true,
-    params: [],
     keys: []
   },
   track: {

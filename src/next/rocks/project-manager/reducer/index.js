@@ -3,7 +3,6 @@ import capitalize from 'lodash/string/capitalize'
 import normalizeProjectTree from '../normalizeProjectTree'
 import actions from '../actions'
 import createItem from '../createItem'
-import * as mandatoryParamGroups from './mandatoryParamGroups'
 import history from './history'
 import {
   getItemById,
@@ -87,61 +86,17 @@ function reducer (projectManager, action) {
         })
       }
       else {
-        const parentParamName = mandatoryParamGroups
-          .getParentParamName(paramName)
-
-        if (parentParamName) {
-          const childParamNames = mandatoryParamGroups
-            .getChildParamNames(parentParamName)
-          const parentParam = createItem({
-            type: 'param',
-            data: {name: parentParamName}
-          })
-
-          projectManager = setItem({projectManager, item: parentParam})
-          projectManager = addChild({
-            projectManager,
-            parentId: trackId,
-            childId: parentParam.id,
-            childrenKey: 'params'
-          })
-
-          childParamNames.forEach(childParamName => {
-            let childParam = createItem({
-              type: 'param',
-              data: {name: childParamName}
-            })
-            projectManager = setItem({projectManager, item: childParam})
-            projectManager = addChild({
-              projectManager,
-              parentId: parentParam.id,
-              childId: childParam.id,
-              childrenKey: 'params'
-            })
-
-            if (childParamName === paramName) {
-              projectManager = setValueOfParamAtTime({
-                projectManager,
-                paramId: childParam.id,
-                time,
-                value
-              })
-            }
-          })
-        }
-        else {
-          param = createItem({
-            type: 'param',
-            data: {name: paramName}
-          })
-          projectManager = setItem({projectManager, item: param})
-          projectManager = addChild({
-            projectManager,
-            parentId: trackId,
-            childId: param.id,
-            childrenKey: 'params'
-          })
-        }
+        param = createItem({
+          type: 'param',
+          data: {name: paramName}
+        })
+        projectManager = setItem({projectManager, item: param})
+        projectManager = addChild({
+          projectManager,
+          parentId: trackId,
+          childId: param.id,
+          childrenKey: 'params'
+        })
       }
 
       return projectManager

@@ -21,7 +21,10 @@ export default function createParamSettings(connect) {
     extraInputs: [input],
     buttons: [{
       getElement: () => <KeyStepper {...{keyHolderId: param.id, timeline}}/>
-    }]
+    }],
+    contextMenu: {
+      items: ['foo', 'bar', 'qux']
+    }
   }
 
   ifit(connect.value.name)
@@ -59,13 +62,13 @@ export default function createParamSettings(connect) {
       input.dragSpeed = 0.01
       input.precision = 2
     })
-    .is('borderTopWidth,borderTopLeftRadius,borderTopColor,borderTopStyle', () => settings.label = 'top')
-    .is('borderRightWidth,borderTopRightRadius,borderRightColor,borderRightStyle', () => settings.label = 'right')
-    .is('borderBottomWidth,borderBottomLeftRadius,borderBottomColor,borderBottomStyle', () => settings.label = 'bottom')
-    .is('borderLeftWidth,borderBottomRightRadius,borderLeftColor,borderLeftStyle', () => settings.label = 'left')
-    .is('transformOriginX,perspectiveOriginX,scaleX,rotateX,textShadowX,boxShadowX,skeewX', () => settings.label = 'x')
-    .is('transformOriginY,perspectiveOriginY,scaleY,rotateY,textShadowY,boxShadowY,skeewY', () => settings.label = 'y')
-    .is('transformOriginZ,perspectiveOriginZ,scaleZ,rotateZ', () => settings.label = 'z')
+    // .is('borderTopWidth,borderTopLeftRadius,borderTopColor,borderTopStyle', () => settings.label = 'top')
+    // .is('borderRightWidth,borderTopRightRadius,borderRightColor,borderRightStyle', () => settings.label = 'right')
+    // .is('borderBottomWidth,borderBottomLeftRadius,borderBottomColor,borderBottomStyle', () => settings.label = 'bottom')
+    // .is('borderLeftWidth,borderBottomRightRadius,borderLeftColor,borderLeftStyle', () => settings.label = 'left')
+    // .is('transformOriginX,perspectiveOriginX,scaleX,rotateX,textShadowX,boxShadowX,skeewX', () => settings.label = 'x')
+    // .is('transformOriginY,perspectiveOriginY,scaleY,rotateY,textShadowY,boxShadowY,skeewY', () => settings.label = 'y')
+    // .is('transformOriginZ,perspectiveOriginZ,scaleZ,rotateZ', () => settings.label = 'z')
     .is('z,rotationX,rotationY,scaleZ', () => {
       if(!track.show3d) {
         settings.hidden = true

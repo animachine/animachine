@@ -26,7 +26,7 @@ describe('normalizeProjectTree', () => {
     }
     testItems('timeline', 1)
     testItems('track', 1)
-    testItems('param', 3)
+    testItems('param', 2)
     testItems('key', 6)
     testItems('ease', 6)
     testItems('selector', 2)

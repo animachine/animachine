@@ -60,5 +60,4 @@ export default [
   createSettings('project', 'timelines'),
   createSettings('timeline', 'tracks'),
   createSettings('track', 'params'),
-  createSettings('param', 'params'),
 ]

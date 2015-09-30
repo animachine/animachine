@@ -38,7 +38,6 @@ export default function (projectTree) {
 
   const normalizeParam = createNormalizer('param', tree => ({
     keys: map(tree.keys, normalizeKey),
-    params: map(tree.params, normalizeParam)
   }))
 
   const normalizeTrack = createNormalizer('track', tree => ({

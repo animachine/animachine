@@ -139,7 +139,7 @@ export default class Keyline extends React.Component {
     const {model, timeline} = this.props
     const {start} = timeline
     const end = start + getVisibleTime({timeline})
-    const isGroup = model.type !== 'param' || model.params.length !== 0
+    const isGroup = model.type !== 'param'
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
@@ -154,9 +154,11 @@ export default class Keyline extends React.Component {
         })
       }
 
-      model.params.forEach(childParam => {
-        renderAllParam(childParam)
-      })
+      if (model.params) {
+        model.params.forEach(childParam => {
+          renderAllParam(childParam)
+        })
+      }
 
       sortBy(visibleKeys, 'time').forEach((key, idx, arr) => {
         this.drawKey(key, isGroup)

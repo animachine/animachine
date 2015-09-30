@@ -39,7 +39,7 @@ export default class Keylines extends React.Component {
 
       pos += height
 
-      if (model.openInTimeline) {
+      if (model.openInTimeline && model.params) {
         model.params.forEach(param => renderKeyline(param))
       }
     }

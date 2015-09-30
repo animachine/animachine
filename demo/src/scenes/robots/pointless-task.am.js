@@ -8,7 +8,7 @@ const projectSource = {
       tracks: [
         {
           name: 'box',
-          selectors: [[{find: 'conveyorGroup'}]],
+          selectors: [[{type: 'findAll', selector: {key: 'ball'}}]],
           params: [
             {
               name: 'translate',

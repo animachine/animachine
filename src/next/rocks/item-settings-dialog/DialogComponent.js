@@ -4,6 +4,7 @@ import JsonVision from 'json-vision'
 import {DialogComp} from 'spaceman'
 import treeSettings from './treeSettings'
 import itemSettings from './itemSettings'
+import {Scrollable} from 'react-matterkit'
 
 @connect(() => {
   const projectManager = BETON.getRock('project-manager')
@@ -25,18 +26,18 @@ export default class DialogComponent extends React.Component {
         title = 'Item settigns'
         buttons = {[{label: 'close', onClick: onClose}]}
         onClose = {onClose}>
-      <div style={{display: 'flex', width: 432, height: 453}}>
+      <Scrollable style={{display: 'flex', width: 432, height: 453}}>
         <JsonVision
           settings={treeSettings}
           value={{}}
           style={{flex: 1}}
         />
-      <JsonVision
+        <JsonVision
           settings={itemSettings}
           value={selectedItem}
           style={{flex: 1}}
         />
-      </div>
+      </Scrollable>
     </DialogComp>
   }
 }

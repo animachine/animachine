@@ -23,7 +23,7 @@ export default class DialogComponent extends React.Component {
 
     return <DialogComp
         title = 'Item settigns'
-        buttons = {[{label: 'close', onClick: 'close'}]}
+        buttons = {[{label: 'close', onClick: onClose}]}
         onClose = {onClose}>
       <div style={{display: 'flex', width: 432, height: 453}}>
         <JsonVision

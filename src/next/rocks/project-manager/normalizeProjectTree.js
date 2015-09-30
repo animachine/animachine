@@ -8,7 +8,7 @@ export default function (projectTree) {
   const createNormalizer = (type, mod) => tree => {
     const spec = omit(mod(tree), isUndefined)
     const item = createItem({type, data: {...tree, ...spec}})
-    items.push(Object.freeze(item))//DEBUG
+    items.push(Object.freeze(item))//DEBUG: freeze to throw on mutation
     return item.id
   }
 
@@ -20,8 +20,9 @@ export default function (projectTree) {
     createNormalizer('selectorCommandParam', tree => ({}))
 
   const normalizeSelectorCommand = createNormalizer('selectorCommand', tree => ({
-    selectorCommands: Object.keys(tree).map(
-      key => normalizeSelectorCommandParam({[key]: tree[key]})
+    commandType: tree.type,
+    selectorCommandParams: Object.keys(tree.selector).map(
+      key => normalizeSelectorCommandParam({key, value: tree.selector[key]})
     ),
   }))
 

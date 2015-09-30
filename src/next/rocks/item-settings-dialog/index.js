@@ -12,9 +12,9 @@ function init({store, projectManager, workspace}) {
   return {
     show() {
       workspace.dialogs.show({
-        getElement() {
+        getElement({onClose}) {
           return <Provider store={store}>
-            {() => <DialogComponent/>}
+            {() => <DialogComponent onClose={onClose}/>}
           </Provider>
         }
       })

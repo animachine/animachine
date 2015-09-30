@@ -30,18 +30,34 @@ BETON.define({
       const originalSource = selectors.getOriginalSourceOfProject({projectId})
       //get the combined timeline which is also the animation source
       const combinedTimeline = selectors.combineTimeline(timelineId)
-console.log({combinedTimeline})
       const animationSourceWrapper = getAnimationSourceWrapper(timelineId)
       const previousCombinedTimeline =
         previousCombinedTimelinesByTimelineId[timelineId]
       previousCombinedTimelinesByTimelineId[timelineId] = combinedTimeline
 
+      function createWrappedAnimationSource() {
+        const result = animationSourceWrapper({
+          animationSource: createAnimationSource({
+            timeline: combinedTimeline
+          }),
+          timelineId,
+          store
+        })
+        //mark the animation source with the projectId so on the next
+        // update it can be recognised
+        result._amProjectId = projectId
+        result._amTimelineName = combinedTimeline.name
+
+        return result
+      }
+
       if (!matchCombinedTimelines(
         previousCombinedTimeline,
         combinedTimeline
       )) {
-        console.log({previewComponents})
         previewComponents.forEach(previewComponent => {
+          let findAnAnimationSourceToReplaceOnTheComponent = false
+
           previewComponent.__runningAnimations.forEach(runningAnimation => {
             //filter the components to the ones that actually running
             // the animation of this timeline
@@ -59,20 +75,16 @@ console.log({combinedTimeline})
               )
               && animationSource._amTimelineName === combinedTimeline.name
             ) {
-              const nextAnimationSource = animationSourceWrapper({
-                animationSource: createAnimationSource({
-                  timeline: combinedTimeline
-                }),
-                timelineId,
-                store
-              })
-              //mark the animation source with the projectId so on the next
-              // update it cam be recognised
-              nextAnimationSource._amProjectId = projectId
-              nextAnimationSource._amTimelineName = combinedTimeline.name
+              const nextAnimationSource = createWrappedAnimationSource()
               runningAnimation.replaceAnimationSource(nextAnimationSource)
+
+              findAnAnimationSourceToReplaceOnTheComponent = true
             }
           })
+
+          if (!findAnAnimationSourceToReplaceOnTheComponent) {
+            previewComponent.addAnimation(createWrappedAnimationSource())
+          }
         })
       }
     })

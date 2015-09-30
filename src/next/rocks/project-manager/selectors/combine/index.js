@@ -16,7 +16,14 @@ const createCombiner = (mod, {dontMerge}={}) => id => {
 const map = (item, fn) => item && item.map(fn)
 
 export const combineSelectorCommand = createCombiner(item => {
-  const reducer = (a, b) => ({...a, [b.key]: b.value})
+  // const reducer = (a, b) => ({...a, [b.key]: b.value})
+  const reducer = (previousValue, id) => {
+    const selectorCommandParam = getItemById({id})
+    return {
+      ...previousValue,
+      [selectorCommandParam.key]: selectorCommandParam.value
+    }
+  }
   const selector = item.selectorCommandParams.reduce(reducer, {})
   return {
     type: item.commandType,

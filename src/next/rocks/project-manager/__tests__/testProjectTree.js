@@ -6,7 +6,10 @@ export default {
       tracks: [
         {
           name: 'box',
-          selectors: [[{key: 'box', name: 'box'}], []],
+          selectors: [
+            [{type: 'find', selector: {key: 'box', name: 'box'}}],
+            []
+          ],
           params: [
             {
               name: 'translate',

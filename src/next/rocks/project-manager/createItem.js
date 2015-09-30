@@ -1,3 +1,5 @@
+import pick from 'lodash/object/pick'
+
 const defaults = {
   ease: {
     easeType: 'bezier',
@@ -25,7 +27,7 @@ const defaults = {
   },
   track: {
     name: '',
-    selectors: [[]],
+    selectors: [],
     openInTimeline: true,
     showThreeDimensionalParams: false,
     params: []
@@ -64,9 +66,12 @@ const defaults = {
 let lastId = 0
 
 export default function createItem({type, data}) {
+  const defaultValues = defaults[type]
+  const filteredData = pick(data, ...Object.keys(defaultValues))
+
   return {
-    ...defaults[type],
-    ...data,
+    ...defaultValues,
+    ...filteredData,
     id: (++lastId).toString(),
     type
   }

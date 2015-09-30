@@ -43,6 +43,17 @@ export default [{
         onClick: () => BETON.getRock('item-settings-dialog').show()
       }
     ],
+    contextMenu: {
+      items: [
+        {
+          label: 'settings',
+          onClick: connect => {
+            handleSelectClick(connect)
+            BETON.getRock('item-settings-dialog').show()
+          }
+        }
+      ]
+    }
   },
   createParamSettings
 ]

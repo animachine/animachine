@@ -30,7 +30,7 @@ const dragOptions = {
       !closestKey ||
       (Math.abs(mouseTime - closestKey.time) * timeline.pxpms) > 4
     ) {
-      return false // prevent draggign
+      return false // prevent dragging
     }
 
     monitor.setData({hitKeys: true})
@@ -139,24 +139,27 @@ export default class Keyline extends React.Component {
     const {model, timeline} = this.props
     const {start} = timeline
     const end = start + getVisibleTime({timeline})
+    const isGroup = model.type !== 'param' || model.params.length !== 0
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     const renderAllParam = model => {
       let visibleKeys = []
 
-      model.keys && model.keys.forEach(key => {
-        if (key.time >= -start && key.time <= end) {
-          visibleKeys.push(key)
-        }
-      })
+      if (model.keys) {
+        model.keys.forEach(key => {
+          if (key.time >= -start && key.time <= end) {
+            visibleKeys.push(key)
+          }
+        })
+      }
 
       model.params.forEach(childParam => {
         renderAllParam(childParam)
       })
 
       sortBy(visibleKeys, 'time').forEach((key, idx, arr) => {
-        this.drawKey(key)
+        this.drawKey(key, isGroup)
 
         const startTime = idx === 0 ? 0 : arr[idx - 1].time
         this.drawEase(key, startTime)
@@ -166,7 +169,7 @@ export default class Keyline extends React.Component {
     renderAllParam(model)
   }
 
-  drawKey(key) {
+  drawKey(key, isGroup) {
     const {ctx} = this
     const {height, timeline} = this.props
     const colors = this.getColors()
@@ -175,7 +178,8 @@ export default class Keyline extends React.Component {
       time: key.time
     })) + 0.5
     const r = 2
-    // if (line) {
+
+    if (!isGroup) {
       ctx.save()
       ctx.beginPath()
       ctx.strokeStyle = key.selected ? colors.selected : colors.normal
@@ -184,19 +188,18 @@ export default class Keyline extends React.Component {
       ctx.lineTo(keyPos, height)
       ctx.stroke()
       ctx.restore()
-    // }
-
-    // if (circle) {
-      // ctx.save()
-      // ctx.beginPath()
-      // ctx.strokeStyle = key.selected ? colors.selected : colors.normal
-      // ctx.fillStyle = key.selected ? colors.selected : colors.normal
-      // ctx.lineWidth = 1
-      // ctx.arc(keyPos, height/2, r, 0, 2 * Math.PI)
-      // ctx.fill()
-      // ctx.stroke()
-      // ctx.restore()
-    // }
+    }
+    else {
+      ctx.save()
+      ctx.beginPath()
+      ctx.strokeStyle = key.selected ? colors.selected : colors.normal
+      ctx.fillStyle = key.selected ? colors.selected : colors.normal
+      ctx.lineWidth = 1
+      ctx.arc(keyPos, height/2, r, 0, 2 * Math.PI)
+      ctx.fill()
+      ctx.stroke()
+      ctx.restore()
+    }
     //TODO
     // if (this.timeline.currTime === this.time) {
     //     ctx.save()

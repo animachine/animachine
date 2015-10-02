@@ -21,20 +21,20 @@ export default class Robots extends React.Component {
   </g>
   <g key="shoulderGroup">
     <line key="shoulder" fill="none" stroke="#E9B400" strokeWidth="140" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" x1="229" y1="350" x2="157.5" y2="502.1"/>
+    <g key="armGroup">
+      <line key="arm" fill="none" stroke="#343434" strokeWidth="80" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" x1="548" y1="86" x2="229" y2="350"/>
+      <circle key="shoulderJoint" fill="#E9B400" stroke="#ededed" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" cx="229" cy="350" r="20.7"/>
+      <g key="forearmGroup">
+        <line key="forearm" fill="none" stroke="#E9B400" strokeWidth="40" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" x1="548" y1="90" x2="548" y2="282"/>
+        <circle key="elbowJoint" fill="#E9B400" stroke="#ededed" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" cx="548" cy="86" r="20.7"/>
+        <g key="pincerGroup">
+        	<polygon key="pincerL" fill="#343434" points="29.7,69 64.3,118.7 64,137.9 0,65.6 65.6,0 83.9,18.3 	"/>
+        	<polygon key="pincerR" fill="#343434" points="144.2,69 109.6,118.7 109.9,137.9 173.9,65.6 108.3,0 90,18.3 	"/>
+        </g>
+        <circle key="pincerJoint" fill="#343434" stroke="#ededed" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" cx="548" cy="278" r="20.7"/>
+      </g>
+    </g>
   </g>
-  <g key="armGroup">
-    <line key="arm" fill="none" stroke="#343434" strokeWidth="80" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" x1="548" y1="86" x2="229" y2="350"/>
-  </g>
-  <circle key="shoulderJoint" fill="#E9B400" stroke="#ededed" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" cx="229" cy="350" r="20.7"/>
-  <g key="forearmGroup">
-    <line key="forearm" fill="none" stroke="#E9B400" strokeWidth="40" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" x1="520" y1="90" x2="520" y2="282"/>
-  </g>
-  <circle key="elbowJoint" fill="#E9B400" stroke="#ededed" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" cx="548" cy="86" r="20.7"/>
-  <g key="pincerGroup">
-  	<polygon key="pincerL" fill="#343434" points="29.7,69 64.3,118.7 64,137.9 0,65.6 65.6,0 83.9,18.3 	"/>
-  	<polygon key="pincerR" fill="#343434" points="144.2,69 109.6,118.7 109.9,137.9 173.9,65.6 108.3,0 90,18.3 	"/>
-  </g>
-  <circle key="pincerJoint" fill="#343434" stroke="#ededed" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" cx="548" cy="278" r="20.7"/>
   <path key="base" fill="#343434" stroke="#ededed" strokeWidth="4" d="M290.9,577.5H24.1c-5.6,0-10.1-4.5-10.1-10.1V436.9c0-5.6,4.5-10.1,10.1-10.1h266.8c5.6,0,10.1,4.5,10.1,10.1
   	v130.5C301,572.9,296.5,577.5,290.9,577.5z"/>
   <path key="ball" fill="#2967A7" d="M525.4,413.3h-10.9v10.2h10.9V413.3L525.4,413.3z M517.3,420.3c-1,0-1.8-0.8-1.8-1.8c0-1,0.8-1.8,1.8-1.8

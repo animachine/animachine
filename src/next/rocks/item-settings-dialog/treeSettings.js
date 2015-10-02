@@ -30,13 +30,13 @@ function handleSelectClick(connect) {
 
 const createSettings = (type, childrenName) => ({
     selector: createTypeSelector(type),
-    children: connect => getChildren(connect, childrenName),
+    children: connect => childrenName ? getChildren(connect, childrenName) : null,
     label: connect => getLabel(connect),
     highlighted: connect => isTheLastSelected(connect),
     onClick: connect => handleSelectClick(connect),
     buttons: connect => {
-      const childrenType = childrenName.slice(0, -1)
-      return [
+      const childrenType = childrenName && childrenName.slice(0, -1)
+      return childrenName ? [
         {
           icon: 'plus',
           tooltip: 'add new ${childrenType}',
@@ -47,7 +47,7 @@ const createSettings = (type, childrenName) => ({
             })
           }
         }
-      ]
+      ] : null
     }
 })
 
@@ -60,4 +60,5 @@ export default [
   createSettings('project', 'timelines'),
   createSettings('timeline', 'tracks'),
   createSettings('track', 'params'),
+  createSettings('param', null),
 ]

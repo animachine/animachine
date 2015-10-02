@@ -16,40 +16,64 @@ export default [{
     onClick: handleSelectClick,
     onToggleOpen: handleToggleOpen,
     children: connect => connect.value.params,
-    buttons: connect => [
-      {
-        icon: 'cube',
-        style: {opacity: connect.value.show3d ? 1 : 0.4},
-        onClick: handleToggle3d
-      }
-    ],
+    // buttons: connect => [
+    //   {
+    //     icon: 'cube',
+    //     style: {opacity: connect.value.show3d ? 1 : 0.4},
+    //     onClick: handleToggle3d
+    //   }
+    // ],
     highlighted: connect => {
       const track = getParentTrack(connect)
       const timeline = getParentTimeline(connect)
       return timeline.currentTrackId === track.id
     },
+    contextMenu: {
+      items: [
+        {
+          label: 'new track',
+          icon: 'add',
+          onClick: connect => {
+            BETON.getRock('project-manager').actions.addTrackToTimeline({
+              timelineId: connect.parent.id,
+            })
+            showItemSettingsDialog()
+          }
+        }, {
+          label: 'new param',
+          icon: 'add',
+          onClick: connect => {
+            BETON.getRock('project-manager').actions.addParamToTrack({
+              trackId: connect.value.id,
+            })
+            showItemSettingsDialog()
+          }
+        }
+      ]
+    }
   }, {
     selector: createTypeSelector(['param']),
     label: connect => connect.value.name,
     open: connect => connect.value.openInTimeline,
     onClick: handleSelectClick,
     onToggleOpen: handleToggleOpen,
-    children: connect => connect.value.params || null
+    children: null,
   }, {
     selector: createTypeSelector(['track', 'param']),
-    buttons: connect => [
-      {
-        icon: 'cog',
-        onClick: () => BETON.getRock('item-settings-dialog').show()
-      }
-    ],
+    // buttons: connect => [
+    //   {
+    //     icon: 'cog',
+    //     onClick: () => showItemSettingsDialog()
+    //   }
+    // ],
     contextMenu: {
       items: [
         {
           label: 'settings',
+          icon: 'cog',
           onClick: connect => {
             handleSelectClick(connect)
-            BETON.getRock('item-settings-dialog').show()
+            showItemSettingsDialog()
           }
         }
       ]
@@ -57,6 +81,10 @@ export default [{
   },
   createParamSettings
 ]
+
+function showItemSettingsDialog() {
+  BETON.getRock('item-settings-dialog').show()
+}
 
 function handleToggle3d(connect) {
   const {actions} = BETON.getRock('project-manager')

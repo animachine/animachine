@@ -1,5 +1,6 @@
 import createEaser from './createEaser'
 import find from 'lodash/collection/find'
+import pluck from 'lodash/collection/pluck'
 import uniq from 'lodash/array/uniq'
 import flatten from 'lodash/array/flatten'
 import startsWith from 'lodash/string/startsWith'
@@ -23,7 +24,7 @@ const mergeTransformOriginParams = next => (params, targets, tlRoot) => {
     let previousTransformOrigin = {x: 50, y: 50, z: 0}
     const getValue = (param, time, previousValue) => {
       const key = param && find(param.keys, {time})
-      return key ? key.value : previousValue
+      return key ? key.value * 100 : previousValue
     }
     const keys = times.map(time => {
       const to = {
@@ -32,9 +33,9 @@ const mergeTransformOriginParams = next => (params, targets, tlRoot) => {
         z: getValue(transformOriginZ, time, previousTransformOrigin.z),
       }
 
-      previousTransformOrigin = transformOrigin
+      previousTransformOrigin = to
 
-      return {time, value: `${to.x}% ${to.y}% ${to.z}`}
+      return {time, value: `${to.x}% ${to.y}%`}
     })
 
     params = [...params, {name: 'transformOrigin', keys}]
@@ -45,7 +46,7 @@ const mergeTransformOriginParams = next => (params, targets, tlRoot) => {
 
 const fixTransformOriginForSvgNodes = next => (params, targets, tlRoot) => {
   //TODO do this only if targets contains an svg
-  tlRoot.set(targets, {transformOrigin: '50% 50% 0'}, 0)
+  tlRoot.set(targets, {transformOrigin: '50% 50%'}, 0)
 
   next(params, targets, tlRoot)
 }
@@ -55,6 +56,7 @@ const addParamTimelines =
 mergeTransformOriginParams(
 fixTransformOriginForSvgNodes(
   (params, targets, tlRoot) => {
+    console.log(params, targets)
     params.forEach(param => {
       const tlParam = new TimelineMax()
       tlRoot.add(tlParam, 0)
@@ -69,6 +71,7 @@ fixTransformOriginForSvgNodes(
             duration / 1000,
             {
               [param.name]: key.value,
+              smoothOrigin: false,//http://greensock.com/docs/#/HTML5/Plugins/CSSPlugin/
               ease: createEaser(key.ease)
             },
             headTime / 1000

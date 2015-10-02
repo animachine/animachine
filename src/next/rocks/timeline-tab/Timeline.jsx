@@ -8,7 +8,7 @@ import customDrag from 'custom-drag'
 import {connect} from 'react-redux'
 import {HotKeys} from 'react-hotkeys'
 import hotkeyMap from './hotkeyMap'
-import {Scrollable} from 'react-matterkit'
+import {Scrollable, getTheme} from 'react-matterkit'
 
 const projectManager = BETON.getRock('project-manager')
 
@@ -98,7 +98,9 @@ export default class Timeline extends React.Component {
   render() {
     const {dividerPos, fullWidth, scrollPosition} = this.state
     const {timeline, actions, selectors, headHeight, dragRef} = this.props
+    const colors = getTheme(this).getStyle('colors')
     const rootStyle = {
+      backgroundColor: colors.grey4,
       display: 'flex',
       flexDirection: 'column',
       flex: 1,

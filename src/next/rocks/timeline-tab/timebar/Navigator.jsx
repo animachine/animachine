@@ -1,6 +1,7 @@
 import React from 'react'
 import customDrag from 'custom-drag'
 import {getVisibleTime} from '../utils'
+import {getTheme} from 'react-matterkit'
 
 const getDragArgs = (dragMode) => {
   const options = {
@@ -69,6 +70,7 @@ export default class Pointer extends React.Component {
   }
 
   renderHandler(side, ref) {
+    const colors = getTheme(this).getStyle('colors')
     const style = {
       position: 'absolute',
       [side === 'start' ? 'left' : 'right']: '0px',
@@ -78,7 +80,7 @@ export default class Pointer extends React.Component {
       minWidth: '1px',
       maxWidth: '7px',
       cursor: 'ew-resize',
-      backgroundColor: this.state.hover === side ? 'white' : 'transparent'
+      backgroundColor: this.state.hover === side ? colors.blue : 'transparent'
     }
 
     return <div ref={ref} style={style}/>
@@ -86,6 +88,7 @@ export default class Pointer extends React.Component {
 
   render() {
     const {timeline, startDragger, endDragger, moveDragger} = this.props
+    const colors = getTheme(this).getStyle('colors')
     const {hover} = this.state
     const {start, length, width, startMargin} = timeline
     const visibleTime = getVisibleTime({timeline})
@@ -98,7 +101,7 @@ export default class Pointer extends React.Component {
       height: '7px',
       cursor: 'move',
       transform: `scaleY(${hover ? 1 : 0.4})`,
-      backgroundColor: hover ? 'red' : 'blue',
+      backgroundColor: hover ? colors.grey2 : colors.grey3,
     }
     const stylePointer = {
       position: 'absolute',
@@ -107,7 +110,7 @@ export default class Pointer extends React.Component {
       width: '100%',
       height: '100%',
       transformOrigin: 'center top',
-      backgroundColor: hover === 'move' ? 'white' : 'transparent'
+      backgroundColor: hover === 'move' ? colors.blue : 'transparent'
     }
 
     return <div style={styleContainer}>

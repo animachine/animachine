@@ -31,13 +31,26 @@ module.exports = {
   module: {
     loaders: [
       {
-        test: /\.jsx?$/,
+        test: /\.(js|jsx)$/,
         include: [
           path.join(__dirname, '../src'),
           __dirname
         ],
-        loaders: [/*'react-hot',*/ 'babel']
-      }, {
+        loader: 'babel',
+        // query: {
+        //   stage: 0,
+        //   plugins: [
+        //     'react-transform'
+        //   ],
+        //   extra: {
+        //     'react-transform': [{
+        //       target: 'react-transform-hmr',
+        //       imports: ['react'],
+        //       locals: ['module']
+        //     }]
+        //   }
+        // }
+    }, {
         test: /\.(html|css)/,
         include: __dirname,
         loader: 'file?name=[name].[ext]'

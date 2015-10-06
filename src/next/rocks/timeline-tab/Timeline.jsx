@@ -9,6 +9,7 @@ import {connect} from 'react-redux'
 import {HotKeys} from 'react-hotkeys'
 import hotkeyMap from './hotkeyMap'
 import {Scrollable, getTheme} from 'react-matterkit'
+import InlineEaseEditor from './inline-ease-editor/InlineEaseEditor'
 
 const projectManager = BETON.getRock('project-manager')
 
@@ -92,6 +93,7 @@ export default class Timeline extends React.Component {
   }
 
   handleChangeScrollPosition = (scroll) => {
+    console.log('handleChangeScrollPosition', scroll)
     this.setState({scrollPosition: scroll})
   }
 
@@ -112,18 +114,10 @@ export default class Timeline extends React.Component {
 
     const hotkeyHandlers = {
       delete() {
-        console.log('fsdfsdfsDDD')
         actions.deleteSelectedKeys({keyHolderId: timeline.id})
       }
     }
     const commonProps = {timeline, actions, selectors}
-    const scrollable = (content) => {
-      return <Scrollable
-        onChangeVerticalScroll = {this.handleChangeScrollPosition}>
-        verticalScroll = {scrollPosition}
-        {content}
-      </Scrollable>
-    }
 
     //return <HotKeys  keyMap={hotkeyMap} handlers={hotkeyHandlers}>
       return <div style={rootStyle}>
@@ -131,11 +125,21 @@ export default class Timeline extends React.Component {
           <Toolbar {...commonProps} style={{width: dividerPos}}/>
           <Timebar {...commonProps} height={headHeight}/>
         </div>
-        <Scrollable style={{display: 'flex', flex: 1, alignItems: 'flex-start'}}>
+        <Scrollable
+          style = {{display: 'flex', flex: 1, alignItems: 'flex-start'}}
+          onChangeVerticalScroll = {this.handleChangeScrollPosition}
+          verticalScroll = {scrollPosition}>
           <Controls {...commonProps} style={{width: dividerPos}}/>
           <Keylines {...commonProps}/>
         </Scrollable>
         <DividerLine ref={dragRef} position={dividerPos}/>
+        <InlineEaseEditor {...{
+            timeline,
+            actions,
+            selectors,
+            dividerPos,
+            scrollPosition,
+          }}/>
       </div>
     //</HotKeys>
   }

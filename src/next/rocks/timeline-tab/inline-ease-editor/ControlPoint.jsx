@@ -1,5 +1,6 @@
 import React from 'react'
 import customDrag from 'custom-drag'
+import {getTheme} from 'react-matterkit'
 
 const dragOptions = {
   onDown(props, monitor) {
@@ -17,16 +18,27 @@ const dragOptions = {
       x: initX + (difference.x / spaceX),
       y: initY - (difference.y / spaceY),
     })
-  }
+  },
+  onEnter(props, monitor, component) {
+    component.setState({hover: true})
+  },
+  onLeave(props, monitor, component) {
+    component.setState({hover: false})
+  },
 }
 
 @customDrag(dragOptions, connect => ({
   dragRef: connect.getDragRef()
 }))
 export default class InlineEaseEditor extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {hover: false}
+  }
   render() {
     const {x, y, spaceX, spaceY, dragRef} = this.props
-    const r = 3
+    const r = 4
+    const colors = getTheme(this).getStyle('colors')
 
     const style = {
       position: 'absolute',
@@ -38,7 +50,7 @@ export default class InlineEaseEditor extends React.Component {
       height: r*2,
       transform: `translate(-${r}px,-${r}px)`,
       borderRadius: r,
-      background: '#00BFFF',
+      background: this.state.hover ? colors.white : colors.blue,
       pointerEvents: 'auto',
     }
 

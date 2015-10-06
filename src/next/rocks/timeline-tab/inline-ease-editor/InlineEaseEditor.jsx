@@ -76,21 +76,21 @@ export default class InlineEaseEditor extends React.Component {
   }
 
   render() {
-    const {timeline} = this.props
+    const {timeline, dividerPos, scrollPosition} = this.props
     const {inlineEaseEditor} = timeline
 
     if (!inlineEaseEditor) {
       return <div hidden/>
     }
-
     const {top, height, startTime, endTime} = inlineEaseEditor
     const left = convertTimeToPosition({timeline, time: startTime})
     const right = convertTimeToPosition({timeline, time: endTime})
     const width = right - left
+console.log({top, height, scrollPosition})
     const rootStyle = {
       position: 'absolute',
-      left,
-      top: top + height,
+      left: left + dividerPos,
+      top: (top + height * 2) - scrollPosition,
       transform: 'scaleY(-1)',
       pointerEvents: 'none',
     }

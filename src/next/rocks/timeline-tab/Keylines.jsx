@@ -1,6 +1,5 @@
 import React from 'react'
 import Keyline from './Keyline'
-import InlineEaseEditor from './inline-ease-editor/InlineEaseEditor'
 import {convertTimeToPosition} from './utils'
 
 export default class Keylines extends React.Component {
@@ -49,7 +48,6 @@ export default class Keylines extends React.Component {
     return <div style={{...style, position: 'relative'}}>
       {children}
       {this.renderPointerLine({height: pos})}
-      <InlineEaseEditor {...{timeline, actions, selectors}}/>
     </div>
   }
 }

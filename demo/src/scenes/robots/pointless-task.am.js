@@ -19,7 +19,7 @@ const projectSource = {
           selectors: [[{type: 'find', selector: {key: 'armGroup'}}]],
           params: [
             {name: 'rotationZ', keys: [{time: 0, value: 90}]},
-            {name: 'transformOriginX', keys: [{time: 0, value: 0}]},
+            {name: 'transformOriginX', keys: [{time: 0, value: 0.075}]},
             {name: 'transformOriginY', keys: [{time: 0, value: 0.5}]}
           ]
         }, {

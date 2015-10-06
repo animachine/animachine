@@ -28,6 +28,7 @@
     "array.prototype.find": "^1.0.0",
     "array.prototype.findindex": "^1.0.0",
     "bezier-easing": "^1.1.0",
+    "custom-drag": "0.0.1",
     "event-emitter": "^0.3.3",
     "eventman": "0.0.1",
     "json-vision": "0.0.34",

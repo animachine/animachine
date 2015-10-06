@@ -45,7 +45,7 @@ export default function createParamSettings(connect) {
     .is('transformOriginX,transformOriginY', () => {
       input.addonLabel = '%'
       input.dragSpeed = 0.01
-      input.precision = 2
+      input.precision = 5
     })
     .is('xPercent,yPercent', () => {
       input.dragSpeed = 1

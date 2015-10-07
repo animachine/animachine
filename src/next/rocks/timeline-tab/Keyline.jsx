@@ -114,11 +114,17 @@ export default class Keyline extends React.Component {
   }
 
   getColors() {
-    const {selected, grey2: normal, red} = getTheme(this).getStyle('colors')
+    const {
+      selected,
+      grey2: normal,
+      bg: border,
+      red
+    } = getTheme(this).getStyle('colors')
 
     return {
       selected,
       normal,
+      border,
       red,
       ease: 'rgba(225,225,225,.23)'
     }
@@ -138,10 +144,15 @@ export default class Keyline extends React.Component {
     const {canvas, ctx} = this
     const {model, timeline} = this.props
     const {start} = timeline
+    const colors = this.getColors()
     const end = start + getVisibleTime({timeline})
     const isGroup = model.type !== 'param'
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
+    ctx.strokeStyle = colors.border
+    ctx.moveTo(0, canvas.height - 0.5)
+    ctx.lineTo(canvas.width, canvas.height - 0.5)
+    ctx.stroke()
 
     const renderAllParam = model => {
       let visibleKeys = []

@@ -10,7 +10,7 @@ It lets you to create code driven animation using traditional animation tools (l
 You don't need to make any changes to your project to use animachine, just add the [chrome extension][extension] or embed it like any other js library and start animating.
 
 ###Status
-This is the second alpha release completely rewritten using [React] and [Redux]. For now, it only animates React components with a very minimal feature set but you can see in the [Todos] what's coming up.
+This is the second alpha release completely rewritten using [React] and [Redux]. For now, it only animates React components with a very minimal feature set but you can see in the [Todos] what's coming up. **And it's ready to animate things!**
 
 [###Docs and quick start guide](docs/README.md)
 
@@ -26,6 +26,7 @@ If you want to change your animation later, just open the animachine, load that 
 ###Demos: [marslanding][demo-marspolip], [argh][demo-argh]
 
 ###Todos:
+- [ ] Select elements with click
 - [ ] Advanced ease editor
 - [ ] Undo/redo history
 - [ ] Bezier motion path editor

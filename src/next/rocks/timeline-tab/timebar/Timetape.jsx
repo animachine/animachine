@@ -18,6 +18,7 @@ function handleMouse(props, monitor) {
   if (dragMode === 'seek') {
     let {x: position} = monitor.getSourceClientOffset()
     let currentTime = convertPositionToTime({position, timeline})
+    actions.setIsPlayingOfTimeline({timelineId, isPlaying: false})
     actions.setCurrentTimeOfTimeline({timelineId, currentTime})
   }
   else if (dragMode === 'translate') {

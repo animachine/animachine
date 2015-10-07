@@ -18,7 +18,7 @@ const key2ParamName = {
     const {selectors} = BETON.getRock('project-manager')
     const project = selectors.getCurrentProject()
     const timeline = selectors.getCurrentTimeline()
-    if (!timeline) {
+    if (!timeline || timeline.isPlaying) {
       return {}
     }
     const previewComponents = selectors.getPreviewComponentsOfProject({

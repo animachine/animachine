@@ -6,7 +6,7 @@ BETON.define({
 
 function init({projectManager}) {
   const {setCurrentTimeOfTimeline} = projectManager.actions
-  const {getCurrentTimeline} = projectManager.selectors
+  const {getCurrentTimeline, getTimelineLength} = projectManager.selectors
   let lastTime = performance.now()
 
   function push() {
@@ -14,6 +14,7 @@ function init({projectManager}) {
     const timeline = getCurrentTimeline()
     if (timeline && timeline.isPlaying) {
       let nextTime = timeline.currentTime + time - lastTime
+      nextTime %= getTimelineLength({timelineId: timeline.id})
       setCurrentTimeOfTimeline({
         timelineId: timeline.id,
         currentTime: nextTime

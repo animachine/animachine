@@ -1,9 +1,7 @@
 import * as selectors from './selectors'
-import actions from './actions'
+import * as actions from './actions'
 import reducer from './reducer'
-
-global.actions = actions
-
+console.log('QQQQQQQQQQQQQQQQactions', actions)
 BETON.define({
   id: 'project-manager',
   dependencies: ['store'],

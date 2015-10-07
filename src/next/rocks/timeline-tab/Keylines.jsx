@@ -1,6 +1,7 @@
 import React from 'react'
 import Keyline from './Keyline'
 import {convertTimeToPosition} from './utils'
+import {ContextMenu} from 'react-matterkit'
 
 export default class Keylines extends React.Component {
   renderPointerLine({height}) {
@@ -45,9 +46,18 @@ export default class Keylines extends React.Component {
 
     timeline.tracks.forEach(param => renderKeyline(param))
 
-    return <div style={{...style, position: 'relative'}}>
-      {children}
-      {this.renderPointerLine({height: pos})}
-    </div>
+    const menuItems = [
+      {label: 'delete selected keys', onClick: () => {
+        const {actions} = BETON.getRock('project-manager')
+        actions.removeSelectedKeysOfTimeline({timelineId: timeline.id})
+      }}
+    ]
+
+    return <ContextMenu items={menuItems}>
+      <div style={{...style, position: 'relative'}}>
+        {children}
+        {this.renderPointerLine({height: pos})}
+      </div>
+    </ContextMenu>
   }
 }

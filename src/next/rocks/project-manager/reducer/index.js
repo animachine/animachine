@@ -1,7 +1,7 @@
 import camelCase from 'lodash/string/camelCase'
 import capitalize from 'lodash/string/capitalize'
 import normalizeProjectTree from '../normalizeProjectTree'
-import actions from '../actions'
+import * as actions from '../actions'
 import createItem from '../createItem'
 import history from './history'
 import {
@@ -173,20 +173,6 @@ function reducer (projectManager, action) {
       collectSelectedKeys({keyHolderId}).forEach(key => {
         const time = key.time + offset
         projectManager = setItem({projectManager, item: {...key, time}})
-      })
-      return projectManager
-    }
-    case actions.DELETE_SELECTED_KEYS: {
-      const {keyHolderId} = action
-      collectSelectedKeys({keyHolderId}).forEach(key => {
-        const param = getParentParamOfKey({keyId: key.id})
-        projectManager = removeChild({
-          projectManager,
-          parentId: param.id,
-          childId: key.id,
-          childrenKey: 'keys',
-        })
-        projectManager = removeItem({projectManager, item: key})
       })
       return projectManager
     }

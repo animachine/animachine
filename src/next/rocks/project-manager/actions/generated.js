@@ -4,7 +4,7 @@ import {
   getMaxTimelineStart,
   getItemById,
   getParentTimelineIdByChildId,
-} from './selectors'
+} from '../selectors'
 
 const constantCase = str => {
   return str.replace(/[A-Z]/g, cap => `_${cap.toLowerCase()}`)
@@ -16,7 +16,10 @@ const minmax = (minValue, maxValue) => value =>
   Math.min(maxValue, Math.max(minValue, value))
 
 const actions = {}
-export default actions
+Object.defineProperty(actions, '__esModule', {
+  value: true
+})
+module.exports = actions//HACK!!!
 
 autoAddAction('add', 'timeline', 'project')
 autoAddAction('remove', 'timeline', 'project')
@@ -44,8 +47,6 @@ autoAddAction('remove', 'param', 'track')
 
 autoAddAction('set', 'name', 'param')
 autoAddAction('set', 'openedInTimeline', 'param')
-autoAddAction('add', 'param', 'param')
-autoAddAction('remove', 'param', 'param')
 autoAddAction('add', 'key', 'param')
 autoAddAction('remove', 'key', 'param')
 
@@ -86,7 +87,6 @@ addAction('TOGGLE_KEYS_AT_TIME', ['keyHolderId', 'time'])
 addAction('DESELECT_ALL_KEYS', ['keyHolderId'])
 addAction('TOGGLE_KEYS_SELECTION_AT_TIME', ['keyHolderId', 'time'])
 addAction('TRANSLATE_SELECTED_KEYS', ['keyHolderId', 'offset'])
-addAction('DELETE_SELECTED_KEYS', ['keyHolderId'])
 addAction('UNDO', ['timelineId'])
 addAction('REDO', ['timelineId'])
 

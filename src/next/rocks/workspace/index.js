@@ -1,28 +1,29 @@
 import React from 'react'
-import {Spaceman, SpacemanStore} from 'spaceman'
-import createMountNode from './createMountNode'
 import source from './source'
-import HTML5Backend from 'react-dnd/modules/backends/HTML5'
-import { DragDropContext } from 'react-dnd'
-import matterkitTheme from './matterkitTheme'
+import {SpacemanStore} from 'spaceman'
+import createMountNode from './createMountNode'
+import App from './App'
+import * as actions from './state/actions'
+import reducer from './state/reducer'
+import {Provider} from 'react-redux'
 
-const workspace = new SpacemanStore(source)
-BETON.define({id: 'workspace', init: () => workspace})
 
-@DragDropContext(HTML5Backend)
-class App {
-  static childContextTypes = {
-    matterkitTheme: React.PropTypes.object
+BETON.define({
+  id: 'workspace',
+  dependencies: ['store', 'toolbar'],
+  init: ({store, toolbar}) => {
+    store.addReducer('workspace', reducer)
+
+    toolbar.actions.addItemToToolbar({item: {
+      icon: 'compress',
+      onClick: actions.collapse,
+    }})
+
+    const workspace = new SpacemanStore(source)
+    const mountNode = createMountNode()
+    React.render(<Provider store={store}>
+      {() => <App workspace={workspace}/>}
+    </Provider>, mountNode)
+    return workspace
   }
-
-  getChildContext() {
-    return {matterkitTheme}
-  }
-
-  render() {
-    return <Spaceman store={workspace}/>
-  }
-}
-
-const mountNode = createMountNode()
-React.render(<App/>, mountNode)
+})

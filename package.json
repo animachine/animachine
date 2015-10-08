@@ -35,7 +35,6 @@
     "lodash": "^3.10.0",
     "putainde-localstorage": "^4.0.0",
     "react": "^0.13.3",
-    "react-dnd": "^1.1.4",
     "react-gsap-enhancer": "0.0.0",
     "react-hotkeys": "^0.5.0",
     "react-redux": "^2.1.2",

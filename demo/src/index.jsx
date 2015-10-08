@@ -1,8 +1,8 @@
 require('./index.html') //for the webpack build
 require('./styles.css')
 
-import injectTapEventPlugin from 'react-tap-event-plugin'
-injectTapEventPlugin()
+// import injectTapEventPlugin from 'react-tap-event-plugin'
+// injectTapEventPlugin()
 
 import React from 'react'
 import Router, {Route, Redirect} from 'react-router'

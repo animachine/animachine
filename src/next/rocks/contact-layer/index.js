@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 
 BETON.define({
   id: 'select-track-on-click-preview-component',
@@ -7,7 +8,7 @@ BETON.define({
     let node
 
     function handleRef(component) {
-      node = React.findDOMNode(component)
+      node = ReactDOM.findDOMNode(component)
     }
 
     function handlePick(e) {

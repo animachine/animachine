@@ -5,23 +5,17 @@ require('./styles.css')
 // injectTapEventPlugin()
 
 import React from 'react'
-import Router, {Route, Redirect} from 'react-router'
+import ReactDOM from 'react-dom'
+import {Router, Route, Redirect} from 'react-router'
 import App from './App'
 import About from './About'
 import Demo from './Demo'
 
 
-var routes = (
-  <Route handler={App}>
-    <Route path="about" handler={About}/>
-    <Route path="demo/:name" handler={Demo}/>
-    <Redirect from='*' to='/demo/Box' />
+ReactDOM.render(<Router>
+  <Route component={App}>
+    {/*<Route path="about" component={About}/>*/}
+    <Route path="demo/:name" component={Demo}/>
+    {/*<Redirect from='*' to='/demo/Box' />*/}
   </Route>
-)
-
-Router.run(routes, Router.HashLocation, (Root, state) => {
-  React.render(<Root/>, document.querySelector('#react-mount'))
-  if (window.onNameParamChange) {
-    window.onNameParamChange(state.params.name)
-  }
-})
+</Router>, document.querySelector('#react-mount'))

@@ -11,7 +11,7 @@ BETON.define({
       index: 100,
       getElement: () => {
         return <Provider store={store}>
-          {() => <TransformTool/>}
+          <TransformTool/>
         </Provider>
       }
     })

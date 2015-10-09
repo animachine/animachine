@@ -14,7 +14,7 @@ function init({store, projectManager, workspace}) {
       workspace.dialogs.show({
         getElement({onClose}) {
           return <Provider store={store}>
-            {() => <DialogComponent onClose={onClose}/>}
+            <DialogComponent onClose={onClose}/>
           </Provider>
         }
       })

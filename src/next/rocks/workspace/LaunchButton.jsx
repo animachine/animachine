@@ -19,6 +19,8 @@ export default class LaunchButton {
 
   render() {
     const {x, y} = this.props
-    return <Button label='animachine' style={{transform=`translate(${x}px, ${y}px)`}}/>
+    return <Button
+      label = 'animachine'
+      style = {{transform: `translate(${x}px, ${y}px)`}}/>
   }
 }

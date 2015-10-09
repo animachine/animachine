@@ -31,12 +31,13 @@ export default class Toolbar extends React.Component {
 
   renderToolbarItems() {
     const {toolbar} = this.props
-    return toolbar && toolbar.map(toolbarItem => {
+    return toolbar && toolbar.map((toolbarItem, idx) => {
       if (toolbarItem.getElement) {
         return toolbarItem.getElement()
       }
       else {
         const props = {
+          key: idx,
           ...toolbarItem,
           mod: {kind: 'stamp', ...toolbarItem.mod}
         }

@@ -50,6 +50,7 @@ If you want to change your animation later, just open the animachine, load that 
 
 These separated modules are developed as part of animachine:
 - [transhand](https://github.com/azazdeaz/transhand)
+- [react-gsap-enhancer](https://github.com/azazdeaz/react-gsap-enhancer)
 - [react-matterkit](https://github.com/azazdeaz/react-matterkit)
 - [json-vision](https://github.com/azazdeaz/json-vision)
 - [spaceman](https://github.com/azazdeaz/spaceman)

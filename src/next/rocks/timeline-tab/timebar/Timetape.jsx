@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import steps from './steps'
 import customDrag from 'custom-drag'
 import {convertPositionToTime, getVisibleTime} from '../utils'
@@ -70,7 +71,7 @@ const dragOptions = {
 }))
 export default class Timetape extends React.Component {
   componentDidMount() {
-    this.canvas = React.findDOMNode(this)
+    this.canvas = ReactDOM.findDOMNode(this)
     this.ctx = this.canvas.getContext('2d')
     this.postRender()
   }

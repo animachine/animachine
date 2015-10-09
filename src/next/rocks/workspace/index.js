@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import source from './source'
 import {SpacemanStore} from 'spaceman'
 import createMountNode from './createMountNode'
@@ -21,8 +22,8 @@ BETON.define({
 
     const workspace = new SpacemanStore(source)
     const mountNode = createMountNode()
-    React.render(<Provider store={store}>
-      {() => <App workspace={workspace}/>}
+    ReactDOM.render(<Provider store={store}>
+      <App workspace={workspace}/>
     </Provider>, mountNode)
     return workspace
   }

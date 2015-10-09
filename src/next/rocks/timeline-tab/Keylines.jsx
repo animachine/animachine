@@ -35,7 +35,7 @@ export default class Keylines extends React.Component {
         style = {{left: 0, top: pos}}
         height = {height}
         model = {model}
-        key = {model.modelId}/>)
+        key = {model.id}/>)
 
       pos += height
 
@@ -44,7 +44,7 @@ export default class Keylines extends React.Component {
       }
     }
 
-    timeline.tracks.forEach(param => renderKeyline(param))
+    timeline.tracks.forEach((param, idx) => renderKeyline(param))
 
     const menuItems = [
       {label: 'delete selected keys', onClick: () => {

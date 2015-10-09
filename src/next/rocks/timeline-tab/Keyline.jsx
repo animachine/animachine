@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import customDrag from 'custom-drag'
 import sortBy from 'lodash/collection/sortBy'
 import {getTheme} from 'react-matterkit'
@@ -103,7 +104,7 @@ const dragOptions = {
 }))
 export default class Keyline extends React.Component {
   componentDidMount() {
-    this.canvas = React.findDOMNode(this)
+    this.canvas = ReactDOM.findDOMNode(this)
     this.ctx = this.canvas.getContext('2d')
 
     this.postRender()

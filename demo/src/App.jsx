@@ -69,7 +69,7 @@ export default class App extends React.Component {
             menuItems = {menuItems} />
         </AppBar>*/}
         <div style={{display: 'flex'}}>
-          <RouteHandler/>
+          {this.props.children}
         </div>
       </div>
     )

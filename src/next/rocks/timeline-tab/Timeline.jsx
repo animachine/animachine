@@ -1,4 +1,5 @@
 import React, {PropTypes} from 'react'
+import ReactDOM from 'react-dom'
 import Controls from './controls/Controls'
 import Keylines from './Keylines'
 import Timebar from './timebar/Timebar'
@@ -73,7 +74,7 @@ export default class Timeline extends React.Component {
   }
 
   testOwnSize = () => {
-    const {width: nodeWidth} = React.findDOMNode(this).getBoundingClientRect()
+    const {width: nodeWidth} = ReactDOM.findDOMNode(this).getBoundingClientRect()
     const {dividerPos, fullWidth} = this.state
     const {timeline} = this.props
     const {setWidthOfTimeline} = this.props.actions
@@ -119,8 +120,8 @@ export default class Timeline extends React.Component {
     }
     const commonProps = {timeline, actions, selectors}
 
-    //return <HotKeys  keyMap={hotkeyMap} handlers={hotkeyHandlers}>
-      return <div style={rootStyle}>
+    return <HotKeys  keyMap={hotkeyMap} handlers={hotkeyHandlers}>
+      <div style={rootStyle}>
         <div style={{display: 'flex', height: headHeight}}>
           <Toolbar {...commonProps} style={{width: dividerPos}}/>
           <Timebar {...commonProps} height={headHeight}/>
@@ -141,6 +142,6 @@ export default class Timeline extends React.Component {
             scrollPosition,
           }}/>
       </div>
-    //</HotKeys>
+    </HotKeys>
   }
 }

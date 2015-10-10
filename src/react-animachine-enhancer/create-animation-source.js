@@ -63,7 +63,13 @@ fixTransformOriginForSvgNodes(
       let headTime = 0
 
       if (param.keys && param.keys.length) {
-        param.keys.sort(sortKeys).forEach(key => {
+        const sortedKeys = param.keys.sort(sortKeys)
+
+        //set the start position to the first key event is not in the time=0
+        // so tartgets don't going to tween from they current position
+        tlParam.set(targets, {[param.name]: sortedKeys[0].value})
+
+        sortedKeys.forEach(key => {
           const duration = key.time - headTime
 
           tlParam.to(

@@ -171,7 +171,7 @@ function reducer (projectManager, action) {
     case actions.TRANSLATE_SELECTED_KEYS: {
       const {keyHolderId, offset} = action
       collectSelectedKeys({keyHolderId}).forEach(key => {
-        const time = key.time + offset
+        const time = Math.max(0, key.time + offset)
         projectManager = setItem({projectManager, item: {...key, time}})
       })
       return projectManager

@@ -156,14 +156,36 @@ export default class Keyline extends React.Component {
     ctx.stroke()
 
     const renderAllParam = model => {
-      let visibleKeys = []
-
       if (model.keys) {
-        model.keys.forEach(key => {
-          if (key.time >= -start && key.time <= end) {
-            visibleKeys.push(key)
+        const sortedKeys = sortBy(model.keys, 'time')
+        let firstKeyIdx = 0
+        let lastKeyIdx = sortedKeys.length - 1
+
+        //search the first and the last keys outside the rendered area
+        sortedKeys.forEach((key, idx) => {
+          if (
+            key.time < -start &&
+            key.time > sortedKeys[firstKeyIdx].time
+          ) {
+            firstKeyIdx = idx
+          }
+          else if (
+            key.time > end &&
+            key.time < sortedKeys[lastKeyIdx].time
+          ) {
+            lastKeyIdx = idx
           }
         })
+
+        for (let i = firstKeyIdx; i <= lastKeyIdx; ++i) {
+          const key = sortedKeys[i]
+          this.drawKey(key, isGroup)
+
+          if (i !== firstKeyIdx) {
+            const startTime = sortedKeys[i-1].time
+            this.drawEase(key, startTime)
+          }
+        }
       }
 
       if (model.params) {
@@ -171,13 +193,6 @@ export default class Keyline extends React.Component {
           renderAllParam(childParam)
         })
       }
-
-      sortBy(visibleKeys, 'time').forEach((key, idx, arr) => {
-        this.drawKey(key, isGroup)
-
-        const startTime = idx === 0 ? 0 : arr[idx - 1].time
-        this.drawEase(key, startTime)
-      })
     }
 
     renderAllParam(model)

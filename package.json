@@ -31,19 +31,20 @@
     "custom-drag": "0.0.3",
     "event-emitter": "^0.3.3",
     "eventman": "0.0.1",
-    "json-vision": "^0.1.2",
+    "json-vision": "^0.1.4",
     "lodash": "^3.10.0",
     "putainde-localstorage": "^4.0.0",
     "react": "^0.14.0",
     "react-dnd": "^1.1.8",
     "react-gsap-enhancer": "^0.1.7",
     "react-hotkeys": "^0.5.0",
+    "react-matterkit": "0.0.40",
     "react-redux": "^3.1.0",
     "react-zeroclipboard": "^2.0.1",
     "redux": "^3.0.2",
     "reselect": "0.0.2",
     "spaceman": "0.0.14",
-    "transhand": "^0.1.16"
+    "transhand": "^0.1.22"
   },
   "devDependencies": {
     "babel": "^5.8.21",

@@ -94,7 +94,6 @@ export default class Timeline extends React.Component {
   }
 
   handleChangeScrollPosition = (scroll) => {
-    console.log('handleChangeScrollPosition', scroll)
     this.setState({scrollPosition: scroll})
   }
 
@@ -115,7 +114,7 @@ export default class Timeline extends React.Component {
 
     const hotkeyHandlers = {
       delete() {
-        actions.deleteSelectedKeys({keyHolderId: timeline.id})
+        actions.removeSelectedKeysOfTimeline({timelineId: timeline.id})
       }
     }
     const commonProps = {timeline, actions, selectors}

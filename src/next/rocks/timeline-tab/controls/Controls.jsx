@@ -8,6 +8,10 @@ export default class Controls extends React.Component {
     BETON.getRock('config', config => this.config = config)
   }
 
+  shouldComponentUpdate(nextProps) {
+    return !nextProps.timeline.isPlaying
+  }
+
   render() {
     const {timeline, style} = this.props
     return <JsonVision

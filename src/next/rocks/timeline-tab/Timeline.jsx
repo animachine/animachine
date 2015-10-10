@@ -85,7 +85,6 @@ export default class Timeline extends React.Component {
 
     const timelineWidth = nodeWidth - dividerPos
     if (timeline && timeline.width !== timelineWidth) {
-      console.log({timelineWidth, timeline})
       setWidthOfTimeline({
         timelineId: timeline.id,
         width: timelineWidth

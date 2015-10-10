@@ -1,3 +1,3 @@
 describe('rocks', function () {
-  require('../src/next/rocks/project-manager/__tests__')
+  require('../src/rocks/project-manager/__tests__')
 })

@@ -80,7 +80,6 @@ const dragOptions = {
     if (!nextKey) {
       return
     }
-    const previousKey = selectors.getPreviousKey({keyHolderId, time: mouseTime})
     actions.deselectAllKeys({keyHolderId: timeline.id})
     actions.selectKeysAtTime({keyHolderId, time: nextKey.time})
     const selectedKeys = selectors.collectSelectedKeys({keyHolderId})
@@ -90,9 +89,7 @@ const dragOptions = {
       inlineEaseEditor: {
         top,
         height,
-        startTime: previousKey ? previousKey.time : 0,
-        endTime: nextKey.time,
-        controlEaseId: nextKey.ease,
+        targetKeyId: nextKey.id,
         controlledEaseIds: selectedKeys.map(key => key.ease),
       }
     })

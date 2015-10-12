@@ -8,6 +8,7 @@ export * from './combine'
 export * from './getKeysAtTime'
 export * from './collectSelectedKeys'
 export * from './getTimelineLength'
+export * from './getParentParamOfKey'
 export * from './getParentTimelineIdByChildId'
 
 export function getProjectManager({projectManager} = {}) {

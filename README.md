@@ -6,7 +6,7 @@
 
 ##animachine
 *a GUI for [GSAP]*  
-It lets you to create code driven animation using traditional animation tools (like timeline, transformtool, etc).  
+ lets you to create code driven animation using traditional animation tools (like timeline, transformtool, etc).  
 You don't need to make any changes to your project to use animachine, just add the [chrome extension][extension] or embed it like any other js library and start animating.
 
 ###Status
@@ -15,7 +15,7 @@ This is the second alpha release completely rewritten using [React] and [Redux].
 [###Docs and quick start guide](docs/README.md)
 
 ###Why is this needed?
-You have great tools to make animations for the web (like Adobe Edge, Google Webdesigner or Animatron) but all of these are only for making sandboxed animations and embedding the boxes somewhere (usually in an iframe). If you need to animate some inner part of your project (ex. when a dialog appears or a game character jumps and walks) it has to be coded by a programmer. When this animation has to be long, artistic or done by somebody who is not a skilled programmer, this work can be tedious or almost impossible which can prevent us from seeing more fine and sophisticated animations on the web.
+You have great tools to make animations for the web (like [Adobe Edge][edge], [Google Webdesigner][webdesigner] or [Animatron]) but all of these are only for making sandboxed animations and embedding the boxes somewhere (usually in an iframe). If you need to animate some inner part of your project (ex. when a dialog appears or a game character jumps and walks) it has to be coded by a programmer. When this animation has to be long, artistic or done by somebody who is not a skilled programmer, this work can be tedious or almost impossible which can prevent us from seeing more fine and sophisticated animations on the web.
 
 ###How is this working?
 In a nutshell, when you click on the extension you'll have an overlay on your page with the animation tools which you'll be familiar with if you ever made animations with programs like Anime Studio, Adobe Edge, After Effects, etc.  
@@ -65,3 +65,6 @@ These separated modules are developed as part of animachine:
 [GSAP]: http://greensock.com/
 [React]: https://facebook.github.io/react/
 [Redux]: https://github.com/rackt/redux/
+[Animatron]: https://www.animatron.com/
+[edge]: https://www.adobe.com/products/edge-animate.html
+[webdesigner]: https://www.google.com/webdesigner/

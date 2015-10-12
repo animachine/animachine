@@ -23,8 +23,11 @@ export default class InlineEaseEditor extends React.Component {
   getControlEase() {
     const {timeline, selectors} = this.props
 
+    const targetKey = selectors.getItemById({
+      id: timeline.inlineEaseEditor.targetKeyId
+    })
     return selectors.getItemById({
-      id: timeline.inlineEaseEditor.controlEaseId
+      id: targetKey.ease
     })
   }
 
@@ -76,17 +79,28 @@ export default class InlineEaseEditor extends React.Component {
   }
 
   render() {
-    const {timeline, dividerPos, scrollPosition} = this.props
+    const {timeline, dividerPos, scrollPosition, selectors} = this.props
     const {inlineEaseEditor} = timeline
 
     if (!inlineEaseEditor) {
       return <div hidden/>
     }
-    const {top, height, startTime, endTime} = inlineEaseEditor
+    const {top, height, targetKeyId} = inlineEaseEditor
+    const targetKey = selectors.getItemById({id: targetKeyId})
+    const targetParam = selectors.getParentParamOfKey({keyId: targetKeyId})
+    const previousKey = selectors.getPreviousKey({
+      keyHolderId: targetParam.id,
+      time: targetKey.time,
+    })
+    if (!previousKey) {
+      return <div hidden/>
+    }
+    const startTime = previousKey.time
+    const endTime = targetKey.time
     const left = convertTimeToPosition({timeline, time: startTime})
     const right = convertTimeToPosition({timeline, time: endTime})
     const width = right - left
-console.log({top, height, scrollPosition})
+
     const rootStyle = {
       position: 'absolute',
       left: left + dividerPos,

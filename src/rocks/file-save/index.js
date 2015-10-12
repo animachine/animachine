@@ -22,8 +22,8 @@ function init({toolbar, projectManager, workspace, createSourceFile}) {
 
   function showSaveDialog() {
     workspace.dialogs.showDialog({
-      getElement: () => {
-        return <Dialog {...createSourceFile()}/>
+      getElement: ({onClose}) => {
+        return <Dialog {...createSourceFile()} onClose={onClose}/>
       }
     })
   }

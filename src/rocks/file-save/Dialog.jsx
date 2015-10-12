@@ -11,12 +11,12 @@ export default class Dialog extends React.Component {
     return <ReactZeroClipboard
       text = {source}
       onAfterCopy = {onClose}>
-      <Button label='copy' style={{height: 32}}/>
+      <Button label='copy' style={{height: 32, lineHeight: '32px'}}/>
     </ReactZeroClipboard>
   }
 
   renderDownloadButton = () => {
-    const {source, onClose} = this.props
+    const {source, fileName, onClose} = this.props
     const uri = 'data:application/javascript;charset=utf-8,' + encodeURIComponent(source)
     return <Button
       onClick = {() => {
@@ -24,17 +24,18 @@ export default class Dialog extends React.Component {
         onClose()
       }}
       label='download'
-      style={{height: 32}}/>
+      style={{height: 32, lineHeight: '32px'}}/>
   }
 
   render() {
     return <DialogComp
-      title = 'Dialog'
+      onClose = {this.props.onClose}
+      title = 'Save'
       buttons = {[
         {getElement: this.renderCopyButton},
         {getElement: this.renderDownloadButton}
       ]}>
-      ''
+      Download the file or copy to clipboard. (Save to filesystem feature is under development)
     </DialogComp>
   }
 }

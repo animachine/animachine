@@ -88,6 +88,9 @@ export default class InlineEaseEditor extends React.Component {
     const {top, height, targetKeyId} = inlineEaseEditor
     const targetKey = selectors.getItemById({id: targetKeyId})
     const targetParam = selectors.getParentParamOfKey({keyId: targetKeyId})
+    if (!targetParam) {
+      return <div hidden/>
+    }
     const previousKey = selectors.getPreviousKey({
       keyHolderId: targetParam.id,
       time: targetKey.time,

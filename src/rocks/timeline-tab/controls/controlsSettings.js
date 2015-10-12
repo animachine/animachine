@@ -16,13 +16,23 @@ export default [{
     onClick: handleSelectClick,
     onToggleOpen: handleToggleOpen,
     children: connect => connect.value.params,
-    // buttons: connect => [
-    //   {
-    //     icon: 'cube',
-    //     style: {opacity: connect.value.show3d ? 1 : 0.4},
-    //     onClick: handleToggle3d
-    //   }
-    // ],
+    buttons: connect => [
+      // {
+      //   icon: 'cube',
+      //   style: {opacity: connect.value.show3d ? 1 : 0.4},
+      //   onClick: handleToggle3d
+      // },
+      {
+        icon: 'plus',
+        tooltip: 'add a new param to this track',
+        onClick: connect => {
+          BETON.getRock('project-manager').actions.addParamToTrack({
+            trackId: connect.value.id,
+          })
+          showItemSettingsDialog()
+        }
+      }
+    ],
     highlighted: connect => {
       const track = getParentTrack(connect)
       const timeline = getParentTimeline(connect)
@@ -32,7 +42,7 @@ export default [{
       items: [
         {
           label: 'new track',
-          icon: 'add',
+          icon: 'plus',
           onClick: connect => {
             BETON.getRock('project-manager').actions.addTrackToTimeline({
               timelineId: connect.parent.id,

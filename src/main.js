@@ -12,6 +12,7 @@ require('./rocks/store')
 require('./rocks/timeline-pusher')
 require('./rocks/timeline-tab')
 require('./rocks/toolbar')
+require('./rocks/tracker')
 require('./rocks/transform-tool')
 require('./rocks/workspace')
 

@@ -13,7 +13,7 @@ function getAnimationSourceWrapper(timelineId) {
 }
 
 BETON.define({
-  init: 'preview-animation-synchronizer',
+  id: 'preview-animation-synchronizer',
   dependencies: ['store', 'project-manager'],
   init: ({store, projectManager}) => {
     const {selectors} = projectManager

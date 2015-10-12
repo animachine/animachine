@@ -41,12 +41,14 @@ const defaults = {
     width: 2000,
     start: 0,
     startMargin: 6,
-    currentTrackId: undefined,
-    inlineEaseEditor: false,
+    //HACK (same as for currentTimelineId) currentTrackId: undefined,
+    //HACK (same as for currentTimelineId) inlineEaseEditor: false,
     tracks: [],
   },
   project: {
-    currentTimelineId: undefined,
+    //currentTimelineId: undefined, //HACK this property should be only filled
+    //runtime, i comment is so it dont gonna be red from the save but it
+    //needs a good solution
     timelines: []
   },
   selector: {
@@ -66,6 +68,7 @@ const defaults = {
 let lastId = 0
 
 export default function createItem({type, data}) {
+  //remove values that don't have defaults (junk)
   const defaultValues = defaults[type]
   const filteredData = pick(data, ...Object.keys(defaultValues))
 

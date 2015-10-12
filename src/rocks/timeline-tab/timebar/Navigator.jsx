@@ -100,7 +100,8 @@ export default class Pointer extends React.Component {
       top: '0px',
       height: '7px',
       cursor: 'move',
-      transform: `scaleY(${hover ? 1 : 0.4})`,
+      transformOrigin: 'center top',
+      transform: `scaleY(${hover ? 1 : 0.56})`,
       backgroundColor: hover ? colors.grey2 : colors.grey3,
     }
     const stylePointer = {

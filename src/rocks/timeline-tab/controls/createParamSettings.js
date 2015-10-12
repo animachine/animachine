@@ -20,7 +20,12 @@ export default function createParamSettings(connect) {
     selector: 'all',
     extraInputs: [input],
     buttons: [{
-      getElement: () => <KeyStepper {...{keyHolderId: param.id, timeline}}/>
+      getElement: connect => {
+        return <KeyStepper
+          keyHolderId = {param.id}
+          timelineId = {timeline.id}
+        />
+      }
     }],
     contextMenu: {
       items: ['foo', 'bar', 'qux']

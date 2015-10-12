@@ -107,7 +107,7 @@ function reducer (projectManager, action) {
     }
     case actions.TOGGLE_KEYS_AT_TIME: {
       const {keyHolderId, time} = action
-      const isEndParam = param => param.params.length === 0
+      const isEndParam = param => true
       let allHasKey = true
 
       recurseParams({keyHolderId, callback: param => {
@@ -116,12 +116,12 @@ function reducer (projectManager, action) {
           allHasKey = false
         }
       }})
-
+      
       recurseParams({keyHolderId, callback: param => {
         if (isEndParam(param)) {
           if (allHasKey) {
             const key = getKeyOfParamAtTime({paramId: param.id, time})
-            return removeChild({
+            projectManager = removeChild({
               projectManager,
               parentId: param.id,
               childId: key.id,
@@ -130,7 +130,7 @@ function reducer (projectManager, action) {
           }
           else {
             const value = getValueOfParamAtTime({paramId: param.id, time})
-            return setValueOfParamAtTime({
+            projectManager = setValueOfParamAtTime({
               projectManager,
               value,
               paramId: param.id,

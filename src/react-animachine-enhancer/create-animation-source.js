@@ -46,7 +46,10 @@ const mergeTransformOriginParams = next => (params, targets, tlRoot) => {
 
 const fixTransformOriginForSvgNodes = next => (params, targets, tlRoot) => {
   //TODO do this only if targets contains an svg
-  tlRoot.set(targets, {transformOrigin: '50% 50%'}, 0)
+  const transformOriginParam = find(params, {name: 'transformOrigin'})
+  if (!transformOriginParam || !find(transformOriginParam.keys, {time: 0})) {
+    tlRoot.set(targets, {transformOrigin: '50% 50%'}, 0)
+  }
 
   next(params, targets, tlRoot)
 }

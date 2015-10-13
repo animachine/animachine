@@ -14,10 +14,13 @@ require('./rocks/timeline-tab')
 require('./rocks/toolbar')
 require('./rocks/tracker')
 require('./rocks/transform-tool')
+require('./rocks/welcome-dialog')
 require('./rocks/workspace')
 
 const animachine = {
-  init() {}
+  init() {
+    BETON.getRock('welcome-dialog').showNext()
+  }
 }
 
 export default animachine

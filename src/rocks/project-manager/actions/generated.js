@@ -21,10 +21,11 @@ Object.defineProperty(actions, '__esModule', {
 })
 module.exports = actions//HACK!!!
 
+autoAddAction('set', 'name', 'project')
 autoAddAction('add', 'timeline', 'project')
 autoAddAction('remove', 'timeline', 'project')
-
 autoAddAction('set', 'currentTimelineId', 'project')
+
 autoAddAction('set', 'name', 'timeline')
 autoAddAction('set', 'isPlaying', 'timeline')
 autoAddAction('set', 'currentTime', 'timeline', null, value => min(0)(parseInt(value)))

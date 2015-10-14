@@ -1,24 +1,10 @@
 import React from 'react'
-import {connect} from 'react-redux'
 import JsonVision from 'json-vision'
 import {DialogComp} from 'spaceman'
-import treeSettings from './treeSettings'
-import itemSettings from './itemSettings'
 import {Scrollable, Tabs} from 'react-matterkit'
 import Markdown from 'react-remarkable'
 
 const URL_REACT_ANIMACHINE_ENHANCER = 'https://github.com/azazdeaz/react-animachine-enhancer'
-
-@connect(() => {
-  const projectManager = BETON.getRock('project-manager')
-  const pmStore = projectManager.selectors.getProjectManager()
-  const {items, lastSelectedItemId} = pmStore
-  return {
-    lastSelectedItemId,
-    items,
-    actions: projectManager.actions,
-  }
-})
 
 export default class DialogComponent extends React.Component {
   renderNoComponentContent() {
@@ -29,45 +15,118 @@ export default class DialogComponent extends React.Component {
     </Markdown>
   }
 
-  renderTabs(selected, children) {
-    return <Tabs currTabIdx={selected === 'open' ? 0 : 1}>
-      <div label = 'Open'>
-        {this.renderOpenProjectContent()}
+  renderTabs({selected, inspectedComponents, projectSources}) {
+    return <Tabs defaultTabIdx={selected === 'open' ? 0 : 1} style={{flex: 1}}>
+      <div label='Open'>
+        {this.renderOpenProjectContent({projectSources})}
       </div>
-      <div label = 'New'>
-        {this.renderNewProjectContent()}
+      <div label='New'>
+        {this.renderNewProjectContent({inspectedComponents})}
       </div>
     </Tabs>
   }
 
-  renderOpenProjectContent() {
-
+  renderOpenProjectContent({projectSources}) {
+    const settings = [
+      {
+        selector: 'root',
+        hiddenHead: true,
+      }, {
+        selector: connect => !!connect.value.timelines,
+        label: connect => connect.value.name,
+        buttons: [{
+          label: 'open',
+          mod: {kind: 'colored'},
+          onClick: connect => {
+            const projectSource = connect.value
+            const {
+              getMountedComponentsOfProjectSource
+            } = BETON.getRock('component-inspector').selectors
+            const previewComponents =
+              getMountedComponentsOfProjectSource({projectSource})
+            const {openProject} = BETON.getRock('project-manager').actions
+            openProject({projectSource, previewComponents})
+            this.props.onClose()
+          }
+        }],
+        children: null
+      }
+    ]
+    return <JsonVision value={projectSources} settings={settings}/>
   }
 
   renderNewProjectContent() {
-
+    const PROJECT_NAME = Symbol()
+    const TIMELINE_NAME = Symbol()
+    const OPEN = Symbol()
+    let projectName = 'new project'
+    let timelineName = 'new timeline'
+    const settings = [
+      {
+        selector: 'root',
+        hiddenHead: true,
+      }, {
+        selector: {value: PROJECT_NAME},
+        input: {
+          label: 'project name',
+          value: connect => projectName,
+        },
+        onChange: (value, connect) => {
+          projectName = value
+          connect.reportChange()
+        }
+      }, {
+        selector: {value: TIMELINE_NAME},
+        input: {
+          label: 'timeline name',
+          value: connect => timelineName,
+        },
+        onChange: (value, connect) => {
+          timelineName = value
+          connect.reportChange()
+        }
+      }, {
+        selector: {value: OPEN},
+        label: null,
+        buttons: [{
+          label: 'create and open',
+          mod: {kind: 'colored'},
+          onClick: () => {
+            const projectSource = {
+              name: projectName,
+              timelnes: [{
+                name: timelineName
+              }]
+            }
+            const previewComponents = []
+            const {openProject} = BETON.getRock('project-manager').actions
+            openProject({projectSource, previewComponents})
+            this.props.onClose()
+          }
+        }]
+      }
+    ]
+    return <JsonVision value={[PROJECT_NAME, TIMELINE_NAME, OPEN]} settings={settings}/>
   }
 
   render() {
-    const {items, lastSelectedItemId, actions, onClose} = this.props
-    const selectedItem = items.find(item => lastSelectedItemId === item.id)
-    console.log({selectedItem, lastSelectedItemId})
+    const {selected, onClose} = this.props
+    const {
+      getInspectedComponents,
+      getProjectSources,
+    } = BETON.getRock('component-inspector').selectors
+    const inspectedComponents = getInspectedComponents()
+    const projectSources = getProjectSources()
 
     return <DialogComp
         title = 'Item settigns'
-        buttons = {[{label: 'close', onClick: onClose}]}
+        buttons = {[]}
         onClose = {onClose}>
       <Scrollable style={{display: 'flex', width: 432, height: 453}}>
-        <JsonVision
-          settings={treeSettings}
-          value={{}}
-          style={{flex: 1}}
-        />
-        <JsonVision
-          settings={itemSettings}
-          value={selectedItem}
-          style={{flex: 1}}
-        />
+        {inspectedComponents.length === 0
+          ? this.renderNoComponentContent()
+          : this.renderTabs({selected, inspectedComponents, projectSources})
+        }
       </Scrollable>
     </DialogComp>
   }

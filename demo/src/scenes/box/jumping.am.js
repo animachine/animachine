@@ -2,9 +2,9 @@ var animachineEnhancer = require('react-animachine-enhancer')
 var createAnimationSource = animachineEnhancer.createAnimationSource
 
 var projectSource = {
-    'currentTimelineId': '17',
+    'name': 'blue box',
     'timelines': [{
-        'name': 'jump',
+        'name': 'jumping',
         'isPlaying': false,
         'currentTime': 253,
         'length': 2000,
@@ -12,13 +12,6 @@ var projectSource = {
         'width': 2000,
         'start': 23,
         'startMargin': 6,
-        'currentTrackId': '16',
-        'inlineEaseEditor': {
-            'top': 0,
-            'height': 21,
-            'targetKeyId': '35',
-            'controlledEaseIds': ['36', '38']
-        },
         'tracks': [{
             'name': 'box',
             'selectors': [
@@ -66,13 +59,13 @@ var projectSource = {
                         'roughClamp': false,
                         'roughRandomise': true,
                         'roughTaper': 'none',
-                        'id': '44',
+                        'id': '3',
                         'type': 'ease'
                     },
-                    'id': '43',
+                    'id': '4',
                     'type': 'key'
                 }],
-                'id': '7',
+                'id': '5',
                 'type': 'param'
             }, {
                 'name': 'y',
@@ -93,10 +86,10 @@ var projectSource = {
                         'roughClamp': false,
                         'roughRandomise': true,
                         'roughTaper': 'none',
-                        'id': '8',
+                        'id': '6',
                         'type': 'ease'
                     },
-                    'id': '9',
+                    'id': '7',
                     'type': 'key'
                 }, {
                     'time': 972,
@@ -114,10 +107,10 @@ var projectSource = {
                         'roughClamp': false,
                         'roughRandomise': true,
                         'roughTaper': 'none',
-                        'id': '46',
+                        'id': '8',
                         'type': 'ease'
                     },
-                    'id': '45',
+                    'id': '9',
                     'type': 'key'
                 }, {
                     'time': 1492,
@@ -135,10 +128,10 @@ var projectSource = {
                         'roughClamp': false,
                         'roughRandomise': true,
                         'roughTaper': 'none',
-                        'id': '48',
+                        'id': '10',
                         'type': 'ease'
                     },
-                    'id': '47',
+                    'id': '11',
                     'type': 'key'
                 }, {
                     'time': 2024,
@@ -156,10 +149,10 @@ var projectSource = {
                         'roughClamp': false,
                         'roughRandomise': true,
                         'roughTaper': 'none',
-                        'id': '50',
+                        'id': '12',
                         'type': 'ease'
                     },
-                    'id': '49',
+                    'id': '13',
                     'type': 'key'
                 }],
                 'id': '14',
@@ -183,13 +176,13 @@ var projectSource = {
                         'roughClamp': false,
                         'roughRandomise': true,
                         'roughTaper': 'none',
-                        'id': '22',
+                        'id': '15',
                         'type': 'ease'
                     },
-                    'id': '21',
+                    'id': '16',
                     'type': 'key'
                 }],
-                'id': '19',
+                'id': '17',
                 'type': 'param'
             }, {
                 'name': 'transformOriginY',
@@ -210,10 +203,10 @@ var projectSource = {
                         'roughClamp': false,
                         'roughRandomise': true,
                         'roughTaper': 'none',
-                        'id': '24',
+                        'id': '18',
                         'type': 'ease'
                     },
-                    'id': '23',
+                    'id': '19',
                     'type': 'key'
                 }],
                 'id': '20',
@@ -237,10 +230,10 @@ var projectSource = {
                         'roughClamp': false,
                         'roughRandomise': true,
                         'roughTaper': 'none',
-                        'id': '28',
+                        'id': '21',
                         'type': 'ease'
                     },
-                    'id': '27',
+                    'id': '22',
                     'type': 'key'
                 }, {
                     'time': 720,
@@ -258,31 +251,10 @@ var projectSource = {
                         'roughClamp': false,
                         'roughRandomise': true,
                         'roughTaper': 'none',
-                        'id': '34',
+                        'id': '23',
                         'type': 'ease'
                     },
-                    'id': '33',
-                    'type': 'key'
-                }, {
-                    'time': 1420,
-                    'value': 0.9,
-                    'selected': true,
-                    'ease': {
-                        'easeType': 'bezier',
-                        'pointAX': 0.14485784485784484,
-                        'pointAY': 0.9666666666666666,
-                        'pointBX': 0.6805194805194805,
-                        'pointBY': 1.0333333333333332,
-                        'roughEase': false,
-                        'roughStrength': 1,
-                        'roughPoints': 20,
-                        'roughClamp': false,
-                        'roughRandomise': true,
-                        'roughTaper': 'none',
-                        'id': '36',
-                        'type': 'ease'
-                    },
-                    'id': '35',
+                    'id': '24',
                     'type': 'key'
                 }, {
                     'time': 804,
@@ -300,10 +272,31 @@ var projectSource = {
                         'roughClamp': false,
                         'roughRandomise': true,
                         'roughTaper': 'none',
-                        'id': '42',
+                        'id': '25',
                         'type': 'ease'
                     },
-                    'id': '41',
+                    'id': '26',
+                    'type': 'key'
+                }, {
+                    'time': 1420,
+                    'value': 0.9,
+                    'selected': true,
+                    'ease': {
+                        'easeType': 'bezier',
+                        'pointAX': 0.14485784485784484,
+                        'pointAY': 0.9666666666666666,
+                        'pointBX': 0.6805194805194805,
+                        'pointBY': 1.0333333333333332,
+                        'roughEase': false,
+                        'roughStrength': 1,
+                        'roughPoints': 20,
+                        'roughClamp': false,
+                        'roughRandomise': true,
+                        'roughTaper': 'none',
+                        'id': '27',
+                        'type': 'ease'
+                    },
+                    'id': '28',
                     'type': 'key'
                 }, {
                     'time': 1868,
@@ -321,13 +314,13 @@ var projectSource = {
                         'roughClamp': false,
                         'roughRandomise': true,
                         'roughTaper': 'none',
-                        'id': '54',
+                        'id': '29',
                         'type': 'ease'
                     },
-                    'id': '53',
+                    'id': '30',
                     'type': 'key'
                 }],
-                'id': '25',
+                'id': '31',
                 'type': 'param'
             }, {
                 'name': 'scaleY',
@@ -348,10 +341,10 @@ var projectSource = {
                         'roughClamp': false,
                         'roughRandomise': true,
                         'roughTaper': 'none',
-                        'id': '30',
+                        'id': '32',
                         'type': 'ease'
                     },
-                    'id': '29',
+                    'id': '33',
                     'type': 'key'
                 }, {
                     'time': 720,
@@ -369,10 +362,31 @@ var projectSource = {
                         'roughClamp': false,
                         'roughRandomise': true,
                         'roughTaper': 'none',
-                        'id': '32',
+                        'id': '34',
                         'type': 'ease'
                     },
-                    'id': '31',
+                    'id': '35',
+                    'type': 'key'
+                }, {
+                    'time': 804,
+                    'value': 0.2565560638035217,
+                    'selected': false,
+                    'ease': {
+                        'easeType': 'bezier',
+                        'pointAX': 0.3,
+                        'pointAY': 0.3,
+                        'pointBX': 0.7,
+                        'pointBY': 0.7,
+                        'roughEase': false,
+                        'roughStrength': 1,
+                        'roughPoints': 20,
+                        'roughClamp': false,
+                        'roughRandomise': true,
+                        'roughTaper': 'none',
+                        'id': '36',
+                        'type': 'ease'
+                    },
+                    'id': '37',
                     'type': 'key'
                 }, {
                     'time': 1420,
@@ -393,27 +407,6 @@ var projectSource = {
                         'id': '38',
                         'type': 'ease'
                     },
-                    'id': '37',
-                    'type': 'key'
-                }, {
-                    'time': 804,
-                    'value': 0.2565560638035217,
-                    'selected': false,
-                    'ease': {
-                        'easeType': 'bezier',
-                        'pointAX': 0.3,
-                        'pointAY': 0.3,
-                        'pointBX': 0.7,
-                        'pointBY': 0.7,
-                        'roughEase': false,
-                        'roughStrength': 1,
-                        'roughPoints': 20,
-                        'roughClamp': false,
-                        'roughRandomise': true,
-                        'roughTaper': 'none',
-                        'id': '40',
-                        'type': 'ease'
-                    },
                     'id': '39',
                     'type': 'key'
                 }, {
@@ -432,29 +425,33 @@ var projectSource = {
                         'roughClamp': false,
                         'roughRandomise': true,
                         'roughTaper': 'none',
-                        'id': '52',
+                        'id': '40',
                         'type': 'ease'
                     },
-                    'id': '51',
+                    'id': '41',
                     'type': 'key'
                 }],
-                'id': '26',
+                'id': '42',
                 'type': 'param'
             }],
-            'id': '16',
+            'id': '44',
             'type': 'track'
         }],
-        'id': '17',
-        'type': 'timeline'
+        'id': '45',
+        'type': 'timeline',
+        'currentTrackId': '44'
     }],
-    'id': '18',
-    'type': 'project'
+    'id': '46',
+    'type': 'project',
+    'currentTimelineId': '45'
 }
 var animations = {}
 
-projectSource.timelines.forEach(function (timeline) {
-  var gsapSource = createAnimationSource({projectSource, timeline})
-  animations[timeline.name] = gsapSource
+projectSource.timelines.forEach(function(timeline) {
+    var gsapSource = createAnimationSource({
+        projectSource, timeline
+    })
+    animations[timeline.name] = gsapSource
 })
 
 module.exports = animations

@@ -27,8 +27,5 @@
     "tabs",
     "<all_urls>"
   ],
-  "externally_connectable": {
-    "matches": ["*://*.example.com/*"]
-  },
   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
 }

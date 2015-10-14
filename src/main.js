@@ -18,10 +18,12 @@ require('./rocks/transform-tool')
 require('./rocks/welcome-dialog')
 require('./rocks/workspace')
 
+BETON.getRock('open-project-dialog').showOpen()
+BETON.getRock('welcome-dialog').showNext()
+
 const animachine = {
   init() {
-    BETON.getRock('open-project-dialog').showOpen()
-    BETON.getRock('welcome-dialog').showNext()
+    //TODO start everithing on init
   }
 }
 

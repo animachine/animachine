@@ -17,9 +17,8 @@ _gaq.push(['_trackPageview'])
 })()
 
 chrome.browserAction.onClicked.addListener(function (tab) {
-    console.log('clicked', tab.id)
-    chrome.tabs.executeScript(tab.id, {code: "if (this.am) {am.toggle();console.log('have am');} else { chrome.runtime.sendMessage({subject:\'embed\', id:"+tab.id+"});console.log('no am'); }"})
-
+  console.log('clicked', tab.id)
+  chrome.tabs.executeScript(tab.id, {code: "if (this.am) {am.toggle();console.log('have am');} else { chrome.runtime.sendMessage({subject:\'embed\', id:"+tab.id+"});console.log('no am'); }"})
 })
 
 chrome.browserAction.setBadgeText({text: 'α2'})

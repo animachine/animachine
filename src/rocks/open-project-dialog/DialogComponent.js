@@ -8,11 +8,11 @@ const URL_REACT_ANIMACHINE_ENHANCER = 'https://github.com/azazdeaz/react-animach
 
 export default class DialogComponent extends React.Component {
   renderNoComponentContent() {
-    return <Markdown>
-      ###Can't find any animatable component
-      You have to decorate your components with [react-animachine-enhancer]({URL_REACT_ANIMACHINE_ENHANCER}) to animate them with animachine.
-      Check out [its readme](URL_REACT_ANIMACHINE_ENHANCER) for more info about this.
-    </Markdown>
+    return <Markdown source={`
+### Can't find any animatable component
+You have to decorate your components with [react-animachine-enhancer]({URL_REACT_ANIMACHINE_ENHANCER}) to animate them with animachine.
+Check out [its readme](URL_REACT_ANIMACHINE_ENHANCER) for more info about this.`}
+    />
   }
 
   renderTabs({selected, inspectedComponents, projectSources}) {

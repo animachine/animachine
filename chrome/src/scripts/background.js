@@ -10,7 +10,7 @@ var _gaq = _gaq || []
 _gaq.push(['_setAccount', 'UA-58968347-1'])
 _gaq.push(['_trackPageview'])
 
-(function() {
+!(function() {
   var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true
   ga.src = 'https://ssl.google-analytics.com/ga.js'
   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s)
@@ -22,11 +22,14 @@ chrome.browserAction.onClicked.addListener(function (tab) {
 
 })
 
-chrome.browserAction.setBadgeText({text: 'α'})
+chrome.browserAction.setBadgeText({text: 'α2'})
 chrome.browserAction.setBadgeBackgroundColor({color: isDevMode() ? '#F00' : '#000'})
 
 chrome.runtime.onMessage.addListener(function (request) {
   if (request.subject === 'embed') {
+    if (isDevMode()) {
+      chrome.tabs.executeScript(request.id, {code: 'this.ANIMACHINE_SOURCE_URL="http://localhost:5436/animachine.js"'})
+    }
     chrome.tabs.executeScript(request.id, {file: 'scripts/content-script.js'})
   }
   if (request.subject === 'track') {

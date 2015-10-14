@@ -36,6 +36,7 @@ If you want to change your animation later, just open the animachine, load that 
 - [ ] Support for plain DOM Nodes (and jQuery)
 - [ ] Param groups (like scale for scaleX and scaleY)
 - [ ] 3D transform params
+- [ ] resolve performance issues
 
 <img src="http://i.imgur.com/9X2xUfz.png">
 

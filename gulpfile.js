@@ -47,7 +47,7 @@ gulp.task('webpack-dev-server', function(callback) {
 })
 
 gulp.task('pack-extension', ['build-chrome'], function () {
-  return gulp.src('build_chrome/**/*.*')
+  return gulp.src('chrome/build/**/*.*')
     .pipe(zip('build_chrome.zip'))
     .pipe(size())
     .pipe(gulp.dest('./'))
@@ -70,5 +70,25 @@ gulp.task('build-browser', function (callback) {
 			colors: true
 		}))
 		callback()
+	})
+})
+
+gulp.task('serve-browser', function(callback) {
+	// modify some webpack config options
+	var myConfig = Object.create(browserWebpackConfig)
+	myConfig.devtool = '#eval-source-map'
+	myConfig.debug = true
+
+	// Start a webpack-dev-server
+	new WebpackDevServer(webpack(myConfig), {
+		publicPath: '/',//myConfig.output.publicPath,
+    // hot: true,
+    historyApiFallback: true,
+		stats: {
+			colors: true
+		}
+	}).listen(5436, 'localhost', function(err) {
+		if(err) throw new gutil.PluginError('webpack-dev-server', err)
+		gutil.log('[webpack-dev-server]', 'http://localhost:5436/webpack-dev-server/index.html')
 	})
 })

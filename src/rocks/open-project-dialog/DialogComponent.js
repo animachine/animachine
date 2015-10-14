@@ -67,24 +67,24 @@ export default class DialogComponent extends React.Component {
         hiddenHead: true,
       }, {
         selector: {value: PROJECT_NAME},
+        label: 'project name',
         input: {
-          label: 'project name',
           value: connect => projectName,
+          onChange: (value, connect) => {
+            projectName = value
+            connect.reportChange()
+          }
         },
-        onChange: (value, connect) => {
-          projectName = value
-          connect.reportChange()
-        }
       }, {
         selector: {value: TIMELINE_NAME},
+        label: 'timeline name',
         input: {
-          label: 'timeline name',
           value: connect => timelineName,
+          onChange: (value, connect) => {
+            timelineName = value
+            connect.reportChange()
+          }
         },
-        onChange: (value, connect) => {
-          timelineName = value
-          connect.reportChange()
-        }
       }, {
         selector: {value: OPEN},
         label: null,
@@ -94,11 +94,14 @@ export default class DialogComponent extends React.Component {
           onClick: () => {
             const projectSource = {
               name: projectName,
-              timelnes: [{
+              timelines: [{
                 name: timelineName
               }]
             }
-            const previewComponents = []
+            const {
+              getInspectedComponents
+            } = BETON.getRock('component-inspector').selectors
+            const previewComponents = getInspectedComponents()
             const {openProject} = BETON.getRock('project-manager').actions
             openProject({projectSource, previewComponents})
             this.props.onClose()

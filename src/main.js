@@ -4,8 +4,9 @@ require('./rocks/component-inspector')
 require('./rocks/config')
 require('./rocks/create-source-file')
 require('./rocks/file-save')
-require('./rocks/hack-open-first-possible-project')
+// require('./rocks/hack-open-first-possible-project')
 require('./rocks/item-settings-dialog')
+require('./rocks/open-project-dialog')
 require('./rocks/preview-animation-synchronizer')
 require('./rocks/project-manager')
 require('./rocks/store')
@@ -19,6 +20,7 @@ require('./rocks/workspace')
 
 const animachine = {
   init() {
+    BETON.getRock('open-project-dialog').showOpen()
     BETON.getRock('welcome-dialog').showNext()
   }
 }

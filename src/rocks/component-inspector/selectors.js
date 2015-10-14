@@ -28,6 +28,16 @@ export function getMountedComponentsOfProjectSource({projectSource}) {
   return result
 }
 
+export function getProjectSources() {
+  const result = []
+  forEachProjectSourceOfComponents(({projectSource}) => {
+    if (result.indexOf(projectSource) === -1) {
+      result.push(projectSource)
+    }
+  })
+  return result
+}
+
 function forEachProjectSourceOfComponents(callback) {
   const inspectedComponents = getInspectedComponents()
 

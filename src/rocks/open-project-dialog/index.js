@@ -3,17 +3,17 @@ import {Provider} from 'react-redux'
 import DialogComponent from './DialogComponent'
 
 BETON.define({
-  id: 'item-settings-dialog',
+  id: 'open-project-dialog',
   dependencies: ['store', 'project-manager', 'workspace'],
   init
 })
 
 function init({store, projectManager, workspace}) {
-  function show(type) {
+  function show(selected) {
     workspace.dialogs.show({
       getElement({onClose}) {
         return <Provider store={store}>
-          <DialogComponent type={type} onClose={onClose}/>
+          <DialogComponent selected={selected} onClose={onClose}/>
         </Provider>
       }
     })

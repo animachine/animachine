@@ -19,7 +19,10 @@ BETON.define({
             const projectSource = projectSources[0]
             const previewComponents =
               getMountedComponentsOfProjectSource({projectSource})
-            projectManager.actions.openProject({projectSource, previewComponents})
+            projectManager.actions.openProject({
+              projectSource,
+              previewComponents
+            })
           }
         })
 

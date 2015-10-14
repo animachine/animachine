@@ -46,10 +46,11 @@ const defaults = {
     tracks: [],
   },
   project: {
+    name: '',
     //currentTimelineId: undefined, //HACK this property should be only filled
     //runtime, i comment is so it dont gonna be red from the save but it
     //needs a good solution
-    timelines: []
+    timelines: [],
   },
   selector: {
     selectorType: 'react-element',

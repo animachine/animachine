@@ -1,6 +1,5 @@
 import React from 'react'
 import {CSSTranshand} from 'transhand'
-import {createTarget} from 'react-animachine-enhancer'
 import {connect} from 'react-redux'
 
 const key2ParamName = {
@@ -21,27 +20,11 @@ const key2ParamName = {
     if (!timeline || timeline.isPlaying) {
       return {}
     }
-    const previewComponents = selectors.getPreviewComponentsOfProject({
-      projectId: project.id
-    })
     const trackId = timeline.currentTrackId
-    if (!trackId || previewComponents.length === 0) {
+    if (!trackId) {
       return {}
     }
-
-    const track = selectors.getItemById({id: trackId})
-    let selectedTarget
-    track.selectors.forEach(selectorId => {
-      previewComponents.forEach(previewComponent => {
-        const combinedSelector = selectors.combineSelector(selectorId)
-        const target = createTarget(previewComponent.__itemTree)
-          .findWithCommands(combinedSelector)
-        if (target.length !== 0) {
-          selectedTarget = target[0]
-        }
-      })
-    })
-
+    const selectedTarget = selectors.getTargetNodesOfTrack({trackId})[0]
     if (!selectedTarget) {
       return {}
     }

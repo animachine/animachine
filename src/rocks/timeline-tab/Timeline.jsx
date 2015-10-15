@@ -122,7 +122,10 @@ export default class Timeline extends React.Component {
     }
     const commonProps = {timeline, actions, selectors}
 
-    return <HotKeys  keyMap={hotkeyMap} handlers={hotkeyHandlers} style={{display: 'flex'}}>
+    return <HotKeys
+        keyMap = {hotkeyMap}
+        handlers = {hotkeyHandlers}
+        style={{display: 'flex', pointerEvents: 'auto'}}>
       <div style={rootStyle}>
         <div style={{display: 'flex', height: headHeight}}>
           <Toolbar {...commonProps} style={{width: dividerPos}}/>

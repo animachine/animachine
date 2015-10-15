@@ -15,5 +15,5 @@ BETON.define({
 })
 
 function init({workspace}) {
-  workspace.setTabContent('timeline', () => <TimelineTab/>)
+  workspace.setTabContent('timeline', <TimelineTab/>)
 }

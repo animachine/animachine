@@ -7,9 +7,10 @@ import {
 export * from './combine'
 export * from './getKeysAtTime'
 export * from './collectSelectedKeys'
-export * from './getTimelineLength'
-export * from './getParentParamOfKey'
+export * from './getParent_of_'
 export * from './getParentTimelineIdByChildId'
+export * from './getTargetNodesOfTrack'
+export * from './getTimelineLength'
 
 export function getProjectManager({projectManager} = {}) {
   const store = BETON.getRock('store')

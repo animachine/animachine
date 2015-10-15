@@ -1,8 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import ContactLayer from './ContactLayer'
 
 BETON.define({
-  id: 'select-track-on-click-preview-component',
+  id: 'contact-layer',
   dependencies: ['workspace', 'project-manager'],
   init: ({workspace, projectManager}) => {
     let node
@@ -13,53 +14,67 @@ BETON.define({
 
     function handlePick(e) {
       const {clientX: x, clientY: y} = e
-      node.pointerEvents = 'none'
+      node.style.pointerEvents = 'none'
       const pickedNode = document.elementFromPoint(x, y)
-      node.pointerEvents = 'auto'
-      cosnt {setCurrent}
+      node.style.pointerEvents = 'auto'
+      const {
+        getTargetNodesOfTrack,
+        getCurrentTimeline,
+      } = projectManager.selectors
+      const timeline = getCurrentTimeline()
 
-      if (isPickableDomElem(pickedNode)) {
+      if (timeline) {
+        let selectedTrackId
 
+        timeline.tracks.forEach(trackId => {
+          const targets = getTargetNodesOfTrack({trackId})
+          if (targets.indexOf(pickedNode) !== -1) {
+            selectedTrackId = trackId
+          }
+        })
+
+        if (selectedTrackId) {
+          projectManager.actions.setCurrentTrackIdOfTimeline({
+            currentTrackId: selectedTrackId,
+            timelineId: timeline.id
+          })
+        }
       }
-      else {
-      }
+
     }
 
-    workspace.setOverlay('contact-layer', {
-      level: 1000,
-      getElement: () => <ContactLayer
-        ref = {handleRef}
-        onPick = {handlePick}/>
-    })
+    workspace.setTabContent('hole', <ContactLayer
+      ref = {handleRef}
+      onPick = {handlePick}/>)
   }
 })
 
-// am.isPickableDomElem = function (deTest) {
-//   //TODO use .compareDocumentPosition()
-//   if (!deTest) {
-//       return false
-//   }
-//
-//   return step(deTest)
-//
-//   function step(de) {
-//     if (!de) {
-//       return false
-//     }
-//     else if (de.nodeType === 9) {
-//       return false
-//     }
-//     else if (de.hasAttribute('data-am-pick')) {
-//       return true
-//     }
-//     else if (de.hasAttribute('data-am-nopick')) {
-//       return false
-//     }
-//     else if (de === document.body) {
-//       return de !== deTest
-//     }
-//     else if (de) {
-//       return step(de.parentNode)
-//     }
-//   }
-// }
+function isPickableDomElem(deTest) {
+  //TODO use .compareDocumentPosition()
+  if (!deTest) {
+      return false
+  }
+
+  return step(deTest)
+
+  function step(de) {
+    if (!de) {
+      return false
+    }
+    else if (de.nodeType === 9) {
+      return false
+    }
+    else if (de.hasAttribute('data-am-pick')) {
+      return true
+    }
+    else if (de.hasAttribute('data-am-nopick')) {
+      return false
+    }
+    else if (de === document.body) {
+      return de !== deTest
+    }
+    else if (de) {
+      return step(de.parentNode)
+    }
+  }
+}

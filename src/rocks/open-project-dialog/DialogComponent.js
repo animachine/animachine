@@ -3,17 +3,25 @@ import JsonVision from 'json-vision'
 import {DialogComp} from 'spaceman'
 import {Scrollable, Tabs} from 'react-matterkit'
 import Markdown from 'react-remarkable'
+import {connect} from 'react-redux'
 
 const URL_REACT_ANIMACHINE_ENHANCER = 'https://github.com/azazdeaz/react-animachine-enhancer'
 
+@connect(() => {
+  const {
+    getInspectedComponents,
+    getProjectSources,
+  } = BETON.getRock('component-inspector').selectors
+  const inspectedComponents = getInspectedComponents()
+  const projectSources = getProjectSources()
+  return {inspectedComponents, projectSources}
+})
 export default class DialogComponent extends React.Component {
   renderNoComponentContent() {
     return <Markdown source={`
 ### Can't find any animatable component
 You have to decorate your components with [react-animachine-enhancer]({URL_REACT_ANIMACHINE_ENHANCER}) to animate them with animachine.
-Check out [its readme](URL_REACT_ANIMACHINE_ENHANCER) for more info about this.`}
-    />
-  }
+Check out [its readme](URL_REACT_ANIMACHINE_ENHANCER) for more info about this.`}/>}
 
   renderTabs({selected, inspectedComponents, projectSources}) {
     return <Tabs defaultTabIdx={selected === 'open' ? 0 : 1} style={{flex: 1}}>
@@ -55,7 +63,7 @@ Check out [its readme](URL_REACT_ANIMACHINE_ENHANCER) for more info about this.`
     return <JsonVision value={projectSources} settings={settings}/>
   }
 
-  renderNewProjectContent() {
+  renderNewProjectContent({inspectedComponents}) {
     const PROJECT_NAME = Symbol()
     const TIMELINE_NAME = Symbol()
     const OPEN = Symbol()
@@ -98,12 +106,8 @@ Check out [its readme](URL_REACT_ANIMACHINE_ENHANCER) for more info about this.`
                 name: timelineName
               }]
             }
-            const {
-              getInspectedComponents
-            } = BETON.getRock('component-inspector').selectors
-            const previewComponents = getInspectedComponents()
             const {openProject} = BETON.getRock('project-manager').actions
-            openProject({projectSource, previewComponents})
+            openProject({projectSource, previewComponents: inspectedComponents})
             this.props.onClose()
           }
         }]
@@ -113,13 +117,7 @@ Check out [its readme](URL_REACT_ANIMACHINE_ENHANCER) for more info about this.`
   }
 
   render() {
-    const {selected, onClose} = this.props
-    const {
-      getInspectedComponents,
-      getProjectSources,
-    } = BETON.getRock('component-inspector').selectors
-    const inspectedComponents = getInspectedComponents()
-    const projectSources = getProjectSources()
+    const {selected, onClose, inspectedComponents, projectSources} = this.props
 
     return <DialogComp
         title = 'Item settigns'

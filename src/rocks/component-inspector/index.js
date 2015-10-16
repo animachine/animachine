@@ -22,7 +22,7 @@ BETON.define({
 
       if (global._waitingMountedAnimachineComponents) {
         global._waitingMountedAnimachineComponents.forEach(component => {
-          store.dispatch(actions.registerComponent({component}))
+          actions.registerComponent({component})
         })
         delete global._waitingMountedAnimachineComponents
       }

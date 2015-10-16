@@ -16,7 +16,7 @@
     "type": "git",
     "url": "https://github.com/animachine/animachine.git"
   },
-  "author": "",
+  "author": "Polgár András <azazdeaz@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/animachine/animachine/issues"
@@ -35,15 +35,15 @@
     "putainde-localstorage": "^4.0.0",
     "react": "^0.14.0",
     "react-dnd": "^1.1.8",
-    "react-gsap-enhancer": "^0.1.7",
+    "react-gsap-enhancer": "^0.1.14",
     "react-hotkeys": "^0.5.0",
-    "react-matterkit": "0.0.42",
+    "react-matterkit": "0.0.44",
     "react-redux": "^3.1.0",
     "react-remarkable": "^1.1.1",
     "react-zeroclipboard": "^2.0.1",
     "redux": "^3.0.2",
     "reselect": "0.0.2",
-    "spaceman": "0.0.14",
+    "spaceman": "0.0.16",
     "transhand": "^0.1.23"
   },
   "devDependencies": {
@@ -51,6 +51,7 @@
     "babel-core": "^5.8.22",
     "babel-eslint": "^4.0.10",
     "babel-loader": "^5.3.2",
+    "babel-plugin-dev": "github:zenwolf/babel-plugin-dev",
     "babel-plugin-react-transform": "^1.1.1",
     "chai": "^3.3.0",
     "chai-spies": "^0.7.1",

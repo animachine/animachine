@@ -26,18 +26,20 @@ export default class DialogComponent extends React.Component {
         title = 'Item settigns'
         buttons = {[{label: 'close', onClick: onClose}]}
         onClose = {onClose}>
-      <Scrollable style={{display: 'flex', width: 432, height: 453}}>
+      <div style = {{display: 'flex', width: 432}}>
+      <Scrollable style={{height: 453, flex: 1}}>
         <JsonVision
           settings={treeSettings}
-          value={{}}
           style={{flex: 1}}
         />
+      </Scrollable>
         <JsonVision
           settings={itemSettings}
           value={selectedItem}
           style={{flex: 1}}
         />
-      </Scrollable>
+
+      </div>
     </DialogComp>
   }
 }

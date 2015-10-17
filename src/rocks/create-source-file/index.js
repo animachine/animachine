@@ -9,8 +9,9 @@ function init({projectManager}) {
     const {selectors} = projectManager
     const currentProject = selectors.getCurrentProject()
     const combinedProject = selectors.combineProject(currentProject.id)
+    const name = currentProject.name || 'unnamed'
     return {
-      fileName: `${currentProject.name}.am.js`,
+      fileName: `${name}.am.js`,
       source: create(combinedProject)
     }
   }

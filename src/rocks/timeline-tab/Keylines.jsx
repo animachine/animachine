@@ -4,6 +4,10 @@ import {convertTimeToPosition} from './utils'
 import {ContextMenu} from 'react-matterkit'
 
 export default class Keylines extends React.Component {
+  shouldComponentUpdate() {
+    return !this.props.timeline.isPlaying
+  }
+
   renderPointerLine({height}) {
     const {timeline} = this.props
     const position = convertTimeToPosition({

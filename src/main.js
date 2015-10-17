@@ -17,10 +17,11 @@ require('./rocks/toolbar')
 require('./rocks/tracker')
 require('./rocks/transform-tool')
 require('./rocks/welcome-dialog')
+require('./rocks/welcome-process')
 require('./rocks/workspace')
 
-BETON.getRock('open-project-dialog').showOpen()
-BETON.getRock('welcome-dialog').showNext()
+
+BETON.getRock('welcome-process').start()
 
 const animachine = {
   init() {

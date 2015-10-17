@@ -16,9 +16,18 @@ export default function createParamSettings(connect) {
     value: getParamValue,
     onChange: setParamValue
   }
+  const nameInput = {
+    value: connect => connect.value.name,
+    mod: {kind: 'stamp'},
+    onChange: (value, connect) => {
+      const {setNameOfParam} = BETON.require('project-manager').actions
+      setNameOfParam({name: value, paramId: connect.value.id})
+    }
+  }
   const settings = {
     selector: 'all',
-    extraInputs: [input],
+    label: null,
+    extraInputs: [nameInput, input],
     buttons: [{
       getElement: connect => {
         return <KeyStepper
@@ -26,10 +35,7 @@ export default function createParamSettings(connect) {
           timelineId = {timeline.id}
         />
       }
-    }],
-    contextMenu: {
-      items: ['foo', 'bar', 'qux']
-    }
+    }]
   }
 
   ifit(connect.value.name)

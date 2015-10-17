@@ -40,11 +40,11 @@ export default class Robots extends React.Component {
     const armJoinStyle = createJoinStyle('#343434', 60, 470, 10)
     const forearmStyle = createBotStyle('#E9B400', 280, 40, 480, 20)
     const forearmJoinStyle = createJoinStyle('#E9B400', 60, 230, -10)
-    return <div>
+    return <div style={{transform: 'scale(0.5)'}}>
       <div key='shoulder' style={shoulderStyle}>
         <div key='armGroup' style={armStyle}>
           <div key='forearmGroup' style={forearmStyle}>
-            <svg key='pincerGroup' style={pincerStyle}>
+            <svg key='pincerGroup' style={pincerStyle} width="170" height="140">
               <polygon key='pincerL' fill='#343434' points='29.7,69 64.3,118.7 64,137.9 0,65.6 65.6,0 83.9,18.3'/>
               <polygon key='pincerR' fill='#343434' points='144.2,69 109.6,118.7 109.9,137.9 173.9,65.6 108.3,0 90,18.3'/>
             </svg>
@@ -69,7 +69,7 @@ export default class Robots extends React.Component {
         </g>
         <path key='base' fill='#343434' stroke='#ededed' strokeWidth='4' d='M290.9,577.5H24.1c-5.6,0-10.1-4.5-10.1-10.1V436.9c0-5.6,4.5-10.1,10.1-10.1h266.8c5.6,0,10.1,4.5,10.1,10.1
         	v130.5C301,572.9,296.5,577.5,290.9,577.5z'/>
-        <path key='ball' fill='#2967A7' d='M525.4,413.3h-10.9v10.2h10.9V413.3L525.4,413.3z M517.3,420.3c-1,0-1.8-0.8-1.8-1.8c0-1,0.8-1.8,1.8-1.8
+        <path key='minirobot' fill='#2967A7' d='M525.4,413.3h-10.9v10.2h10.9V413.3L525.4,413.3z M517.3,420.3c-1,0-1.8-0.8-1.8-1.8c0-1,0.8-1.8,1.8-1.8
         	c1,0,1.8,0.8,1.8,1.8C519.1,419.5,518.3,420.3,517.3,420.3z M522.6,420.3c-1,0-1.8-0.8-1.8-1.8c0-1,0.8-1.8,1.8-1.8s1.8,0.8,1.8,1.8
         	C524.4,419.5,523.6,420.3,522.6,420.3z M537.7,435.9c-0.2-3.5-1.6-5.9-3.5-7.3c-1.5-1.2-3.2-1.8-4.6-2v-1.2h-19.4v1.2
         	c-1.4,0.2-3,0.8-4.6,2c-1.8,1.4-3.3,3.9-3.5,7.3c-1.3,0.5-2.3,1.7-2.3,3.2c0,1.9,1.5,3.4,3.4,3.4v-1.5c-1,0-1.9-0.8-1.9-1.9

@@ -1,3 +1,10 @@
-demo
-src
 .*
+chrome
+demo
+docs
+src
+test
+tours
+CNAME
+gulpfile.js
+webpack.browser.config.js

@@ -59,7 +59,6 @@ const addParamTimelines =
 mergeTransformOriginParams(
 fixTransformOriginForSvgNodes(
   (params, targets, tlRoot) => {
-    console.log(params, targets)
     params.forEach(param => {
       const tlParam = new TimelineMax()
       tlRoot.add(tlParam, 0)

@@ -3,10 +3,10 @@ import find from 'lodash/collection/find'
 import capitalize from 'lodash/string/capitalize'
 import createTypeSelector from './createTypeSelector'
 
-const getItems = () => BETON.getRock('project-manager').selectors.getItems()
+const getItems = () => BETON.require('project-manager').selectors.getItems()
 
 const isTheLastSelected = connect => {
-  const {selectors} = BETON.getRock('project-manager')
+  const {selectors} = BETON.require('project-manager')
   const {lastSelectedItemId} = selectors.getProjectManager()
   return lastSelectedItemId === (connect.value && connect.value.id)
 }
@@ -24,7 +24,7 @@ const getChildren = (connect, name) => {
 const getLabel = connect => `${connect.value.type}: ${connect.value.name}`
 
 function handleSelectClick(connect) {
-  const {actions} = BETON.getRock('project-manager')
+  const {actions} = BETON.require('project-manager')
   actions.setLastSelectedItemId({itemId: connect.value.id})
 }
 
@@ -41,7 +41,7 @@ const createSettings = (type, childrenName) => ({
           icon: 'plus',
           tooltip: 'add new ${childrenType}',
           onClick: connect => {
-            const {actions} = BETON.getRock('project-manager')
+            const {actions} = BETON.require('project-manager')
             actions[`add${capitalize(childrenType)}To${capitalize(type)}`]({
               [`${type}Id`]: connect.value.id
             })

@@ -5,12 +5,12 @@ import createTypeSelector from './createTypeSelector'
 
 
 function getItemsByIds(ids) {
-  const {selectors} = BETON.getRock('project-manager')
+  const {selectors} = BETON.require('project-manager')
   return ids.map(id => selectors.getItemById({id}))
 }
 
 function actions() {
-  return BETON.getRock('project-manager').actions
+  return BETON.require('project-manager').actions
 }
 
 function addNewSelector(connect/*selectors[]*/) {

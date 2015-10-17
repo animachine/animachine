@@ -1,4 +1,4 @@
-const store = BETON.getRock('store')
+const store = BETON.require('store')
 
 export function getCursorType() {
   return store.getState().cursorType

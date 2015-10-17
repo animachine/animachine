@@ -1,7 +1,7 @@
 import forIn from 'lodash/object/forIn'
 
 export function getInspectedComponents() {
-  const store = BETON.getRock('store')
+  const store = BETON.require('store')
   return store.getState().componentInspector.inspectedComponents
 }
 

@@ -10,7 +10,7 @@ export default class TimelineTab extends React.Component {
 
   render() {
     const {timeline} = this.state
-    const store = BETON.getRock('store')
+    const store = BETON.require('store')
     return <Provider store={store}>
       <Timeline/>
     </Provider>

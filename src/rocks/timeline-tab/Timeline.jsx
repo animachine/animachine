@@ -12,7 +12,7 @@ import hotkeyMap from './hotkeyMap'
 import {Scrollable, getTheme} from 'react-matterkit'
 import InlineEaseEditor from './inline-ease-editor/InlineEaseEditor'
 
-const projectManager = BETON.getRock('project-manager')
+const projectManager = BETON.require('project-manager')
 
 const dragOptions = {
   onDown(props, monitor, component) {
@@ -29,7 +29,7 @@ const dragOptions = {
 
 @connect(
   (state) => {
-    const projectManager = BETON.getRock('project-manager')
+    const projectManager = BETON.require('project-manager')
     const {getCurrentTimelineId} = projectManager.selectors
     const timelineId = getCurrentTimelineId()
     if (!timelineId) {
@@ -39,7 +39,7 @@ const dragOptions = {
     return {timeline}
   },
   () => {
-    const projectManager = BETON.getRock('project-manager')
+    const projectManager = BETON.require('project-manager')
     return {
       actions: projectManager.actions,
       selectors: projectManager.selectors,

@@ -96,7 +96,7 @@ console.log({actions})
 function addAction(type, params, fixPayload) {
   actions[type] = type
   actions[camelCase(type)] = function (payload = {}) {
-    const store = BETON.getRock('store')
+    const store = BETON.require('store')
 
     if (__DEV__) {
       let payloadKeys = Object.keys(payload)

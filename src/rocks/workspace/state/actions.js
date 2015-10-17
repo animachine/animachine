@@ -3,7 +3,7 @@ export const UNCOLLAPSE = '@workspace/UNCOLLAPSE'
 export const MOVE = '@workspace/MOVE'
 
 function dispatch(action) {
-  const store = BETON.getRock('store')
+  const store = BETON.require('store')
   store.dispatch(action)
 }
 

@@ -13,7 +13,7 @@ export * from './getTargetNodesOfTrack'
 export * from './getTimelineLength'
 
 export function getProjectManager({projectManager} = {}) {
-  const store = BETON.getRock('store')
+  const store = BETON.require('store')
   return projectManager || store.getState().projectManager
 }
 

@@ -86,12 +86,12 @@ export default function createParamSettings(connect) {
 function getParamValue(connect) {
   const param = connect.value
   const {currentTime} = getParentTimeline(connect)
-  const {selectors} = BETON.getRock('project-manager')
+  const {selectors} = BETON.require('project-manager')
   return selectors.getValueOfParamAtTime({paramId: param.id, time: currentTime})
 }
 
 function setParamValue(value, connect) {
-  const {actions} = BETON.getRock('project-manager')
+  const {actions} = BETON.require('project-manager')
   const param = connect.value
   const {currentTime} = getParentTimeline(connect)
   actions.setValueOfParamAtTime({

@@ -1,4 +1,4 @@
 export function getToolbar() {
-  const store = BETON.getRock('store')
+  const store = BETON.require('store')
   return store.getState().toolbar
 }

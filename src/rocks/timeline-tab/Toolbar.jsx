@@ -4,7 +4,7 @@ import {Button, Input} from 'react-matterkit'
 import {connect} from 'react-redux'
 
 @connect(store => {
-  const {selectors} = BETON.getRock('toolbar')
+  const {selectors} = BETON.require('toolbar')
   return {
     toolbar: selectors.getToolbar()
   }

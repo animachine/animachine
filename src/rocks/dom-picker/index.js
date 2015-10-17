@@ -1,5 +1,4 @@
 import React from 'react'
-import TransformTool from './TransformTool'
 import {Provider} from 'react-redux'
 
 BETON.define({

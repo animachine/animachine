@@ -1,5 +1,4 @@
 import generateReactSelector from './generateReactSelector'
-import generateQuerySelector from './generateQuerySelector'
 import ReactDOM from 'react-dom'
 
 BETON.define({

@@ -60,8 +60,8 @@ function hasRock(...ids) {
 
 const BETON = {
   define,
-  getRock,
-  hasRock,
+  require: getRock,
+  has: hasRock,
 }
 
 setTimeout(() => {

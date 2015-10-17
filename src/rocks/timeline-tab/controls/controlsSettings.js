@@ -26,7 +26,7 @@ export default [{
         icon: 'plus',
         tooltip: 'add a new param to this track',
         onClick: connect => {
-          BETON.getRock('project-manager').actions.addParamToTrack({
+          BETON.require('project-manager').actions.addParamToTrack({
             trackId: connect.value.id,
           })
           showItemSettingsDialog()
@@ -44,7 +44,7 @@ export default [{
           label: 'new track',
           icon: 'plus',
           onClick: connect => {
-            BETON.getRock('project-manager').actions.addTrackToTimeline({
+            BETON.require('project-manager').actions.addTrackToTimeline({
               timelineId: connect.parent.id,
             })
             showItemSettingsDialog()
@@ -53,7 +53,7 @@ export default [{
           label: 'new param',
           icon: 'add',
           onClick: connect => {
-            BETON.getRock('project-manager').actions.addParamToTrack({
+            BETON.require('project-manager').actions.addParamToTrack({
               trackId: connect.value.id,
             })
             showItemSettingsDialog()
@@ -93,11 +93,11 @@ export default [{
 ]
 
 function showItemSettingsDialog() {
-  BETON.getRock('item-settings-dialog').show()
+  BETON.require('item-settings-dialog').show()
 }
 
 function handleToggle3d(connect) {
-  const {actions} = BETON.getRock('project-manager')
+  const {actions} = BETON.require('project-manager')
   const {showThreeDimensionalParams, id} = connect.value
   actions.setShowThreeDimensionalParamsOfTrack({
     trackId: id,
@@ -106,7 +106,7 @@ function handleToggle3d(connect) {
 }
 
 function handleToggleOpen(connect) {
-  const {actions} = BETON.getRock('project-manager')
+  const {actions} = BETON.require('project-manager')
   const {type, id} = connect.value
   if (type === 'param') {
     actions.toggleOpenInTimelnieOfParam({paramId: id})
@@ -117,7 +117,7 @@ function handleToggleOpen(connect) {
 }
 
 function handleSelectClick(connect) {
-  const {actions} = BETON.getRock('project-manager')
+  const {actions} = BETON.require('project-manager')
   const {id: currentTrackId} = getParentTrack(connect)
   const {id: timelineId} = getParentTimeline(connect)
 

@@ -21,7 +21,7 @@ require('./rocks/welcome-process')
 require('./rocks/workspace')
 
 
-BETON.getRock('welcome-process').start()
+BETON.require('welcome-process').start()
 
 const animachine = {
   init() {

@@ -14,7 +14,7 @@ const key2ParamName = {
 
 @connect(
   (state) => {
-    const {selectors} = BETON.getRock('project-manager')
+    const {selectors} = BETON.require('project-manager')
     const project = selectors.getCurrentProject()
     const timeline = selectors.getCurrentTimeline()
     if (!timeline || timeline.isPlaying) {
@@ -55,7 +55,7 @@ const key2ParamName = {
     }
   },
   () => {
-    const projectManager = BETON.getRock('project-manager')
+    const projectManager = BETON.require('project-manager')
     return {
       actions: projectManager.actions
     }

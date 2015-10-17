@@ -11,7 +11,7 @@ const URL_REACT_ANIMACHINE_ENHANCER = 'https://github.com/azazdeaz/react-animach
   const {
     getInspectedComponents,
     getProjectSources,
-  } = BETON.getRock('component-inspector').selectors
+  } = BETON.require('component-inspector').selectors
   const inspectedComponents = getInspectedComponents()
   const projectSources = getProjectSources()
   return {inspectedComponents, projectSources}
@@ -49,10 +49,10 @@ Check out [its readme](URL_REACT_ANIMACHINE_ENHANCER) for more info about this.`
             const projectSource = connect.value
             const {
               getMountedComponentsOfProjectSource
-            } = BETON.getRock('component-inspector').selectors
+            } = BETON.require('component-inspector').selectors
             const previewComponents =
               getMountedComponentsOfProjectSource({projectSource})
-            const {openProject} = BETON.getRock('project-manager').actions
+            const {openProject} = BETON.require('project-manager').actions
             openProject({projectSource, previewComponents})
             this.props.onClose()
           }
@@ -106,7 +106,7 @@ Check out [its readme](URL_REACT_ANIMACHINE_ENHANCER) for more info about this.`
                 name: timelineName
               }]
             }
-            const {openProject} = BETON.getRock('project-manager').actions
+            const {openProject} = BETON.require('project-manager').actions
             openProject({projectSource, previewComponents: inspectedComponents})
             this.props.onClose()
           }

@@ -7,7 +7,7 @@ import itemSettings from './itemSettings'
 import {Scrollable} from 'react-matterkit'
 
 @connect(() => {
-  const projectManager = BETON.getRock('project-manager')
+  const projectManager = BETON.require('project-manager')
   const pmStore = projectManager.selectors.getProjectManager()
   const {items, lastSelectedItemId} = pmStore
   return {

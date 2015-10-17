@@ -28,7 +28,7 @@ export default class Keylines extends React.Component {
 
   render() {
     const {timeline, actions, selectors, style} = this.props
-    const height = BETON.getRock('config').size
+    const height = BETON.require('config').size
     const children = []
     var pos = 0
 
@@ -52,7 +52,7 @@ export default class Keylines extends React.Component {
 
     const menuItems = [
       {label: 'delete selected keys', onClick: () => {
-        const {actions} = BETON.getRock('project-manager')
+        const {actions} = BETON.require('project-manager')
         actions.removeSelectedKeysOfTimeline({timelineId: timeline.id})
       }}
     ]

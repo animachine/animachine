@@ -1,4 +1,4 @@
-const store = BETON.getRock('store')
+const store = BETON.require('store')
 
 export const SET_CURSOR_TYPE = 'SET_CURSOR_TYPE'
 export function registerComponent({cursorType}) {

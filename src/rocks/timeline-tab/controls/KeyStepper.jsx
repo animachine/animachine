@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 // export default props => <div>key</div>
 
 @connect((store, props) => {
-  const {selectors, actions} = BETON.getRock('project-manager')
+  const {selectors, actions} = BETON.require('project-manager')
   const {keyHolderId, timelineId} = props
   const timeline = selectors.getItemById({id: timelineId})
   if (timeline.isPlaying) {
@@ -33,13 +33,13 @@ export default class KeyStepper extends React.Component {
   }
 
   handleKeyClick = () => {
-    const {actions} = BETON.getRock('project-manager')
+    const {actions} = BETON.require('project-manager')
     const {keyHolderId, time} = this.props
     actions.toggleKeysAtTime({keyHolderId, time})
   }
 
   render() {
-    const {actions} = BETON.getRock('project-manager')
+    const {actions} = BETON.require('project-manager')
     const {hasKeyNow, previousKeyTime, nextKeyTime, timelineId} = this.props
     const {hover} = this.state
     const stepperW = 12

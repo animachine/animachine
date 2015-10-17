@@ -42,7 +42,7 @@ export default class DomPicker extends React.Component {
     }
 
     function selectNode(nextNode) {
-      const {actions} = BETON.getRock('project-manager')
+      const {actions} = BETON.require('project-manager')
 
     }
 

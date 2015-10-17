@@ -6,7 +6,7 @@ import {ContextMenu, Button, Label} from 'react-matterkit'
 export default class Controls extends React.Component {
   constructor() {
     super()
-    BETON.getRock('config', config => this.config = config)
+    BETON.require('config', config => this.config = config)
   }
 
   shouldComponentUpdate(nextProps) {
@@ -29,7 +29,7 @@ export default class Controls extends React.Component {
         label = 'Create a new one!'
         mod = {{kind: 'colored'}}
         onClick =  {() => {
-          const {actions} = BETON.getRock('project-manager')
+          const {actions} = BETON.require('project-manager')
           const timelineId = this.props.timeline.id
           actions.addTrackToTimeline({timelineId, childTrack: {name: 'new Track'}})
         }}/>

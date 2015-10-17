@@ -29,7 +29,7 @@ function createInputSettingsNode(itemType, key, onChange) {
     selector: createSelector(itemType, key),
     input: {
       onChange(value, connect) {
-        const {actions} = BETON.getRock('project-manager')
+        const {actions} = BETON.require('project-manager')
         onChange(value, connect.parent.id, actions)
       }
     }

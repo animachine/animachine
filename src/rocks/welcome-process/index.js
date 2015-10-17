@@ -7,12 +7,12 @@ BETON.define({
       setTimeout(() => {//HACK wait to see if there are projects loaded later
         const projectSources = componentInspector.selectors.getProjectSources()
         if (projectSources.length) {
-          BETON.getRock('open-project-dialog').showOpen()
+          BETON.require('open-project-dialog').showOpen()
         }
         else {
-          BETON.getRock('open-project-dialog').showNew()
+          BETON.require('open-project-dialog').showNew()
         }
-        BETON.getRock('welcome-dialog').showNext()
+        BETON.require('welcome-dialog').showNext()
       })
     }
 

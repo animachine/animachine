@@ -12,7 +12,7 @@ export default class DebuggerTab extends React.Component {
   }
 
   componentDidMount() {
-    BETON.getRock('project-manager', this.setProjectManager)
+    BETON.require('project-manager', this.setProjectManager)
   }
 
   setProjectManager = (projectManager) => {

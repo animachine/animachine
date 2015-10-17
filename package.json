@@ -10,7 +10,9 @@
     "lib": "babel ./src --out-dir lib  --source-maps --source-maps",
     "lib-watch": "npm run lib && babel ./src --out-dir lib  --source-maps --source-maps --watch",
     "test": "mocha --compilers js:babel/register",
-    "test-debug": "node-debug _mocha --compilers js:babel/register"
+    "test-debug": "node-debug _mocha --compilers js:babel/register",
+    "browser-build": "webpack --config webpack.browser.config.js",
+    "publish-browser": "npm run browser-build && gh-pages --dist browser --branch browser-dist"
   },
   "repository": {
     "type": "git",
@@ -30,10 +32,11 @@
     "custom-drag": "0.0.3",
     "event-emitter": "^0.3.3",
     "eventman": "0.0.1",
-    "json-vision": "^0.1.5",
+    "json-vision": "^0.1.6",
     "lodash": "^3.10.0",
     "putainde-localstorage": "^4.0.0",
     "react": "^0.14.0",
+    "react-animachine-enhancer": "0.0.0",
     "react-dnd": "^1.1.8",
     "react-gsap-enhancer": "^0.1.14",
     "react-hotkeys": "^0.5.0",
@@ -43,7 +46,7 @@
     "react-zeroclipboard": "^2.0.1",
     "redux": "^3.0.2",
     "reselect": "0.0.2",
-    "spaceman": "0.0.16",
+    "spaceman": "0.0.17",
     "transhand": "^0.1.23"
   },
   "devDependencies": {
@@ -61,6 +64,7 @@
     "eslint-plugin-mocha": "^1.0.0",
     "eslint-plugin-react": "^3.4.2",
     "file-loader": "^0.8.4",
+    "gh-pages": "^0.4.0",
     "gsap": "^1.18.0",
     "gulp": "^3.9.0",
     "gulp-gh-pages": "^0.5.2",

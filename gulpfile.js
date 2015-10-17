@@ -46,32 +46,23 @@ gulp.task('webpack-dev-server', function(callback) {
 	})
 })
 
-gulp.task('pack-extension', ['build-chrome'], function () {
-  return gulp.src('chrome/build/**/*.*')
+gulp.task('pack-extension', function () {
+  return gulp.src('chrome/src/**/*.*')
     .pipe(zip('build_chrome.zip'))
     .pipe(size())
     .pipe(gulp.dest('./'))
 })
 
-gulp.task('build-chrome:copy-files', function () {
-  return gulp.src('chrome/src/**/*.*')
-    .pipe(gulp.dest('chrome/build'))
-})
 
-gulp.task('build-chrome', [
-  'build-browser',
-  'build-chrome:copy-files'
-])
-
-gulp.task('build-browser', function (callback) {
-  webpack(browserWebpackConfig, function(err, stats) {
-		if(err) throw new gutil.PluginError('build-demo', err)
-		gutil.log('[webpack:build]', stats.toString({
-			colors: true
-		}))
-		callback()
-	})
-})
+// gulp.task('build-browser', function (callback) {
+//   webpack(browserWebpackConfig, function(err, stats) {
+// 		if(err) throw new gutil.PluginError('build-demo', err)
+// 		gutil.log('[webpack:build]', stats.toString({
+// 			colors: true
+// 		}))
+// 		callback()
+// 	})
+// })
 
 gulp.task('serve-browser', function(callback) {
 	// modify some webpack config options

@@ -1,5 +1,5 @@
 console.log('init animachine')
-var sourceUrl = window.ANIMACHINE_SOURCE_URL || 'https://rawgit.com/animachine/animachine/next/browser/animachine.js'
+var sourceUrl = window.ANIMACHINE_SOURCE_URL || 'https://rawgit.com/animachine/animachine/browser-dist/animachine.js'
 loadjscssfile('js', sourceUrl)
 loadjscssfile('css', '//fonts.googleapis.com/css?family=Open+Sans:400,700,600,300&subset=latin,latin-ext')
 loadjscssfile('css', '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css')

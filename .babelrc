@@ -1,5 +1,4 @@
 {
   "stage": 0,
-  "plugins": ["babel-plugin-dev"],
-  "optional": ["optimisation.react.inlineElements"]
+  "plugins": ["babel-plugin-dev"]
 }

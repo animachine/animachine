@@ -1,5 +1,5 @@
 BETON.define({
-  id: 'hack-open',
+  id: 'hack-open-first-possible-project',
   dependencies: ['store', 'component-inspector', 'project-manager'],
   init: ({store, componentInspector, projectManager}) => {
     const {
@@ -7,9 +7,6 @@ BETON.define({
       getProjectSourcesOfComponent,
       getMountedComponentsOfProjectSource
     } = componentInspector.selectors
-
-    // store.subscribe(test)
-    test()
 
     function test() {
       if (!projectManager.selectors.getCurrentProjectId()) {
@@ -29,5 +26,7 @@ BETON.define({
         setTimeout(test, 312)
       }
     }
+
+    return () => {test()}
   }
 })

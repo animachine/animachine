@@ -5,7 +5,7 @@ require('./rocks/config')
 require('./rocks/contact-layer')
 require('./rocks/create-source-file')
 require('./rocks/file-save')
-// require('./rocks/hack-open-first-possible-project')
+require('./rocks/hack-open-first-possible-project')
 require('./rocks/item-settings-dialog')
 require('./rocks/open-project-dialog')
 require('./rocks/preview-animation-synchronizer')
@@ -20,8 +20,12 @@ require('./rocks/welcome-dialog')
 require('./rocks/welcome-process')
 require('./rocks/workspace')
 
-
-BETON.require('welcome-process').start()
+if (!window.__ANIMACHINE_OPEN_FIRST__) {//HACK this flag is used by the demos
+  BETON.require('hack-open-first-possible-project')()
+}
+else {
+  BETON.require('welcome-process').start()
+}
 
 const animachine = {
   init() {

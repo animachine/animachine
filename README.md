@@ -28,7 +28,9 @@ Then you can pick elements from your page and start animating them.
 When it's done, you can save your animation as a .js file and include it in your page.  
 If you want to change your animation later just open your project and animachine again, it will recognize the animations, and offer to continue editing them.
 
-###Demos: [marslanding][demo-marspolip], [argh][demo-argh] //TODO: replace with the new ones
+###Demos: 
+ - animations: [jumping thing][demo-jump], [pointless-robots][demo-robots]
+ - components: [Zombie](https://github.com/azazdeaz/react-animated-topdown-zombie)
 
 ###Todos:
 - [ ] [Select elements with click](http://i.imgur.com/LPCj6jp.gif)
@@ -60,10 +62,8 @@ These separated modules are developed as part of animachine:
 - [custom-drag](https://github.com/azazdeaz/custom-drag)
 
 [extension]: https://chrome.google.com/webstore/detail/animachine-alpha/feefkphfphgbcidiajhoapphgmnfhgod
-[demo-marspolip]: http://animachine.github.io/animachine/demos/marspolip/
-[demo-argh]: http://animachine.github.io/animachine/demos/argh/
-[tour-quickstart]: http://animachine.github.io/animachine/tours/quickstart/
-[tour-bezier]: http://animachine.github.io/animachine/tours/bezier/
+[demo-jump]: http://animachine.github.io/animachine/#/demo/Box
+[demo-robots]: http://animachine.github.io/animachine/#/demo/Robots
 [GSAP]: http://greensock.com/
 [React]: https://facebook.github.io/react/
 [Redux]: https://github.com/rackt/redux/

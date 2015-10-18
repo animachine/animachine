@@ -8,7 +8,7 @@
 ######*a GUI for [GSAP]*  
 Create code driven animation using traditional animation tools (like timeline, transformtool, etc). All you have to do is install the [Chrome extension][extension], open your project in [Chrome][chrome], hit the animachine button, and start animating!
 
-#/>image here
+<img src="http://i.imgur.com/GNRAlz5.png">
 
 ###Status
 *work in progress*
@@ -25,7 +25,7 @@ Then you can pick elements from your page and start animating them.
 When it's done, you can save your animation as a .js file and include it in your page.  
 If you want to change your animation later just open your project and animachine again, it will recognize the animations, and offer to continue editing them.
 
-###Demos: [marslanding][demo-marspolip], [argh][demo-argh]
+###Demos: [marslanding][demo-marspolip], [argh][demo-argh] //TODO: replace with the new ones
 
 ###Todos:
 - [ ] [Select elements with click](http://i.imgur.com/LPCj6jp.gif)
@@ -39,8 +39,6 @@ If you want to change your animation later just open your project and animachine
 - [ ] Param groups (like scale for scaleX and scaleY)
 - [ ] 3D transform params
 - [ ] resolve performance issues
-
-<img src="http://i.imgur.com/9X2xUfz.png">
 
 
 ![](http://zippy.gfycat.com/IndolentBowedBustard.gif) | **free transform tool**

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {PropTypes} from 'react'
 import customDrag from 'custom-drag'
 import {getVisibleTime} from '../utils'
 import {getTheme} from 'react-matterkit'
@@ -71,11 +71,11 @@ export default class Pointer extends React.Component {
   shouldComponentUpdate(next) {
     const {props} = this
     return (
-      props.timelnie.start !== next.timeline.start ||
-      props.timelnie.pxpms !== next.timeline.pxpms ||
-      props.timelnie.width !== next.timeline.width ||
-      props.timelnie.length !== next.timeline.length ||
-      props.timelnie.startMargin !== next.timeline.startMargin
+      props.timeline.start !== next.timeline.start ||
+      props.timeline.pxpms !== next.timeline.pxpms ||
+      props.timeline.width !== next.timeline.width ||
+      props.timeline.length !== next.timeline.length ||
+      props.timeline.startMargin !== next.timeline.startMargin
     )
   }
   constructor(props) {

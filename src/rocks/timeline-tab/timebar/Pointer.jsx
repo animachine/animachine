@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {PropTypes} from 'react'
 import {getVisibleTime} from '../utils'
 
 export default class Pointer extends React.Component {
@@ -19,12 +19,12 @@ export default class Pointer extends React.Component {
   shouldComponentUpdate(next) {
     const {props} = this
     return (
-      props.timelnie.start !== next.timeline.start ||
-      props.timelnie.pxpms !== next.timeline.pxpms ||
-      props.timelnie.width !== next.timeline.width ||
-      props.timelnie.currentTime !== next.timeline.currentTime ||
+      props.timeline.start !== next.timeline.start ||
+      props.timeline.pxpms !== next.timeline.pxpms ||
+      props.timeline.width !== next.timeline.width ||
+      props.timeline.currentTime !== next.timeline.currentTime ||
       props.radius !== next.radius ||
-      props.position !== next.position  
+      props.position !== next.position
     )
   }
 

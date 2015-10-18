@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {PropTypes} from 'react'
 import ReactDOM from 'react-dom'
 import steps from './steps'
 import customDrag from 'custom-drag'
@@ -75,16 +75,16 @@ export default class Timetape extends React.Component {
       start: PropTypes.number,
       pxpms: PropTypes.number,
       width: PropTypes.number,
-    })
+    }),
     height: PropTypes.number,
   }
 
   shouldComponentUpdate(next) {
     const {props} = this
     return (
-      props.timelnie.start !== next.timeline.start ||
-      props.timelnie.pxpms !== next.timeline.pxpms ||
-      props.timelnie.width !== next.timeline.width ||
+      props.timeline.start !== next.timeline.start ||
+      props.timeline.pxpms !== next.timeline.pxpms ||
+      props.timeline.width !== next.timeline.width ||
       props.height !== next.height
     )
   }

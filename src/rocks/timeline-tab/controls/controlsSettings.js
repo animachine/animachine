@@ -109,10 +109,10 @@ function handleToggleOpen(connect) {
   const {actions} = BETON.require('project-manager')
   const {type, id} = connect.value
   if (type === 'param') {
-    actions.toggleOpenInTimelnieOfParam({paramId: id})
+    actions.toggleOpenInTimelineOfParam({paramId: id})
   }
   else if (type === 'track') {
-    actions.toggleOpenInTimelnieOfTrack({trackId: id})
+    actions.toggleOpenInTimelineOfTrack({trackId: id})
   }
 }
 

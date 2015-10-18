@@ -1,7 +1,7 @@
 import {getItems, getItemById} from '../index.js'
 
 export function getParentTimelineIdByChildId({id}) {
-  const timelnie = getItems.find(item => {
+  const timeline = getItems.find(item => {
     return item.type === 'timeline' && testTimeline(item)
   })
 

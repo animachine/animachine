@@ -36,7 +36,7 @@ React.createClass({
 3. click on the ![animachine icon](chrome/src/icons/icon19.png)
 4. the upcoming dialogs will help you opening a project or creating a new one
 
-###Animate with timelnie
+###Animate with timeline
 ```//TODO```
 
 ###Save and use the animation

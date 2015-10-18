@@ -1,8 +1,0 @@
-node_modules
-bower_components
-*.sublime-workspace
-*.sublime-project
-*.log
-*.zip
-*.crx
-*.pem

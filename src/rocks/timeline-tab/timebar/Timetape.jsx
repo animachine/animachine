@@ -70,6 +70,25 @@ const dragOptions = {
   dragRef: connect.getDragRef()
 }))
 export default class Timetape extends React.Component {
+  static propTypes = {
+    timeline: PropTypes.shape({
+      start: PropTypes.number,
+      pxpms: PropTypes.number,
+      width: PropTypes.number,
+    })
+    height: PropTypes.number,
+  }
+
+  shouldComponentUpdate(next) {
+    const {props} = this
+    return (
+      props.timelnie.start !== next.timeline.start ||
+      props.timelnie.pxpms !== next.timeline.pxpms ||
+      props.timelnie.width !== next.timeline.width ||
+      props.height !== next.height
+    )
+  }
+
   componentDidMount() {
     this.canvas = ReactDOM.findDOMNode(this)
     this.ctx = this.canvas.getContext('2d')

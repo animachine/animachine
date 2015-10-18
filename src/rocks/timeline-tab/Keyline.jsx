@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {PropTypes} from 'react'
 import ReactDOM from 'react-dom'
 import customDrag from 'custom-drag'
 import sortBy from 'lodash/collection/sortBy'
@@ -100,6 +100,20 @@ const dragOptions = {
   dragRef: connect.getDragRef()
 }))
 export default class Keyline extends React.Component {
+  static propTypes = {
+    timeline: PropTypes.shape({
+      start: PropTypes.number,
+      pxpms: PropTypes.number,
+      width: PropTypes.number,
+    }),
+    keys: PropTypes.arrayOf(PropTypes.shape({
+
+    })),
+    top: PropTypes.number,
+    height: PropTypes.number,
+    style: PropTypes.object,
+  }
+
   componentDidMount() {
     this.canvas = ReactDOM.findDOMNode(this)
     this.ctx = this.canvas.getContext('2d')

@@ -2,9 +2,30 @@ import React from 'react'
 import {getVisibleTime} from '../utils'
 
 export default class Pointer extends React.Component {
+  static propTypes = {
+    timeline: PropTypes.shape({
+      start: PropTypes.number,
+      pxpms: PropTypes.number,
+      width: PropTypes.number,
+      currentTime: PropTypes.number,
+    }),
+    radius: PropTypes.number,
+    position: PropTypes.number,
+  }
   static defaultProps = {
     radius: 5,
     position: 0,
+  }
+  shouldComponentUpdate(next) {
+    const {props} = this
+    return (
+      props.timelnie.start !== next.timeline.start ||
+      props.timelnie.pxpms !== next.timeline.pxpms ||
+      props.timelnie.width !== next.timeline.width ||
+      props.timelnie.currentTime !== next.timeline.currentTime ||
+      props.radius !== next.radius ||
+      props.position !== next.position  
+    )
   }
 
   render() {

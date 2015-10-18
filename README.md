@@ -12,7 +12,10 @@ Create code driven animation using traditional animation tools (like timeline, t
 
 ###Status
 *work in progress*
+
 This is the second alpha release completely rewritten using [React] and [Redux]. For now, it animates only React components with a very minimal feature set but you can see in the [Todos] what's coming up.
+
+*[Here](https://github.com/animachine/animachine/tree/first-alpha) you can check out the previous alpha version*
 
 ###[Check out the quick start with React guide!](docs/quick-start-with-react.md)
 

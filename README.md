@@ -58,7 +58,7 @@ These separated modules are developed as part of animachine:
 - [react-theme](https://github.com/azazdeaz/react-theme)
 - [custom-drag](https://github.com/azazdeaz/custom-drag)
 
-[extension]: https://chrome.google.com/webstore/detail/animachine/gpnfomkfgajaojpakbkikiekmajeojgd
+[extension]: https://chrome.google.com/webstore/detail/animachine-alpha/feefkphfphgbcidiajhoapphgmnfhgod
 [demo-marspolip]: http://animachine.github.io/animachine/demos/marspolip/
 [demo-argh]: http://animachine.github.io/animachine/demos/argh/
 [tour-quickstart]: http://animachine.github.io/animachine/tours/quickstart/

@@ -46,3 +46,4 @@ Click on the floppy icon to save your project in a file and use as it was descri
 [react-animachine-enhancer]: https://github.com/azazdeaz/react-animachine-enhancer
 [react-gsap-enhancer]: https://github.com/azazdeaz/react-gsap-enhancer
 [React]: https://github.com/facebook/react
+[extension]: https://chrome.google.com/webstore/detail/animachine-alpha/feefkphfphgbcidiajhoapphgmnfhgod

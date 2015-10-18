@@ -1,7 +1,7 @@
 {
-  "name": "animachine (alpha)",
+  "name": "animachine (v0.2-alpha)",
   "short_name": "animachine",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "manifest_version": 2,
   "description": "An animation tool for React components.",
   "homepage_url": "https://github.com/animachine/animachine",

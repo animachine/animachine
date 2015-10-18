@@ -1,10 +1,6 @@
-![](https://img.shields.io/badge/stability-experimental-orange.svg?style=flat-square)
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/animachine/animachine?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.org/animachine/animachine.svg)](https://travis-ci.org/animachine/animachine)
-
 <img src="http://s9.postimg.org/mqolutoxb/amheader.png">
 
-##animachine
+##animachine ![](https://img.shields.io/badge/stability-experimental-orange.svg?style=flat-square) [![Build Status](https://img.shields.io/travis/animachine/animachine.svg?style=flat-square)](https://travis-ci.org/animachine/animachine) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/animachine/animachine?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ######*a GUI for [GSAP]*  
 Create code driven animation using traditional animation tools (like timeline, transformtool, etc). All you have to do is install the [Chrome extension][extension], open your project in [Chrome][chrome], hit the animachine button, and start animating!
 

@@ -1,7 +1,8 @@
 import React from 'react'
 import Keyline from './Keyline'
-import {convertTimeToPosition} from './utils'
+import {convertTimeToPosition, getVisibleTime} from './utils'
 import {ContextMenu} from 'react-matterkit'
+import union from 'lodash/array/union'
 
 export default class Keylines extends React.Component {
   shouldComponentUpdate() {
@@ -28,27 +29,84 @@ export default class Keylines extends React.Component {
 
   render() {
     const {timeline, actions, selectors, style} = this.props
+    const {start} = timeline
+    const end = start + getVisibleTime({timeline})
     const height = BETON.require('config').size
     const children = []
-    var pos = 0
+    let pos = 0
+    const {
+      getItemById,
+      getParamsOfTimeline
+    } = BETON.require('project-manager').selectors
+    const params = getParamsOfTimeline({timelineId: timeline.id})
+    const visibleKeysByParamId = {}
+    params.forEach(param => {
+      const keys = param.keys
+        .map(id => getItemById({id}))
+        .sort((a, b) => a.time - b.time)
+      //select the first and last key to render
+      //if there are off screen key we have to include the first and last
+      // to render they eases
+      const lastIdx = keys.length - 1
+      let firstKeyIdx = 0
+      let lastKeyIdx = lastIdx
+      keys.forEach((key, idx) => {
+        if (idx !== lastIdx && key.time < start && keys[idx + 1].time > start) {
+          firstKeyIdx = idx
+        }
+        if (idx !== 0 && key.time > end && key[idx - 1].time < end) {
+          lastKeyIdx = idx
+        }
+      })
+      const visibleKeys = keys.slice(firstKeyIdx, lastKeyIdx + 1)
+      visibleKeysByParamId[param.id] = visibleKeys
+    })
+    const toPosition = time =>
+      parseInt(convertTimeToPosition({time, timeline})) + 0.5
 
-    const renderKeyline = model => {
+    const renderKeyline = (keyHolderId, paramIds) => {
+      const keySequences = []
+      const easeSequences = []
+      paramIds.forEach(paramId => {
+        const ks = visibleKeysByParamId[paramId]
+        const es = [toPosition(ks[0].time)]
+        for (let i = 1; i < ks.length; ++i) {
+          const key = ks[i]
+          es.push(getItemById({id: key.ease}), toPosition(key.time))
+        }
+        keySequences.push(ks)
+        easeSequences.push(es)
+      })
+      const timeSequences = keySequences.map(ks => ks.map(key => key.time))
+      const timeSequence = union(...timeSequences)
+      const selectedSequence = timeSequence.map(time => {
+        return timeSequences.every((ts, sequenceIdx) => {
+          const idx = ts.indexOf(time)
+          return idx === -1 || keySequences[sequenceIdx][idx].selected
+        })
+      })
+
+
       children.push(<Keyline
         {...{timeline, actions, selectors}}
         top = {pos}
         style = {{left: 0, top: pos}}
         height = {height}
-        model = {model}
-        key = {model.id}/>)
+        keyHolderId = {keyHolderId}
+        easeSequences = {easeSequences}
+        positionSequence = {timeSequence.map(time => toPosition(time))}
+        selectedSequence = {selectedSequence}
+        isGroup = {paramIds.length > 1}
+        key = {keyHolderId}/>)
 
       pos += height
-
-      if (model.openInTimeline && model.params) {
-        model.params.forEach(param => renderKeyline(param))
-      }
     }
 
-    timeline.tracks.forEach((param, idx) => renderKeyline(param))
+    timeline.tracks.forEach(trackId => {
+      const {params:paramIds} = getItemById({id: trackId})
+      renderKeyline(trackId, paramIds)
+      paramIds.forEach(paramId => renderKeyline(paramId, [paramId]))
+    })
 
     const menuItems = [
       {label: 'delete selected keys', onClick: () => {

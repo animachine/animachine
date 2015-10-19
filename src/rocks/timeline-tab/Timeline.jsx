@@ -30,13 +30,14 @@ const dragOptions = {
 @connect(
   (state) => {
     const projectManager = BETON.require('project-manager')
-    const {getCurrentTimelineId} = projectManager.selectors
+    const {getCurrentTimelineId, getItemById} = projectManager.selectors
     const timelineId = getCurrentTimelineId()
     if (!timelineId) {
       return {}
     }
-    const timeline = projectManager.selectors.combineTimeline(timelineId)
-    return {timeline}
+    const timeline = getItemById({id: timelineId})
+    const __combinedTimeline__ = projectManager.selectors.combineTimeline(timelineId)
+    return {__combinedTimeline__, timeline}
   },
   () => {
     const projectManager = BETON.require('project-manager')
@@ -102,7 +103,7 @@ export default class Timeline extends React.Component {
 
   render() {
     const {dividerPos, fullWidth, scrollPosition} = this.state
-    const {timeline, actions, selectors, headHeight, dragRef} = this.props
+    const {timeline, __combinedTimeline__, actions, selectors, headHeight, dragRef} = this.props
     const colors = getTheme(this).getStyle('colors')
     const rootStyle = {
       backgroundColor: colors.grey4,
@@ -128,19 +129,19 @@ export default class Timeline extends React.Component {
         style={{display: 'flex', pointerEvents: 'auto'}}>
       <div style={rootStyle}>
         <div style={{display: 'flex', height: headHeight}}>
-          <Toolbar {...commonProps} style={{width: dividerPos}}/>
+          <Toolbar {...{...commonProps, timeline: __combinedTimeline__}} style={{width: dividerPos}}/>
           <Timebar {...commonProps} height={headHeight}/>
         </div>
         <Scrollable
           style = {{display: 'flex', flex: 1, alignItems: 'flex-start'}}
           onChangeVerticalScroll = {this.handleChangeScrollPosition}
           verticalScroll = {scrollPosition}>
-          <Controls {...commonProps} style={{width: dividerPos}}/>
+          <Controls {...{...commonProps, timeline: __combinedTimeline__}} style={{width: dividerPos}}/>
           <Keylines {...commonProps}/>
         </Scrollable>
         <DividerLine ref={dragRef} position={dividerPos}/>
         <InlineEaseEditor {...{
-            timeline,
+            timeline: __combinedTimeline__,
             actions,
             selectors,
             dividerPos,

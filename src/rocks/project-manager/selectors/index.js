@@ -7,6 +7,7 @@ import {
 export * from './combine'
 export * from './getKeysAtTime'
 export * from './collectSelectedKeys'
+export * from './getParamsOfTimeline'
 export * from './getParent_of_'
 export * from './getParentTimelineIdByChildId'
 export * from './getTargetNodesOfTrack'

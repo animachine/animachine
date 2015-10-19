@@ -19,11 +19,10 @@ function getMouseTime(props, monitor) {
 
 const dragOptions = {
   onDown(props, monitor) {
-    const {model, timeline, actions, selectors} = props
-    const keyHolderId = model.id
+    const {keyHolderId, timeline, actions, selectors} = props
     const mouseTime = getMouseTime(props, monitor)
     const closestKey = selectors.getClosestKey({
-      keyHolderId: model.id,
+      keyHolderId,
       time: mouseTime
     })
 
@@ -56,8 +55,7 @@ const dragOptions = {
   },
 
   onDrag(props, monitor) {
-    const {model, actions} = props
-    const keyHolderId = model.id
+    const {keyHolderId, actions} = props
     const mouseTime = getMouseTime(props, monitor)
     const offset = mouseTime - monitor.data.lastMouseTime
 
@@ -73,8 +71,7 @@ const dragOptions = {
       return
     }
 
-    const {model, timeline, actions, selectors, top, height} = props
-    const keyHolderId = model.id
+    const {keyHolderId, timeline, actions, selectors, top, height} = props
     const mouseTime = getMouseTime(props, monitor)
     const nextKey = selectors.getNextKey({keyHolderId, time: mouseTime})
     if (!nextKey) {
@@ -106,9 +103,10 @@ export default class Keyline extends React.Component {
       pxpms: PropTypes.number,
       width: PropTypes.number,
     }),
-    keys: PropTypes.arrayOf(PropTypes.shape({
-
-    })),
+    keyHolderId: PropTypes.string,
+    keyTimes: PropTypes.arrayOf(PropTypes.number),
+    eases: PropTypes.arrayOf(PropTypes.object),
+    easeBounds: PropTypes.arrayOf(PropTypes.number),
     top: PropTypes.number,
     height: PropTypes.number,
     style: PropTypes.object,
@@ -154,88 +152,62 @@ export default class Keyline extends React.Component {
 
   postRender() {
     const {canvas, ctx} = this
-    const {model, timeline} = this.props
-    const {start} = timeline
     const colors = this.getColors()
-    const end = start + getVisibleTime({timeline})
-    const isGroup = model.type !== 'param'
+    const {
+      easeSequences,
+      positionSequence,
+      selectedSequence,
+      isGroup,
+    } = this.props
 
+    //clear and render border line
+    ctx.save()
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.strokeStyle = colors.border
     ctx.moveTo(0, canvas.height - 0.5)
     ctx.lineTo(canvas.width, canvas.height - 0.5)
     ctx.stroke()
+    ctx.restore()
 
-    const renderAllParam = model => {
-      if (model.keys) {
-        const sortedKeys = sortBy(model.keys, 'time')
-        let firstKeyIdx = 0
-        let lastKeyIdx = sortedKeys.length - 1
-
-        //search the first and the last keys outside the rendered area
-        sortedKeys.forEach((key, idx) => {
-          if (
-            key.time < -start &&
-            key.time > sortedKeys[firstKeyIdx].time
-          ) {
-            firstKeyIdx = idx
-          }
-          else if (
-            key.time > end &&
-            key.time < sortedKeys[lastKeyIdx].time
-          ) {
-            lastKeyIdx = idx
-          }
-        })
-
-        for (let i = firstKeyIdx; i <= lastKeyIdx; ++i) {
-          const key = sortedKeys[i]
-          this.drawKey(key, isGroup)
-
-          if (i !== firstKeyIdx) {
-            const startTime = sortedKeys[i-1].time
-            this.drawEase(key, startTime)
-          }
-        }
+    easeSequences.forEach((easeSequence) => {
+      for (let i = 0; i < easeSequence.length - 2; i += 2) {
+        const startPosition = easeSequence[i]
+        const ease = easeSequence[i + 1]
+        const endPosition = easeSequence[i + 2]
+        this.drawEase(ease, startPosition, endPosition)
       }
 
-      if (model.params) {
-        model.params.forEach(childParam => {
-          renderAllParam(childParam)
-        })
+      for (let i = 0; i < positionSequence.length; ++i) {
+        const position = positionSequence[i]
+        const selected = selectedSequence[i]
+        this.drawKey(position, selected, isGroup)
       }
-    }
-
-    renderAllParam(model)
+    })
   }
 
-  drawKey(key, isGroup) {
+  drawKey(position, selected, isGroup) {
     const {ctx} = this
-    const {height, timeline} = this.props
+    const {height} = this.props
     const colors = this.getColors()
-    const keyPos = parseInt(convertTimeToPosition({
-      timeline,
-      time: key.time
-    })) + 0.5
     const r = 2
 
     if (!isGroup) {
       ctx.save()
       ctx.beginPath()
-      ctx.strokeStyle = key.selected ? colors.selected : colors.normal
+      ctx.strokeStyle = selected ? colors.selected : colors.normal
       ctx.lineWidth = 1
-      ctx.moveTo(keyPos, 0)
-      ctx.lineTo(keyPos, height)
+      ctx.moveTo(position, 0)
+      ctx.lineTo(position, height)
       ctx.stroke()
       ctx.restore()
     }
     else {
       ctx.save()
       ctx.beginPath()
-      ctx.strokeStyle = key.selected ? colors.selected : colors.normal
-      ctx.fillStyle = key.selected ? colors.selected : colors.normal
+      ctx.strokeStyle = selected ? colors.selected : colors.normal
+      ctx.fillStyle = selected ? colors.selected : colors.normal
       ctx.lineWidth = 1
-      ctx.arc(keyPos, height/2, r, 0, 2 * Math.PI)
+      ctx.arc(position, height/2, r, 0, 2 * Math.PI)
       ctx.fill()
       ctx.stroke()
       ctx.restore()
@@ -246,20 +218,18 @@ export default class Keyline extends React.Component {
     //     ctx.beginPath()
     //     ctx.strokeStyle = colors.red
     //     ctx.lineWidth = 1
-    //     ctx.arc(keyPos, height/2, 6, 0, 2 * Math.PI)
+    //     ctx.arc(position, height/2, 6, 0, 2 * Math.PI)
     //     ctx.stroke()
     //     ctx.restore()
     // }
   }
 
-  drawEase(key, startTime) {
+  drawEase(ease, startPosition, endPosition) {
     const {ctx} = this
-    const {height, timeline} = this.props
+    const {height} = this.props
     const colors = this.getColors()
-    const easer = createEaser(key.ease)
-    const startPos = parseInt(convertTimeToPosition({timeline, time: startTime})) + 0.5
-    const endPos = parseInt(convertTimeToPosition({timeline, time: key.time})) + 0.5
-    const width = endPos - startPos
+    const easer = createEaser(ease)
+    const width = endPosition - startPosition
 
     if (width === 0) {
       return
@@ -269,10 +239,10 @@ export default class Keyline extends React.Component {
     ctx.beginPath()
     ctx.strokeStyle = colors.ease
     ctx.lineWidth = 1.2
-    ctx.moveTo(startPos, height)
+    ctx.moveTo(startPosition, height)
 
     for (let i = 0; i < width; ++i) {
-      ctx.lineTo(startPos + i, height - height * easer.getRatio(i/width))
+      ctx.lineTo(startPosition + i, height - height * easer.getRatio(i/width))
     }
 
     ctx.stroke()

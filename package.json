@@ -11,7 +11,7 @@
     "lib-watch": "npm run lib && babel ./src --out-dir lib  --source-maps --source-maps --watch",
     "test": "mocha --compilers js:babel/register",
     "test-debug": "node-debug _mocha --compilers js:babel/register",
-    "build-browser": "webpack --config webpack.browser.config.js",
+    "build-browser": "webpack --config webpack.browser.config.prod.js",
     "build-demo": "webpack --config demo/webpack.config.prod.js",
     "publish-browser": "npm run browser-build && gh-pages --dist browser --branch browser-dist",
     "publish-demo": "npm run build-demo && gh-pages --dist demo/dist"

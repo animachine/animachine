@@ -15,7 +15,7 @@ module.exports = {
   resolve: {
     extensions: ['', '.js', '.jsx'],
     alias: {
-      'animachine': path.join(__dirname, '../src/index.js'),
+      'animachine': path.join(__dirname, '../browser/animachine.js'),
       'react': path.join(__dirname, '../node_modules/react'),
     }
   },
@@ -37,11 +37,11 @@ module.exports = {
   },
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.DefinePlugin({
-      'process.env': {
-        'NODE_ENV': JSON.stringify('production')
-      }
-    }),
+    // new webpack.DefinePlugin({
+    //   'process.env': {
+    //     'NODE_ENV': JSON.stringify('production')
+    //   }
+    // }),
     new webpack.optimize.UglifyJsPlugin({
       compressor: {
         warnings: false

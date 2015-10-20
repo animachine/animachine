@@ -161,13 +161,12 @@ export default class Keyline extends React.Component {
     } = this.props
 
     //clear and render border line
-    ctx.save()
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.strokeStyle = colors.border
+    ctx.beginPath()
     ctx.moveTo(0, canvas.height - 0.5)
     ctx.lineTo(canvas.width, canvas.height - 0.5)
     ctx.stroke()
-    ctx.restore()
 
     easeSequences.forEach((easeSequence) => {
       for (let i = 0; i < easeSequence.length - 2; i += 2) {
@@ -176,13 +175,13 @@ export default class Keyline extends React.Component {
         const endPosition = easeSequence[i + 2]
         this.drawEase(ease, startPosition, endPosition)
       }
-
-      for (let i = 0; i < positionSequence.length; ++i) {
-        const position = positionSequence[i]
-        const selected = selectedSequence[i]
-        this.drawKey(position, selected, isGroup)
-      }
     })
+
+    for (let i = 0; i < positionSequence.length; ++i) {
+      const position = positionSequence[i]
+      const selected = selectedSequence[i]
+      this.drawKey(position, selected, isGroup)
+    }
   }
 
   drawKey(position, selected, isGroup) {
@@ -191,17 +190,7 @@ export default class Keyline extends React.Component {
     const colors = this.getColors()
     const r = 2
 
-    if (!isGroup) {
-      ctx.save()
-      ctx.beginPath()
-      ctx.strokeStyle = selected ? colors.selected : colors.normal
-      ctx.lineWidth = 1
-      ctx.moveTo(position, 0)
-      ctx.lineTo(position, height)
-      ctx.stroke()
-      ctx.restore()
-    }
-    else {
+    if (isGroup) {
       ctx.save()
       ctx.beginPath()
       ctx.strokeStyle = selected ? colors.selected : colors.normal
@@ -209,6 +198,16 @@ export default class Keyline extends React.Component {
       ctx.lineWidth = 1
       ctx.arc(position, height/2, r, 0, 2 * Math.PI)
       ctx.fill()
+      ctx.stroke()
+      ctx.restore()
+    }
+    else {
+      ctx.save()
+      ctx.beginPath()
+      ctx.strokeStyle = selected ? colors.selected : colors.normal
+      ctx.lineWidth = 1
+      ctx.moveTo(position, 0)
+      ctx.lineTo(position, height)
       ctx.stroke()
       ctx.restore()
     }

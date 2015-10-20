@@ -11,8 +11,10 @@
     "lib-watch": "npm run lib && babel ./src --out-dir lib  --source-maps --source-maps --watch",
     "test": "mocha --compilers js:babel/register",
     "test-debug": "node-debug _mocha --compilers js:babel/register",
-    "browser-build": "webpack --config webpack.browser.config.js",
-    "publish-browser": "npm run browser-build && gh-pages --dist browser --branch browser-dist"
+    "build-browser": "webpack --config webpack.browser.config.js",
+    "build-demo": "webpack --config demo/webpack.config.prod.js",
+    "publish-browser": "npm run browser-build && gh-pages --dist browser --branch browser-dist",
+    "publish-demo": "npm run build-demo && gh-pages --dist demo/dist"
   },
   "repository": {
     "type": "git",
@@ -32,14 +34,14 @@
     "custom-drag": "0.0.3",
     "event-emitter": "^0.3.3",
     "eventman": "0.0.1",
-    "json-vision": "^0.1.6",
+    "json-vision": "^0.1.7",
     "lodash": "^3.10.0",
     "putainde-localstorage": "^4.0.0",
-    "react-animachine-enhancer": "0.0.0",
+    "react-animachine-enhancer": "0.0.2",
     "react-dnd": "^1.1.8",
     "react-gsap-enhancer": "^0.1.14",
     "react-hotkeys": "^0.5.0",
-    "react-matterkit": "0.0.44",
+    "react-matterkit": "0.0.45",
     "react-redux": "^3.1.0",
     "react-remarkable": "^1.1.1",
     "react-zeroclipboard": "^2.0.1",
@@ -58,6 +60,7 @@
     "chai": "^3.3.0",
     "chai-spies": "^0.7.1",
     "coveralls": "^2.11.4",
+    "envify-loader": "^0.1.0",
     "eslint": "^1.5.0",
     "eslint-plugin-babel": "^2.1.1",
     "eslint-plugin-mocha": "^1.0.0",
@@ -81,7 +84,7 @@
     "react-router": "^1.0.0-rc3",
     "react-transform-hmr": "^1.0.1",
     "uid": "0.0.2",
-    "webpack": "*",
+    "webpack": "^1.12.2",
     "webpack-dev-server": "*"
   }
 }

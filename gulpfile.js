@@ -4,27 +4,12 @@ var size = require('gulp-size')
 var zip = require('gulp-zip')
 var webpack = require('webpack')
 var WebpackDevServer = require('webpack-dev-server')
-var demoWebpackConfig = require('./demo/webpack.config.js')
-var browserWebpackConfig = require('./webpack.browser.config.js')
+var demoWebpackConfig = require('./demo/webpack.config.dev.js')
+var browserWebpackConfig = require('./webpack.browser.config.dev.js')
 var ghPages = require('gulp-gh-pages')
 
 
 gulp.task('default', ['webpack-dev-server'])
-
-gulp.task('gh-pages', ['build-demo'], function() {
-  return gulp.src('./demo/dist/**/*')
-    .pipe(ghPages())
-})
-
-gulp.task('build-demo', function(callback) {
-	webpack(demoWebpackConfig, function(err, stats) {
-		if(err) throw new gutil.PluginError('build-demo', err)
-		gutil.log('[webpack:build]', stats.toString({
-			colors: true
-		}))
-		callback()
-	})
-})
 
 gulp.task('webpack-dev-server', function(callback) {
 	// modify some webpack config options

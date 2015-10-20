@@ -8,7 +8,9 @@ BETON.define({
     const store = createStore(reducerSwitch)
 
     function reducerSwitch(state = {}, action) {
-      console.log(action.type, action)
+      if (__DEV__) {
+        console.log(action.type, action)
+      }
       tracker.track({eventType: action.type, value: action})
 
       const nextState = {...state}

@@ -37,7 +37,9 @@ function tryToResolve() {
       // }
 
       BETON[camelCase(id)] = rock
-      console.log(`[BETON] resolve rock - ${id}`)
+      if (__DEV__) {
+        console.log(`[BETON] resolve rock - ${id}`)
+      }
       resolvedANewRock = true
     }
   })
@@ -69,5 +71,6 @@ setTimeout(() => {
   waitingRocks.forEach((rock, id) => console.error(`[BETON] ${id} is still waiting!`, rock.dependencies.filter(id => !hasRock(id))))
 }, 1234)
 
+console.log('BBBBBBBBBBBBBBBBB')
 global.BETON = BETON
 export default BETON

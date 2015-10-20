@@ -30,14 +30,14 @@ const dragOptions = {
 @connect(
   (state) => {
     const projectManager = BETON.require('project-manager')
-    const {getCurrentTimelineId, getItemById} = projectManager.selectors
+    const {getCurrentTimelineId, getItemById, getItems} = projectManager.selectors
     const timelineId = getCurrentTimelineId()
     if (!timelineId) {
       return {}
     }
     const timeline = getItemById({id: timelineId})
-    const __combinedTimeline__ = projectManager.selectors.combineTimeline(timelineId)
-    return {__combinedTimeline__, timeline}
+    const items = getItems()//pass items to make sure that timeline updates if any of the items has changed
+    return {timeline, items}
   },
   () => {
     const projectManager = BETON.require('project-manager')
@@ -129,19 +129,19 @@ export default class Timeline extends React.Component {
         style={{display: 'flex', pointerEvents: 'auto'}}>
       <div style={rootStyle}>
         <div style={{display: 'flex', height: headHeight}}>
-          <Toolbar {...{...commonProps, timeline: __combinedTimeline__}} style={{width: dividerPos}}/>
+          <Toolbar {...commonProps} style={{width: dividerPos}}/>
           <Timebar {...commonProps} height={headHeight}/>
         </div>
         <Scrollable
           style = {{display: 'flex', flex: 1, alignItems: 'flex-start'}}
           onChangeVerticalScroll = {this.handleChangeScrollPosition}
           verticalScroll = {scrollPosition}>
-          <Controls {...{...commonProps, timeline: __combinedTimeline__}} style={{width: dividerPos}}/>
+          <Controls {...commonProps} style={{width: dividerPos}}/>
           <Keylines {...commonProps}/>
         </Scrollable>
         <DividerLine ref={dragRef} position={dividerPos}/>
         <InlineEaseEditor {...{
-            timeline: __combinedTimeline__,
+            timeline,
             actions,
             selectors,
             dividerPos,

@@ -7,15 +7,23 @@ const createTypeSelector = types => connect => {
 
 export default [{
     selector: 'root',
+    // shouldUpdate,
     hiddenHead: true,
-    children: connect => connect.value.tracks,
+    children: connect => {
+      const {getItemById} = BETON.require('project-manager').selectors
+      return connect.value.tracks.map(trackId => getItemById({id: trackId}))
+    },
   }, {
     selector: createTypeSelector(['track']),
+    // shouldUpdate,
     label: connect => connect.value.name,
     open: connect => connect.value.openInTimeline,
     onClick: handleSelectClick,
     onToggleOpen: handleToggleOpen,
-    children: connect => connect.value.params,
+    children: connect => {
+      const {getItemById} = BETON.require('project-manager').selectors
+      return connect.value.params.map(paramId => getItemById({id: paramId}))
+    },
     buttons: connect => [
       // {
       //   icon: 'cube',
@@ -63,6 +71,7 @@ export default [{
     }
   }, {
     selector: createTypeSelector(['param']),
+    // shouldUpdate,
     label: connect => connect.value.name,
     open: connect => connect.value.openInTimeline,
     onClick: handleSelectClick,
@@ -91,6 +100,10 @@ export default [{
   },
   createParamSettings
 ]
+
+function shouldUpdate(previousConnect, nextConnect) {
+  return previousConnect.value === nextConnect.value
+}
 
 function showItemSettingsDialog() {
   BETON.require('item-settings-dialog').show()

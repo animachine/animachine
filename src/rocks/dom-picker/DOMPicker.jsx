@@ -1,5 +1,8 @@
 import React from 'react'
+import {connect} from 'react-redux'
+import {getPickerDOMNode} from 'store/selectors'
 
+@connect(() => ({node: getPickerDOMNode()}))
 export default class DomPicker extends React.Component {
   static propTypes = {
     node: React.PropTypes.object,

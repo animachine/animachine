@@ -1,5 +1,9 @@
 import React from 'react'
 import {Provider} from 'react-redux'
+import DOMPicker from './DOMPicker'
+import reducer from './store/reducer'
+import actions from './store/actions'
+import selectors from './store/selectors'
 
 BETON.define({
   id: 'transform-tool',
@@ -10,9 +14,14 @@ BETON.define({
       index: 100,
       getElement: () => {
         return <Provider store={store}>
-          <TransformTool/>
+          <DOMPicker/>
         </Provider>
       }
     })
+
+    return {
+      actions,
+      selectors,
+    }
   }
 })

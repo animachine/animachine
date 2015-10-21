@@ -1,16 +1,19 @@
-import {createStore} from 'redux'
+import {createStore, applyMiddleware} from 'redux'
+import frameDebounce from 'frame-debounce'
+import {batchedSubscribe} from 'redux-batched-subscribe'
 
 BETON.define({
   id: 'store',
   dependencies: ['tracker'],
   init: ({tracker}) => {
     const reducers = new Map()
-    const store = createStore(reducerSwitch)
+    const batchDebounce = frameDebounce(notify => notify())
+    const store = batchedSubscribe(batchDebounce)(createStore)(reducerSwitch)
 
+      // if (__DEV__) {
+      //   console.log(action.type, action)
+      // }
     function reducerSwitch(state = {}, action) {
-      if (__DEV__) {
-        console.log(action.type, action)
-      }
       tracker.track({eventType: action.type, value: action})
 
       const nextState = {...state}
@@ -25,7 +28,7 @@ BETON.define({
       store.dispatch({type: ''})
     }
 
-    store.subscribe(() => console.log(store.getState()))
+    store.subscribe(() => console.log('FIRE!!!!!', store.getState()))
 
     return store
   }

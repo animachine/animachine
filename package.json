@@ -34,6 +34,7 @@
     "custom-drag": "0.0.3",
     "event-emitter": "^0.3.3",
     "eventman": "0.0.1",
+    "frame-debounce": "^1.0.1",
     "json-vision": "^0.1.7",
     "lodash": "^3.10.0",
     "putainde-localstorage": "^4.0.0",
@@ -46,6 +47,7 @@
     "react-remarkable": "^1.1.1",
     "react-zeroclipboard": "^2.0.1",
     "redux": "^3.0.2",
+    "redux-batched-subscribe": "^0.1.4",
     "reselect": "0.0.2",
     "spaceman": "0.0.17",
     "transhand": "^0.1.23"

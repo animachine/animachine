@@ -4,8 +4,8 @@ import ContactLayer from './ContactLayer'
 
 BETON.define({
   id: 'contact-layer',
-  dependencies: ['workspace', 'project-manager'],
-  init: ({workspace, projectManager}) => {
+  dependencies: ['workspace', 'project-manager', 'dom-picker'],
+  init: ({workspace, projectManager, domPicker}) => {
     let node
 
     function handleRef(component) {
@@ -13,27 +13,31 @@ BETON.define({
     }
 
     function handlePick(e) {
-      const {clientX: x, clientY: y} = e
-      node.style.pointerEvents = 'none'
-      const pickedNode = document.elementFromPoint(x, y)
-      node.style.pointerEvents = 'auto'
+      const {setPickedDOMNode} = domPicker.actions
       const {
         getTargetNodesOfTrack,
         getCurrentTimeline,
       } = projectManager.selectors
+      const {clientX: x, clientY: y} = e
       const timeline = getCurrentTimeline()
 
+      node.style.pointerEvents = 'none'
+      const pickedDOMNode = document.elementFromPoint(x, y)
+      node.style.pointerEvents = 'auto'
+
+      let isFindATrackBelongsToThePickedNode = false
       if (timeline) {
         let selectedTrackId
 
         timeline.tracks.forEach(trackId => {
           const targets = getTargetNodesOfTrack({trackId})
-          if (targets.indexOf(pickedNode) !== -1) {
+          if (targets.indexOf(pickedDOMNode) !== -1) {
             selectedTrackId = trackId
           }
         })
 
         if (selectedTrackId) {
+          isFindATrackBelongsToThePickedNode = true
           projectManager.actions.setCurrentTrackIdOfTimeline({
             currentTrackId: selectedTrackId,
             timelineId: timeline.id
@@ -41,6 +45,9 @@ BETON.define({
         }
       }
 
+      if (!isFindATrackBelongsToThePickedNode) {
+        setPickedDOMNode({pickedDOMNode})
+      }
     }
 
     workspace.setTabContent('hole', <ContactLayer

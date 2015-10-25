@@ -1,5 +1,4 @@
-const store = BETON.require('store')
-
-export function getPickerDOMNode() {
-  return store.getState().pickedDOMNode
+export function getPickedDOMNode() {
+  const {getState} = BETON.require('store')
+  return getState().pickedDOMNode
 }

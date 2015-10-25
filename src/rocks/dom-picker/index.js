@@ -2,16 +2,17 @@ import React from 'react'
 import {Provider} from 'react-redux'
 import DOMPicker from './DOMPicker'
 import reducer from './store/reducer'
-import actions from './store/actions'
-import selectors from './store/selectors'
+import * as actions from './store/actions'
+import * as selectors from './store/selectors'
 
 BETON.define({
-  id: 'transform-tool',
+  id: 'dom-picker',
   dependencies: ['workspace', 'store'],
   init: ({workspace, store}) => {
-    console.log({workspace})
-    workspace.overlays.setOverlay('transform-tool', {
-      index: 100,
+    store.addReducer('pickedDOMNode', reducer)
+
+    workspace.overlays.setOverlay('dom-picker', {
+      index: 110,
       getElement: () => {
         return <Provider store={store}>
           <DOMPicker/>

@@ -1,5 +1,6 @@
 require('./beton')
 require('./rocks/debugger-tab')
+require('./rocks/dom-picker')
 require('./rocks/component-inspector')
 require('./rocks/config')
 require('./rocks/contact-layer')

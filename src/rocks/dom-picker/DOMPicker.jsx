@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {getPickedDOMNode} from './store/selectors'
+import {setPickedDOMNode} from './store/actions'
 import {Button} from 'react-matterkit'
 
 @connect(() => ({node: getPickedDOMNode()}))
@@ -20,7 +21,19 @@ export default class DomPicker extends React.Component {
   }
 
   handleMouseLeave = (e) => {
-    // this.setState({hover: false})
+    this.setState({hover: false})
+  }
+
+  addNewTrack(node) {
+    const generateSelector = BETON.require('generate-selector')
+    const {selectors, actions, normalize} = BETON.require('project-manager')
+    const timelineId = selectors.getCurrentTimelineId()
+    actions.addTrackToTimeline({
+      parentTimelineId: timelineId,
+      childSource: {
+        selectors: [generateSelector({node})]
+      }
+    })
   }
 
   render() {
@@ -56,7 +69,7 @@ export default class DomPicker extends React.Component {
     }
 
     function selectNode(nextNode) {
-      const {actions} = BETON.require('project-manager')
+      setPickedDOMNode({pickedDOMNode: nextNode})
     }
 
     function renderButton(icon, tooltip, onClick, style) {
@@ -79,7 +92,6 @@ export default class DomPicker extends React.Component {
     }
 
     return <div
-      ref = {c => console.log("dddddddddddDDDD", React.findDOMNode(c))}
       style = {baseStyle}
       onMouseEnter = {this.handleMouseEnter}
       onMouseLeave = {this.handleMouseLeave}>
@@ -118,7 +130,7 @@ export default class DomPicker extends React.Component {
         {renderButton(
           'plus',
           'create a new track with this node',
-          () => {},
+          () => this.addNewTrack(node),
           {right: `-${buttonSize}px`, bottom: `-${buttonSize}px`}
         )}
       </div>

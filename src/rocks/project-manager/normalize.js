@@ -2,7 +2,7 @@ import omit from 'lodash/object/omit'
 import isUndefined from 'lodash/lang/isUndefined'
 import createItem from './createItem'
 
-export default function (projectTree) {
+export default function ({source, type}) {
   let items = []
 
   const createNormalizer = (type, mod) => tree => {
@@ -53,18 +53,33 @@ export default function (projectTree) {
     timelines: map(tree.timelines, normalizeTimeline)
   }))
 
-  normalizeProject(projectTree)
-  let project = items[items.length - 1]
+  switch(type) {
+    case 'selector':
+    normalizeSelector(source)
+    break
+
+    case 'track':
+    normalizeTrack(source)
+    break
+
+    case 'project':
+    default:
+    normalizeProject(source)
+    break
+  }
+  let rootItem = items[items.length - 1]
 
   //if there is no current timeline set the first
-  if (!project.currentTimelineId) {
+  if (rootItem.type === 'project' && !rootItem.currentTimelineId) {
     const timeline = items.find(item => item.type === 'timeline')
     if (timeline) {
-      project = {...project, currentTimelineId: timeline.id}
-      items = [...items.slice(0, items.length - 1), project]
+      rootItem = {...rootItem, currentTimelineId: timeline.id}
+      items = [...items.slice(0, items.length - 1), rootItem]
     }
   }
 
-  console.log('normalizer', {items, projectId: project.id})
-  return {items, projectId: project.id}
+  if (__DEV__) {
+    console.log('normalizer', {items, id: rootItem.id})
+  }
+  return {items, id: rootItem.id}
 }

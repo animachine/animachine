@@ -1,4 +1,4 @@
- import generateReactSelector from './generateReactSelector'
+import generateReactSelector from './generateReactSelector'
 import ReactDOM from 'react-dom'
 
 BETON.define({
@@ -12,11 +12,11 @@ BETON.define({
         selectors.getPreviewComponentsOfProject({projectId})
 
       if (type === 'react') {
-        const rootNode = previewComponents.map(component => {
-            return ReactDOM.findDOMNode(component)
-          })
-          .find(testRootNode => testRootNode.contains(node))
-        return generateReactSelector(node, rootNode)
+        const rootComponent = previewComponents.find(component => {
+          const testRootNode = ReactDOM.findDOMNode(component)
+          return testRootNode.contains(node)
+        })
+        return generateReactSelector(node, rootComponent)
       }
       else if (type === 'dom') {
         return generateQuerySelector()

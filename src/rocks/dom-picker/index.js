@@ -7,7 +7,7 @@ import * as selectors from './store/selectors'
 
 BETON.define({
   id: 'dom-picker',
-  dependencies: ['workspace', 'store'],
+  dependencies: ['workspace', 'store', 'generate-selector'],
   init: ({workspace, store}) => {
     store.addReducer('pickedDOMNode', reducer)
 

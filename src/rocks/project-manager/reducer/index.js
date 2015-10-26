@@ -1,6 +1,6 @@
 import camelCase from 'lodash/string/camelCase'
 import capitalize from 'lodash/string/capitalize'
-import normalizeProjectTree from '../normalizeProjectTree'
+import normalize from '../normalize'
 import * as actions from '../actions'
 import createItem from '../createItem'
 import history from './history'
@@ -44,7 +44,10 @@ function reducer (projectManager, action) {
   const {type} = action
   switch (type) {
     case actions.OPEN_PROJECT: {
-      const {items, projectId} = normalizeProjectTree(action.projectSource)
+      const {items, id: projectId} = normalize({
+        source: action.projectSource,
+        type: 'project'
+      })
       console.log('OPEN_PROJECT', {items, projectId})
       return {
         ...projectManager,
@@ -116,7 +119,7 @@ function reducer (projectManager, action) {
           allHasKey = false
         }
       }})
-      
+
       recurseParams({keyHolderId, callback: param => {
         if (isEndParam(param)) {
           if (allHasKey) {
@@ -201,12 +204,22 @@ function reducer (projectManager, action) {
         .slice(1, 3)
         .map(camelCase)
       const targetItem = getItemById({id: action[`${targetKey}Id`]})
-      const childItem = createItem({type: childType})
 
-      projectManager = setItem({projectManager, item: childItem})
+      let childId
+      if (action.childSource) {
+        const {items, id} = normalize(action.childSource, 'childType')
+        items.forEach(item => {
+          projectManager = setItem({projectManager, item})
+        })
+      }
+      else {
+        const childItem = createItem({type: childType})
+        childId = childItem.id
+      }
+
       return addChild({
         projectManager,
-        childId: childItem.id,
+        childId,
         parentId: targetItem.id,
         childrenKey: `${childType}s`
       })

@@ -3,14 +3,13 @@ import {createTarget} from 'react-animachine-enhancer'
 export default function (node, rootComponent) {
   const itemTree = rootComponent.__itemTree
   // const rootTarget = createTarget(itemTree)
-  debugger
   const {item:itemOfNode, key:keyOfNode} = findItemOfNode(itemTree, node)
-  return [{type: 'find', selector: {key}}]
+  return [{type: 'find', selector: {key: keyOfNode}}]
 }
 
 function findItemOfNode(itemTree, node) {
   let result
-  recurseChildren({children: itemTree}, (item, key) => {
+  recurseChildren(itemTree, (item, key) => {
     if (item.node === node) {
       result = {item, key}
     }
@@ -19,9 +18,9 @@ function findItemOfNode(itemTree, node) {
 }
 
 
-function iterateChildren(item, callback) {
-  if (item) {
-    item.forEach((childItem, key) => {
+function iterateChildren(childItemMap, callback) {
+  if (childItemMap) {
+    childItemMap.forEach((childItem, key) => {
       if (isMounted(childItem)) {
         callback(childItem, key)
       }
@@ -34,4 +33,8 @@ function recurseChildren(item, callback) {
     callback(childItem, key)
     recurseChildren(childItem.children, callback)
   })
+}
+
+function isMounted(item) {
+  return !!item.node
 }

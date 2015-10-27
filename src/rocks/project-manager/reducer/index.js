@@ -1,5 +1,6 @@
 import camelCase from 'lodash/string/camelCase'
 import capitalize from 'lodash/string/capitalize'
+import findLast from 'lodash/collection/findLast'
 import normalize from '../normalize'
 import * as actions from '../actions'
 import createItem from '../createItem'
@@ -207,13 +208,20 @@ function reducer (projectManager, action) {
 
       let childId
       if (action.childSource) {
-        const {items, id} = normalize(action.childSource, 'childType')
-        items.forEach(item => {
-          projectManager = setItem({projectManager, item})
+        const {items, id} = normalize({
+          source: action.childSource,
+          type: childType
         })
+        //add the newly created items to the projectManager
+        projectManager = {
+          ...projectManager,
+          items: [...projectManager.items, ...items]
+        }
+        childId = findLast(items, {type: childType}).id
       }
       else {
         const childItem = createItem({type: childType})
+        projectManager = setItem({projectManager, item: childItem})
         childId = childItem.id
       }
 

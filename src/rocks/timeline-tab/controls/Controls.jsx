@@ -10,7 +10,7 @@ export default class Controls extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return false //!nextProps.timeline.isPlaying
+    return !nextProps.timeline.isPlaying
   }
 
   renderConrols() {

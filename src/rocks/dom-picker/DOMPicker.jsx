@@ -21,7 +21,7 @@ export default class DomPicker extends React.Component {
   }
 
   handleMouseLeave = (e) => {
-    this.setState({hover: false})
+    // this.setState({hover: false})
   }
 
   addNewTrack(node) {
@@ -29,7 +29,8 @@ export default class DomPicker extends React.Component {
     const {selectors, actions, normalize} = BETON.require('project-manager')
     const timelineId = selectors.getCurrentTimelineId()
     actions.addTrackToTimeline({
-      parentTimelineId: timelineId,
+      timelineId,
+      name: 'new track',
       childSource: {
         selectors: [generateSelector({node})]
       }
@@ -65,19 +66,32 @@ export default class DomPicker extends React.Component {
       transform: `translate(-${borderSize}px,-${borderSize}px)`,
     }
     const buttonContainerStyle = {
-      position: 'absolute'
+      position: 'absolute',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      left: 0,
+      top: 0,
+      width: '100%',
+      height: '100%',
     }
 
     function selectNode(nextNode) {
       setPickedDOMNode({pickedDOMNode: nextNode})
     }
 
-    function renderButton(icon, tooltip, onClick, style) {
+    function renderButton(icon, tooltip, onClick, style, hidden) {
+      if (hidden) {
+        return null
+      }
+
       if (style.margin) {
         style = {
           ...style,
           position: 'absolute',
           margin: null,
+          width: buttonSize,
+          height: buttonSize,
           marginTop: style.margin[0],
           marginBottom: style.margin[0],
           marginLeft: style.margin[1],
@@ -101,25 +115,29 @@ export default class DomPicker extends React.Component {
           'angle-up',
           'up one level',
           () => selectNode(node.parentElement),
-          {top: `-${buttonSize}px`, left: 0, right: 0, margin: ['0', 'auto']}
+          {top: `-${buttonSize}px`, left: 0, right: 0, margin: ['0', 'auto']},
+          !node.parentElement
         )}
         {renderButton(
           'angle-right',
           'next sibling',
           () => selectNode(node.nextElementSibling),
-          {right: `-${buttonSize}px`, top: 0, bottom: 0, margin: ['auto', '0']}
+          {right: `-${buttonSize}px`, top: 0, bottom: 0, margin: ['auto', '0']},
+          !node.nextElementSibling
         )}
         {renderButton(
           'angle-down',
           'down one level',
           () => selectNode(node.firstElementChild),
-          {bottom: `-${buttonSize}px`, left: 0, right: 0, margin: ['0', 'auto']}
+          {bottom: `-${buttonSize}px`, left: 0, right: 0, margin: ['0', 'auto']},
+          !node.firstElementChild
         )}
         {renderButton(
           'angle-left',
           'previous sibling',
           () => selectNode(node.previousElementSibling),
-          {left: `-${buttonSize}px`, top: 0, bottom: 0, margin: ['auto', '0']}
+          {left: `-${buttonSize}px`, top: 0, bottom: 0, margin: ['auto', '0']},
+          !node.previousElementSibling
         )}
         {/*renderButton(
           'cancel',

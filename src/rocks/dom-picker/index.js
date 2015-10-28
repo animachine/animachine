@@ -4,6 +4,7 @@ import DOMPicker from './DOMPicker'
 import reducer from './store/reducer'
 import * as actions from './store/actions'
 import * as selectors from './store/selectors'
+import {HotKeys} from 'react-hotkeys'
 
 BETON.define({
   id: 'dom-picker',
@@ -11,11 +12,20 @@ BETON.define({
   init: ({workspace, store}) => {
     store.addReducer('pickedDOMNode', reducer)
 
+    const hotkeyMap = {
+      'cancel': ['esc']
+    }
+    const hotkeyHandlers = {
+      cancel: () => console.log('canceled')
+    }
+
     workspace.overlays.setOverlay('dom-picker', {
       index: 110,
       getElement: () => {
         return <Provider store={store}>
-          <DOMPicker/>
+          <HotKeys keyMap={hotkeyMap} handlers={hotkeyHandlers}>
+            <DOMPicker/>
+          </HotKeys>
         </Provider>
       }
     })

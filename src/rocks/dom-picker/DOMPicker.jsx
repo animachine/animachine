@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
 import {getPickedDOMNode} from './store/selectors'
 import {setPickedDOMNode} from './store/actions'
@@ -7,8 +7,22 @@ import {Button} from 'react-matterkit'
 @connect(() => ({node: getPickedDOMNode()}))
 export default class DomPicker extends React.Component {
   static propTypes = {
-    node: React.PropTypes.object,
-    onChange: React.PropTypes.func,
+    node: PropTypes.object,
+    onChange: PropTypes.func,
+    getBounds: PropTypes.func,
+    buttonSize: PropTypes.number,
+    borderSize: PropTypes.number,
+  }
+
+  static defaultProps = {
+    getBounds: () => ({
+      x: 0,
+      y: 0,
+      w: window.innerWidth,
+      h: window.innerHeight,
+    }),
+    buttonSize: 21,
+    borderSize: 2,
   }
 
   constructor(props) {
@@ -37,16 +51,44 @@ export default class DomPicker extends React.Component {
     })
   }
 
+  getRect() {
+    const {buttonSize, node, getBounds} = this.props
+    let {top, left, width, height} = node.getBoundingClientRect()
+    const [oTop, oLeft, oWidth, oHeight] = [top, left, width, height]
+    const {x: wLeft, y: wTop, w: wWidth, h: wHeight} = getBounds()
+
+    width = Math.max(buttonSize, oWidth)
+    height = Math.max(buttonSize, oHeight)
+
+    left += (oWidth - width) / 2
+    top += (oHeight - height) / 2
+
+    if (left < wLeft + buttonSize) {
+        left = wLeft + buttonSize
+        width = Math.max(buttonSize, oLeft + oWidth - left)
+    }
+    if (top < wTop + buttonSize) {
+        top = wTop + buttonSize
+        height = Math.max(buttonSize, oTop + oHeight - top)
+    }
+    if (left + width > wLeft + wWidth - buttonSize) {
+      width = wLeft + wWidth - buttonSize - left
+    }
+    if (top + height > wTop + wHeight - buttonSize) {
+      height = wTop + wHeight - buttonSize - top
+    }
+
+    return {left, top, width, height}
+  }
+
   render() {
-    const {node, onChange} = this.props
+    const {node, onChange, buttonSize, borderSize} = this.props
 
     if (!node) {
       return <div hidden/>
     }
 
-    const {left, top, width, height} = node.getBoundingClientRect()
-    const buttonSize = 21
-    const borderSize = 2
+    const {left, top, width, height} = this.getRect()
     const baseStyle = {
       position: 'fixed',
       left, top, width, height,
@@ -80,26 +122,33 @@ export default class DomPicker extends React.Component {
       setPickedDOMNode({pickedDOMNode: nextNode})
     }
 
-    function renderButton(icon, tooltip, onClick, style, hidden) {
+    function renderButton(icon, tooltip, onClick, originalStyle, hidden) {
       if (hidden) {
         return null
       }
 
-      if (style.margin) {
+      let style = {
+        ...originalStyle,
+        margin: null,
+        width: buttonSize,
+        height: buttonSize,
+        textShadow: '0 0 2px #555, 0 0 2px #555'
+      }
+
+      if (originalStyle.margin) {
         style = {
           ...style,
           position: 'absolute',
-          margin: null,
-          width: buttonSize,
-          height: buttonSize,
-          marginTop: style.margin[0],
-          marginBottom: style.margin[0],
-          marginLeft: style.margin[1],
-          marginRight: style.margin[1],
+          marginTop: originalStyle.margin[0],
+          marginBottom: originalStyle.margin[0],
+          marginLeft: originalStyle.margin[1],
+          marginRight: originalStyle.margin[1],
         }
       }
+
       return <Button
         icon = {icon}
+        mod = {{kind: 'stamp'}}
         tooltip = {tooltip}
         onClick = {onClick}
         style = {style}/>
@@ -112,44 +161,44 @@ export default class DomPicker extends React.Component {
       <div style={dashedStyle}/>
       <div style={buttonContainerStyle} hidden={!this.state.hover}>
         {renderButton(
-          'angle-up',
+          'chevron-up',
           'up one level',
           () => selectNode(node.parentElement),
           {top: `-${buttonSize}px`, left: 0, right: 0, margin: ['0', 'auto']},
           !node.parentElement
         )}
         {renderButton(
-          'angle-right',
+          'chevron-right',
           'next sibling',
           () => selectNode(node.nextElementSibling),
           {right: `-${buttonSize}px`, top: 0, bottom: 0, margin: ['auto', '0']},
           !node.nextElementSibling
         )}
         {renderButton(
-          'angle-down',
+          'chevron-down',
           'down one level',
           () => selectNode(node.firstElementChild),
           {bottom: `-${buttonSize}px`, left: 0, right: 0, margin: ['0', 'auto']},
           !node.firstElementChild
         )}
         {renderButton(
-          'angle-left',
+          'chevron-left',
           'previous sibling',
           () => selectNode(node.previousElementSibling),
           {left: `-${buttonSize}px`, top: 0, bottom: 0, margin: ['auto', '0']},
           !node.previousElementSibling
         )}
-        {/*renderButton(
-          'cancel',
+        {renderButton(
+          'times',
           'close',
-          () => {},
-          {right: `-${buttonSize}px`, top: `-${buttonSize}px`}
-        )*/}
+          () => setPickedDOMNode({pickedDOMNode: undefined}),
+          {right: `-${buttonSize}px`, top: `-${buttonSize}px`, margin: [0, 0]}
+        )}
         {renderButton(
           'plus',
           'create a new track with this node',
           () => this.addNewTrack(node),
-          {right: `-${buttonSize}px`, bottom: `-${buttonSize}px`}
+          {}
         )}
       </div>
     </div>

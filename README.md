@@ -2,6 +2,8 @@
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/animachine/animachine?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/animachine/animachine.svg)](https://travis-ci.org/animachine/animachine)
 
+#This version is outdated! The new one is availabale [here](https://github.com/animachine/animachine#readme)!
+
 <img src="http://s9.postimg.org/mqolutoxb/amheader.png">
 
 The animachine is a GUI for [GSAP].  
@@ -44,8 +46,8 @@ We're working to reach the beta state where you can start using it in your proje
 - [react-theme](https://github.com/azazdeaz/react-theme)
 
 [extension]: https://chrome.google.com/webstore/detail/animachine/gpnfomkfgajaojpakbkikiekmajeojgd
-[demo-marspolip]: http://animachine.github.io/animachine/demos/marspolip/
-[demo-argh]: http://animachine.github.io/animachine/demos/argh/
-[tour-quickstart]: http://animachine.github.io/animachine/tours/quickstart/
-[tour-bezier]: http://animachine.github.io/animachine/tours/bezier/
+[demo-marspolip]: http://animachine.github.io/temp/demos/marspolip/
+[demo-argh]: http://animachine.github.io/temp/demos/argh/
+[tour-quickstart]: http://animachine.github.io/temp/tours/quickstart/
+[tour-bezier]: http://animachine.github.io/temp/tours/bezier/
 [GSAP]: http://greensock.com/

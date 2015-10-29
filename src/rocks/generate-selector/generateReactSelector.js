@@ -4,11 +4,16 @@ export default function (node, rootComponent) {
   const itemTree = rootComponent.__itemTree
   // const rootTarget = createTarget(itemTree)
   const {item:itemOfNode, key:keyOfNode} = findItemOfNode(itemTree, node)
-  return [{type: 'find', selector: {key: keyOfNode}}]
+  if (keyOfNode) {
+    return [{type: 'find', selector: {key: keyOfNode}}]
+  }
+  else {
+    return false
+  }
 }
 
 function findItemOfNode(itemTree, node) {
-  let result
+  let result = {}
   recurseChildren(itemTree, (item, key) => {
     if (item.node === node) {
       result = {item, key}

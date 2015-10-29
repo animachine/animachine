@@ -16,7 +16,12 @@ BETON.define({
           const testRootNode = ReactDOM.findDOMNode(component)
           return testRootNode.contains(node)
         })
-        return generateReactSelector(node, rootComponent)
+        if (rootComponent) {
+          return generateReactSelector(node, rootComponent)
+        }
+        else {
+          return false
+        }
       }
       else if (type === 'dom') {
         return generateQuerySelector()

@@ -39,14 +39,14 @@ export default class DomPicker extends React.Component {
   }
 
   addNewTrack(node) {
-    const generateSelector = BETON.require('generate-selector')
     const {selectors, actions, normalize} = BETON.require('project-manager')
     const timelineId = selectors.getCurrentTimelineId()
+    const {selector} = this.state
     actions.addTrackToTimeline({
       timelineId,
       name: 'new track',
       childSource: {
-        selectors: [generateSelector({node})]
+        selectors: [selector]
       }
     })
   }
@@ -81,8 +81,25 @@ export default class DomPicker extends React.Component {
     return {left, top, width, height}
   }
 
+  componentWillMount() {
+    this.updateSelector(this.props)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.updateSelector(nextProps)
+  }
+
+  updateSelector(nextProps) {
+    const generateSelector = BETON.require('generate-selector')
+    const {node} = nextProps
+    const selector = node && generateSelector({node})
+    console.log({selector})
+    this.setState({selector})
+  }
+
   render() {
     const {node, onChange, buttonSize, borderSize} = this.props
+    const {selector} = this.state
 
     if (!node) {
       return <div hidden/>
@@ -198,7 +215,8 @@ export default class DomPicker extends React.Component {
           'plus',
           'create a new track with this node',
           () => this.addNewTrack(node),
-          {}
+          {},
+          !selector
         )}
       </div>
     </div>

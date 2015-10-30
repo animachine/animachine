@@ -10,7 +10,7 @@ import {connect} from 'react-redux'
   }
 })
 export default class Toolbar extends React.Component {
-
+  shouldComponentUpdate() {return false}
   handlePlayPauseClick = () => {
     const {actions, timeline} = this.props
 
@@ -30,6 +30,7 @@ export default class Toolbar extends React.Component {
   }
 
   renderToolbarItems() {
+    return null
     const {toolbar} = this.props
     return toolbar && toolbar.map((toolbarItem, idx) => {
       if (toolbarItem.getElement) {
@@ -76,12 +77,12 @@ function formatTime(time) {
   ms = ~~time
 
   if (min) {
-      str += min + ':'
-      sec = ('00' + sec).substr(-2)
+    str += min + ':'
+    sec = ('00' + sec).substr(-2)
   }
   if (sec) {
-      str += sec + '.'
-      ms = ('000' + ms).substr(-3)
+    str += sec + '.'
+    ms = ('000' + ms).substr(-3)
   }
   str += ms
   return str

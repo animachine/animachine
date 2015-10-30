@@ -6,7 +6,7 @@ import union from 'lodash/array/union'
 
 export default class Keylines extends React.Component {
   shouldComponentUpdate() {
-    return !this.props.timeline.isPlaying
+    return false //!this.props.timeline.isPlaying
   }
 
   renderPointerLine({height}) {

@@ -9,6 +9,7 @@ BETON.define({
     const reducers = new Map()
     const batchDebounce = frameDebounce(notify => notify())
     const store = batchedSubscribe(batchDebounce)(createStore)(reducerSwitch)
+    // const store = createStore(reducerSwitch)
 
     function reducerSwitch(state = {}, action) {
       if (__DEV__) {

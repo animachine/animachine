@@ -28,14 +28,14 @@ export default function createParamSettings(connect) {
     selector: 'all',
     label: null,
     extraInputs: [nameInput, input],
-    buttons: [{
+    buttons: [/*{
       getElement: connect => {
         return <KeyStepper
           keyHolderId = {param.id}
           timelineId = {timeline.id}
         />
       }
-    }]
+    }*/]
   }
 
   ifit(connect.value.name)

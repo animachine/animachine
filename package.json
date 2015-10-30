@@ -81,6 +81,7 @@
     "node-libs-browser": "^0.5.2",
     "raw-loader": "^0.5.1",
     "react": "^0.14.0",
+    "react-addons-perf": "^0.14.1",
     "react-dom": "^0.14.0",
     "react-hot-loader": "^1.2.8",
     "react-router": "^1.0.0-rc3",

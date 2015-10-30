@@ -5,6 +5,20 @@ const createTypeSelector = types => connect => {
   return connect.value && types.indexOf(connect.value.type) !== -1
 }
 
+const fields = [
+  [ () => {},
+    {hiddenHead: true},
+    () => {
+      const {getItemById} = BETON.require('project-manager').selectors
+      return [connect.value.tracks.map(trackId => getItemById({id: trackId}))]
+    },
+    (tracks) => tracks.map(track => [
+      () => (track.name, track.openInTimeline),
+      () => {},
+    ])
+  ]
+]
+
 export default [{
     selector: 'root',
     // shouldUpdate,

@@ -16,11 +16,14 @@ BETON.define({
         console.log(action.type, action)
       }
       tracker.track({eventType: action.type, value: action})
-
+console.time('reducing time')
       const nextState = {...state}
       reducers.forEach((reducer, path) => {
+// console.time('reducing time '+path)
         nextState[path] = reducer(nextState[path], action)
+// console.timeEnd('reducing time '+path)
       })
+console.timeEnd('reducing time')
       return nextState
     }
 

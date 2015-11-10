@@ -19,6 +19,24 @@ const fields = [
   ]
 ]
 
+function selectTracks() {
+  const {getItemById} = BETON.require('project-manager').selectors
+  this.props.timeline.tracks.map((trackId => getItemById({id: trackId})))
+}
+
+function trackQI(track) {
+  <QuickInterface settings={{
+    label: track.name,
+    open: track.openInTimeline,
+  }}>
+
+  </QuickInterface>
+}
+
+<QuickInterface settings={{hiddenHead: true}}>
+
+</QuickInterface>
+
 export default [{
     selector: 'root',
     // shouldUpdate,

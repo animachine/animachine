@@ -13,6 +13,8 @@ This is the second alpha release completely rewritten using [React] and [Redux].
 
 *[Here](https://github.com/animachine/animachine/tree/first-alpha) you can check out the previous alpha version*
 
+>**Update:** Currently stuck on performance issues... (And thinking on switching to [Elm](http://elm-lang.org/)) 
+
 ###[Check out the quick start with React guide!](docs/quick-start-with-react.md)
 
 ###Why is this needed?

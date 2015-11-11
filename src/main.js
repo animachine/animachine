@@ -37,16 +37,32 @@ const animachine = {
 
 import Perf from 'react-addons-perf'
 global.perfSeek = function () {
-
+  PPP.clear()
   Perf.start()
   BETON.projectManager.actions.setCurrentTimeOfTimeline({timelineId: '142', currentTime: ~~(2000 * Math.random())})
   setTimeout(function () {
     Perf.stop()
-        Perf.printInclusive()
-        Perf.printExclusive()
-        Perf.printWasted()
+    Perf.printInclusive()
+    Perf.printExclusive()
+    Perf.printWasted()
+    PPP.log()
   }, 200)
 }
 global.Perf = Perf
+global.PPP = (function () {
+  let data = {}
+  return {
+    clear() {
+      data = {}
+    },
+    start(name) {
+      const t = performance.now()
+      return () => data[name] = (data[name] || 0) + (performance.now() - t)
+    },
+    log() {
+      console.log(data)
+    }
+  }
+}())
 
 export default animachine

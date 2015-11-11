@@ -151,6 +151,7 @@ export default class Keyline extends React.Component {
   }
 
   postRender() {
+    var end = PPP.start('keyline postrender')
     const {canvas, ctx} = this
     const colors = this.getColors()
     const {
@@ -182,6 +183,7 @@ export default class Keyline extends React.Component {
       const selected = selectedSequence[i]
       this.drawKey(position, selected, isGroup)
     }
+    end()
   }
 
   drawKey(position, selected, isGroup) {

@@ -33,10 +33,6 @@ function trackQI(track) {
   </QuickInterface>
 }
 
-<QuickInterface settings={{hiddenHead: true}}>
-
-</QuickInterface>
-
 export default [{
     selector: 'root',
     // shouldUpdate,

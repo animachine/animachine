@@ -33,7 +33,7 @@ If you want to change your animation later just open your project and animachine
 >[Here](https://github.com/animachine/animachine/tree/first-alpha#demos-marslanding-argh) you can check out the demos for the previous alpha version which has more features at the moment.
 
 ###Todos:
-- [ ] [Select elements with click](http://i.imgur.com/LPCj6jp.gif)
+- [x] [Select elements with click](http://i.imgur.com/LPCj6jp.gif)
 - [ ] [Advanced ease editor](http://i.imgur.com/fZhQcc6.gif)
 - [ ] Undo/redo history
 - [ ] [Bezier motion path editor](http://i.imgur.com/LjBruea.gif)

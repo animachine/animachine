@@ -43,6 +43,7 @@
     "react-gsap-enhancer": "^0.1.14",
     "react-hotkeys": "^0.5.0",
     "react-matterkit": "0.0.45",
+    "react-pure-render": "^1.0.2",
     "react-redux": "^3.1.0",
     "react-remarkable": "^1.1.1",
     "react-zeroclipboard": "^2.0.1",

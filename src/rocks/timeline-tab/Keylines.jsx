@@ -91,7 +91,6 @@ export default class Keylines extends React.Component {
       children.push(<Keyline
         {...{timeline, actions, selectors}}
         top = {pos}
-        style = {{left: 0, top: pos}}
         height = {height}
         keyHolderId = {keyHolderId}
         easeSequences = {easeSequences}

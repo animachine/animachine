@@ -5,6 +5,7 @@ import sortBy from 'lodash/collection/sortBy'
 import {getTheme} from 'react-matterkit'
 import {createEaser} from 'react-animachine-enhancer'
 import getPreviousSiblingOfKey from './getPreviousSiblingOfKey'
+import shallowEqual from 'react-pure-render/shallowEqual'
 import {
   convertPositionToTime,
   convertTimeToPosition,
@@ -99,17 +100,36 @@ const dragOptions = {
 export default class Keyline extends React.Component {
   static propTypes = {
     timeline: PropTypes.shape({
-      start: PropTypes.number,
-      pxpms: PropTypes.number,
-      width: PropTypes.number,
-    }),
-    keyHolderId: PropTypes.string,
-    keyTimes: PropTypes.arrayOf(PropTypes.number),
-    eases: PropTypes.arrayOf(PropTypes.object),
-    easeBounds: PropTypes.arrayOf(PropTypes.number),
-    top: PropTypes.number,
-    height: PropTypes.number,
-    style: PropTypes.object,
+      start: PropTypes.number.isRequired,
+      pxpms: PropTypes.number.isRequired,
+      width: PropTypes.number.isRequired,
+    }).isRequired,
+    keyHolderId: PropTypes.string.isRequired,
+    positionSequence: PropTypes.arrayOf(PropTypes.number).isRequired,
+    easeSequences: PropTypes.arrayOf(PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.number
+    ])).isRequired,
+    selectedSequence: PropTypes.arrayOf(PropTypes.boolean).isRequired,
+    top: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired,
+  }
+
+  shouldComponentUpdate(nextProps) {
+    const {props} = this
+
+    return props.keyHolderId !== nextProps.keyHolderId
+      || props.timeline.start !== nextProps.timeline.start
+      || props.timeline.pxpms !== nextProps.timeline.pxpms
+      || props.timeline.width !== nextProps.timeline.width
+      || props.top !== nextProps.top
+      || props.height !== nextProps.height
+      || !shallowEqual(props.positionSequence, nextProps.positionSequence)
+      || !shallowEqual(props.selectedSequence, nextProps.selectedSequence)
+      || props.easeSequences.length !== nextProps.easeSequences.length
+      || !props.easeSequences.every((easeSequence, idx) => {
+        return shallowEqual(easeSequence, nextProps.easeSequences[idx])
+      })
   }
 
   componentDidMount() {
@@ -141,13 +161,13 @@ export default class Keyline extends React.Component {
   }
 
   render() {
-    const {timeline, height, top, style, dragRef} = this.props
+    const {timeline, height, top, dragRef} = this.props
 
     return <canvas
       ref = {dragRef}
       width = {timeline.width}
       height = {height}
-      style = {{position: 'absolute', top, ...style}}/>
+      style = {{position: 'absolute', left: 0, top}}/>
   }
 
   postRender() {

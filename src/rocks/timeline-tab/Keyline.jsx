@@ -106,10 +106,14 @@ export default class Keyline extends React.Component {
     }).isRequired,
     keyHolderId: PropTypes.string.isRequired,
     positionSequence: PropTypes.arrayOf(PropTypes.number).isRequired,
-    easeSequences: PropTypes.arrayOf(PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.number
-    ])).isRequired,
+    easeSequences: PropTypes.arrayOf(
+      PropTypes.arrayOf(
+        PropTypes.oneOfType([
+          PropTypes.object,
+          PropTypes.number
+        ])
+      )
+    ).isRequired,
     selectedSequence: PropTypes.arrayOf(PropTypes.boolean).isRequired,
     top: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,

@@ -116,6 +116,7 @@ const renderParams = params => {
     .map(paramId => getItemById({id: paramId}))
     .map(({id, name, openInTimeline}) => (
       <QuickInterface {...{
+        key: id,
         id,
         name,
         openInTimeline,
@@ -130,6 +131,7 @@ const renderTracks = tracks => {
     .map(trackId => getItemById({id: trackId}))
     .map(({id, name, openInTimeline, params}) => (
       <QuickInterface {...{
+        key: id,
         id,
         name,
         openInTimeline,
@@ -141,7 +143,7 @@ const renderTracks = tracks => {
 }
 
 export default tracks => (
-  <QuickInterface createSettings={() => {hiddenHead: true}}>
+  <QuickInterface createSettings={() => {label: "hello"}}>
     {renderTracks(tracks)}
   </QuickInterface>
 )

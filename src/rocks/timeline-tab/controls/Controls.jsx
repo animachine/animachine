@@ -1,6 +1,5 @@
 import React from 'react'
-import JsonVision from 'json-vision'
-import controlsSettings from './controlsSettings'
+import renderControls from './renderControls'
 import {ContextMenu, Button, Label} from 'react-matterkit'
 
 export default class Controls extends React.Component {
@@ -10,15 +9,7 @@ export default class Controls extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return false//!nextProps.timeline.isPlaying
-  }
-
-  renderConrols() {
-    const {timeline, style} = this.props
-    return <JsonVision
-      style = {style}
-      settings = {controlsSettings}
-      value = {timeline}/>
+    return !nextProps.timeline.isPlaying
   }
 
   renderPlaceholder() {
@@ -40,6 +31,6 @@ export default class Controls extends React.Component {
     const {timeline} = this.props
     return timeline.tracks.length === 0
       ? this.renderPlaceholder()
-      : this.renderConrols()
+      : renderControls(timeline.tracks)
   }
 }

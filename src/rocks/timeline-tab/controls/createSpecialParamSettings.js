@@ -3,25 +3,21 @@ import KeyStepper from './KeyStepper'
 import ifit from './ifit'
 import {getParentTimeline, getParentTrack} from './utils'
 
-export default function createParamSettings(connect) {
+export default function createParamSettings(id, name) {
   if (!connect.value || connect.value.type !== 'param') {
     return null
   }
 
-  const param = connect.value
-  const track = getParentTrack(connect)
-  const timeline = getParentTimeline(connect)
-
   const input = {
-    value: getParamValue,
-    onChange: setParamValue
+    value: getParamValue(id),
+    onChange: setParamValue.bind(null, id)
   }
   const nameInput = {
-    value: connect => connect.value.name,
+    value: name,
     mod: {kind: 'stamp'},
-    onChange: (value, connect) => {
+    onChange: (v, connect) => {
       const {setNameOfParam} = BETON.require('project-manager').actions
-      setNameOfParam({name: value, paramId: connect.value.id})
+      setNameOfParam({name: v, paramId: id})
     }
   }
   const settings = {
@@ -89,19 +85,22 @@ export default function createParamSettings(connect) {
   return settings
 }
 
-function getParamValue(connect) {
-  const param = connect.value
-  const {currentTime} = getParentTimeline(connect)
+function getCurrentTime(id) {
   const {selectors} = BETON.require('project-manager')
-  return selectors.getValueOfParamAtTime({paramId: param.id, time: currentTime})
+  return selectors.getParentTimelineIdByChildId({childId: id}).currentTime
 }
 
-function setParamValue(value, connect) {
+function getParamValue(id) {
+  const {selectors} = BETON.require('project-manager')
+  const currentTime = getCurrentTime(id)
+  return selectors.getValueOfParamAtTime({paramId: id, time: currentTime})
+}
+
+function setParamValue(id, value) {
   const {actions} = BETON.require('project-manager')
-  const param = connect.value
-  const {currentTime} = getParentTimeline(connect)
+  const currentTime = getCurrentTime(id)
   actions.setValueOfParamAtTime({
-    paramId: param.id,
+    paramId: id,
     time: currentTime,
     value,
   })

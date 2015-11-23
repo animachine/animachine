@@ -1,19 +1,13 @@
-import {getItems, getItemById} from '../index.js'
+import {getItems, getItemById} from './index'
 
-export function getParentTimelineIdByChildId({id}) {
-  const timeline = getItems.find(item => {
-    return item.type === 'timeline' && testTimeline(item)
-  })
-
-  return timeline.id
-
+export function getParentTimelineIdByChildId({childId}) {
   function testTimeline(timeline) {
     let result = false
 
     walk(timeline, handleItem)
 
     function handleItem(item) {
-      if (item.id === id) {
+      if (item.id === childId) {
         result = true
       }
 
@@ -28,11 +22,19 @@ export function getParentTimelineIdByChildId({id}) {
   function walk(item, callback) {
     switch (item.type) {
       case 'timeline':
-      forEachItem(item.tracks, callback)
+        return forEachItem(item.tracks, callback)
+      case 'track':
+        return forEachItem(item.params, callback)
     }
   }
 
   function forEachItem(idList, callback) {
-    idList.forEach(id => callback(getItemById(id)))
+    idList.forEach(id => callback(getItemById({id})))
   }
+
+  const timeline = getItems().find(item => {
+    return item.type === 'timeline' && testTimeline(item)
+  })
+
+  return timeline.id
 }

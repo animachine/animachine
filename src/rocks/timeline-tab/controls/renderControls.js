@@ -1,5 +1,5 @@
 import React from 'react'
-import QuickInterface from 'json-vision'
+import QuickInterface from 'quick-interface'
 import createSpecialParamSettings from './createSpecialParamSettings'
 
 function showItemSettingsDialog() {
@@ -32,17 +32,17 @@ function handleToggleOpen(id) {
 
 
 function createTrackSettings({id, name, openInTimeline}) {
-  const parentTimeline = selectors.getParentTimelineOfTrack({trackId: id})
+  const {getParentTimelineOfTrack} = BETON.require('project-manager').selectors
+  const parentTimeline = getParentTimelineOfTrack({trackId: id})
   return {
-    label: name,
     open: openInTimeline,
     onClick: handleSelectClick.bind(null, id),
     onToggleOpen: handleToggleOpen.bind(null, id),
-    buttons: connect => [
+    buttons:  [
       {
         icon: 'plus',
         tooltip: 'add a new param to this track',
-        onClick: connect => {
+        onClick: () => {
           BETON.require('project-manager').actions.addParamToTrack({
             trackId: id,
           })
@@ -56,7 +56,7 @@ function createTrackSettings({id, name, openInTimeline}) {
         {
           label: 'new track',
           icon: 'plus',
-          onClick: connect => {
+          onClick: () => {
             BETON.require('project-manager').actions.addTrackToTimeline({
               timelineId: parentTimeline.id,
             })
@@ -65,7 +65,7 @@ function createTrackSettings({id, name, openInTimeline}) {
         }, {
           label: 'new param',
           icon: 'add',
-          onClick: connect => {
+          onClick: () => {
             BETON.require('project-manager').actions.addParamToTrack({
               trackId: id,
             })
@@ -76,8 +76,8 @@ function createTrackSettings({id, name, openInTimeline}) {
             {
               label: 'settings',
               icon: 'cog',
-              onClick: connect => {
-                handleSelectClick(connect)
+              onClick: () => {
+                handleSelectClick()
                 showItemSettingsDialog()
               }
             }
@@ -90,7 +90,7 @@ function createTrackSettings({id, name, openInTimeline}) {
 
 function createParamSettings({id, name, openInTimeline}) {
   return {
-    label: name,
+    labels: [name],
     open: openInTimeline,
     onClick: handleSelectClick.bind(null, id),
     onToggleOpen: handleToggleOpen.bind(null, id),
@@ -99,8 +99,8 @@ function createParamSettings({id, name, openInTimeline}) {
         {
           label: 'settings',
           icon: 'cog',
-          onClick: connect => {
-            handleSelectClick(connect)
+          onClick: () => {
+            handleSelectClick()
             showItemSettingsDialog()
           }
         }
@@ -137,13 +137,13 @@ const renderTracks = tracks => {
         openInTimeline,
         createSettings: createTrackSettings
       }}>
-        renderParams(params)
+        {renderParams(params)}
       </QuickInterface>
     ))
 }
 
 export default tracks => (
-  <QuickInterface createSettings={() => {label: "hello"}}>
+  <QuickInterface createSettings={() => ({hiddenHead: true})}>
     {renderTracks(tracks)}
   </QuickInterface>
 )

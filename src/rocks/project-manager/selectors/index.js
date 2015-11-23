@@ -18,7 +18,7 @@ export function getProjectManager({projectManager} = {}) {
   return projectManager || store.getState().projectManager
 }
 
-export function getItems ({projectManager} = {}) {
+export function getItems({projectManager} = {}) {
   return getProjectManager({projectManager}).items
 }
 

@@ -3,29 +3,24 @@ import KeyStepper from './KeyStepper'
 import ifit from './ifit'
 import {getParentTimeline, getParentTrack} from './utils'
 
-export default function createParamSettings(id, name) {
-  if (!connect.value || connect.value.type !== 'param') {
-    return null
-  }
-
-  const input = {
-    value: getParamValue(id),
-    onChange: setParamValue.bind(null, id)
-  }
+export default function createParamSettings({id, name}) {
   const nameInput = {
     value: name,
     mod: {kind: 'stamp'},
-    onChange: (v, connect) => {
+    onChange: (v) => {
       const {setNameOfParam} = BETON.require('project-manager').actions
       setNameOfParam({name: v, paramId: id})
     }
   }
+  const input = {
+    value: getParamValue(id),
+    onChange: setParamValue.bind(null, id)
+  }
   const settings = {
     selector: 'all',
-    label: null,
-    extraInputs: [nameInput, input],
+    inputs: [nameInput, input],
     buttons: [/*{
-      getElement: connect => {
+      getElement: () => {
         return <KeyStepper
           keyHolderId = {param.id}
           timelineId = {timeline.id}
@@ -34,7 +29,7 @@ export default function createParamSettings(id, name) {
     }*/]
   }
 
-  ifit(connect.value.name)
+  ifit(name)
     .is('x,y,z,transformOriginZ', () => {
       input.type = 'number'
       input.addonLabel = 'px'

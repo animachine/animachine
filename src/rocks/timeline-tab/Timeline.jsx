@@ -136,7 +136,9 @@ export default class Timeline extends React.Component {
           style = {{display: 'flex', flex: 1, alignItems: 'flex-start'}}
           onChangeVerticalScroll = {this.handleChangeScrollPosition}
           verticalScroll = {scrollPosition}>
-          <Controls {...commonProps} style={{width: dividerPos}}/>
+          <div style={{width: dividerPos}}>
+            <Controls {...commonProps}/>
+          </div>
           <Keylines {...commonProps}/>
         </Scrollable>
         <DividerLine ref={dragRef} position={dividerPos}/>

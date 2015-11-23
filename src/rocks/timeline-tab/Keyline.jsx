@@ -114,7 +114,7 @@ export default class Keyline extends React.Component {
         ])
       )
     ).isRequired,
-    selectedSequence: PropTypes.arrayOf(PropTypes.boolean).isRequired,
+    selectedSequence: PropTypes.arrayOf(PropTypes.bool).isRequired,
     top: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
   }

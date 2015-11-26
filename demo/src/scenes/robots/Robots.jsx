@@ -41,12 +41,12 @@ export default class Robots extends React.Component {
     const forearmStyle = createBotStyle('#E9B400', 280, 40, 480, 20)
     const forearmJoinStyle = createJoinStyle('#E9B400', 60, 230, -10)
     return <div style={{transform: 'scale(0.5)'}}>
-      <div key='shoulder' style={shoulderStyle}>
-        <div key='armGroup' style={armStyle}>
-          <div key='forearmGroup' style={forearmStyle}>
-            <svg key='pincerGroup' style={pincerStyle} width="170" height="140">
-              <polygon key='pincerL' fill='#343434' points='29.7,69 64.3,118.7 64,137.9 0,65.6 65.6,0 83.9,18.3'/>
-              <polygon key='pincerR' fill='#343434' points='144.2,69 109.6,118.7 109.9,137.9 173.9,65.6 108.3,0 90,18.3'/>
+      <div name='shoulder' style={shoulderStyle}>
+        <div name='armGroup' style={armStyle}>
+          <div name='forearmGroup' style={forearmStyle}>
+            <svg name='pincerGroup' style={pincerStyle} width="170" height="140">
+              <polygon name='pincerL' fill='#343434' points='29.7,69 64.3,118.7 64,137.9 0,65.6 65.6,0 83.9,18.3'/>
+              <polygon name='pincerR' fill='#343434' points='144.2,69 109.6,118.7 109.9,137.9 173.9,65.6 108.3,0 90,18.3'/>
             </svg>
             <div style={forearmJoinStyle}/>
           </div>
@@ -55,21 +55,21 @@ export default class Robots extends React.Component {
         <div style={shoulderJoinStyle}/>
       </div>
       <svg style={{overflow: 'visible'}}>
-        <g key='conveyorGroup'>
-          <path key='conveyor' fill='none' stroke='#343434' strokeWidth='18' strokeMiterlimit='10' d='M724.8,568H496.9c-28.5,0-51.9-23.3-51.9-51.9v0
+        <g name='conveyorGroup'>
+          <path name='conveyor' fill='none' stroke='#343434' strokeWidth='18' strokeMiterlimit='10' d='M724.8,568H496.9c-28.5,0-51.9-23.3-51.9-51.9v0
           	c0-28.5,23.3-51.9,51.9-51.9h227.8c28.5,0,51.9,23.3,51.9,51.9v0C776.6,544.7,753.3,568,724.8,568z'/>
-          <path key='wheelL' fill='#343434' d='M527,521v-8h-7c-0.5-3.6-1.8-7-3.7-9.9l5.4-5.4l-5.7-5.7l-5.2,5.2c-2.6-2-5.6-3.4-8.9-4.2V486h-8v6.6
+          <path name='wheelL' fill='#343434' d='M527,521v-8h-7c-0.5-3.6-1.8-7-3.7-9.9l5.4-5.4l-5.7-5.7l-5.2,5.2c-2.6-2-5.6-3.4-8.9-4.2V486h-8v6.6
           	c-4.2,0.5-8.2,2.1-11.4,4.5l-5-5l-5.7,5.7l5.1,5.1c-2,3-3.4,6.4-3.9,10.2H467v8h6.4c0.7,3.5,2.2,6.7,4.3,9.4l-4.6,4.6l5.7,5.7
           	l4.8-4.8c3.1,2,6.6,3.4,10.4,3.8v6.3h8v-6.8c2.9-0.7,5.5-1.9,7.9-3.5l5,5l5.7-5.7l-4.9-4.9c2-2.7,3.4-5.8,4.1-9.2H527z M510.3,516.1
           	c0,7.5-6.1,13.7-13.7,13.7s-13.7-6.1-13.7-13.7s6.1-13.7,13.7-13.7S510.3,508.6,510.3,516.1z'/>
-          <path key='wheelR' fill='#343434' d='M754,521v-8h-6.6c-0.5-3.6-1.8-7-3.7-9.9l5.4-5.4l-5.7-5.7l-5.4,5.2c-2.6-2-5-3.4-9-4.2V486h-8v6.6
+          <path name='wheelR' fill='#343434' d='M754,521v-8h-6.6c-0.5-3.6-1.8-7-3.7-9.9l5.4-5.4l-5.7-5.7l-5.4,5.2c-2.6-2-5-3.4-9-4.2V486h-8v6.6
           	c-4,0.5-8,2.1-11.3,4.5l-4.9-5l-5.6,5.7l5.1,5.1c-2,3-3.4,6.4-3.9,10.2H694v8h6.8c0.7,3.5,2.2,6.7,4.3,9.4l-4.6,4.6l5.7,5.7l4.7-4.8
           	c3.1,2,7.3,3.4,10.3,3.8v6.3h8v-6.8c3-0.7,5.7-1.9,8.1-3.5l5.1,5l5.7-5.7l-4.9-4.9c2-2.7,3.4-5.8,4.1-9.2H754z M737.6,516.1
           	c0,7.5-6.1,13.7-13.7,13.7s-13.7-6.1-13.7-13.7s6.1-13.7,13.7-13.7S737.6,508.6,737.6,516.1z'/>
         </g>
-        <path key='base' fill='#343434' stroke='#ededed' strokeWidth='4' d='M290.9,577.5H24.1c-5.6,0-10.1-4.5-10.1-10.1V436.9c0-5.6,4.5-10.1,10.1-10.1h266.8c5.6,0,10.1,4.5,10.1,10.1
+        <path name='base' fill='#343434' stroke='#ededed' strokeWidth='4' d='M290.9,577.5H24.1c-5.6,0-10.1-4.5-10.1-10.1V436.9c0-5.6,4.5-10.1,10.1-10.1h266.8c5.6,0,10.1,4.5,10.1,10.1
         	v130.5C301,572.9,296.5,577.5,290.9,577.5z'/>
-        <path key='minirobot' fill='#2967A7' d='M525.4,413.3h-10.9v10.2h10.9V413.3L525.4,413.3z M517.3,420.3c-1,0-1.8-0.8-1.8-1.8c0-1,0.8-1.8,1.8-1.8
+        <path name='minirobot' fill='#2967A7' d='M525.4,413.3h-10.9v10.2h10.9V413.3L525.4,413.3z M517.3,420.3c-1,0-1.8-0.8-1.8-1.8c0-1,0.8-1.8,1.8-1.8
         	c1,0,1.8,0.8,1.8,1.8C519.1,419.5,518.3,420.3,517.3,420.3z M522.6,420.3c-1,0-1.8-0.8-1.8-1.8c0-1,0.8-1.8,1.8-1.8s1.8,0.8,1.8,1.8
         	C524.4,419.5,523.6,420.3,522.6,420.3z M537.7,435.9c-0.2-3.5-1.6-5.9-3.5-7.3c-1.5-1.2-3.2-1.8-4.6-2v-1.2h-19.4v1.2
         	c-1.4,0.2-3,0.8-4.6,2c-1.8,1.4-3.3,3.9-3.5,7.3c-1.3,0.5-2.3,1.7-2.3,3.2c0,1.9,1.5,3.4,3.4,3.4v-1.5c-1,0-1.9-0.8-1.9-1.9

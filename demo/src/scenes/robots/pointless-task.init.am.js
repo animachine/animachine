@@ -8,7 +8,7 @@ const projectSource = {
       tracks: [
         {
           name: 'shoulder',
-          selectors: [[{type: 'find', selector: {key: 'shoulder'}}]],
+          selectors: [[{type: 'find', selector: {name: 'shoulder'}}]],
           params: [
             {name: 'rotationZ', keys: [{time: 0, value: -70}]},
             {name: 'transformOriginX', keys: [{time: 0, value: 0.15}]},
@@ -16,7 +16,7 @@ const projectSource = {
           ]
         }, {
           name: 'arm',
-          selectors: [[{type: 'find', selector: {key: 'armGroup'}}]],
+          selectors: [[{type: 'find', selector: {name: 'armGroup'}}]],
           params: [
             {name: 'rotationZ', keys: [{time: 0, value: 90}]},
             {name: 'transformOriginX', keys: [{time: 0, value: 0.075}]},
@@ -24,7 +24,7 @@ const projectSource = {
           ]
         }, {
           name: 'forearm',
-          selectors: [[{type: 'find', selector: {key: 'forearmGroup'}}]],
+          selectors: [[{type: 'find', selector: {name: 'forearmGroup'}}]],
           params: [
             {name: 'rotationZ', keys: [{time: 0, value:90}]},
             {name: 'transformOriginX', keys: [{time: 0, value: 0.5}]},
@@ -32,7 +32,7 @@ const projectSource = {
           ]
         }, {
           name: 'pincer',
-          selectors: [[{type: 'find', selector: {key: 'pincerGroup'}}]],
+          selectors: [[{type: 'find', selector: {name: 'pincerGroup'}}]],
           params: [
             {name: 'x', keys: [{time: 0, value: 461}]},
             {name: 'y', keys: [{time: 0, value: 272}]},

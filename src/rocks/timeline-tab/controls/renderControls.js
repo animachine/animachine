@@ -90,7 +90,6 @@ function createTrackSettings({id, name, openInTimeline}) {
 
 function createParamSettings({id, name, openInTimeline}) {
   return {
-    labels: [name],
     open: openInTimeline,
     onClick: handleSelectClick.bind(null, id),
     onToggleOpen: handleToggleOpen.bind(null, id),

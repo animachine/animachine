@@ -1,9 +1,9 @@
 import React from 'react'
 import KeyStepper from './KeyStepper'
 import ifit from './ifit'
-import {getParentTimeline, getParentTrack} from './utils'
+import {setParamValue} from './utils'
 
-export default function createParamSettings({id, name}) {
+export default function createParamSettings({id, name, value}) {
   const nameInput = {
     value: name,
     mod: {kind: 'stamp'},
@@ -13,7 +13,7 @@ export default function createParamSettings({id, name}) {
     }
   }
   const input = {
-    value: getParamValue(id),
+    value,
     onChange: setParamValue.bind(null, id)
   }
   const settings = {
@@ -78,25 +78,4 @@ export default function createParamSettings({id, name}) {
     })
 
   return settings
-}
-
-function getCurrentTime(id) {
-  const {selectors} = BETON.require('project-manager')
-  return selectors.getParentTimelineIdByChildId({childId: id}).currentTime
-}
-
-function getParamValue(id) {
-  const {selectors} = BETON.require('project-manager')
-  const currentTime = getCurrentTime(id)
-  return selectors.getValueOfParamAtTime({paramId: id, time: currentTime})
-}
-
-function setParamValue(id, value) {
-  const {actions} = BETON.require('project-manager')
-  const currentTime = getCurrentTime(id)
-  actions.setValueOfParamAtTime({
-    paramId: id,
-    time: currentTime,
-    value,
-  })
 }

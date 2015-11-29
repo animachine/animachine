@@ -1,6 +1,7 @@
 import React from 'react'
 import QuickInterface from 'quick-interface'
 import createSpecialParamSettings from './createSpecialParamSettings'
+import {getParamValue} from './utils'
 
 function showItemSettingsDialog() {
   BETON.require('item-settings-dialog').show()
@@ -88,7 +89,7 @@ function createTrackSettings({id, name, openInTimeline}) {
   }
 }
 
-function createParamSettings({id, name, openInTimeline}) {
+function createParamSettings({id, name, value, openInTimeline}) {
   return {
     open: openInTimeline,
     onClick: handleSelectClick.bind(null, id),
@@ -105,7 +106,7 @@ function createParamSettings({id, name, openInTimeline}) {
         }
       ]
     }],
-    ...createSpecialParamSettings({id, name})
+    ...createSpecialParamSettings({id, name, value})
   }
 }
 
@@ -118,6 +119,7 @@ const renderParams = params => {
         key: id,
         id,
         name,
+        value: getParamValue({id}),
         openInTimeline,
         createSettings: createParamSettings
       }}/>

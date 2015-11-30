@@ -19,14 +19,13 @@ export default function createParamSettings({id, name, value}) {
   const settings = {
     selector: 'all',
     inputs: [nameInput, input],
-    buttons: [/*{
+    buttons: [{
       getElement: () => {
         return <KeyStepper
-          keyHolderId = {param.id}
-          timelineId = {timeline.id}
+          keyHolderId = {id}
         />
       }
-    }*/]
+    }]
   }
 
   ifit(name)

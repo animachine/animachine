@@ -25,6 +25,8 @@ export function getParentTimelineIdByChildId({childId}) {
         return forEachItem(item.tracks, callback)
       case 'track':
         return forEachItem(item.params, callback)
+      case 'param':
+        return forEachItem(item.keys, callback)
     }
   }
 

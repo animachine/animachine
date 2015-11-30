@@ -112,6 +112,7 @@ function createParamSettings({id, name, value, openInTimeline}) {
 
 const renderParams = params => {
   const {getItemById} = BETON.require('project-manager').selectors
+
   return params
     .map(paramId => getItemById({id: paramId}))
     .map(({id, name, openInTimeline}) => (
@@ -119,7 +120,7 @@ const renderParams = params => {
         key: id,
         id,
         name,
-        value: getParamValue({id}),
+        value: getParamValue(id),
         openInTimeline,
         createSettings: createParamSettings
       }}/>

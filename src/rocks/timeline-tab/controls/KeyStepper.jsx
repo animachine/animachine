@@ -6,7 +6,8 @@ import {connect} from 'react-redux'
 
 @connect((store, props) => {
   const {selectors, actions} = BETON.require('project-manager')
-  const {keyHolderId, timelineId} = props
+  const {keyHolderId} = props
+  const timelineId = selectors.getParentTimelineIdByChildId({childId: keyHolderId})
   const timeline = selectors.getItemById({id: timelineId})
   if (timeline.isPlaying) {
     return {skipUpdate: true}
@@ -19,6 +20,7 @@ import {connect} from 'react-redux'
     hasKeyNow,
     previousKeyTime: previousKey && previousKey.time,
     nextKeyTime: nextKey && nextKey.time,
+    timelineId,
     time
   }
 })

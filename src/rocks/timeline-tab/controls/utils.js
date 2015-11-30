@@ -1,6 +1,7 @@
 function getCurrentTime(id) {
   const {selectors} = BETON.require('project-manager')
-  return selectors.getParentTimelineIdByChildId({childId: id}).currentTime
+  const timelineId =  selectors.getParentTimelineIdByChildId({childId: id})
+  return selectors.getItemById({id: timelineId}).currentTime
 }
 
 export function getParamValue(id) {

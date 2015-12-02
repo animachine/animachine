@@ -10,6 +10,7 @@ export default class Controls extends React.Component {
 
   shouldComponentUpdate(nextProps) {
     return !nextProps.timeline.isPlaying
+      && !nextProps.timeline.isSeeking
   }
 
   renderPlaceholder() {

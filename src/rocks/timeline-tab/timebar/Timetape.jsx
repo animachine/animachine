@@ -38,9 +38,8 @@ function handleMouse(props, monitor) {
 
 const dragOptions = {
   onDown(props, monitor) {
-
     const {shiftKey, ctrlKey} = monitor.getLastEvent().nativeEvent
-    const {timeline} = props
+    const {timeline, actions} = props
     var dragMode
 
     if (shiftKey) {
@@ -51,6 +50,11 @@ const dragOptions = {
     }
     else {
       dragMode = 'seek'
+
+      actions.setIsSeekingOfTimeline({
+        timelineId: timeline.id,
+        isSeeking: true
+      })
     }
 
     monitor.setData({
@@ -63,6 +67,14 @@ const dragOptions = {
   },
   onDrag(props, monitor) {
     handleMouse(props, monitor)
+  },
+  onUp(props, monitor) {
+    if (monitor.data.dragMode === 'seek') {
+      props.actions.setIsSeekingOfTimeline({
+        timelineId: props.timeline.id,
+        isSeeking: false
+      })
+    }
   }
 }
 

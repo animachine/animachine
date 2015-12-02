@@ -28,6 +28,7 @@ autoAddAction('set', 'currentTimelineId', 'project')
 
 autoAddAction('set', 'name', 'timeline')
 autoAddAction('set', 'isPlaying', 'timeline')
+autoAddAction('set', 'isSeeking', 'timeline')
 autoAddAction('set', 'currentTime', 'timeline', null, value => min(0)(parseInt(value)))
 autoAddAction('set', 'pxpms', 'timeline', null, minmax(0.0001, 3))
 autoAddAction('set', 'length', 'timeline')

@@ -17,7 +17,7 @@ const key2ParamName = {
     const {selectors} = BETON.require('project-manager')
     const project = selectors.getCurrentProject()
     const timeline = selectors.getCurrentTimeline()
-    if (!timeline || timeline.isPlaying) {
+    if (!timeline || timeline.isPlaying || timeline.isSeeking) {
       return {}
     }
     const trackId = timeline.currentTrackId

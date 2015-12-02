@@ -9,7 +9,7 @@ import {connect} from 'react-redux'
   const {keyHolderId} = props
   const timelineId = selectors.getParentTimelineIdByChildId({childId: keyHolderId})
   const timeline = selectors.getItemById({id: timelineId})
-  if (timeline.isPlaying) {
+  if (timeline.isPlaying || timeline.isSeeking) {
     return {skipUpdate: true}
   }
   const time = timeline.currentTime

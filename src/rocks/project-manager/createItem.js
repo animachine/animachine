@@ -35,6 +35,7 @@ const defaults = {
   timeline: {
     name: '',
     isPlaying: false,
+    isSeeking: false,
     currentTime: 0,
     length: 60000,
     pxpms: 1,

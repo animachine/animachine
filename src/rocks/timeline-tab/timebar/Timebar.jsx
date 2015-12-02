@@ -6,6 +6,7 @@ import Navigator from './Navigator'
 export default class Timebar extends React.Component {
   shouldComponentUpdate() {
     return !this.props.timeline.isPlaying
+      && !this.props.timeline.isSeeking
   }
 
   render() {

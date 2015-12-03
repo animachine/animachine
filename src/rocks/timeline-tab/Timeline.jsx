@@ -30,6 +30,7 @@ const dragOptions = {
 @connect(
   (state) => {
     const projectManager = BETON.require('project-manager')
+    const toolbar = BETON.require('toolbar').selectors.getToolbar()
     const {getCurrentTimelineId, getItemById, getItems} = projectManager.selectors
     const timelineId = getCurrentTimelineId()
     if (!timelineId) {
@@ -37,7 +38,11 @@ const dragOptions = {
     }
     const timeline = getItemById({id: timelineId})
     const items = getItems()//pass items to make sure that timeline updates if any of the items has changed
-    return {timeline, items}
+    return {
+      timeline,
+      items,
+      toolbar,
+    }
   },
   () => {
     const projectManager = BETON.require('project-manager')
@@ -102,8 +107,19 @@ export default class Timeline extends React.Component {
   }
 
   render() {
-    const {dividerPos, fullWidth, scrollPosition} = this.state
-    const {timeline, __combinedTimeline__, actions, selectors, headHeight, dragRef} = this.props
+    const {
+      dividerPos,
+      fullWidth,
+      scrollPosition
+    } = this.state
+    const {
+      timeline,
+      actions,
+      selectors,
+      headHeight,
+      dragRef,
+      toolbar
+    } = this.props
     const colors = getTheme(this).getStyle('colors')
     const rootStyle = {
       backgroundColor: colors.grey4,
@@ -129,7 +145,7 @@ export default class Timeline extends React.Component {
         style={{display: 'flex', pointerEvents: 'auto'}}>
       <div style={rootStyle}>
         <div style={{display: 'flex', height: headHeight}}>
-          <Toolbar {...commonProps} style={{width: dividerPos}}/>
+          <Toolbar {...{...commonProps, toolbar}} style={{width: dividerPos}}/>
           <Timebar {...commonProps} height={headHeight}/>
         </div>
         <Scrollable

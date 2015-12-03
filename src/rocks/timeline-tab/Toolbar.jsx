@@ -1,16 +1,7 @@
 import React from 'react'
-import customDrag from 'custom-drag'
 import {Button, Input} from 'react-matterkit'
-import {connect} from 'react-redux'
 
-@connect(store => {
-  const {selectors} = BETON.require('toolbar')
-  return {
-    toolbar: selectors.getToolbar()
-  }
-})
 export default class Toolbar extends React.Component {
-  shouldComponentUpdate() {return false}
   handlePlayPauseClick = () => {
     const {actions, timeline} = this.props
 

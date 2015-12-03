@@ -21,7 +21,7 @@ export default class Demo extends React.Component {
       this.setState({sceneName: name})
     }
 
-    animachine.init()
+    // animachine.init()
   }
 
   render() {

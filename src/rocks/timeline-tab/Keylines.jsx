@@ -5,9 +5,9 @@ import {ContextMenu} from 'react-matterkit'
 import union from 'lodash/array/union'
 
 export default class Keylines extends React.Component {
-  shouldComponentUpdate() {
-    return !this.props.timeline.isPlaying
-  }
+  // shouldComponentUpdate() {
+  //   return !this.props.timeline.isPlaying
+  // }
 
   renderPointerLine({height}) {
     const {timeline} = this.props

@@ -49,7 +49,9 @@ function reducer (projectManager, action) {
         source: action.projectSource,
         type: 'project'
       })
-      console.log('OPEN_PROJECT', {items, projectId})
+      if (__DEV__) {
+        console.log('OPEN_PROJECT', {items, projectId})
+      }
       return {
         ...projectManager,
         items: [

@@ -37,6 +37,8 @@
     "frame-debounce": "^1.0.1",
     "json-vision": "^0.1.7",
     "lodash": "^3.10.0",
+    "mobservable": "^1.1.4",
+    "mobservable-react": "^2.1.0",
     "putainde-localstorage": "^4.0.0",
     "react-animachine-enhancer": "^0.1.0",
     "react-dnd": "^1.1.8",

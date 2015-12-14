@@ -22,6 +22,20 @@ require('./rocks/welcome-dialog')
 require('./rocks/welcome-process')
 require('./rocks/workspace')
 
+// import {Key} from './rocks/project-manager/models'
+// import {autorun, transaction} from 'mobservable'
+// var key = new Key()
+// window.key = key
+// autorun(() => {
+//   console.log(`Key - value: ${key.value} | time: ${key.time}`)
+// })
+// key.time = 1000
+// key.value = '5px'
+// transaction(() => {
+//   key.time = 1200
+//   key.value = '15px'
+// })
+
 if (!window.__ANIMACHINE_OPEN_FIRST__) {//HACK this flag is used by the demos
   BETON.require('hack-open-first-possible-project')()
 }

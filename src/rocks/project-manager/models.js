@@ -1,5 +1,13 @@
 import {observable} from 'mobservable'
 
+function mapSources(sources, Class) {
+  return sources.map(source => {
+    const item = new Class()
+    item.deserialiize(source)
+    return item
+  })
+}
+
 export class Ease {
   @observable id: string = ''
   @observable easeType: string = 'bezier'
@@ -57,7 +65,8 @@ export class Key {
     this.id = source.id
     this.time = source.time
     this.value = source.value
-    this.ease = source.ease
+    this.ease = new Ease()
+    this.ease.deserialize(source.ease)
     this.selected = source.selected
   }
 
@@ -74,13 +83,14 @@ export class Key {
 export class Param {
   @observable id: string = ''
   @observable name: string = 'param'
-  @observable params: Array<Key> = []
+  @observable keys: Array<Key> = []
   @observable openInTimeline: boolean = true
 
   deserialize(source) {
     this.id = source.id
     this.name = source.name
-    this.keys = source.keys
+    this.keys = mapSources(source.keys, Key)
+    this.openInTimeline = source.openInTimeline
   }
 
   serialize() {
@@ -88,6 +98,7 @@ export class Param {
       id: this.id,
       name: this.name,
       keys: this.keys.map(key => key.serialize()),
+      openInTimeline: this.openInTimeline,
     }
   }
 }
@@ -101,7 +112,6 @@ export class Selector {
     this.id = source.id
     this.type = source.type
     this.value = source.value
-    this.openInTimeline = source.openInTimeline
   }
 
   serialize() {
@@ -109,7 +119,6 @@ export class Selector {
       id: this.id,
       type: this.type,
       value: this.value,
-      openInTimeline: this.openInTimeline,
     }
   }
 }
@@ -125,7 +134,7 @@ export class Track {
     this.id = source.id
     this.name = source.name
     this.params = source.params
-    this.selectors = source.selectors
+    this.selectors = mapSources(source.selectors, Selector)
     this.openInTimeline = source.openInTimeline
   }
 
@@ -140,6 +149,8 @@ export class Track {
   }
 }
 
+function test (...args) {console.log('TESTED', ...args)}
+
 export class Timeline {
   @observable id: string = ''
   @observable name: string = 'timeline'
@@ -152,18 +163,37 @@ export class Timeline {
   @observable start: number = 0
   @observable startMargin: number = 6
   @observable tracks: Array<Track> = []
+  @observable selectedKeyHolderId: string = 'project'
 
   deserialize(source) {
     this.id = source.id
     this.name = source.name
-    this.tracks = source.tracks
+    this.isPlaying = source.isPlaying
+    this.isSeeking = source.isSeeking
+    this.currentTime = source.currentTime
+    this.length = source.length
+    this.pxpms = source.pxpms
+    this.width = source.width
+    this.start = source.start
+    this.startMargin = source.startMargin
+    this.tracks = mapSources(source.tracks, Track)
+    this.selectedKeyHolderId = source.selectedKeyHolderId
   }
 
   serialize() {
     return {
       id: this.id,
       name: this.name,
+      isPlaying: this.isPlaying,
+      isSeeking: this.isSeeking,
+      currentTime: this.currentTime,
+      length: this.length,
+      pxpms: this.pxpms,
+      width: this.width,
+      start: this.start,
+      startMargin: this.startMargin,
       tracks: this.tracks.map(timeline => timeline.serialize()),
+      selectedKeyHolderId: this.selectedKeyHolderId,
     }
   }
 }
@@ -172,11 +202,13 @@ export class Project {
   @observable id: string = ''
   @observable name: string = 'project'
   @observable timelines: Array<Timeline> = []
+  @observable selectedTimelineId: string = 'project'
 
   deserialize(source) {
     this.id = source.id
     this.name = source.name
-    this.timelines = source.timelines
+    this.timelines = mapSources(ource.timelines, timelines)
+    this.selectedTimelineId = source.selectedTimelineId
   }
 
   serialize() {
@@ -184,6 +216,7 @@ export class Project {
       id: this.id,
       name: this.name,
       timelines: this.timelines.map(timeline => timeline.serialize()),
+      selectedTimelineId: this.selectedTimelineId,
     }
   }
 }

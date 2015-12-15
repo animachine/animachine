@@ -13,19 +13,11 @@ const key2ParamName = {
 }
 
 @connect(
-  (state) => {
-    const {selectors} = BETON.require('project-manager')
-    const project = selectors.getCurrentProject()
-    const timeline = selectors.getCurrentTimeline()
-    if (!timeline || timeline.isPlaying || timeline.isSeeking) {
-      return {}
-    }
-    const trackId = timeline.currentTrackId
-    if (!trackId) {
-      return {}
-    }
-    const selectedTarget = selectors.getTargetNodesOfTrack({trackId})[0]
-    if (!selectedTarget) {
+  () => {
+    const {state, getters} = BETON.require('project-manager')
+    const target = state.selectedTarget
+
+    if (!target) {
       return {}
     }
 

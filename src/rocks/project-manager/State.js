@@ -1,6 +1,6 @@
 import {observable} from 'mobservable'
-import {Project} from './models'
-import {recurseKeyHolders}
+import {Key, Project} from './models'
+import {recurseKeyHolders, recurseKeys} from './recursers'
 
 export default class State {
   @observable projects: Array<Project> = []
@@ -23,5 +23,13 @@ export default class State {
     if (this.currentProject) {
       const {selectedKeyholderId} = this.currentProject
     }
+  }
+
+  @observable selectedKeys: Array<Key> = function () {
+    const result: Array<Key> = []
+    if (this.currentTimeline) {
+      recurseKeys(this.currentTimeline, key => result.push(key))
+    }
+    return result
   }
 }

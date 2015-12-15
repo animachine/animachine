@@ -15,21 +15,17 @@ const key2ParamName = {
 @connect(
   () => {
     const {state, getters} = BETON.require('project-manager')
-    const target = state.selectedTarget
+    const track = state.lastSelectedTrack
 
-    if (!target) {
+    if (!track) {
       return {}
     }
 
+    const currentTime = state.selectedTimeline.currentTime
+
     const getValue = (paramName, defaultValue) => {
-      const param = selectors.getParamOfTrackByName({
-        trackId,
-        paramName
-      })
-      const value = param && selectors.getValueOfParamAtTime({
-        paramId: param.id,
-        time: timeline.currentTime
-      })
+      const param = track.params.find(paramv => param.name === paramName)
+      const value = param && getters.getValueOfParamAtTime(param, currentTime)
       return value === undefined ? defaultValue : value
     }
 
@@ -42,8 +38,7 @@ const key2ParamName = {
       rz: getValue('rotationZ', 0),
       ox: getValue('transformOriginX', 0.5),
       oy: getValue('transformOriginY', 0.5),
-      trackId,
-      currentTime: timeline.currentTime
+      currentTime
     }
   },
   () => {
@@ -73,11 +68,7 @@ export default class TransformTool extends React.Component {
   }
 
   render() {
-    const {selectedTarget, tx, ty, sx, sy, rz, ox, oy} = this.props
-
-    if (!selectedTarget) {
-      return <div hidden />
-    }
+    const {hidden, tx, ty, sx, sy, rz, ox, oy} = this.props
 
     const transform = {
       tx,

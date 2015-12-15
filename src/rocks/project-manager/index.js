@@ -1,5 +1,5 @@
 import * as actions from './actions/actions'
-import reducer from './reducer'
+import * as getters from './getters'
 import State from './State'
 
 BETON.define({
@@ -7,6 +7,6 @@ BETON.define({
   dependencies: [],
   init: () => {
     const state = new State()
-    return {state, actions}
+    return {state, actions, getters}
   }
 })

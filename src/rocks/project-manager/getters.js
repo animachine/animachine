@@ -56,3 +56,15 @@ export function getValueOfTrackAtTime(
     }
   }
 }
+
+getTimelineLength(timeline: Timeline) {
+  let result = 0
+
+  recurseKeys(timeline, key => {
+    if (key.time > result) {
+      result = key.time
+    }
+  })
+
+  return result
+}

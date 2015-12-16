@@ -19,9 +19,25 @@ export default class State {
     }
   }
 
-  @observable selectedKeyholder: ?Project = function () {
-    if (this.currentProject) {
-      const {selectedKeyholderId} = this.currentProject
+  @observable selectedParam: ?Param = function () {
+    if (this.currentTimeline) {
+      const {selectedParamId} = this.currentTimeline
+      let result
+      recurseParams(this.currentTimeline, param => {
+        if (param.id === selectedParamId) {
+          result = param
+          return true //break
+        }
+      })
+      return result
+    }
+  }
+
+  @observable selectedTrack: ?Track = function () {
+    if (this.selectedParam) {
+      return this.currentTimeline.tracks.find(track =>
+        track.params.indexOf(this.selectedParam) !== -1
+      )
     }
   }
 

@@ -3,12 +3,20 @@ import {observable} from 'mobservable'
 function mapSources(sources, Class) {
   return sources.map(source => {
     const item = new Class()
-    item.deserialiize(source)
+    item.deserialize(source)
     return item
   })
 }
 
+function constructor(source) {
+  if (source) {
+    this.deserialize(source)
+  }
+}
+
 export class Ease {
+  constructor: constructor
+
   @observable id: string = ''
   @observable easeType: string = 'bezier'
   @observable pointAX: number = 0.3
@@ -56,17 +64,19 @@ export class Ease {
 }
 
 export class Key {
+  constructor: constructor
+
   @observable id: string = ''
   @observable time: int = 0
   @observable value: string = '0'
   @observable ease: Ease = null
+  @observable selected: boolean = false
 
   deserialize(source) {
     this.id = source.id
     this.time = source.time
     this.value = source.value
-    this.ease = new Ease()
-    this.ease.deserialize(source.ease)
+    this.ease = new Ease(source.ease)
     this.selected = source.selected
   }
 
@@ -76,11 +86,14 @@ export class Key {
       time: this.time,
       value: this.value,
       else: this.ease && this.ease.serialize(),
+      selected: this.selected,
     }
   }
 }
 
 export class Param {
+  constructor: constructor
+
   @observable id: string = ''
   @observable name: string = 'param'
   @observable keys: Array<Key> = []
@@ -104,6 +117,8 @@ export class Param {
 }
 
 export class Selector {
+  constructor: constructor
+
   @observable id: string = ''
   @observable type: string = 'css'
   @observable value: string = ''
@@ -124,6 +139,8 @@ export class Selector {
 }
 
 export class Track {
+  constructor: constructor
+
   @observable id: string = ''
   @observable name: string = 'param'
   @observable params: Array<Param> = []
@@ -152,6 +169,8 @@ export class Track {
 function test (...args) {console.log('TESTED', ...args)}
 
 export class Timeline {
+  constructor: constructor
+
   @observable id: string = ''
   @observable name: string = 'timeline'
   @observable isPlaying: boolean = false
@@ -163,7 +182,7 @@ export class Timeline {
   @observable start: number = 0
   @observable startMargin: number = 6
   @observable tracks: Array<Track> = []
-  @observable selectedKeyHolderId: string = 'project'
+  @observable selectedParamId: string = 'project'
 
   deserialize(source) {
     this.id = source.id
@@ -177,7 +196,7 @@ export class Timeline {
     this.start = source.start
     this.startMargin = source.startMargin
     this.tracks = mapSources(source.tracks, Track)
-    this.selectedKeyHolderId = source.selectedKeyHolderId
+    this.selectedParamId = source.selectedParamId
   }
 
   serialize() {
@@ -193,12 +212,14 @@ export class Timeline {
       start: this.start,
       startMargin: this.startMargin,
       tracks: this.tracks.map(timeline => timeline.serialize()),
-      selectedKeyHolderId: this.selectedKeyHolderId,
+      selectedParamId: this.selectedParamId,
     }
   }
 }
 
 export class Project {
+  constructor: constructor
+
   @observable id: string = ''
   @observable name: string = 'project'
   @observable timelines: Array<Timeline> = []

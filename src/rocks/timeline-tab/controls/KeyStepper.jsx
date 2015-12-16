@@ -1,33 +1,36 @@
 import React from 'react'
 import {Button} from 'react-matterkit'
-import {connect} from 'react-redux'
+import {observable, observer} from 'mobservable'
 
-// export default props => <div>key</div>
+const stepperW = 12
+const stepperStyle = {
+  position: 'absolute',
+  top: 0,
+  cursor: 'pointer',
+  width: 14,
+  paddingLeft: 0,
+  paddingRight: 0,
+}
 
-@connect((store, props) => {
-  const {selectors, actions} = BETON.require('project-manager')
-  const {keyHolderId} = props
-  const timelineId = selectors.getParentTimelineIdByChildId({childId: keyHolderId})
-  const timeline = selectors.getItemById({id: timelineId})
-  if (timeline.isPlaying || timeline.isSeeking) {
-    return {skipUpdate: true}
-  }
-  const time = timeline.currentTime
-  const hasKeyNow = selectors.getKeysAtTime({keyHolderId, time}).length > 0
-  const previousKey = selectors.getPreviousKey({keyHolderId, time})
-  const nextKey = selectors.getNextKey({keyHolderId, time})
-  return {
-    hasKeyNow,
-    previousKeyTime: previousKey && previousKey.time,
-    nextKeyTime: nextKey && nextKey.time,
-    timelineId,
-    time
-  }
-})
+@observer
 export default class KeyStepper extends React.Component {
   constructor(props) {
     super(props)
     this.state = {}
+
+    const {state, actions, recursers} = BETON.require('project-manager')
+
+    this.keyTimes = observable(() => {
+      const result = []
+
+      recursers.recurseKeys(props.keyHolder, ({time}) => {
+        if (result.indexOf(time === -1)) {
+          result.push(time)
+        }
+      })
+
+      return result.sort()
+    })
   }
 
   shouldComponentUpdate(nextProps) {
@@ -35,45 +38,56 @@ export default class KeyStepper extends React.Component {
   }
 
   handleKeyClick = () => {
-    const {actions} = BETON.require('project-manager')
-    const {keyHolderId, time} = this.props
-    actions.toggleKeysAtTime({keyHolderId, time})
+    const {state, actions} = BETON.require('project-manager')
+    const {keyHolder} = this.props
+    actions.toggleKeysSelectionAtTime(
+      keyHolderId,
+      state.selectedTimeline.currentTime
+    )
+  }
+
+  handleStepTime = (way: boolean) => {
+    const {state, actions} = BETON.require('project-manager')
+    const keyTimes = this.keyTimes
+    let time
+    for (let i = 1; i < keyTimes.length; ++i) {
+      if (keyTimes[i] > currentTime) {
+        time = next ? keyTimes[i] : keyTimes[-1]
+      }
+    }
+    actions.set(state.selectedTimeline, 'currentTime', time)
   }
 
   render() {
-    const {actions} = BETON.require('project-manager')
-    const {hasKeyNow, previousKeyTime, nextKeyTime, timelineId} = this.props
-    const {hover} = this.state
-    const stepperW = 12
-    const stepperStyle = {
-      position: 'absolute',
-      top: 0,
-      cursor: 'pointer',
-      width: 14,
-      paddingLeft: 0,
-      paddingRight: 0,
+    const {state} = BETON.require('project-manager')
+    const timeline = state.selectedTimeline
+    let currentTime, hasKeyNow, hasKeyBefore, hasKeyAfter
+
+    if (timeline.isPlaying === false) {
+      const keyTimes = this.keyTimes
+      hasKeyNow = keyTimes.indexOf(currentTime) !== -1
+
+      if (this.state.hover) {
+        hasKeyBefore = keyTimes[0] < currentTime
+        hasKeyAfter = currentTime < keyTimes[keyTimes.length - 1]
+      }
     }
+
     return <div
       style = {{position: 'relative'}}
       onMouseEnter = {() => this.setState({hover: true})}
       onMouseLeave = {() => this.setState({hover: false})}>
 
-      {hover && previousKeyTime !== undefined && <Button
+      {hasKeyBefore && <Button
         icon = 'angle-left'
         style = {{...stepperStyle, left: -stepperW}}
-        onClick = {() => {actions.setCurrentTimeOfTimeline({
-          timelineId,
-          currentTime: previousKeyTime
-        })}}/>
+        onClick = {() => {this.handleStepTime(false)}}/>
       }
 
-      {hover && nextKeyTime !== undefined && <Button
+      {hasKeyAfter && <Button
         icon = 'angle-right'
         style = {{...stepperStyle, right: -stepperW}}
-        onClick = {() => {actions.setCurrentTimeOfTimeline({
-          timelineId,
-          currentTime: nextKeyTime
-        })}}/>
+        onClick = {() => this.handleStepTime(true)}/>
       }
 
       <Button

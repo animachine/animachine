@@ -1,3 +1,5 @@
+import {observable} from 'mobservable'
+
 BETON.define({
   id: 'timeline-pusher',
   dependencies: ['project-manager'],
@@ -5,20 +7,23 @@ BETON.define({
 })
 
 function init({projectManager}) {
-  const {setCurrentTimeOfTimeline} = projectManager.actions
-  const {getCurrentTimeline, getTimelineLength} = projectManager.selectors
+  const {state, actions, getters} = projectManager.actions
   let lastTime = performance.now()
+  //observe the length of the timeline so it don't have to recalculate it until
+  // the time of the keys or the timeline don't changes
+  const timelineLength = observable(() => {
+    if (state.selectedTimeline) {
+      return getters.getTimelineLength(state.selectedTimeline)
+    }
+  })
 
   function push() {
     const time = performance.now()
-    const timeline = getCurrentTimeline()
+    const timeline = state.selectedTimeline
     if (timeline && timeline.isPlaying) {
       let nextTime = timeline.currentTime + time - lastTime
-      nextTime %= getTimelineLength({timelineId: timeline.id})
-      setCurrentTimeOfTimeline({
-        timelineId: timeline.id,
-        currentTime: nextTime
-      })
+      nextTime %= timelineLength
+      actions.set(timeline, 'currentTime', nextTime)
     }
     lastTime = time
     window.requestAnimationFrame(push)

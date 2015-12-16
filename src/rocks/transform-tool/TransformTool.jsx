@@ -15,7 +15,7 @@ const key2ParamName = {
 @connect(
   () => {
     const {state, getters} = BETON.require('project-manager')
-    const track = state.lastSelectedTrack
+    const track = state.selectedTrack
 
     if (!track) {
       return {}

@@ -224,6 +224,8 @@ export class Project {
   @observable name: string = 'project'
   @observable timelines: Array<Timeline> = []
   @observable selectedTimelineId: string = 'project'
+  //only runtime
+  @observable previewNodes: Array<object> = []
 
   deserialize(source) {
     this.id = source.id

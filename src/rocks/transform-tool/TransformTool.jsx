@@ -30,7 +30,7 @@ const key2ParamName = {
     }
 
     return {
-      selectedTarget,
+      selectedTarget: state.selectedProject.previewNodes[0],
       tx: getValue('x', 0),
       ty: getValue('y', 0),
       sx: getValue('scaleX', 1),

@@ -23,7 +23,7 @@ export default class DialogComponent extends React.Component {
     console.log({selectedItem, lastSelectedItemId})
 
     return <DialogComp
-        title = 'Item settigns'
+        title = 'Item settings'
         buttons = {[{label: 'close', onClick: onClose}]}
         onClose = {onClose}>
       <div style = {{display: 'flex', width: 432}}>

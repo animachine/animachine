@@ -16,10 +16,9 @@ BETON.define({
       const {setPickedDOMNode} = domPicker.actions
       const {
         getTargetNodesOfTrack,
-        getCurrentTimeline,
       } = projectManager.selectors
       const {clientX: x, clientY: y} = e
-      const timeline = getCurrentTimeline()
+      const timeline = projectManager.state.selectedTimeline
 
       node.style.pointerEvents = 'none'
       const pickedDOMNode = document.elementFromPoint(x, y)

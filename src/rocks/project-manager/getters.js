@@ -57,13 +57,36 @@ export function getValueOfTrackAtTime(
   }
 }
 
-getTimelineLength(timeline: Timeline) {
+export getTimelineLength(timeline: Timeline) {
   let result = 0
 
   recurseKeys(timeline, key => {
     if (key.time > result) {
       result = key.time
     }
+  })
+
+  return result
+}
+
+function getParent(Type: Class, item: object) {
+
+}
+
+export function getTargetNodesOfTrack(track) {
+  const {id: projectId} = getParentProjectOfTrack({trackId})
+  const track = getItemById({id: trackId})
+  const previewComponents = getPreviewComponentsOfProject({projectId})
+  let result = []
+
+  track.selectors.forEach(selector => {
+    previewComponents.forEach(previewComponent => {
+      const combinedSelector = combineSelector(selectorId)
+      const target = createTarget(previewComponent.__itemTree)
+        .findWithCommands(combinedSelector)
+
+      result = [...result, ...target]
+    })
   })
 
   return result

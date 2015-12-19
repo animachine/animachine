@@ -27,12 +27,16 @@ export function recurseKeyHolders(root: object, cb: Function) {
   }
 }
 
-export function recurseAll(root: object, cb: Function) {
+export function recurseAll(
+  root: object,
+  cb: Function,
+  path: Array<object> = []
+) {
   if (cb(root) !== true) {
     return true
   }
   if (root instanceof Project) {
-    return root.timelines.some(timeline => recurseAll(timeline, cb))
+    return root.timelines.some(timeline => recurseAll(timeline, cb, [...]))
   }
   if (root instanceof Timeline) {
     return root.tracks.some(track => recurseAll(track, cb))

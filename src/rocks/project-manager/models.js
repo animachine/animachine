@@ -1,6 +1,10 @@
 import {observable} from 'mobservable'
 import {registerId, createId} from './id-store'
 
+import uniq from 'lodash/array/uniq'
+import flatten from 'lodash/array/flatten'
+import {getValueOfParamAtTime} from '../getters'
+
 function mapSources(sources, Class) {
   return sources.map(source => {
     const item = new Class()
@@ -12,6 +16,16 @@ function mapSources(sources, Class) {
 function constructor(source = {}) {
   this.id = source.id ? registerId(source.id) : createId
   this._deserialize(source)
+}
+
+function findParent(item, ParentClass) {
+  let parent = item.parent
+  while (parent) {
+    if (parent instanceof ParentClass) {
+      return parent
+    }
+    parent = parent.parent
+  }
 }
 
 export class Ease {
@@ -29,6 +43,13 @@ export class Ease {
   @observable roughClamp: boolean = false
   @observable roughRandomise: boolean = true
   @observable roughTaper: string = 'none'
+
+  @observable parent: Key = null
+  @observable get parentKey() {return findParent(this, Key)}
+  @observable get parentParam() {return findParent(this, Param)}
+  @observable get parentTrack() {return findParent(this, Track)}
+  @observable get parentTimeline() {return findParent(this, Timeline)}
+  @observable get parentProject() {return findParent(this, Project)}
 
   _deserialize(source) {
     this.id = source.id
@@ -72,6 +93,12 @@ export class Key {
   @observable ease: Ease = null
   @observable selected: boolean = false
 
+  @observable parent: Param = null
+  @observable get parentParam() {return findParent(this, Param)}
+  @observable get parentTrack() {return findParent(this, Track)}
+  @observable get parentTimeline() {return findParent(this, Timeline)}
+  @observable get parentProject() {return findParent(this, Project)}
+
   _deserialize(source) {
     this.id = source.id
     this.time = source.time
@@ -106,6 +133,19 @@ export class Param {
     this.openInTimeline = source.openInTimeline
   }
 
+  @observable parent: Track = null
+  @observable get parentTrack() {return findParent(this, Track)}
+  @observable get parentTimeline() {return findParent(this, Timeline)}
+  @observable get parentProject() {return findParent(this, Project)}
+
+  @observable get keyTimes() {
+    return this.keys.map(key => key.time).sort()
+  }
+
+  @observable get currentValue() {
+    return getValueOfParamAtTime(this, this.parentTimeline.currentTime)
+  }
+
   serialize() {
     return {
       id: this.id,
@@ -122,6 +162,11 @@ export class Selector {
   @observable id: string = ''
   @observable type: string = 'css'
   @observable value: string = ''
+
+  @observable parent: Track = null
+  @observable get parentTrack() {return findParent(this, Track)}
+  @observable get parentTimeline() {return findParent(this, Timeline)}
+  @observable get parentProject() {return findParent(this, Project)}
 
   _deserialize(source) {
     this.id = source.id
@@ -147,6 +192,14 @@ export class Track {
   @observable selectors: Array<Selector> = []
   @observable openInTimeline: boolean = true
 
+  @observable parent: Timeline = null
+  @observable get parentTimeline() {return findParent(this, Timeline)}
+  @observable get parentProject() {return findParent(this, Project)}
+
+  @observable get keyTimes() {
+    return uniq(flatten(this.params.map(param => key.keyTimes))).sort()
+  }
+
   _deserialize(source) {
     this.id = source.id
     this.name = source.name
@@ -166,8 +219,6 @@ export class Track {
   }
 }
 
-function test (...args) {console.log('TESTED', ...args)}
-
 export class Timeline {
   constructor: constructor
 
@@ -183,6 +234,9 @@ export class Timeline {
   @observable startMargin: number = 6
   @observable tracks: Array<Track> = []
   @observable selectedParamId: string = 'project'
+
+  @observable parent: Project = null
+  @observable get parentProject() {return findParent(this, Project)}
 
   _deserialize(source) {
     this.id = source.id

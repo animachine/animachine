@@ -16,21 +16,23 @@ const stepperStyle = {
 export default class KeyStepper extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {}
 
-    const {state, actions, recursers} = BETON.require('project-manager')
+    this.state = {
+      hover: false
+    }
 
-    this.keyTimes = observable(() => {
-      const result = []
-
-      recursers.recurseKeys(props.keyHolder, ({time}) => {
-        if (result.indexOf(time === -1)) {
-          result.push(time)
-        }
-      })
-
-      return result.sort()
-    })
+    const {state} = BETON.require('project-manager')
+    const keyTimes = this.keyHolder.keyTimes
+    const timeline = state.selectedTimeline
+    this.hasKeyBefore = observable(() =>
+      keyTimes[0] < timeline.currentTime
+    )
+    this.hasKeyAfter = observable(() =>
+      timeline.currentTime < keyTimes[keyTimes.length - 1]
+    )
+    this.hasKeyNow = observable(() =>
+      keyTimes.indexOf(timeline.currentTime) !== -1
+    )
   }
 
   shouldComponentUpdate(nextProps) {
@@ -48,7 +50,7 @@ export default class KeyStepper extends React.Component {
 
   handleStepTime = (way: boolean) => {
     const {state, actions} = BETON.require('project-manager')
-    const keyTimes = this.keyTimes
+    const keyTimes = this.keyHolder.keyTimes
     let time
     for (let i = 1; i < keyTimes.length; ++i) {
       if (keyTimes[i] > currentTime) {
@@ -59,32 +61,18 @@ export default class KeyStepper extends React.Component {
   }
 
   render() {
-    const {state} = BETON.require('project-manager')
-    const timeline = state.selectedTimeline
-    let currentTime, hasKeyNow, hasKeyBefore, hasKeyAfter
-
-    if (timeline.isPlaying === false) {
-      const keyTimes = this.keyTimes
-      hasKeyNow = keyTimes.indexOf(currentTime) !== -1
-
-      if (this.state.hover) {
-        hasKeyBefore = keyTimes[0] < currentTime
-        hasKeyAfter = currentTime < keyTimes[keyTimes.length - 1]
-      }
-    }
-
     return <div
       style = {{position: 'relative'}}
       onMouseEnter = {() => this.setState({hover: true})}
       onMouseLeave = {() => this.setState({hover: false})}>
 
-      {hasKeyBefore && <Button
+      {this.hasKeyBefore && <Button
         icon = 'angle-left'
         style = {{...stepperStyle, left: -stepperW}}
         onClick = {() => {this.handleStepTime(false)}}/>
       }
 
-      {hasKeyAfter && <Button
+      {this.hasKeyAfter && <Button
         icon = 'angle-right'
         style = {{...stepperStyle, right: -stepperW}}
         onClick = {() => this.handleStepTime(true)}/>
@@ -92,7 +80,7 @@ export default class KeyStepper extends React.Component {
 
       <Button
         icon = 'key'
-        style = {{opacity: hasKeyNow ? 1 : 0.4}}
+        style = {{opacity: this.hasKeyNow ? 1 : 0.4}}
         onClick = {this.handleKeyClick}
         mod = {{kind: 'stamp'}}/>
     </div>

@@ -7,7 +7,7 @@ function oneTransaction(fn) {
   return (...args) => transaction(fn(...args))
 }
 
-export function historySave(undo: Function, redo: Function) {
+function historySave(redo: Function, undo: Function) {
   redo()
 }
 
@@ -20,17 +20,29 @@ export function set(target: object, name: string, value: any) {
   )
 }
 
-export function add(container: Array<object>, item: object) {
+export function add(parent: object, containerName: string, item: object) {
   historySave(
-    () => container.remove(item),
-    () => container.push(item)
+    () => {
+      parent[containerName].push(item)
+      item.parent = parent
+    },
+    () => {
+      parent[containerName].remove(item)
+      item.parent = null
+    }
   )
 }
 
-export function remove(container: Array<object>, item: object) {
+export function remove(parent: object, containerName: string, item: object) {
   historySave(
-    () => container.push(item),
-    () => container.remove(item)
+    () => {
+      parent[containerName].remove(item)
+      item.parent = null
+    },
+    () => {
+      parent[containerName].push(item)
+      item.parent = parent
+    }
   )
 }
 

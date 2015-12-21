@@ -1,17 +1,17 @@
 import {observable} from 'mobservable'
+import {registerId, createId} from './id-store'
 
 function mapSources(sources, Class) {
   return sources.map(source => {
     const item = new Class()
-    item.deserialize(source)
+    item._deserialize(source)
     return item
   })
 }
 
-function constructor(source) {
-  if (source) {
-    this.deserialize(source)
-  }
+function constructor(source = {}) {
+  this.id = source.id ? registerId(source.id) : createId
+  this._deserialize(source)
 }
 
 export class Ease {
@@ -30,7 +30,7 @@ export class Ease {
   @observable roughRandomise: boolean = true
   @observable roughTaper: string = 'none'
 
-  deserialize(source) {
+  _deserialize(source) {
     this.id = source.id
     this.easeType = source.easeType
     this.pointAX = source.pointAX
@@ -72,7 +72,7 @@ export class Key {
   @observable ease: Ease = null
   @observable selected: boolean = false
 
-  deserialize(source) {
+  _deserialize(source) {
     this.id = source.id
     this.time = source.time
     this.value = source.value
@@ -99,7 +99,7 @@ export class Param {
   @observable keys: Array<Key> = []
   @observable openInTimeline: boolean = true
 
-  deserialize(source) {
+  _deserialize(source) {
     this.id = source.id
     this.name = source.name
     this.keys = mapSources(source.keys, Key)
@@ -123,7 +123,7 @@ export class Selector {
   @observable type: string = 'css'
   @observable value: string = ''
 
-  deserialize(source) {
+  _deserialize(source) {
     this.id = source.id
     this.type = source.type
     this.value = source.value
@@ -147,7 +147,7 @@ export class Track {
   @observable selectors: Array<Selector> = []
   @observable openInTimeline: boolean = true
 
-  deserialize(source) {
+  _deserialize(source) {
     this.id = source.id
     this.name = source.name
     this.params = source.params
@@ -184,7 +184,7 @@ export class Timeline {
   @observable tracks: Array<Track> = []
   @observable selectedParamId: string = 'project'
 
-  deserialize(source) {
+  _deserialize(source) {
     this.id = source.id
     this.name = source.name
     this.isPlaying = source.isPlaying
@@ -227,7 +227,7 @@ export class Project {
   //only runtime
   @observable previewNodes: Array<object> = []
 
-  deserialize(source) {
+  _deserialize(source) {
     this.id = source.id
     this.name = source.name
     this.timelines = mapSources(ource.timelines, timelines)

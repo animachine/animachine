@@ -6,10 +6,21 @@ BETON.define({
       getInspectedComponents,
       getProjectSourcesOfComponent,
       getMountedComponentsOfProjectSource
-    } = componentInspector.selectors
+    } = componentInspector.getters
+
+    const dispose = autorun(() => {
+      if (projectManager.state.currentProject) {
+        dispose()
+        return
+      }
+
+      componentInspector.state.inspectedReactComponents.forEach(component => {
+
+      })
+    })
 
     function test() {
-      if (!projectManager.selectors.getCurrentProjectId()) {
+      if (!projectManager.state.currentProject) {
         getInspectedComponents().forEach(component => {
           const projectSources = getProjectSourcesOfComponent({component})
           if (projectSources.length) {

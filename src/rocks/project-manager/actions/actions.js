@@ -1,3 +1,5 @@
+/* @flow */
+
 import {Param, Track, Timeline, Project} from '../models'
 import state from '../state'
 import {recurseKeys} from '../recursers'
@@ -57,7 +59,7 @@ export function setValueOfParamAtTime(
   value: string,
   time: number
 ) {
-  const key: Key = param.keys.find(key => key.time === time)
+  let key: Key = param.keys.find(key => key.time === time)
   if (!key) {
     key = new Key()
     add(param.keys, key)
@@ -71,7 +73,7 @@ export function setValueOfTrackAtTime(
   value: string,
   time: number
 ) {
-  const param: Param = track.params.find(param => param.name === paramName)
+  let param: Param = track.params.find(param => param.name === paramName)
   if (!param) {
     param = new Param()
     add(track.params, param)
@@ -117,15 +119,3 @@ export function toggleKeysSelectionAtTime(keyHolder, time) {
     }
   })
 }
-
-// addAction('SET_LAST_SELECTED_ITEM_ID', ['itemId'])
-addAction('SET_VISIBLE_TIME_OF_TIMELINE', ['timelineId', 'visibleTime'])
-// addAction('SET_VALUE_OF_PARAM_AT_TIME', ['paramId', 'time', 'value'])
-// addAction('SET_VALUE_OF_TRACK_AT_TIME', ['trackId', 'paramName', 'time', 'value'])
-// addAction('SELECT_KEYS_AT_TIME', ['keyHolderId', 'time'])
-// addAction('TOGGLE_KEYS_AT_TIME', ['keyHolderId', 'time'])
-// addAction('DESELECT_ALL_KEYS', ['keyHolderId'])
-// addAction('TOGGLE_KEYS_SELECTION_AT_TIME', ['keyHolderId', 'time'])
-addAction('TRANSLATE_SELECTED_KEYS', ['keyHolderId', 'offset'])
-addAction('UNDO', ['timelineId'])
-addAction('REDO', ['timelineId'])

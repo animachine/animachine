@@ -36,7 +36,7 @@ export function recurseAll(
     return true
   }
   if (root instanceof Project) {
-    return root.timelines.some(timeline => recurseAll(timeline, cb, [...]))
+    return root.timelines.some(timeline => recurseAll(timeline, cb))
   }
   if (root instanceof Timeline) {
     return root.tracks.some(track => recurseAll(track, cb))

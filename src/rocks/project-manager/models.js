@@ -3,7 +3,7 @@ import {registerId, createId} from './id-store'
 
 import uniq from 'lodash/array/uniq'
 import flatten from 'lodash/array/flatten'
-import {getValueOfParamAtTime} from '../getters'
+import {getValueOfParamAtTime} from './getters'
 
 function mapSources(sources, Class) {
   return sources.map(source => {
@@ -277,15 +277,20 @@ export class Project {
   @observable id: string = ''
   @observable name: string = 'project'
   @observable timelines: Array<Timeline> = []
-  @observable selectedTimelineId: string = 'project'
+  @observable currentTimelineId: string = 'project'
   //only runtime
   @observable previewNodes: Array<object> = []
+
+  @observable get currentTimeline(): ?Project {
+    const {timeline, currentTmelineId} = this
+    return this.timelines.find(({id}) => id === currentTimelineId) || null
+  }
 
   _deserialize(source) {
     this.id = source.id
     this.name = source.name
     this.timelines = mapSources(ource.timelines, timelines)
-    this.selectedTimelineId = source.selectedTimelineId
+    this.currentTimelineId = source.currentTimelineId
   }
 
   serialize() {
@@ -293,7 +298,7 @@ export class Project {
       id: this.id,
       name: this.name,
       timelines: this.timelines.map(timeline => timeline.serialize()),
-      selectedTimelineId: this.selectedTimelineId,
+      currentTimelineId: this.selectedTimelineId,
     }
   }
 }

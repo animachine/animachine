@@ -57,7 +57,7 @@ export function getValueOfTrackAtTime(
   }
 }
 
-export getTimelineLength(timeline: Timeline) {
+export function getTimelineLength(timeline: Timeline) {
   let result = 0
 
   recurseKeys(timeline, key => {
@@ -74,9 +74,7 @@ function getParent(Type: Class, item: object) {
 }
 
 export function getTargetNodesOfTrack(track) {
-  const {id: projectId} = getParentProjectOfTrack({trackId})
-  const track = getItemById({id: trackId})
-  const previewComponents = getPreviewComponentsOfProject({projectId})
+  const previewComponents = getPreviewComponentsOfProject(track.parentProject)
   let result = []
 
   track.selectors.forEach(selector => {

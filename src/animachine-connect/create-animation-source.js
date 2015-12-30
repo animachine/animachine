@@ -5,6 +5,8 @@ import uniq from 'lodash/array/uniq'
 import flatten from 'lodash/array/flatten'
 import startsWith from 'lodash/string/startsWith'
 
+import {registerRunningTimeline} from './register'
+
 const sortKeys = (a, b) => a.time - b.time
 
 const mergeTransformOriginParams = next => (params, targets, tlRoot) => {
@@ -96,23 +98,32 @@ fixTransformOriginForSvgNodes(
 ))
 
 
-export default function createAnimationSource({projectSource, timeline}) {
-  function animationSource({target}) {
+export default function createAnimationSource(timeline, projectSource) {
+  function animationSource(rootTarget) {
     const tlRoot = new TimelineMax()
 
     timeline.tracks.forEach(track => {
-      const targets = track.selectors.map(selectorCommands => {
-        return target.findWithCommands(selectorCommands)
+      const targets = track.selectors.map(selector => {
+        if (selector.type === 'css') {
+          //TODO throw if rootTarget not a dom element
+          rootTarget.querySelector(selector.query)
+        }
+        else if (selector.type === 'react') {
+          return target.findWithCommands(selector.query)
+        }
       })
 
       addParamTimelines(track.params, targets, tlRoot)
     })
 
+
+    //add to the animachine registry
+    if (projectSource) {
+      registerRunningTimeline(rootTarget, projectSource, timeline.name)
+    }
+
     return tlRoot
   }
-
-  animationSource._amProjectSource = projectSource
-  animationSource._amTimelineName = timeline.name
 
   return animationSource
 }

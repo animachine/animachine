@@ -14,14 +14,6 @@ function exec(command, ...args) {
   }
 }
 
-export function registerRoot(root) {
-  exec('registerRoot', root)
-}
-
-export function registerProject(root, project) {
-  exec('registerProject', root, project)
-}
-
-export function registerRunningTimelie(root, project, ) {
-  exec('registerRunningTimeline', root, project)
+export function registerRunningTimelie(timeline, rootTarget, gsapTimeline) {
+  exec('registerRunningTimeline', timeline, rootTarget, gsapTimeline)
 }

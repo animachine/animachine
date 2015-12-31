@@ -14,9 +14,38 @@ function getAnimationSourceWrapper(timelineId) {
 
 BETON.define({
   id: 'preview-animation-synchronizer',
-  dependencies: ['store', 'project-manager'],
-  init: ({store, projectManager}) => {
-    const {selectors} = projectManager
+  dependencies: ['project-manager', 'preview-registry'],
+  init: ({projectManager, previewRegistry}) => {
+    const controllers = observable(() => {
+      const timeline = projectManager.state.currentTimeline
+      const timelineReg = previewRegistry.timelineMap[timeline]
+      if (!timelineReg || timelineReg.controllers.length === 0) {
+        //TODO show a message
+        return []
+      }
+      else {
+        return timelineReg.controllers
+      }
+    })
+    autorun(() => {
+      const animationSource = createAnimationSource(timelineSource, project)
+      controllers().forEach(controller) {
+        if (controller.replaceAnimationSource) {
+          controller.replaceAnimationSource(animationSource)
+        }
+        else {
+          const root = controller.__animachine_root_target
+          controller.clear().add(animationSource(root))
+        }
+      }
+
+      controllers.forEach(controller => controller.time(time))
+    })
+
+    autorun(() => {
+      const time = projectManager.state.currentTimeline.currentTime
+      controllers().forEach(controller => controller.time(time))
+    })
 
     store.subscribe(() => {
       const projectId = selectors.getCurrentProjectId()

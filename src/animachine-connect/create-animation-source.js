@@ -98,7 +98,7 @@ fixTransformOriginForSvgNodes(
 ))
 
 
-export default function createAnimationSource(timeline, timelineReference) {
+export default function createAnimationSource(timeline, register) {
   function animationSource(rootTarget) {
     const tlRoot = new TimelineMax()
 
@@ -117,8 +117,8 @@ export default function createAnimationSource(timeline, timelineReference) {
     })
 
     //add to the animachine registry
-    if (timelineReference) {
-      registerRunningTimeline(timelineReference, rootTarget, tlRoot)
+    if (register) {
+      register(rootTarget, tlRoot)
     }
 
     return tlRoot

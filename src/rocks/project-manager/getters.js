@@ -1,5 +1,5 @@
 import {Track} from './models'
-import {createEaser} from 'react-animachine-enhancer'
+import {createEaser} from 'animachine-connect'
 
 export function getValueOfTrackAtTime(
   track: Track,

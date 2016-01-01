@@ -1,45 +1,50 @@
-import {map, observeble} from 'mobservable'
+import {map, observeble, fastArray, autorun} from 'mobservable'
 
-class Store() {
-  runningTimelinesMap: map()
-}
-
-class TimelineReg {
-  @observeble previews: [],
-}
-
-class PreviewReg {
-  @observeble gsapAnimation: null,
-  @observeble rootTarget: null,
-
-  constructor(gsapAnimation, rootTarget) {
-    this.gsapAnimation = gsapAnimation
-    this.rootTarget = rootTarget
-  }
-}
 
 BETON.define({
   id: 'preview-registry',
   dependencies: [],
   init: () => {
-
-    const store = new Store()
-
-    function registerRunningTimelie(timeline, rootTarget, gsapAnimation) {
-      let timelineReg
-      if (store.runningTimelinesMap.has(timeline)) {
-        timelineReg = store.runningTimelinesMap.get(timeline)
-      }
-      else {
-        timelineReg = new TimelineReg()
-        store.runningTimelinesMap.set(timeline, timelineReg)
-      }
-
-
+    const state = {
+      runningTimelinesMap: map()//[timelines:[rootTargets:gsapAnimations]]
     }
 
+    function registerRunningTimeline(timeline, rootTarget, gsapAnimation) {
+      if (!state.runningTimelinesMap.has(timeline)) {
+        state.runningTimelinesMap.set(timeline, map())
+      }
+      state.runningTimelinesMap.get(timeline).set(rootTarget, gsapAnimation)
+    }
+
+    global.__animachineRegisterRunningTimeline = fastArray(
+      global.__animachineRegisterRunningTimeline
+    )
+    let pos = 0
+    autoRun(() => {
+      while(pos < global.__animachineRegisterRunningTimeline.length) {
+        const args = global.__animachineRegisterRunningTimeline[pos]
+        registerRunningTimeline(...args)
+        ++pos
+      }
+    })
+
     return {
-      store
+      state,
+      actions: {
+        registerRunningTimeline
+      },
+      getters: {
+        getPreviewsOfTimelnie(timeline) {
+          const result = []
+          (state.runningTimelinesMap.get(timelne) || map()).forEach(
+            (rootTarget, gsapAnimation) => result.push({
+              rootTarget,
+              gsapAnimation
+            })
+          )
+          return result
+        }
+      }
     }
   }
 })

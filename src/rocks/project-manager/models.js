@@ -269,6 +269,13 @@ export class Timeline {
       selectedParamId: this.selectedParamId,
     }
   }
+
+  getProductionSource() {
+    return {
+      name: this.name,
+      tracks: this.tracks.map(timeline => timeline.serialize())
+    }
+  }
 }
 
 export class Project {

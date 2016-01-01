@@ -1,4 +1,4 @@
-import {createEaser} from 'react-animachine-enhancer'
+import {createEaser} from 'animachine-connect'
 import {
   recurseParams,
   recurseKeys,

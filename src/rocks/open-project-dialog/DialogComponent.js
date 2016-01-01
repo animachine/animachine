@@ -5,7 +5,7 @@ import {Scrollable, Tabs} from 'react-matterkit'
 import Markdown from 'react-remarkable'
 import {connect} from 'react-redux'
 
-const URL_REACT_ANIMACHINE_ENHANCER = 'https://github.com/azazdeaz/react-animachine-enhancer'
+const URL_REACT_ANIMACHINE_ENHANCER = 'https://github.com/azazdeaz/animachine-connect'
 
 @connect(() => {
   const {
@@ -20,7 +20,7 @@ export default class DialogComponent extends React.Component {
   renderNoComponentContent() {
     return <Markdown source={`
 ### Can't find any animatable component
-You have to decorate your components with [react-animachine-enhancer]({URL_REACT_ANIMACHINE_ENHANCER}) to animate them with animachine.
+You have to decorate your components with [animachine-connect]({URL_REACT_ANIMACHINE_ENHANCER}) to animate them with animachine.
 Check out [its readme](URL_REACT_ANIMACHINE_ENHANCER) for more info about this.`}/>}
 
   renderTabs({selected, inspectedComponents, projectSources}) {

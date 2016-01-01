@@ -1,5 +1,5 @@
 import React from 'react'
-import animachine from 'react-animachine-enhancer'
+import animachine from 'animachine-connect/react'
 import animations from './jumping.am'
 
 @animachine(animations)

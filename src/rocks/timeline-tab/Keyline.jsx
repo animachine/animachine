@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import customDrag from 'custom-drag'
 import sortBy from 'lodash/collection/sortBy'
 import {getTheme} from 'react-matterkit'
-import {createEaser} from 'react-animachine-enhancer'
+import {createEaser} from 'animachine-connect'
 import getPreviousSiblingOfKey from './getPreviousSiblingOfKey'
 import shallowEqual from 'react-pure-render/shallowEqual'
 import {

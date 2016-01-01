@@ -48,10 +48,10 @@ export function remove(parent: object, containerName: string, item: object) {
   )
 }
 
-export function openProject(source: object) {
+export function loadProject(source: object) {
   const project = new Project(source)
   state.openedProjects.push(project)
-  state.currentProjectId = project.id
+  return project
 }
 
 export function setValueOfParamAtTime(

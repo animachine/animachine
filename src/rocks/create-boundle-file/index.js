@@ -24,15 +24,57 @@ function init({projectManager}) {
 }
 
 function create(timelineSources, projectSource) {
-  return `var animachineEnhancer = require('react-animachine-enhancer')
+  return `var animachineEnhancer = require('animachine-connect')
 var createAnimationSource = animachineEnhancer.createAnimationSource
 
-var projectSource = ${JSON.stringify(projectSource)} //TODO: remove in prod
+//TODO: remove in prod
+var projectSource = ${JSON.stringify(projectSource)}
+var project
+var registerRunningTimelineWaitingList = []
+
+function handleLoadProject(_project) {
+  project = _project
+  while (registerRunningTimelineWaitingList.length !== 0) {
+    registerRunningTimeline(
+      ...registerRunningTimelineWaitingList.pop()
+    )
+  }
+}
+
+function registerRunningTimeline(index, rootTarget, gsapSource) {
+  if (project) {
+    if (!window.__animachineRegisterRunningTimeline) {
+      window.__animachineRegisterRunningTimeline = []
+    }
+
+    window.__animachineRegisterRunningTimeline.push([
+      project.timelines[i],
+      rootTarget,
+      gsapSource
+    ])
+  }
+  else {
+    registerRunningTimelineWaitingList.push(arguments)
+  }
+}
+
+if (!window.__animachineLoadProject) {
+  window.__animachineLoadProject = []
+}
+window.__animachineLoadProject.push(
+  [projectSource, handleLoadProject]
+)
+
 var timelneSources = ${JSON.stringify(timelneSources)}
 var animations = {}
 
 timelineSources.forEach(function (timeline) {
-  var gsapSource = createAnimationSource({projectSource, timeline})
+  var gsapSource = createAnimationSource(
+    timeline,
+    (rootTarget, gsapAnimation) => {
+      registerRunningTimeline(index, rootTarget, gsapAnimation)
+    }
+  )
   animations[timeline.name] = gsapSource
 })
 
@@ -42,7 +84,10 @@ module.exports = {
     for (var i = 0; i < projectSource.timelines.length; ++i) {
       var timeline = projectSource.timelines[i]
       if (timeline.name === timelineName) {
-        return createAnimationSource(timeline, projectSource)
+        return createAnimationSource(
+          timeline,
+          () => registerRunningTimeline
+        )
       }
     }
 

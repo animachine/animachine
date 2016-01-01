@@ -1,4 +1,4 @@
-import {createAnimationSource} from 'react-animachine-enhancer'
+import {createAnimationSource} from 'animachine-connect'
 
 const projectSource = {
   timelines: [

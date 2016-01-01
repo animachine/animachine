@@ -1,4 +1,4 @@
-import {createTarget} from 'react-animachine-enhancer'
+import {createTarget} from 'animachine-connect'
 
 export default function (node, rootComponent) {
   const itemTree = rootComponent.__itemTree

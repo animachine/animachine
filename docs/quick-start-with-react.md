@@ -8,10 +8,10 @@
  - [Save and use the animation](#save-and-use-the-animation)
 
 ###Make components animatable
-To make animachine able to connect your component you have to decorate it with [react-animachine-enhancer]
+To make animachine able to connect your component you have to decorate it with [animachine-connect]
 ```javascript
   /*ES5*/
-  var animachine = require('react-animachine-enhancer')
+  var animachine = require('animachine-connect')
   var MyComponent = React.createClass(/*...*/)
   module.exports = animachine()(MyComponent)
 
@@ -19,7 +19,7 @@ To make animachine able to connect your component you have to decorate it with [
   var myAnimation = require('my-animation.am')
   module.exports = animachine(myAnimation)(MyComponent)
 ```
-For more information please check out [react-animachine-enhancer] but in short the API is looks like this:
+For more information please check out [animachine-connect] but in short the API is looks like this:
 ```javascript
 React.createClass({
   handleClick: function() {
@@ -43,7 +43,7 @@ React.createClass({
 Click on the floppy icon to save your project in a file and use as it was described it the [first step](#make-components-animatable)
 
 [gsap-docs]: http://greensock.com/docs/#/HTML5/GSAP/TimelineMax/
-[react-animachine-enhancer]: https://github.com/azazdeaz/react-animachine-enhancer
+[animachine-connect]: https://github.com/azazdeaz/animachine-connect
 [react-gsap-enhancer]: https://github.com/azazdeaz/react-gsap-enhancer
 [React]: https://github.com/facebook/react
 [extension]: https://chrome.google.com/webstore/detail/animachine-alpha/feefkphfphgbcidiajhoapphgmnfhgod

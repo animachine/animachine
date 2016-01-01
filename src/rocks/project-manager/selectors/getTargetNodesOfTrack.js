@@ -5,7 +5,7 @@ import {
   getParentProjectOfTrack
 } from '../selectors'
 
-import {createTarget} from 'react-animachine-enhancer'
+import {createTarget} from 'animachine-connect'
 
 export function getTargetNodesOfTrack({trackId}) {
   const {id: projectId} = getParentProjectOfTrack({trackId})

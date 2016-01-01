@@ -1,6 +1,6 @@
 //based on http://codepen.io/chrisgannon/pen/PqOOrR
 import React from 'react'
-import animachine from 'react-animachine-enhancer'
+import animachine from 'animachine-connect'
 import animations from './pointless-task.am'
 
 @animachine(animations)

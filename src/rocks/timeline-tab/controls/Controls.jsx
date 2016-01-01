@@ -1,18 +1,10 @@
 import React from 'react'
 import renderControls from './renderControls'
 import {ContextMenu, Button, Label} from 'react-matterkit'
+import {observer} from 'mobservable'
 
+@observer
 export default class Controls extends React.Component {
-  constructor() {
-    super()
-    BETON.require('config', config => this.config = config)
-  }
-
-  shouldComponentUpdate(nextProps) {
-    return !nextProps.timeline.isPlaying
-      && !nextProps.timeline.isSeeking
-  }
-
   renderPlaceholder() {
     return <div>
       <Label label='Hi, there is no track to animate yet!'/>

@@ -18,10 +18,11 @@ const URL_REACT_ANIMACHINE_ENHANCER = 'https://github.com/azazdeaz/react-animach
 })
 export default class DialogComponent extends React.Component {
   renderNoComponentContent() {
-    return <Markdown source={`
-### Can't find any animatable component
-You have to decorate your components with [react-animachine-enhancer]({URL_REACT_ANIMACHINE_ENHANCER}) to animate them with animachine.
-Check out [its readme](URL_REACT_ANIMACHINE_ENHANCER) for more info about this.`}/>}
+    return <Markdown options={html: true}>
+        ### Can't find any animatable component
+        You have to decorate your components with [react-animachine-enhancer]({URL_REACT_ANIMACHINE_ENHANCER}) to animate them with animachine.
+        Check out [its readme]({URL_REACT_ANIMACHINE_ENHANCER}) for more info about this.
+      </Markdown>
 
   renderTabs({selected, inspectedComponents, projectSources}) {
     return <Tabs defaultTabIdx={selected === 'open' ? 0 : 1} style={{flex: 1}}>
@@ -120,7 +121,7 @@ Check out [its readme](URL_REACT_ANIMACHINE_ENHANCER) for more info about this.`
     const {selected, onClose, inspectedComponents, projectSources} = this.props
 
     return <DialogComp
-        title = 'Item settigns'
+        title = 'Item settings'
         buttons = {[]}
         onClose = {onClose}>
       <Scrollable style={{display: 'flex', width: 432, height: 453}}>

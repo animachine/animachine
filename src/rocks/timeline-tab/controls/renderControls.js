@@ -7,7 +7,7 @@ function showItemSettingsDialog() {
   BETON.require('item-settings-dialog').show()
 }
 
-function handleSelectClick(id) {
+function handleSelectClick(param) {
   const {actions, selectors} = BETON.require('project-manager')
   const {type} = selectors.getItemById({id})
   const currentTrackId = type === 'track'
@@ -20,15 +20,9 @@ function handleSelectClick(id) {
   actions.setCurrentTrackIdOfTimeline({timelineId, currentTrackId})
 }
 
-function handleToggleOpen(id) {
-  const {actions, selectors} = BETON.require('project-manager')
-  const {type} = selectors.getItemById({id})
-  if (type === 'param') {
-    actions.toggleOpenInTimelineOfParam({paramId: id})
-  }
-  else if (type === 'track') {
-    actions.toggleOpenInTimelineOfTrack({trackId: id})
-  }
+function handleToggleOpen(paramOrTrack) {
+  const {actions} = BETON.require('project-manager')
+  actions.set(paramOrTrack, 'openInTimeline', !paramOrTrack.openInTimeline)
 }
 
 
@@ -89,24 +83,28 @@ function createTrackSettings({id, name, openInTimeline}) {
   }
 }
 
-function createParamSettings({id, name, value, openInTimeline}) {
+function createParamSettings({param}) {
   return {
-    open: openInTimeline,
-    onClick: handleSelectClick.bind(null, id),
-    onToggleOpen: handleToggleOpen.bind(null, id),
+    open: param.openInTimeline,
+    onClick: handleSelectClick.bind(null, param),
+    onToggleOpen: handleToggleOpen.bind(null, param),
     contextMenu: [{
       items: [
         {
           label: 'settings',
           icon: 'cog',
           onClick: () => {
-            handleSelectClick()
+            handleSelectClick(param)
             showItemSettingsDialog()
           }
         }
       ]
     }],
-    ...createSpecialParamSettings({id, name, value})
+    ...createSpecialParamSettings({
+      id: param.id,
+      name: param.name,
+      value: param.value,
+    })
   }
 }
 
@@ -114,14 +112,10 @@ const renderParams = params => {
   const {getItemById} = BETON.require('project-manager').selectors
 
   return params
-    .map(paramId => getItemById({id: paramId}))
-    .map(({id, name, openInTimeline}) => (
+    .map(param => (
       <QuickInterface {...{
-        key: id,
-        id,
-        name,
-        value: getParamValue(id),
-        openInTimeline,
+        key: param.id,
+        param,
         createSettings: createParamSettings
       }}/>
     ))
@@ -130,7 +124,6 @@ const renderParams = params => {
 const renderTracks = tracks => {
   const {getItemById} = BETON.require('project-manager').selectors
   return tracks
-    .map(trackId => getItemById({id: trackId}))
     .map(({id, name, openInTimeline, params}) => (
       <QuickInterface {...{
         key: id,

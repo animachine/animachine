@@ -1,12 +1,12 @@
-import * as selectors from './selectors'
-import * as actions from './actions'
-import reducer from './reducer'
+import * as actions from './actions/actions'
+import * as getters from './getters'
+import State from './State'
 
 BETON.define({
   id: 'project-manager',
-  dependencies: ['store'],
-  init: ({store}) => {
-    store.addReducer('projectManager', reducer)
-    return {selectors, actions}
+  dependencies: [],
+  init: () => {
+    const state = new State()
+    return {state, actions, getters}
   }
 })

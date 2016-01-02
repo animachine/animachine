@@ -28,39 +28,35 @@ export default class Keylines extends React.Component {
   }
 
   render() {
+    return <div hidden/>
     console.time('calc keylines data')
-    const {timeline, actions, selectors, style} = this.props
+    const {timeline, actions, style} = this.props
     const {start} = timeline
     const end = start + getVisibleTime({timeline})
     const height = BETON.require('config').size
     const children = []
     let pos = 0
-    const {
-      getItemById,
-      getParamsOfTimeline
-    } = BETON.require('project-manager').selectors
-    const params = getParamsOfTimeline({timelineId: timeline.id})
     const visibleKeysByParamId = {}
-    params.forEach(param => {
-      const keys = param.keys
-        .map(id => getItemById({id}))
-        .sort((a, b) => a.time - b.time)
-      //select the first and last key to render
-      //if there are off screen key we have to include the first and last
-      // to render they eases
-      const lastIdx = keys.length - 1
-      let firstKeyIdx = 0
-      let lastKeyIdx = lastIdx
-      keys.forEach((key, idx) => {
-        if (idx !== lastIdx && key.time < start && keys[idx + 1].time > start) {
-          firstKeyIdx = idx
-        }
-        if (idx !== 0 && key.time > end && key[idx - 1].time < end) {
-          lastKeyIdx = idx
-        }
+    timeline.tracks.forEach(track => {
+      track.params.forEach(param => {
+        const keyTimes = param.keyTimes
+        //select the first and last key to render
+        //if there are off screen key we have to include the first and last
+        // to render they eases
+        const lastIdx = keyTimes.length - 1
+        let firstKeyIdx = 0
+        let lastKeyIdx = lastIdx
+        keyTimes.forEach((key, idx) => {
+          if (idx !== lastIdx && key.time < start && keyTimes[idx + 1].time > start) {
+            firstKeyIdx = idx
+          }
+          if (idx !== 0 && key.time > end && key[idx - 1].time < end) {
+            lastKeyIdx = idx
+          }
+        })
+        const visibleKeys = keyTimes.slice(firstKeyIdx, lastKeyIdx + 1)
+        visibleKeysByParamId[param.id] = visibleKeys
       })
-      const visibleKeys = keys.slice(firstKeyIdx, lastKeyIdx + 1)
-      visibleKeysByParamId[param.id] = visibleKeys
     })
     const toPosition = time =>
       parseInt(convertTimeToPosition({time, timeline})) + 0.5

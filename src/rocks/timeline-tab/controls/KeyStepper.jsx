@@ -1,6 +1,7 @@
 import React from 'react'
 import {Button} from 'react-matterkit'
-import {observable, observer} from 'mobservable'
+import {observable} from 'mobservable'
+import {observer} from 'mobservable-react'
 
 const stepperW = 12
 const stepperStyle = {

@@ -1,5 +1,5 @@
 BETON.define({
-  id: 'create-source-file',
+  id: 'create-bundle-file',
   dependencies: ['project-manager'],
   init
 })
@@ -24,8 +24,8 @@ function init({projectManager}) {
 }
 
 function create(timelineSources, projectSource) {
-  return `var animachineEnhancer = require('animachine-connect')
-var createAnimationSource = animachineEnhancer.createAnimationSource
+  return `var createAnimationSource =
+  require('animachine-connect/create-animation-source')
 
 //TODO: remove in prod
 var projectSource = ${JSON.stringify(projectSource)}

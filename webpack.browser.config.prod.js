@@ -13,7 +13,7 @@ module.exports = {
   resolve: {
     extensions: ['', '.js', '.jsx'],
     alias: {
-      // 'animachine-connect': path.join(__dirname, 'src/animachine-connect'),
+      'animachine-connect': path.join(__dirname, 'src/animachine-connect'),
       'react': path.join(__dirname, './node_modules/react'),
     }
   },

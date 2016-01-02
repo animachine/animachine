@@ -1,7 +1,7 @@
 import React from 'react'
 import renderControls from './renderControls'
 import {ContextMenu, Button, Label} from 'react-matterkit'
-import {observer} from 'mobservable'
+import {observer} from 'mobservable-react'
 
 @observer
 export default class Controls extends React.Component {
@@ -21,6 +21,7 @@ export default class Controls extends React.Component {
   }
 
   render() {
+    return <div hidden/>
     const {timeline} = this.props
     return timeline.tracks.length === 0
       ? this.renderPlaceholder()

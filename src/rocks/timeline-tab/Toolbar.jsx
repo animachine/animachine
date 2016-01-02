@@ -1,29 +1,24 @@
 import React from 'react'
+import {observer} from 'mobservable-react'
 import {Button, Input} from 'react-matterkit'
 
+@observer
 export default class Toolbar extends React.Component {
   handlePlayPauseClick = () => {
-    const {actions, timeline} = this.props
-
-    actions.setIsPlayingOfTimeline({
-      timelineId: timeline.id,
-      isPlaying: !timeline.isPlaying
-    })
+    const {state} = BETON.require('project-manager')
+    const timeline = state.currentTimeline.timeline
+    actions.set(timeline, 'playing', !timeline.playing)
   }
 
   handleTimeInputChange = (time) => {
-    const {actions, timeline} = this.props
-
-    actions.setCurrentTimeOfTimeline({
-      timelineId: timeline.id,
-      currentTime: time
-    })
+    const {state} = BETON.require('project-manager')
+    const timeline = state.currentTimeline.timeline
+    actions.set(timeline, 'currentTime', time)
   }
 
   renderToolbarItems() {
-    return null
-    const {toolbar} = this.props
-    return toolbar && toolbar.map((toolbarItem, idx) => {
+    const {state: toolbar} = BETON.require('toolbar')
+    return toolbar.map((toolbarItem, idx) => {
       if (toolbarItem.getElement) {
         return toolbarItem.getElement()
       }
@@ -39,7 +34,9 @@ export default class Toolbar extends React.Component {
   }
 
   render() {
-    const {timeline, style} = this.props
+    const {state} = BETON.require('project-manager')
+    const time = state.currentTimeline.currentTime
+    const {style} = this.props
 
     return <div style={{...style, display: 'flex'}}>
       <Button
@@ -49,7 +46,7 @@ export default class Toolbar extends React.Component {
       <Input
         style={{maxWidth: 88}}
         type = 'number'
-        value = {timeline.currentTime}
+        value = {time}
         onChange = {this.handleTimeInputChange}
         prettifyValue = {formatTime}/>
       <div style={{flex: 1}}/>

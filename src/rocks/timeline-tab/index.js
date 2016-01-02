@@ -1,5 +1,5 @@
 import React from 'react'
-import TimelineTab from './TimelineTab'
+import Timeline from './Timeline'
 
 
 BETON.define({
@@ -15,5 +15,5 @@ BETON.define({
 })
 
 function init({workspace}) {
-  workspace.setTabContent('timeline', <TimelineTab/>)
+  workspace.setTabContent('timeline', <Timeline/>)
 }

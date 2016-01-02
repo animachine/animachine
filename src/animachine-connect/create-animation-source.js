@@ -5,8 +5,6 @@ import uniq from 'lodash/array/uniq'
 import flatten from 'lodash/array/flatten'
 import startsWith from 'lodash/string/startsWith'
 
-import {registerRunningTimeline} from './register'
-
 const sortKeys = (a, b) => a.time - b.time
 
 const mergeTransformOriginParams = next => (params, targets, tlRoot) => {

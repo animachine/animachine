@@ -7,13 +7,13 @@ BETON.define({
     'toolbar',
     'project-manager',
     'workspace',
-    'create-source-file'
+    'create-bundle-file'
   ],
   init
 })
 
 function init({toolbar, projectManager, workspace, createSourceFile}) {
-  toolbar.actions.addItemToToolbar({
+  toolbar.actions.addItem({
     item: {
       icon: 'save',
       onClick: showSaveDialog,

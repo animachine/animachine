@@ -4,12 +4,7 @@ import {recurseKeyHolders, recurseKeys} from './recursers'
 
 class State {
   @observable projects: Array<Project> = []
-  @observable currentProjectId: ?string = null
-
-  @observable get currentProject(): ?Project {
-    const {projects, currentProjectId} = this
-    return this.projects.find(({id}) => id === currentProjectId) || null
-  }
+  @observable currentProject: ?Project = null
 
   @observable get currentTimeline(): ?Timeline {
     if (this.currentProject) {

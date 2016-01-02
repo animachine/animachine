@@ -16,6 +16,7 @@ module.exports = {
     extensions: ['', '.js', '.jsx'],
     alias: {
       'animachine': path.join(__dirname, '../src/index.js'),
+      'animachine-connect': path.join(__dirname, '../src/animachine-connect'),
       'react': path.join(__dirname, '../node_modules/react'),
     }
   },

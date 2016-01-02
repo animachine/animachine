@@ -20,7 +20,7 @@ BETON.define({
       global.__animachineRegisterRunningTimeline
     )
     let pos = 0
-    autoRun(() => {
+    autorun(() => {
       while(pos < global.__animachineRegisterRunningTimeline.length) {
         const args = global.__animachineRegisterRunningTimeline[pos]
         registerRunningTimeline(...args)

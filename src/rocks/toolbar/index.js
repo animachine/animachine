@@ -1,17 +1,18 @@
-import * as selectors from './selectors'
-import * as actions from './actions'
-import reducer from './reducer'
-
+import {fastArray} from 'mobservable'
 
 BETON.define({
   id: 'toolbar',
-  dependencies: ['store'],
-  init: ({store}) => {
-    store.addReducer('toolbar', reducer)
+  dependencies: [],
+  init: () => {
+    const state = fastArray()
 
     return {
-      selectors,
-      actions,
+      state,
+      actions: {
+        addItem(item) {
+          state.push(item)
+        }
+      }
     }
   }
 })

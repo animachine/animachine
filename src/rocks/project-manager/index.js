@@ -1,6 +1,7 @@
 import * as actions from './actions/actions'
 import * as getters from './getters'
 import state from './state'
+import {autorun, fastArray} from 'mobservable'
 
 BETON.define({
   id: 'project-manager',
@@ -10,7 +11,7 @@ BETON.define({
       global.__animachineLoadProject
     )
     let pos = 0
-    autoRun(() => {
+    autorun(() => {
       while(pos < global.__animachineLoadProject.length) {
         const [projectSource, callback] = global.__animachineLoadProject[pos]
         const project = getters.loadProject(projectSource)

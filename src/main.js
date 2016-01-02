@@ -3,7 +3,7 @@ require('./rocks/debugger-tab')
 require('./rocks/dom-picker')
 require('./rocks/config')
 require('./rocks/contact-layer')
-require('./rocks/create-source-file')
+require('./rocks/create-bundle-file')
 require('./rocks/file-save')
 require('./rocks/generate-selector')
 require('./rocks/hack-open-first-possible-project')
@@ -12,14 +12,14 @@ require('./rocks/open-project-dialog')
 require('./rocks/preview-animation-synchronizer')
 require('./rocks/preview-registry')
 require('./rocks/project-manager')
-require('./rocks/store')
+// require('./rocks/store')
 require('./rocks/timeline-pusher')
 require('./rocks/timeline-tab')
 require('./rocks/toolbar')
 require('./rocks/tracker')
 require('./rocks/transform-tool')
-require('./rocks/welcome-dialog')
-require('./rocks/welcome-process')
+// require('./rocks/welcome-dialog')
+// require('./rocks/welcome-process')
 require('./rocks/workspace')
 
 import {Key, Param} from './rocks/project-manager/models'
@@ -42,12 +42,12 @@ transaction(() => {
 })
 param.keys.push(new Key())
 
-if (!window.__ANIMACHINE_OPEN_FIRST__) {//HACK this flag is used by the demos
+// if (!window.__ANIMACHINE_OPEN_FIRST__) {//HACK this flag is used by the demos
   BETON.require('hack-open-first-possible-project')()
-}
-else {
-  BETON.require('welcome-process').start()
-}
+// }
+// else {
+//   BETON.require('welcome-process').start()
+// }
 
 const animachine = {
   init() {

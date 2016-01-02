@@ -1,4 +1,5 @@
 import React, {PropTypes} from 'react'
+import {observer} from 'mobservable-react'
 import ReactDOM from 'react-dom'
 import Controls from './controls/Controls'
 import Keylines from './Keylines'
@@ -6,7 +7,6 @@ import Timebar from './timebar/Timebar'
 import Toolbar from './Toolbar'
 import DividerLine from './DividerLine'
 import customDrag from 'custom-drag'
-import {connect} from 'react-redux'
 import {HotKeys} from 'react-hotkeys'
 import hotkeyMap from './hotkeyMap'
 import {Scrollable, getTheme} from 'react-matterkit'
@@ -27,34 +27,10 @@ const dragOptions = {
   }
 }
 
-@connect(
-  (state) => {
-    const projectManager = BETON.require('project-manager')
-    const toolbar = BETON.require('toolbar').selectors.getToolbar()
-    const {getCurrentTimelineId, getItemById, getItems} = projectManager.selectors
-    const timelineId = getCurrentTimelineId()
-    if (!timelineId) {
-      return {}
-    }
-    const timeline = getItemById({id: timelineId})
-    const items = getItems()//pass items to make sure that timeline updates if any of the items has changed
-    return {
-      timeline,
-      items,
-      toolbar,
-    }
-  },
-  () => {
-    const projectManager = BETON.require('project-manager')
-    return {
-      actions: projectManager.actions,
-      selectors: projectManager.selectors,
-    }
-  }
-)
 @customDrag(dragOptions, connect => ({
   dragRef: connect.getDragRef()
 }))
+@observer
 export default class Timeline extends React.Component {
   static propTypes = {
     timeline: PropTypes.object,
@@ -86,8 +62,8 @@ export default class Timeline extends React.Component {
   testOwnSize = () => {
     const {width: nodeWidth} = ReactDOM.findDOMNode(this).getBoundingClientRect()
     const {dividerPos, fullWidth} = this.state
-    const {timeline} = this.props
-    const {setWidthOfTimeline} = this.props.actions
+    const {state, actions} = BETON.require('project-manager')
+    const timeline = state.currentTimeline
 
     if (nodeWidth !== fullWidth) {
       this.setState({fullWidth: nodeWidth})
@@ -95,10 +71,7 @@ export default class Timeline extends React.Component {
 
     const timelineWidth = nodeWidth - dividerPos
     if (timeline && timeline.width !== timelineWidth) {
-      setWidthOfTimeline({
-        timelineId: timeline.id,
-        width: timelineWidth
-      })
+      actions.set(timeline, 'width', timelineWidth)
     }
   }
 
@@ -107,18 +80,19 @@ export default class Timeline extends React.Component {
   }
 
   render() {
+    const {state, actions} = BETON.require('project-manager')
+    const timeline = state.currentTimeline
+    if (!timeline) {
+      return <div hidden/>
+    }
     const {
       dividerPos,
       fullWidth,
       scrollPosition
     } = this.state
     const {
-      timeline,
-      actions,
-      selectors,
       headHeight,
-      dragRef,
-      toolbar
+      dragRef
     } = this.props
     const colors = getTheme(this).getStyle('colors')
     const rootStyle = {
@@ -134,10 +108,10 @@ export default class Timeline extends React.Component {
 
     const hotkeyHandlers = {
       delete() {
-        actions.removeSelectedKeysOfTimeline({timelineId: timeline.id})
+        actions.removeSelectedKeysOfTimeline(timeline)
       }
     }
-    const commonProps = {timeline, actions, selectors}
+    const commonProps = {timeline, actions}
 
     return <HotKeys
         keyMap = {hotkeyMap}
@@ -145,7 +119,7 @@ export default class Timeline extends React.Component {
         style={{display: 'flex', pointerEvents: 'auto'}}>
       <div style={rootStyle}>
         <div style={{display: 'flex', height: headHeight}}>
-          <Toolbar {...{...commonProps, toolbar}} style={{width: dividerPos}}/>
+          <Toolbar style={{width: dividerPos}}/>
           <Timebar {...commonProps} height={headHeight}/>
         </div>
         <Scrollable
@@ -161,7 +135,6 @@ export default class Timeline extends React.Component {
         <InlineEaseEditor {...{
             timeline,
             actions,
-            selectors,
             dividerPos,
             scrollPosition,
           }}/>

@@ -15,7 +15,7 @@ BETON.define({
   init: ({store, toolbar}) => {
     store.addReducer('workspace', reducer)
 
-    toolbar.actions.addItemToToolbar({item: {
+    toolbar.actions.addItem({item: {
       icon: 'compress',
       onClick: actions.collapse,
     }})

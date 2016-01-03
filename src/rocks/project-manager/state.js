@@ -7,9 +7,10 @@ class State {
   @observable currentProject: ?Project = null
 
   @observable get currentTimeline(): ?Timeline {
-    if (this.currentProject) {
-      const {currentTimelineId} = this.currentProject
-      return currentProject.projects.find(({id}) => id === currentTimelineId)
+    const {currentProject} = this
+    if (currentProject) {
+      const {currentTimelineId} = currentProject
+      return currentProject.timelines.find(({id}) => id === currentTimelineId)
         || null
     }
   }

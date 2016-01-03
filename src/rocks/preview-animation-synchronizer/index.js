@@ -18,7 +18,7 @@ BETON.define({
         return
       }
       const timelineSource = timeline.getProductionSource()
-      const animationSource = createAnimationSource(timelineSource, project)
+      const animationSource = createAnimationSource(timelineSource)
       previews().forEach(({rootTarget, gsapAnimation}) => {
         //TODO do controller.replaceAnimationSource(animationSource) in react
         gsapAnimation.clear().add(animationSource(rootTarget))

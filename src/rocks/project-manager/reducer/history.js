@@ -27,7 +27,7 @@ export default (projectManager, action, next) => {
   switch (type) {
     case action.UNDO: {
       const {timelineId} = action
-      const timelne = getItemById({id: timelineId})
+      const timeline = getItemById({id: timelineId})
       const {historyStack, historyPosition} = timeline
 
       if (historyPosition < 0) {
@@ -43,7 +43,7 @@ export default (projectManager, action, next) => {
     }
     case action.REDO: {
       const {timelineId} = action
-      const timelne = getItemById({id: timelineId})
+      const timeline = getItemById({id: timelineId})
       const {historyStack, historyPosition} = timeline
 
       if (historyPosition >= historyStack.length - 1) {

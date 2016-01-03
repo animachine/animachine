@@ -5,16 +5,15 @@ import uniq from 'lodash/array/uniq'
 import flatten from 'lodash/array/flatten'
 import {getValueOfParamAtTime} from './getters'
 
-function mapSources(sources, Class) {
+function mapSources(sources = [], Class) {
   return sources.map(source => {
-    const item = new Class()
-    item._deserialize(source)
+    const item = new Class(source)
     return item
   })
 }
 
 function constructor(source = {}) {
-  this.id = source.id ? registerId(source.id) : createId
+  this.id = source.id ? registerId(source.id) : createId()
   this._deserialize(source)
 }
 
@@ -29,7 +28,7 @@ function findParent(item, ParentClass) {
 }
 
 export class Ease {
-  constructor: constructor
+  constructor() {constructor.apply(this, arguments)}
 
   @observable id: string = ''
   @observable easeType: string = 'bezier'
@@ -85,7 +84,7 @@ export class Ease {
 }
 
 export class Key {
-  constructor: constructor
+  constructor() {constructor.apply(this, arguments)}
 
   @observable id: string = ''
   @observable time: int = 0
@@ -119,7 +118,7 @@ export class Key {
 }
 
 export class Param {
-  constructor: constructor
+  constructor() {constructor.apply(this, arguments)}
 
   @observable id: string = ''
   @observable name: string = 'param'
@@ -157,7 +156,7 @@ export class Param {
 }
 
 export class Selector {
-  constructor: constructor
+  constructor() {constructor.apply(this, arguments)}
 
   @observable id: string = ''
   @observable type: string = 'css'
@@ -184,7 +183,7 @@ export class Selector {
 }
 
 export class Track {
-  constructor: constructor
+  constructor() {constructor.apply(this, arguments)}
 
   @observable id: string = ''
   @observable name: string = 'param'
@@ -203,7 +202,7 @@ export class Track {
   _deserialize(source) {
     this.id = source.id
     this.name = source.name
-    this.params = source.params
+    this.params = mapSources(source.params, Param)
     this.selectors = mapSources(source.selectors, Selector)
     this.openInTimeline = source.openInTimeline
   }
@@ -213,14 +212,14 @@ export class Track {
       id: this.id,
       name: this.name,
       params: this.params.map(param => param.serialize()),
-      selectors: this.selectors.map(sekector => sekector.serialize()),
+      selectors: this.selectors.map(selector => selector.serialize()),
       openInTimeline: this.openInTimeline,
     }
   }
 }
 
 export class Timeline {
-  constructor: constructor
+  constructor() {constructor.apply(this, arguments)}
 
   @observable id: string = ''
   @observable name: string = 'timeline'
@@ -279,7 +278,7 @@ export class Timeline {
 }
 
 export class Project {
-  constructor: constructor
+  constructor() {constructor.apply(this, arguments)}
 
   @observable id: string = ''
   @observable name: string = 'project'
@@ -296,7 +295,7 @@ export class Project {
   _deserialize(source) {
     this.id = source.id
     this.name = source.name
-    this.timelines = mapSources(ource.timelines, timelines)
+    this.timelines = mapSources(source.timelines, Timeline)
     this.currentTimelineId = source.currentTimelineId
   }
 

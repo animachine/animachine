@@ -14,7 +14,7 @@ BETON.define({
     autorun(() => {
       while(pos < global.__animachineLoadProject.length) {
         const [projectSource, callback] = global.__animachineLoadProject[pos]
-        const project = getters.loadProject(projectSource)
+        const project = actions.loadProject(projectSource)
         callback(project)
         ++pos
       }

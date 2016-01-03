@@ -24,8 +24,8 @@ function init({projectManager}) {
 }
 
 function create(timelineSources, projectSource) {
-  return `var createAnimationSource =
-  require('animachine-connect/create-animation-source')
+  return `
+var createAnimationSource = require('animachine-connect/create-animation-source')
 
 //TODO: remove in prod
 var projectSource = ${JSON.stringify(projectSource)}
@@ -48,7 +48,7 @@ function registerRunningTimeline(index, rootTarget, gsapSource) {
     }
 
     window.__animachineRegisterRunningTimeline.push([
-      project.timelines[i],
+      project.timelines[index],
       rootTarget,
       gsapSource
     ])
@@ -68,7 +68,7 @@ window.__animachineLoadProject.push(
 var timelneSources = ${JSON.stringify(timelneSources)}
 var animations = {}
 
-timelineSources.forEach(function (timeline) {
+timelineSources.forEach(function (timeline, index) {
   var gsapSource = createAnimationSource(
     timeline,
     (rootTarget, gsapAnimation) => {
@@ -78,20 +78,5 @@ timelineSources.forEach(function (timeline) {
   animations[timeline.name] = gsapSource
 })
 
-module.exports = {
-  projectSource: projectSource,
-  createAnimation: function (timelineName) {
-    for (var i = 0; i < projectSource.timelines.length; ++i) {
-      var timeline = projectSource.timelines[i]
-      if (timeline.name === timelineName) {
-        return createAnimationSource(
-          timeline,
-          () => registerRunningTimeline
-        )
-      }
-    }
-
-    throw Error('Can\'t find a timeline with the name: "' +timelineName + '"')
-  }
-}`
+module.exports = animations`
 }

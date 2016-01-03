@@ -10,6 +10,7 @@ BETON.define({
     }
 
     function registerRunningTimeline(timeline, rootTarget, gsapAnimation) {
+      console.log('registerRunningTimeline', timeline.name)
       if (!state.runningTimelinesMap.has(timeline)) {
         state.runningTimelinesMap.set(timeline, map())
       }
@@ -36,12 +37,14 @@ BETON.define({
       getters: {
         getPreviewsOfTimelnie(timeline) {
           const result = []
-          (state.runningTimelinesMap.get(timelne) || map()).forEach(
-            (rootTarget, gsapAnimation) => result.push({
-              rootTarget,
-              gsapAnimation
-            })
-          )
+
+          if (state.runningTimelinesMap.has(timeline)) {
+            state.runningTimelinesMap.get(timeline).forEach(
+              (rootTarget, gsapAnimation) => {
+                result.push({rootTarget, gsapAnimation})
+              }
+            )
+          }
           return result
         }
       }

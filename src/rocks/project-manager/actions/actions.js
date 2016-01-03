@@ -50,7 +50,7 @@ export function remove(parent: object, containerName: string, item: object) {
 
 export function loadProject(source: object) {
   const project = new Project(source)
-  state.openedProjects.push(project)
+  state.projects.push(project)
   return project
 }
 

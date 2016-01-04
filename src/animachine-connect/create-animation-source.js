@@ -98,6 +98,15 @@ fixTransformOriginForSvgNodes(
 
 export default function createAnimationSource(timeline, register) {
   function animationSource(rootTarget) {
+    //to keep compatible with react-gsap-enhancer v0.2.x
+    if (
+      rootTarget.hasOwnProperty('target') &&
+      rootTarget.hasOwnProperty('options')
+    ) {
+      rootTarget = rootTarget.target
+    }
+    //--------------------------------------------------
+
     const tlRoot = new TimelineMax()
 
     timeline.tracks.forEach(track => {

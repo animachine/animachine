@@ -27,7 +27,6 @@
   },
   "homepage": "https://github.com/animachine/animachine",
   "dependencies": {
-    "animachine-connect": "^0.1.0",
     "array.from": "^0.2.0",
     "array.prototype.find": "^1.0.0",
     "array.prototype.findindex": "^1.0.0",

@@ -4,11 +4,11 @@ import DialogComponent from './DialogComponent'
 
 BETON.define({
   id: 'open-project-dialog',
-  dependencies: ['store', 'project-manager', 'workspace'],
+  dependencies: ['project-manager', 'workspace'],
   init
 })
 
-function init({store, projectManager, workspace}) {
+function init({projectManager, workspace}) {
   function show(selected) {
     workspace.dialogs.show({
       getElement({onClose}) {

@@ -2,10 +2,10 @@ import React from 'react'
 import animachine from 'animachine-connect/react'
 import animations from './jumping.am'
 
-@animachine(animations)
+@animachine()
 export default class Box extends React.Component {
   componentDidMount() {
-    this.addAnimation('jumping')
+    this.addAnimation(animations.jumping)
   }
 
   render() {

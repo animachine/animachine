@@ -1,20 +1,19 @@
+import state from './state'
+
 export const COLLAPSE = '@workspace/COLLAPSE'
 export const UNCOLLAPSE = '@workspace/UNCOLLAPSE'
 export const MOVE = '@workspace/MOVE'
 
-function dispatch(action) {
-  const store = BETON.require('store')
-  store.dispatch(action)
-}
 
 export function collapse() {
-  dispatch({type: COLLAPSE})
+  state.collapsed = true
 }
 
 export function uncollapse() {
-  dispatch({type: UNCOLLAPSE})
+  state.collapsed = false
 }
 
 export function move({x, y}) {
-  dispatch({type: MOVE, x, y})
+  state.launchButtonX = x
+  state.launchButtonY = y
 }

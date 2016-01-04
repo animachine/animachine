@@ -4,11 +4,11 @@ import DialogComponent from './DialogComponent'
 
 BETON.define({
   id: 'item-settings-dialog',
-  dependencies: ['store', 'project-manager', 'workspace'],
+  dependencies: ['project-manager', 'workspace'],
   init
 })
 
-function init({store, projectManager, workspace}) {
+function init({projectManager, workspace}) {
   return {
     show() {
       workspace.dialogs.show({

@@ -1,5 +1,6 @@
 var createAnimationSource = require('animachine-connect/create-animation-source')
-console.log('bundle is running')
+console.log('>> bundle is running')
+
 //TODO: remove in prod
 var project
 var registerRunningTimelineWaitingList = []
@@ -7,7 +8,7 @@ var projectSource = {"name":"blue box","timelines":[{"name":"jumping","isPlaying
 
 function handleLoadProject(_project) {
   project = _project
-  console.log('ploject loaded', project.name)
+  console.log('>> ploject loaded', project.name)
   while (registerRunningTimelineWaitingList.length !== 0) {
     registerRunningTimeline(
       ...registerRunningTimelineWaitingList.pop()

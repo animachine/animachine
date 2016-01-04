@@ -4,11 +4,11 @@ import {connect} from 'react-redux'
 import {collapse, uncollapse, move} from './state/actions'
 import matterkitTheme from './matterkitTheme'
 import LaunchButton from './LaunchButton'
+import state from './state'
 import HTML5Backend from 'react-dnd/modules/backends/HTML5'
 import {DragDropContext} from 'react-dnd'
 
 @DragDropContext(HTML5Backend)
-@connect(state => state.workspace || {})
 export default class App extends React.Component{
   static childContextTypes = {
     matterkitTheme: React.PropTypes.object
@@ -19,9 +19,9 @@ export default class App extends React.Component{
   }
 
   render() {
-    const {collapsed, launchButtonX, launchButtonY, workspace} = this.props
-    return collapsed
-      ? <LaunchButton x={launchButtonX}  y={launchButtonY} {...{uncollapse, move}}/>
+    const {workspace} = this.props
+    return state.collapsed
+      ? <LaunchButton/>
       : <Spaceman store={workspace}/>
   }
 }

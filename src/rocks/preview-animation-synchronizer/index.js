@@ -7,9 +7,11 @@ BETON.define({
   init: ({projectManager, previewRegistry}) => {
     const previews = observable(() => {
       const timeline = projectManager.state.currentTimeline
-      return timeline
-        ? previewRegistry.getters.getPreviewsOfTimelnie(timeline)
+      const result = timeline
+        ? previewRegistry.getters.getPreviewsOfTimeline(timeline)
         : []
+      console.log(':: prewiews:', result.slice(), result[0] && result[0].rootTarget, result[0] && result[0].gsapAnimation)
+      return result
     })
 
     autorun(() => {
@@ -19,12 +21,11 @@ BETON.define({
       }
       const timelineSource = timeline.getProductionSource()
       const animationSource = createAnimationSource(timelineSource)
+
       previews().forEach(({rootTarget, gsapAnimation}) => {
         //TODO do controller.replaceAnimationSource(animationSource) in react
         gsapAnimation.clear().add(animationSource(rootTarget))
       })
-
-      previews.forEach(({gsapAnimation}) => gsapAnimation.time(time))
     })
 
     autorun(() => {

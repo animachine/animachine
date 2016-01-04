@@ -1,20 +1,46 @@
-import {map, observeble, fastArray, autorun} from 'mobservable'
+import {fastArray, observable, autorun} from 'mobservable'
 
+class RunningTimeline {
+  @observable timeline = null
+  @observable previews = []
+}
+
+class Preview {
+  rootTarget = null
+  gsapAnimation = null
+}
 
 BETON.define({
   id: 'preview-registry',
   dependencies: [],
   init: () => {
     const state = {
-      runningTimelinesMap: map()//[timelines:[rootTargets:gsapAnimations]]
+      runningTimelines: fastArray()
     }
 
     function registerRunningTimeline(timeline, rootTarget, gsapAnimation) {
-      console.log('registerRunningTimeline', timeline.name)
-      if (!state.runningTimelinesMap.has(timeline)) {
-        state.runningTimelinesMap.set(timeline, map())
+      console.log('>> preview-registry: registerRunningTimeline', timeline.name, rootTarget, gsapAnimation)
+
+      let runningTimeline = state.runningTimelines.find(
+        runningTimeline => runningTimeline.timeline === timeline
+      )
+
+      if (!runningTimeline) {
+        runningTimeline = new RunningTimeline()
+        runningTimeline.timeline = timeline
+        state.runningTimelines.push(runningTimeline)
       }
-      state.runningTimelinesMap.get(timeline).set(rootTarget, gsapAnimation)
+
+      if (!runningTimeline.previews.find(
+        preview => preview.rootTarget === rootTarget
+      )) {
+        const preview = new Preview()
+
+        console.log('>> preview-registry: create Preview', rootTarget, gsapAnimation)
+        preview.rootTarget = rootTarget
+        preview.gsapAnimation = gsapAnimation
+        runningTimeline.previews.push(preview)
+      }
     }
 
     global.__animachineRegisterRunningTimeline = fastArray(
@@ -35,17 +61,11 @@ BETON.define({
         registerRunningTimeline
       },
       getters: {
-        getPreviewsOfTimelnie(timeline) {
-          const result = []
-
-          if (state.runningTimelinesMap.has(timeline)) {
-            state.runningTimelinesMap.get(timeline).forEach(
-              (rootTarget, gsapAnimation) => {
-                result.push({rootTarget, gsapAnimation})
-              }
-            )
-          }
-          return result
+        getPreviewsOfTimeline(timeline) {
+          let runningTimeline = state.runningTimelines.find(
+            runningTimeline => runningTimeline.timeline === timeline
+          )
+          return runningTimeline ? runningTimeline.previews : []
         }
       }
     }

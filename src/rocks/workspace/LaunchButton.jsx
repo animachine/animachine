@@ -1,6 +1,8 @@
 import React from 'react'
 import customDrag from 'custom-drag'
 import {Button} from 'react-matterkit'
+import state from './state'
+import * as actions from './actions'
 
 const dragOptions = {
   onDown(props, monitor) {
@@ -11,13 +13,13 @@ const dragOptions = {
   },
   onDrag(props, monitor) {
     const {x, y} = monitor.getDifferenceFromInitialOffset()
-    props.move({
+    actions.move({
       x: monitor.data.initX + x,
       y: monitor.data.initY + y,
     })
   },
   onClick(props) {
-    props.uncollapse()
+    actions.uncollapse()
   }
 }
 @customDrag(dragOptions, connect => ({
@@ -25,7 +27,8 @@ const dragOptions = {
 }))
 export default class LaunchButton extends React.Component {
   render() {
-    const {x, y, dragRef} = this.props
+    const {launchButtonX: x, launchButtonY: y} = state
+    const {dragRef} = this.props
     return <Button
       ref = {dragRef}
       tooltip = 'show animachine or drag this button away'

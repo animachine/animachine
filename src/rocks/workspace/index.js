@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import source from './source'
+import {collapse} from './actions'
 import {SpacemanStore} from 'spaceman'
 import createMountNode from './createMountNode'
 import App from './App'
@@ -13,7 +14,7 @@ BETON.define({
 
     toolbar.actions.addItem({item: {
       icon: 'compress',
-      onClick: actions.collapse,
+      onClick: collapse,
     }})
 
     const workspace = new SpacemanStore(source)

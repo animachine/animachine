@@ -14,7 +14,7 @@ function historySave(redo: Function, undo: Function) {
 }
 
 export function set(target: object, name: string, value: any) {
-  oldValue = target[name]
+  const oldValue = target[name]
 
   historySave(
     () => target[name] = value,

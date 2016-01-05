@@ -3,6 +3,7 @@ import customDrag from 'custom-drag'
 import {Button} from 'react-matterkit'
 import state from './state'
 import * as actions from './actions'
+import {observer} from 'mobservable-react'
 
 const dragOptions = {
   onDown(props, monitor) {
@@ -25,6 +26,7 @@ const dragOptions = {
 @customDrag(dragOptions, connect => ({
   dragRef: connect.getDragRef()
 }))
+@observer
 export default class LaunchButton extends React.Component {
   render() {
     const {launchButtonX: x, launchButtonY: y} = state

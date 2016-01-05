@@ -119,7 +119,7 @@ export default class Timeline extends React.Component {
         style={{display: 'flex', pointerEvents: 'auto'}}>
       <div style={rootStyle}>
         <div style={{display: 'flex', height: headHeight}}>
-          <Toolbar style={{width: dividerPos}}/>
+          <Toolbar {...commonProps} style={{width: dividerPos}}/>
           <Timebar {...commonProps} height={headHeight}/>
         </div>
         <Scrollable

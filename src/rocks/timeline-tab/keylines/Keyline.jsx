@@ -10,44 +10,39 @@ import {
   convertPositionToTime,
   convertTimeToPosition,
   getVisibleTime,
+  closestNumber
 } from './utils'
 
 function getMouseTime(props, monitor) {
   const {x: position} = monitor.getSourceClientOffset()
-  const {timeline} = props
-  return convertPositionToTime({timeline, position})
+  const timeline = props.keyHolder.parentTimeline
+  return convertPositionToTime(timeline, position)
 }
 
 const dragOptions = {
   onDown(props, monitor) {
-    const {keyHolderId, timeline, actions, selectors} = props
+    const {keyHolder, actions} = props
+    const {pxpms} = keyHolder.parentTimeline
     const mouseTime = getMouseTime(props, monitor)
-    const closestKey = selectors.getClosestKey({
-      keyHolderId,
-      time: mouseTime
-    })
+    const time = closestNumber(keyHolder.ketTimes, mouseTime)
 
-    if (
-      !closestKey ||
-      (Math.abs(mouseTime - closestKey.time) * timeline.pxpms) > 4
-    ) {
+    if ((Math.abs(mouseTime - time) * pxpms) > 4) {
       return false // prevent dragging
     }
 
     monitor.setData({hitKeys: true})
 
-    const {time} = closestKey
     const {shiftKey, ctrlKey} = monitor.getLastEvent().nativeEvent
 
     if (!shiftKey && !ctrlKey) {
-      actions.deselectAllKeys({keyHolderId: timeline.id})
+      actions.deselectAllKeys(keyHolder)
     }
 
     if (shiftKey || ctrlKey) {
-      actions.toggleKeysSelectionAtTime({time, keyHolderId})
+      actions.toggleKeysSelectionAtTime(keyHolder, time)
     }
     else {
-      actions.selectKeysAtTime({time, keyHolderId})
+      actions.selectKeysAtTime(keyHolder, time)
     }
 
     monitor.setData({
@@ -56,7 +51,7 @@ const dragOptions = {
   },
 
   onDrag(props, monitor) {
-    const {keyHolderId, actions} = props
+    const {keyHolder, actions} = props
     const mouseTime = getMouseTime(props, monitor)
     const offset = mouseTime - monitor.data.lastMouseTime
 
@@ -64,7 +59,7 @@ const dragOptions = {
       lastMouseTime: mouseTime
     })
 
-    actions.translateSelectedKeys({keyHolderId, offset})
+    actions.translateSelectedKeys({keyHolder, offset})
   },
 
   onClick(props, monitor) {
@@ -72,15 +67,15 @@ const dragOptions = {
       return
     }
 
-    const {keyHolderId, timeline, actions, selectors, top, height} = props
+    const {keyHolder, timeline, actions, selectors, top, height} = props
     const mouseTime = getMouseTime(props, monitor)
-    const nextKey = selectors.getNextKey({keyHolderId, time: mouseTime})
+    const nextKey = selectors.getNextKey({keyHolder, time: mouseTime})
     if (!nextKey) {
       return
     }
-    actions.deselectAllKeys({keyHolderId: timeline.id})
-    actions.selectKeysAtTime({keyHolderId, time: nextKey.time})
-    const selectedKeys = selectors.collectSelectedKeys({keyHolderId})
+    actions.deselectAllKeys({keyHolder: timeline.id})
+    actions.selectKeysAtTime({keyHolder, time: nextKey.time})
+    const selectedKeys = selectors.collectSelectedKeys({keyHolder})
 
     actions.setInlineEaseEditorOfTimeline({
       timelineId: timeline.id,
@@ -104,7 +99,7 @@ export default class Keyline extends React.Component {
       pxpms: PropTypes.number.isRequired,
       width: PropTypes.number.isRequired,
     }).isRequired,
-    keyHolderId: PropTypes.string.isRequired,
+    keyHolder: PropTypes.string.isRequired,
     positionSequence: PropTypes.arrayOf(PropTypes.number).isRequired,
     easeSequences: PropTypes.arrayOf(
       PropTypes.arrayOf(
@@ -122,7 +117,7 @@ export default class Keyline extends React.Component {
   shouldComponentUpdate(nextProps) {
     const {props} = this
 
-    return props.keyHolderId !== nextProps.keyHolderId
+    return props.keyHolder !== nextProps.keyHolder
       || props.timeline.start !== nextProps.timeline.start
       || props.timeline.pxpms !== nextProps.timeline.pxpms
       || props.timeline.width !== nextProps.timeline.width
@@ -164,14 +159,46 @@ export default class Keyline extends React.Component {
     }
   }
 
-  render() {
-    const {timeline, height, top, dragRef} = this.props
 
-    return <canvas
+
+  render() {
+    const {timeline, height, top, dragRef, keyHolder} = this.props
+    const colors = this.getColors()
+
+    function renderParam(param) {
+      const {height} = this.props
+      const result = param.keys.map(key => (
+        <Key
+          key = {key}
+          colors = {colors}
+          height = {height}/>
+      ))
+      for (let i = 1; i < param.keys.length; ++i) {
+        result.push(
+          <Ease
+            height = {height}
+            colors = {colors}
+            beforeKey = {param.keys[i-1]}
+            afterKey = {param.keys[i]}/>
+        )
+      }
+      return result
+    }
+
+    return <svg
       ref = {dragRef}
-      width = {timeline.width}
-      height = {height}
-      style = {{position: 'absolute', left: 0, top}}/>
+      style = {{
+        position: 'absolute',
+        left: 0,
+        top,
+        width: timeline.width,
+        height
+      }}>
+        {keyHolder.params
+          ? keyHolder.param.map(param => renderParam(param))
+          : renderParam(keyHolder)
+        }
+      </svg>
   }
 
   postRender() {

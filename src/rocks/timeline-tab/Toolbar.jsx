@@ -5,14 +5,12 @@ import {Button, Input} from 'react-matterkit'
 @observer
 export default class Toolbar extends React.Component {
   handlePlayPauseClick = () => {
-    const {state} = BETON.require('project-manager')
-    const timeline = state.currentTimeline.timeline
+    const {timeline, actions} = this.props
     actions.set(timeline, 'playing', !timeline.playing)
   }
 
   handleTimeInputChange = (time) => {
-    const {state} = BETON.require('project-manager')
-    const timeline = state.currentTimeline.timeline
+    const {timeline, actions} = this.props
     actions.set(timeline, 'currentTime', time)
   }
 
@@ -34,8 +32,8 @@ export default class Toolbar extends React.Component {
   }
 
   render() {
-    const {state} = BETON.require('project-manager')
-    const time = state.currentTimeline.currentTime
+    const {timeline} = this.props
+    const time = timeline.currentTime
     const {style} = this.props
 
     return <div style={{...style, display: 'flex'}}>

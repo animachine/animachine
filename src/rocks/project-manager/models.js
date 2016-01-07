@@ -5,11 +5,16 @@ import uniq from 'lodash/array/uniq'
 import flatten from 'lodash/array/flatten'
 import {getValueOfParamAtTime} from './getters'
 
-function mapSources(sources = [], Class) {
+function mapSources(sources = [], Class, parent) {
   return sources.map(source => {
     const item = new Class(source)
+    item.parent = parent
     return item
   })
+}
+
+function sortNum(a, b) {
+  return a - b
 }
 
 function constructor(source = {}) {
@@ -128,7 +133,7 @@ export class Param {
   _deserialize(source) {
     this.id = source.id
     this.name = source.name
-    this.keys = mapSources(source.keys, Key)
+    this.keys = mapSources(source.keys, Key, this)
     this.openInTimeline = source.openInTimeline
   }
 
@@ -138,7 +143,7 @@ export class Param {
   @observable get parentProject() {return findParent(this, Project)}
 
   @observable get keyTimes() {
-    return this.keys.map(key => key.time).sort()
+    return this.keys.map(key => key.time).sort(sortNum)
   }
 
   @observable get currentValue() {
@@ -196,14 +201,14 @@ export class Track {
   @observable get parentProject() {return findParent(this, Project)}
 
   @observable get keyTimes() {
-    return uniq(flatten(this.params.map(param => key.keyTimes))).sort()
+    return uniq(flatten(this.params.map(param => param.keyTimes))).sort(sortNum)
   }
 
   _deserialize(source) {
     this.id = source.id
     this.name = source.name
-    this.params = mapSources(source.params, Param)
-    this.selectors = mapSources(source.selectors, Selector)
+    this.params = mapSources(source.params, Param, this)
+    this.selectors = mapSources(source.selectors, Selector, this)
     this.openInTimeline = source.openInTimeline
   }
 
@@ -234,6 +239,13 @@ export class Timeline {
   @observable tracks: Array<Track> = []
   @observable selectedParamId: string = 'project'
 
+  @observable inlineEaseEditor = {
+    top: 0,
+    height: 0,
+    targetKey: null,
+    controlledEases: [],
+  }
+
   @observable parent: Project = null
   @observable get parentProject() {return findParent(this, Project)}
 
@@ -248,7 +260,7 @@ export class Timeline {
     this.width = source.width
     this.start = source.start
     this.startMargin = source.startMargin
-    this.tracks = mapSources(source.tracks, Track)
+    this.tracks = mapSources(source.tracks, Track, this)
     this.selectedParamId = source.selectedParamId
   }
 
@@ -288,14 +300,14 @@ export class Project {
   @observable previewNodes: Array<object> = []
 
   @observable get currentTimeline(): ?Project {
-    const {timeline, currentTmelineId} = this
+    const {timeline, currentTimelineId} = this
     return this.timelines.find(({id}) => id === currentTimelineId) || null
   }
 
   _deserialize(source) {
     this.id = source.id
     this.name = source.name
-    this.timelines = mapSources(source.timelines, Timeline)
+    this.timelines = mapSources(source.timelines, Timeline, this)
     this.currentTimelineId = source.currentTimelineId
   }
 

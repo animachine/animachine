@@ -7,7 +7,6 @@ export default class InlineEaseEditor extends React.Component {
   static propTypes = {
     timeline: React.PropTypes.object,
     actions: React.PropTypes.object,
-    selectors: React.PropTypes.object,
   }
 
   handleClickAway = () => {
@@ -20,21 +19,10 @@ export default class InlineEaseEditor extends React.Component {
     // }
   }
 
-  getControlEase() {
-    const {timeline, selectors} = this.props
-
-    const targetKey = selectors.getItemById({
-      id: timeline.inlineEaseEditor.targetKeyId
-    })
-    return selectors.getItemById({
-      id: targetKey.ease
-    })
-  }
-
   renderControlPoint(pointName, spaceX, spaceY) {
-    const {timeline, actions} = this.props
+    const {timeline, targetKey, actions} = this.props
     const {controlledEaseIds} = timeline.inlineEaseEditor
-    const controlEase = this.getControlEase()
+    const controlEase = targetKey.ease
     const x = controlEase[`point${pointName}X`]
     const y = controlEase[`point${pointName}Y`]
 
@@ -42,15 +30,9 @@ export default class InlineEaseEditor extends React.Component {
       {...{x, y, spaceX, spaceY}}
       onChange = {({x, y}) => {
         console.log(x, y)
-        controlledEaseIds.forEach(easeId => {
-          actions[`setPoint${pointName}XOfEase`]({
-            easeId,
-            [`point${pointName}X`]: x
-          })
-          actions[`setPoint${pointName}YOfEase`]({
-            easeId,
-            [`point${pointName}Y`]: y
-          })
+        controlledEases.forEach(ease => {
+          actions.set(ease, `point${pointName}X`, x)
+          actions.set(ease, `point${pointName}Y`, y)
         })
       }}/>
   }
@@ -61,7 +43,7 @@ export default class InlineEaseEditor extends React.Component {
       pointAY: pay,
       pointBX: pbx,
       pointBY: pby,
-    } = this.getControlEase()
+    } = this.props.targetKey.ease
 
     const d = [
       `M${w*pax},${h*pay}`,
@@ -82,26 +64,19 @@ export default class InlineEaseEditor extends React.Component {
     const {timeline, dividerPos, scrollPosition, selectors} = this.props
     const {inlineEaseEditor} = timeline
 
-    if (!inlineEaseEditor) {
+    if (!inlineEaseEditor || !inlineEaseEditor.targetKey) {
       return <div hidden/>
     }
-    const {top, height, targetKeyId} = inlineEaseEditor
-    const targetKey = selectors.getItemById({id: targetKeyId})
-    const targetParam = selectors.getParentParamOfKey({keyId: targetKeyId})
-    if (!targetParam) {
+    const {top, height, targetKey} = inlineEaseEditor
+    const keyPosition = targetKey.parentParam.keyTimes.indexOf(targetKey.time)
+    if (keyPosition === 0) {
       return <div hidden/>
     }
-    const previousKey = selectors.getPreviousKey({
-      keyHolderId: targetParam.id,
-      time: targetKey.time,
-    })
-    if (!previousKey) {
-      return <div hidden/>
-    }
-    const startTime = previousKey.time
+    const previousKeyTime = targetKey.parentParam.keyTimes[keyPosition - 1]
+    const startTime = previousKeyTime
     const endTime = targetKey.time
-    const left = convertTimeToPosition({timeline, time: startTime})
-    const right = convertTimeToPosition({timeline, time: endTime})
+    const left = convertTimeToPosition(timeline, startTime)
+    const right = convertTimeToPosition(timeline, endTime)
     const width = right - left
 
     const rootStyle = {

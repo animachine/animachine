@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react'
 import {observer} from 'mobservable-react'
 import ReactDOM from 'react-dom'
 import Controls from './controls/Controls'
-import Keylines from './Keylines'
+import Keylines from './keylines/Keylines'
 import Timebar from './timebar/Timebar'
 import Toolbar from './Toolbar'
 import DividerLine from './DividerLine'
@@ -82,9 +82,11 @@ export default class Timeline extends React.Component {
   render() {
     const {state, actions} = BETON.require('project-manager')
     const timeline = state.currentTimeline
+
     if (!timeline) {
       return <div hidden/>
     }
+
     const {
       dividerPos,
       fullWidth,
@@ -100,10 +102,6 @@ export default class Timeline extends React.Component {
       display: 'flex',
       flexDirection: 'column',
       flex: 1,
-    }
-
-    if (!timeline) {
-      return <div hidden/>
     }
 
     const hotkeyHandlers = {

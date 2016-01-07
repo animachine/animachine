@@ -2,7 +2,7 @@
 
 import {Param, Track, Timeline, Project} from '../models'
 import state from '../state'
-import {recurseKeys} from '../recursers'
+import {recurseKeys, recurseParams} from '../recursers'
 import {getValueOfParamAtTime} from '../getters'
 
 function oneTransaction(fn) {
@@ -82,7 +82,15 @@ export function setValueOfTrackAtTime(
 }
 
 export function deselectAllKeys(keyHolder: object) {
-  forEachKeys(keyHolder, key => set(key, 'selected', false))
+  recurseKeys(keyHolder, key => set(key, 'selected', false))
+}
+
+export function translateSelectedKeys(keyHolder: object, offset) {
+  recurseKeys(keyHolder, key => {
+    if (key.selected) {
+      set(key, 'time', key.time + offset)
+    }
+  })
 }
 
 export function selectKeysAtTime(keyHolder, time) {

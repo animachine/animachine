@@ -4,14 +4,16 @@ import {createEaser} from 'animachine-connect'
 import {convertTimeToPosition} from '../utils'
 
 @observer
-export default class Ease extends React.Component {
+export default class Key extends React.Component {
   render () {
-    const {key, height, colors} = this.props
+    const {_key: key, height, colors, isGroup} = this.props
     const r = 2
+    const position = convertTimeToPosition(key.parentTimeline, key.time)
 
     if (isGroup) {
       return (
         <circle
+          fill = {key.selected ? colors.selected : colors.normal}
           cx = {position}
           cy = {height / 2}
           r = {r}/>
@@ -24,8 +26,8 @@ export default class Ease extends React.Component {
           y1 = {0}
           x2 = {position}
           y2 = {height}
-          stroke = {selected ? colors.selected : colors.normal}
-          stroke-width='1'/>
+          stroke = {key.selected ? colors.selected : colors.normal}
+          strokeWidth='1'/>
       )
     }
   }

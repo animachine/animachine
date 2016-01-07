@@ -36,15 +36,21 @@ export function getVisibleTime(timeline) {
 //   return position
 // }
 
-export function closestIndex(arr, target) {
-  let i
-  for (i = 0; i < arr.length; ++i) {
-    const current = arr[i]
-    if (target < current) {
-      return (i > 0 && (target - arr[i-1] < current - target)) ? i - 1 : i
+//TODO make this faster using binary search
+export function closestNumber(arr, target) {
+  let result
+  let diff
+  for (let i = 0; i < arr.length; ++i) {
+    const nextDiff = Math.abs(arr[i] - target)
+    if (diff === undefined || nextDiff < diff) {
+      diff = nextDiff
+      result = arr[i]
+    }
+    else {
+      return result
     }
   }
-  return i
+  return result
 }
 
 // export function forEachEndParam({keyHolder, callback}) {

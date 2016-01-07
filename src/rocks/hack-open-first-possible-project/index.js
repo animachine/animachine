@@ -9,7 +9,12 @@ BETON.define({
       const dispose = autorunUntil(
         () => {
           if (projectManager.state.projects.length !== 0) {
-            projectManager.state.currentProject = projectManager.state.projects[0]
+            const project = projectManager.state.projects[0]
+            projectManager.state.currentProject = project
+
+            if (!project.currentTimelineId && project.timelines[0]) {
+              project.currentTimelineId = project.timelines[0].id
+            }
           }
         },
         () => !!projectManager.state.currentProject

@@ -6,7 +6,7 @@ import {convertTimeToPosition} from '../utils'
 @observer
 export default class Ease extends React.Component {
   render () {
-    const {beforeKey, afterKey, height, colors} = this.props
+    const {afterKey, height, colors} = this.props
     const easer = createEaser(afterKey.ease)
     const timeline = afterKey.parentTimeline
     const startPosition = convertTimeToPosition(timeline, beforeKey.time)
@@ -21,7 +21,7 @@ export default class Ease extends React.Component {
     for (let i = 0; i < width; ++i) {
       const x = startPosition + i
       const y = height - height * easer.getRatio(i/width)
-      points += `${x},${y}`
+      points += `${x},${y} `
     }
 
     const style = {

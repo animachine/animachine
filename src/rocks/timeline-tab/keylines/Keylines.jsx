@@ -2,22 +2,23 @@ import React from 'react'
 import {observer} from 'mobservable-react'
 import Keyline from './Keyline'
 import PointerLine from './PointerLine'
-import {convertTimeToPosition, getVisibleTime} from './utils'
+import {convertTimeToPosition, getVisibleTime} from '../utils'
 import {ContextMenu} from 'react-matterkit'
 import union from 'lodash/array/union'
 
 @observer
 export default class Keylines extends React.Component {
   render() {
-    return <div hidden/>
     const {timeline, actions, style} = this.props
     const height = BETON.require('config').size
     const children = []
     let pos = 0
 
-    const renderKeyline = (keyHolderId, paramIds) => {
+    const renderKeyline = (keyHolder) => {
       children.push(<Keyline
+        key = {keyHolder.id}
         keyHolder = {keyHolder}
+        actions = {actions}
         top = {pos}
         height = {height}/>)
 
@@ -31,8 +32,7 @@ export default class Keylines extends React.Component {
 
     const menuItems = [
       {label: 'delete selected keys', onClick: () => {
-        const {actions} = BETON.require('project-manager')
-        actions.removeSelectedKeysOfTimeline({timelineId: timeline.id})
+        actions.removeSelectedKeysOfTimeline(timeline)
       }}
     ]
 

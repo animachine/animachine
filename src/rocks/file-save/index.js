@@ -12,7 +12,7 @@ BETON.define({
   init
 })
 
-function init({toolbar, projectManager, workspace, createSourceFile}) {
+function init({toolbar, projectManager, workspace, createBundleFile}) {
   toolbar.actions.addItem({
     item: {
       icon: 'save',
@@ -23,7 +23,7 @@ function init({toolbar, projectManager, workspace, createSourceFile}) {
   function showSaveDialog() {
     workspace.dialogs.showDialog({
       getElement: ({onClose}) => {
-        return <Dialog {...createSourceFile()} onClose={onClose}/>
+        return <Dialog {...createBundleFile()} onClose={onClose}/>
       }
     })
   }

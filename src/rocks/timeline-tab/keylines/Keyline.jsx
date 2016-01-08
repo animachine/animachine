@@ -26,7 +26,7 @@ const dragOptions = {
     const {pxpms} = keyHolder.parentTimeline
     const mouseTime = getMouseTime(props, monitor)
     const time = closestNumber(keyHolder.keyTimes, mouseTime)
-    
+
     // prevent dragging if the mouse is not close enough to the closest key
     if ((Math.abs(mouseTime - time) * pxpms) > 4) {
       return false
@@ -139,8 +139,7 @@ export default class Keyline extends React.Component {
             key = {param.keys[i].ease.id}
             height = {height}
             colors = {colors}
-            beforeKey = {param.keys[i-1]}
-            afterKey = {param.keys[i]}/>
+            ease = {param.keys[i].ease}/>
         )
       }
       return result

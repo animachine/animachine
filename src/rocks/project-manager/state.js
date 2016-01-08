@@ -40,7 +40,11 @@ class State {
   @observable get selectedKeys(): Array<Key> {
     const result: Array<Key> = []
     if (this.currentTimeline) {
-      recurseKeys(this.currentTimeline, key => result.push(key))
+      recurseKeys(this.currentTimeline, key => {
+        if (key.selected) {
+          result.push(key)
+        }
+      })
     }
     return result
   }

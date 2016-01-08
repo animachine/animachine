@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react'
 import ReactDOM from 'react-dom'
+import {observer} from 'mobservable-react'
 import steps from './steps'
 import customDrag from 'custom-drag'
 import {convertPositionToTime, getVisibleTime} from '../utils'
@@ -11,28 +12,27 @@ const color = {
 function handleMouse(props, monitor) {
   const {dragMode} = monitor.data
   const {timeline, actions} = props
-  const timelineId = timeline.id
   const {currentTime, pxpms} = timeline
   const {initStart, initPxpms} = monitor.data
   const offset = monitor.getDifferenceFromInitialOffset().x
 
   if (dragMode === 'seek') {
     let {x: position} = monitor.getSourceClientOffset()
-    let currentTime = convertPositionToTime({position, timeline})
-    actions.setIsPlayingOfTimeline({timelineId, isPlaying: false})
-    actions.setCurrentTimeOfTimeline({timelineId, currentTime})
+    let currentTime = convertPositionToTime(timeline, position)
+    actions.set(timeline, 'isPlaying', false)
+    actions.set(timeline, 'currentTime', currentTime)
   }
   else if (dragMode === 'translate') {
     let start = initStart + (offset / pxpms)
-    actions.setStartOfTimeline({timelineId, start})
+    actions.set(timeline, 'start', start)
   }
   else if (dragMode === 'scale') {
     let pxpms = initPxpms + (offset / 100)
-    actions.setPxpmsOfTimeline({timelineId, pxpms})
+    actions.set(timeline, 'pxpms', pxpms)
     //keep pointer in the same position
     let mdPos = (initStart + currentTime) * initPxpms
     let start = -((currentTime * pxpms) - mdPos) / pxpms
-    actions.setStartOfTimeline({timelineId, start})
+    actions.set(timeline, 'start', start)
   }
 }
 
@@ -50,11 +50,6 @@ const dragOptions = {
     }
     else {
       dragMode = 'seek'
-
-      actions.setIsSeekingOfTimeline({
-        timelineId: timeline.id,
-        isSeeking: true
-      })
     }
 
     monitor.setData({
@@ -67,20 +62,13 @@ const dragOptions = {
   },
   onDrag(props, monitor) {
     handleMouse(props, monitor)
-  },
-  onUp(props, monitor) {
-    if (monitor.data.dragMode === 'seek') {
-      props.actions.setIsSeekingOfTimeline({
-        timelineId: props.timeline.id,
-        isSeeking: false
-      })
-    }
   }
 }
 
 @customDrag(dragOptions, connect => ({
   dragRef: connect.getDragRef()
 }))
+@observer
 export default class Timetape extends React.Component {
   static propTypes = {
     timeline: PropTypes.shape({
@@ -112,7 +100,10 @@ export default class Timetape extends React.Component {
   }
 
   render() {
-    const {width, height, style, dragRef} = this.props
+    const {width, height, style, dragRef, timeline} = this.props
+    //HACK to make it update
+    //TODO fix it!
+    const {start, pxpms, width: _} = timeline
     return <canvas ref={dragRef}  width={width} height={height} style={style}/>
   }
 
@@ -120,7 +111,7 @@ export default class Timetape extends React.Component {
     const {canvas, ctx} = this
     const {timeline, height} = this.props
     const {start, pxpms, width} = timeline
-    const visibleTime = getVisibleTime({timeline})
+    const visibleTime = getVisibleTime(timeline)
     const maxMarkers = width / 4
     let step
 

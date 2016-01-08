@@ -1,13 +1,13 @@
 import React, {PropTypes} from 'react'
-import {connect} from 'react-redux'
+import {observer} from 'mobservable-react'
+import state from './state'
 import {getPickedDOMNode} from './store/selectors'
 import {setPickedDOMNode} from './store/actions'
 import {Button} from 'react-matterkit'
 
-@connect(() => ({node: getPickedDOMNode()}))
+@observer
 export default class DomPicker extends React.Component {
   static propTypes = {
-    node: PropTypes.object,
     onChange: PropTypes.func,
     getBounds: PropTypes.func,
     buttonSize: PropTypes.number,
@@ -41,18 +41,18 @@ export default class DomPicker extends React.Component {
   addNewTrack(node) {
     const {selectors, actions, normalize} = BETON.require('project-manager')
     const timelineId = selectors.getCurrentTimelineId()
-    const {selector} = this.state
     actions.addTrackToTimeline({
       timelineId,
       name: 'new track',
       childSource: {
-        selectors: [selector]
+        selectors: [this.selector]
       }
     })
   }
 
   getRect() {
-    const {buttonSize, node, getBounds} = this.props
+    const node = state.pickedDOMNode
+    const {buttonSize, getBounds} = this.props
     let {top, left, width, height} = node.getBoundingClientRect()
     const [oTop, oLeft, oWidth, oHeight] = [top, left, width, height]
     const {x: wLeft, y: wTop, w: wWidth, h: wHeight} = getBounds()
@@ -89,17 +89,17 @@ export default class DomPicker extends React.Component {
     this.updateSelector(nextProps)
   }
 
-  updateSelector(nextProps) {
+  @observable get selector() {
     const generateSelector = BETON.require('generate-selector')
-    const {node} = nextProps
+    const node = state.pickedDOMNode
     const selector = node && generateSelector({node})
     console.log({selector})
-    this.setState({selector})
+    return selector
   }
 
   render() {
-    const {node, onChange, buttonSize, borderSize} = this.props
-    const {selector} = this.state
+    const node = state.pickedDOMNode
+    const {onChange, buttonSize, borderSize} = this.props
 
     if (!node) {
       return <div hidden/>
@@ -136,7 +136,7 @@ export default class DomPicker extends React.Component {
     }
 
     function selectNode(nextNode) {
-      setPickedDOMNode({pickedDOMNode: nextNode})
+      actions.setPickedDOMNode(nextNode)
     }
 
     function renderButton(icon, tooltip, onClick, originalStyle, hidden) {
@@ -208,7 +208,7 @@ export default class DomPicker extends React.Component {
         {renderButton(
           'times',
           'close',
-          () => setPickedDOMNode({pickedDOMNode: undefined}),
+          () => actions.setPickedDOMNode(null),
           {right: `-${buttonSize}px`, top: `-${buttonSize}px`, margin: [0, 0]}
         )}
         {renderButton(
@@ -216,7 +216,7 @@ export default class DomPicker extends React.Component {
           'create a new track with this node',
           () => this.addNewTrack(node),
           {},
-          !selector
+          !this.selector
         )}
       </div>
     </div>

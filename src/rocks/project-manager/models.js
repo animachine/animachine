@@ -108,6 +108,7 @@ export class Key {
     this.time = source.time
     this.value = source.value
     this.ease = new Ease(source.ease)
+    this.ease.parent = this
     this.selected = source.selected
   }
 

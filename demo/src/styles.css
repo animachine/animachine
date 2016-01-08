@@ -6,6 +6,10 @@
   flex: 1;
 }
 
+body {
+  overflow: hidden;
+}
+
 /*.playgroundPreview {
   position: relative;
 }*/

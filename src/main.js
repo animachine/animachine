@@ -1,3 +1,5 @@
+require('mobservable-react-devtools')
+
 require('./beton')
 require('./rocks/debugger-tab')
 // require('./rocks/dom-picker')

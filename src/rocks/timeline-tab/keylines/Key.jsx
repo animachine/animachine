@@ -8,7 +8,8 @@ export default class Key extends React.Component {
   render () {
     const {_key: key, height, colors, isGroup} = this.props
     const r = 2
-    const position = convertTimeToPosition(key.parentTimeline, key.time)
+    const position =
+      parseInt(convertTimeToPosition(key.parentTimeline, key.time)) + 0.5
 
     if (isGroup) {
       return (

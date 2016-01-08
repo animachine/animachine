@@ -32,9 +32,8 @@ export default class Toolbar extends React.Component {
   }
 
   render() {
-    const {timeline} = this.props
+    const {timeline, style} = this.props
     const time = timeline.currentTime
-    const {style} = this.props
 
     return <div style={{...style, display: 'flex'}}>
       <Button

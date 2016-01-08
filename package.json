@@ -82,6 +82,7 @@
     "history": "^1.13.1",
     "http-server": "^0.8.0",
     "isparta": "^3.0.4",
+    "mobservable-react-devtools": "^2.0.5",
     "mocha": "^2.3.3",
     "node-libs-browser": "^0.5.2",
     "raw-loader": "^0.5.1",

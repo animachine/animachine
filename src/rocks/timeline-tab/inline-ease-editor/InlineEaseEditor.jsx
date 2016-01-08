@@ -1,8 +1,10 @@
 import React from 'react'
+import {observer} from 'mobservable-react'
 import ControlPoint from './ControlPoint'
 import {convertTimeToPosition} from '../utils'
 import ClickAway from 'react-matterkit/lib/utils/ClickAway'
 
+@observer
 export default class InlineEaseEditor extends React.Component {
   static propTypes = {
     timeline: React.PropTypes.object,
@@ -19,51 +21,9 @@ export default class InlineEaseEditor extends React.Component {
     // }
   }
 
-  renderControlPoint(pointName, spaceX, spaceY) {
-    const {timeline, targetKey, actions} = this.props
-    const {controlledEaseIds} = timeline.inlineEaseEditor
-    const controlEase = targetKey.ease
-    const x = controlEase[`point${pointName}X`]
-    const y = controlEase[`point${pointName}Y`]
-
-    return <ControlPoint
-      {...{x, y, spaceX, spaceY}}
-      onChange = {({x, y}) => {
-        console.log(x, y)
-        controlledEases.forEach(ease => {
-          actions.set(ease, `point${pointName}X`, x)
-          actions.set(ease, `point${pointName}Y`, y)
-        })
-      }}/>
-  }
-
-  renderPath(w, h) {
-    const {
-      pointAX: pax,
-      pointAY: pay,
-      pointBX: pbx,
-      pointBY: pby,
-    } = this.props.targetKey.ease
-
-    const d = [
-      `M${w*pax},${h*pay}`,
-      `L0,0`,
-      `C${w*pax},${h*pay} ${w*pbx},${h*pby} ${w},${h}`,
-      `L${w*pbx},${h*pby}`
-    ].join(' ')
-
-    const style = {
-      fill: 'none',
-      stroke: '#00BFFF',
-    }
-
-    return <path {...{d, style}}/>
-  }
-
   render() {
-    const {timeline, dividerPos, scrollPosition, selectors} = this.props
+    const {timeline, dividerPos, scrollPosition, actions} = this.props
     const {inlineEaseEditor} = timeline
-
     if (!inlineEaseEditor || !inlineEaseEditor.targetKey) {
       return <div hidden/>
     }
@@ -93,13 +53,52 @@ export default class InlineEaseEditor extends React.Component {
       overflow: 'visible',
     }
 
+    function renderPath(w, h) {
+      const {
+        pointAX: pax,
+        pointAY: pay,
+        pointBX: pbx,
+        pointBY: pby,
+      } = targetKey.ease
+
+      const d = [
+        `M${w*pax},${h*pay}`,
+        `L0,0`,
+        `C${w*pax},${h*pay} ${w*pbx},${h*pby} ${w},${h}`,
+        `L${w*pbx},${h*pby}`
+      ].join(' ')
+
+      const style = {
+        fill: 'none',
+        stroke: '#00BFFF',
+      }
+
+      return <path {...{d, style}}/>
+    }
+
+    function renderControlPoint(pointName, spaceX, spaceY) {
+      const {controlledEases} = timeline.inlineEaseEditor
+      const controlEase = targetKey.ease
+      const x = controlEase[`point${pointName}X`]
+      const y = controlEase[`point${pointName}Y`]
+
+      return <ControlPoint
+        {...{x, y, spaceX, spaceY}}
+        onChange = {({x, y}) => {
+          controlledEases.forEach(ease => {
+            actions.set(ease, `point${pointName}X`, x)
+            actions.set(ease, `point${pointName}Y`, y)
+          })
+        }}/>
+    }
+
     return <ClickAway onClickAway={this.handleClickAway}>
       <div style={rootStyle}>
         <svg style={rootSvgStyle}>
-          {this.renderPath(width, height)}
+          {renderPath(width, height)}
         </svg>
-        {this.renderControlPoint('A', width, height)}
-        {this.renderControlPoint('B', width, height)}
+        {renderControlPoint('A', width, height)}
+        {renderControlPoint('B', width, height)}
       </div>
     </ClickAway>
   }

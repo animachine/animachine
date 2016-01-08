@@ -1,13 +1,11 @@
 import React from 'react'
+import {observer} from 'mobservable-react'
 import Pointer from './Pointer'
 import Timetape from './Timetape'
 import Navigator from './Navigator'
 
+@observer
 export default class Timebar extends React.Component {
-  // shouldComponentUpdate() {
-  //   return !this.props.timeline.isPlaying
-  // }
-
   render() {
     const {height, timeline, actions} = this.props
     return <div style={{position: 'relative'}}>

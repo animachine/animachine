@@ -6,11 +6,14 @@ import {convertTimeToPosition} from '../utils'
 @observer
 export default class Ease extends React.Component {
   render () {
-    const {afterKey, height, colors} = this.props
-    const easer = createEaser(afterKey.ease)
-    const timeline = afterKey.parentTimeline
-    const startPosition = convertTimeToPosition(timeline, beforeKey.time)
-    const endPosition = convertTimeToPosition(timeline, afterKey.time)
+    const {ease, height, colors} = this.props
+    const easer = createEaser(ease)
+    const timeline = ease.parentTimeline
+    const keyTimes = ease.parentParam.keyTimes
+    const endTime = ease.parentKey.time
+    const startTime = keyTimes[keyTimes.indexOf(endTime) - 1]
+    const startPosition = convertTimeToPosition(timeline, startTime)
+    const endPosition = convertTimeToPosition(timeline, endTime)
     const width = endPosition - startPosition
 
     if (width === 0) {

@@ -12,10 +12,10 @@ BETON.define({
   dependencies: ['toolbar'],
   init: ({toolbar}) => {
 
-    toolbar.actions.addItem({item: {
+    toolbar.actions.addItem({
       icon: 'compress',
       onClick: collapse,
-    }})
+    })
 
     const workspace = new SpacemanStore(source)
     const mountNode = createMountNode()

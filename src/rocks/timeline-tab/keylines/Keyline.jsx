@@ -37,7 +37,7 @@ const dragOptions = {
     const {shiftKey, ctrlKey} = monitor.getLastEvent().nativeEvent
 
     if (!shiftKey && !ctrlKey) {
-      actions.deselectAllKeys(keyHolder)
+      actions.deselectAllKeys(keyHolder.parentTimeline)
     }
 
     if (shiftKey || ctrlKey) {

@@ -13,6 +13,9 @@ export function recurseParams(root: object, cb: Function) {
   else if (root instanceof Track) {
     return root.params.some(param => cb(param))
   }
+  else if (root instanceof Param) {
+    return cb(root)
+  }
 }
 
 export function recurseKeyHolders(root: object, cb: Function) {

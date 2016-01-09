@@ -26,6 +26,7 @@ export default class Toolbar extends React.Component {
           ...toolbarItem,
           mod: {kind: 'stamp', ...toolbarItem.mod}
         }
+        console.log('render item', props)
         return <Button {...props}/>
       }
     })

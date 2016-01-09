@@ -50,6 +50,10 @@ export default class Timeline extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this._testOwnSizeSetI = setInterval(() => this.testOwnSize(), 312)
+  }
+
 
   componentWillUnmount() {
     clearInterval(this._testOwnSizeSetI)

@@ -21,7 +21,6 @@ export default class Controls extends React.Component {
   }
 
   render() {
-    return <div hidden/>
     const {timeline} = this.props
     return timeline.tracks.length === 0
       ? this.renderPlaceholder()

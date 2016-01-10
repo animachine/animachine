@@ -18,6 +18,7 @@ module.exports = {
       'animachine': path.join(__dirname, '../src/index.js'),
       'animachine-connect': path.join(__dirname, '../src/animachine-connect'),
       'react': path.join(__dirname, '../node_modules/react'),
+      'quick-interface': path.join(__dirname, '../../quick-interface/src'),//DEBUG
     }
   },
   module: {
@@ -26,6 +27,7 @@ module.exports = {
         test: /\.(js|jsx)$/,
         include: [
           path.join(__dirname, '../src'),
+          path.join(__dirname, '../../quick-interface/src'), //DEBUG
           __dirname
         ],
         loader: 'babel-loader',

@@ -1,14 +1,22 @@
 import React from 'react'
 import QuickInterface from 'quick-interface'
-import createSpecialParamSettings from './createSpecialParamSettings'
-import {getParamValue} from './utils'
+import createValueInputDescriber from './createValueInputDescriber'
+
+const createNameInputDescriber = paramOrTrack => () => ({
+  value: paramOrTrack.name,
+  mod: {kind: 'stamp'},
+  onChange: (value) => {
+    const {actions} = BETON.require('project-manager')
+    actions.set(paramOrTrack, 'name', value)
+  }
+})
 
 function showItemSettingsDialog() {
   BETON.require('item-settings-dialog').show()
 }
 
 function handleSelectClick(param) {
-  const {actions, selectors} = BETON.require('project-manager')
+  const {actions} = BETON.require('project-manager')
   const {type} = selectors.getItemById({id})
   const currentTrackId = type === 'track'
     ? id
@@ -26,119 +34,134 @@ function handleToggleOpen(paramOrTrack) {
 }
 
 
-function createTrackSettings({id, name, openInTimeline}) {
+function createTrackSettings(track) {
+  return () => ({
+    open: track.openInTimeline,
+    onToggleOpen: handleToggleOpen.bind(null, track),
+    describeRow: () => ({
+      onClick: handleSelectClick.bind(null, track),
+      items: [
+        {type: 'input', describe: createNameInputDescriber(track)},
+        {
+          type: 'button',
+          describe: () => ({
+            icon: 'plus',
+            tooltip: 'add a new param to this track',
+            onClick: () => {
+              const param = new Param()
+              BETON.require('project-manager').actions.add(track, 'params', param)
+              showItemSettingsDialog()
+            }
+          }),
+        }
+      ],
+      highlighted: track.parentTimeline.currentTrackId === track.id,
+      contextMenu: {
+        items: [
+          {
+            label: 'new track',
+            icon: 'plus',
+            onClick: () => {
+              const track = new Track()
+              BETON.require('project-manager').actions.add(
+                track.parentTimeline,
+                'tracks',
+                track
+              )
+              showItemSettingsDialog()
+            }
+          }, {
+            label: 'new param',
+            icon: 'add',
+            onClick: () => {
+              const param = new Param()
+              BETON.require('project-manager').actions.add(track, 'params', param)
+              showItemSettingsDialog()
+            }
+          }, {
+            items: [
+              {
+                label: 'settings',
+                icon: 'cog',
+                onClick: () => {
+                  handleSelectClick()
+                  showItemSettingsDialog()
+                }
+              }
+            ]
+          }
+        ]
+      },
+      describeChildren() {
+        return track.params.map(param => (
+          <QuickInterface key={param.id} describe={createParamSetting(param)}/>
+        ))
+      }
+    })
+  })
   const {getParentTimelineOfTrack} = BETON.require('project-manager').selectors
   const parentTimeline = getParentTimelineOfTrack({trackId: id})
-  return {
-    open: openInTimeline,
-    onClick: handleSelectClick.bind(null, id),
-    onToggleOpen: handleToggleOpen.bind(null, id),
-    buttons:  [
-      {
-        icon: 'plus',
-        tooltip: 'add a new param to this track',
-        onClick: () => {
-          BETON.require('project-manager').actions.addParamToTrack({
-            trackId: id,
-          })
-          showItemSettingsDialog()
-        }
-      }
-    ],
-    highlighted: parentTimeline.currentTrackId === id,
-    contextMenu: {
-      items: [
-        {
-          label: 'new track',
-          icon: 'plus',
-          onClick: () => {
-            BETON.require('project-manager').actions.addTrackToTimeline({
-              timelineId: parentTimeline.id,
-            })
-            showItemSettingsDialog()
-          }
-        }, {
-          label: 'new param',
-          icon: 'add',
-          onClick: () => {
-            BETON.require('project-manager').actions.addParamToTrack({
-              trackId: id,
-            })
-            showItemSettingsDialog()
-          }
-        }, {
-          items: [
-            {
-              label: 'settings',
-              icon: 'cog',
-              onClick: () => {
-                handleSelectClick()
-                showItemSettingsDialog()
-              }
-            }
-          ]
-        }
-      ]
-    }
-  }
+  return
 }
 
-function createParamSettings({param}) {
-  return {
+function createParamSettings(param) {
+  return () => ({
     open: param.openInTimeline,
-    onClick: handleSelectClick.bind(null, param),
     onToggleOpen: handleToggleOpen.bind(null, param),
-    contextMenu: [{
+    describeRow: () => ({
+      onClick: handleSelectClick.bind(null, param),
       items: [
+        {type: 'input', describe: createNameInputDescriber(param)},
+        {type: 'input', describe: createValueInputDescriber(param)},
         {
-          label: 'settings',
-          icon: 'cog',
-          onClick: () => {
-            handleSelectClick(param)
-            showItemSettingsDialog()
-          }
+          type: 'button',
+          describe: () => ({
+            icon: 'plus',
+            tooltip: 'add a new param to this track',
+            onClick: () => {
+              const param = new Param()
+              BETON.require('project-manager').actions.add(track, 'params', param)
+              showItemSettingsDialog()
+            }
+          }),
+        }, {
+          type: 'button',
+          describe: () => ({
+            getElement: () => <KeyStepper keyHolder={param}/>
+          })
         }
-      ]
-    }],
-    ...createSpecialParamSettings({
-      id: param.id,
-      name: param.name,
-      value: param.value,
+      ],
+      contextMenu: [{
+        items: [
+          {
+            label: 'settings',
+            icon: 'cog',
+            onClick: () => {
+              handleSelectClick(param)
+              showItemSettingsDialog()
+            }
+          }
+        ]
+      }],
     })
-  }
+  })
 }
 
-const renderParams = params => {
-  const {getItemById} = BETON.require('project-manager').selectors
 
-  return params
-    .map(param => (
+const renderTracks = tracks => {
+  return tracks
+    .map(track => (
       <QuickInterface {...{
-        key: param.id,
-        param,
-        createSettings: createParamSettings
+        key: track.id,
+        describe: createTrackSettings(track)
       }}/>
     ))
 }
 
-const renderTracks = tracks => {
-  const {getItemById} = BETON.require('project-manager').selectors
-  return tracks
-    .map(({id, name, openInTimeline, params}) => (
-      <QuickInterface {...{
-        key: id,
-        id,
-        name,
-        openInTimeline,
-        createSettings: createTrackSettings
-      }}>
-        {renderParams(params)}
-      </QuickInterface>
-    ))
-}
-
 export default tracks => (
-  <QuickInterface createSettings={() => ({hiddenHead: true})}>
-    {renderTracks(tracks)}
-  </QuickInterface>
+  <QuickInterface
+    describe={() => ({
+      hiddenHead: true,
+      describeChildren: () => renderTracks(tracks)
+    })}/>
 )

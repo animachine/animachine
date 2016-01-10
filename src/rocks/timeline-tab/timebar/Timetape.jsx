@@ -70,24 +70,24 @@ const dragOptions = {
 }))
 @observer
 export default class Timetape extends React.Component {
-  static propTypes = {
-    timeline: PropTypes.shape({
-      start: PropTypes.number,
-      pxpms: PropTypes.number,
-      width: PropTypes.number,
-    }),
-    height: PropTypes.number,
-  }
+  // static propTypes = {
+  //   timeline: PropTypes.shape({
+  //     start: PropTypes.number,
+  //     pxpms: PropTypes.number,
+  //     width: PropTypes.number,
+  //   }),
+  //   height: PropTypes.number,
+  // }
 
-  shouldComponentUpdate(next) {
-    const {props} = this
-    return (
-      props.timeline.start !== next.timeline.start ||
-      props.timeline.pxpms !== next.timeline.pxpms ||
-      props.timeline.width !== next.timeline.width ||
-      props.height !== next.height
-    )
-  }
+  // shouldComponentUpdate(next) {
+  //   const {props} = this
+  //   return (
+  //     props.timeline.start !== next.timeline.start ||
+  //     props.timeline.pxpms !== next.timeline.pxpms ||
+  //     props.timeline.width !== next.timeline.width ||
+  //     props.height !== next.height
+  //   )
+  // }
 
   componentDidMount() {
     this.canvas = ReactDOM.findDOMNode(this)
@@ -96,7 +96,8 @@ export default class Timetape extends React.Component {
   }
 
   componentDidUpdate() {
-    this.postRender()
+    //HACK i dont know why but it triggers Timeline update without the timeout
+    setTimeout(() => this.postRender())
   }
 
   render() {

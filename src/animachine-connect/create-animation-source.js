@@ -110,7 +110,6 @@ export default function createAnimationSource(timeline, register) {
     const tlRoot = new TimelineMax()
 
     timeline.tracks.forEach(track => {
-      debugger
       const targets = track.selectors.map(selector => {
         if (selector.type === 'css') {
           //TODO throw if rootTarget not a dom element

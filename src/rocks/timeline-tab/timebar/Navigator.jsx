@@ -61,25 +61,25 @@ const getDragArgs = (dragMode) => {
 @customDrag(...getDragArgs('end'))
 @observer
 export default class Pointer extends React.Component {
-  static propTypes = {
-    timeline: PropTypes.shape({
-      start: PropTypes.number,
-      pxpms: PropTypes.number,
-      width: PropTypes.number,
-      lenght: PropTypes.number,
-      startMargin: PropTypes.number,
-    })
-  }
-  shouldComponentUpdate(next) {
-    const {props} = this
-    return (
-      props.timeline.start !== next.timeline.start ||
-      props.timeline.pxpms !== next.timeline.pxpms ||
-      props.timeline.width !== next.timeline.width ||
-      props.timeline.length !== next.timeline.length ||
-      props.timeline.startMargin !== next.timeline.startMargin
-    )
-  }
+  // static propTypes = {
+  //   timeline: PropTypes.shape({
+  //     start: PropTypes.number,
+  //     pxpms: PropTypes.number,
+  //     width: PropTypes.number,
+  //     lenght: PropTypes.number,
+  //     startMargin: PropTypes.number,
+  //   })
+  // }
+  // shouldComponentUpdate(next) {
+  //   const {props} = this
+  //   return (
+  //     props.timeline.start !== next.timeline.start ||
+  //     props.timeline.pxpms !== next.timeline.pxpms ||
+  //     props.timeline.width !== next.timeline.width ||
+  //     props.timeline.length !== next.timeline.length ||
+  //     props.timeline.startMargin !== next.timeline.startMargin
+  //   )
+  // }
   constructor(props) {
     super(props)
     this.state = {

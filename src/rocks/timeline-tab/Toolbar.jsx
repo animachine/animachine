@@ -2,6 +2,22 @@ import React from 'react'
 import {observer} from 'mobservable-react'
 import {Button, Input} from 'react-matterkit'
 
+const PlayButton = observer(({timeline, onClick}) => (
+  <Button
+    mod = {{kind: 'stamp'}}
+    icon = {timeline.isPlaying ? 'pause' : 'play'}
+    onClick = {onClick}/>
+))
+
+const TimeInput = observer(({timeline, onChange}) => (
+  <Input
+    style={{maxWidth: 88}}
+    type = 'number'
+    value = {timeline.currentTime}
+    onChange = {onChange}
+    prettifyValue = {formatTime}/>
+))
+
 @observer
 export default class Toolbar extends React.Component {
   handlePlayPauseClick = () => {
@@ -34,19 +50,14 @@ export default class Toolbar extends React.Component {
 
   render() {
     const {timeline, style} = this.props
-    const time = timeline.currentTime
 
     return <div style={{...style, display: 'flex'}}>
-      <Button
-        mod = {{kind: 'stamp'}}
-        icon = {timeline.isPlaying ? 'pause' : 'play'}
+      <PlayButton
+        timeline = {timeline}
         onClick = {this.handlePlayPauseClick}/>
-      <Input
-        style={{maxWidth: 88}}
-        type = 'number'
-        value = {time}
-        onChange = {this.handleTimeInputChange}
-        prettifyValue = {formatTime}/>
+      <TimeInput
+        timeline = {timeline}
+        onChange = {this.handleTimeInputChange}/>
       <div style={{flex: 1}}/>
       {this.renderToolbarItems()}
     </div>

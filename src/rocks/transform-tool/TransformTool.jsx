@@ -42,7 +42,7 @@ export default class TransformTool extends React.Component {
       return {}
     }
 
-    const currentTime = state.selectedTimeline.currentTime
+    const currentTime = state.currentTimeline.currentTime
 
     const getValue = (paramName, defaultValue) => {
       const param = track.params.find(param => param.name === paramName)

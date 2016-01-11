@@ -1,13 +1,12 @@
 import React, { PropTypes } from 'react'
 import {observer} from 'mobservable-react'
-import {createEaser} from 'animachine-connect'
 import {convertTimeToPosition} from '../utils'
 
 @observer
 export default class Ease extends React.Component {
   render () {
     const {ease, height, colors} = this.props
-    const easer = createEaser(ease)
+    const easer = ease.easer
     const timeline = ease.parentTimeline
     const keyTimes = ease.parentParam.keyTimes
     const endTime = ease.parentKey.time

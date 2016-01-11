@@ -4,7 +4,6 @@ import {observer} from 'mobservable-react'
 import customDrag from 'custom-drag'
 import sortBy from 'lodash/collection/sortBy'
 import {getTheme} from 'react-matterkit'
-import {createEaser} from 'animachine-connect'
 import Key from './Key'
 import Ease from './Ease'
 import {

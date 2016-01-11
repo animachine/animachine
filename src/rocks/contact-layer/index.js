@@ -18,7 +18,7 @@ BETON.define({
         getTargetNodesOfTrack,
       } = projectManager.selectors
       const {clientX: x, clientY: y} = e
-      const timeline = projectManager.state.selectedTimeline
+      const timeline = projectManager.state.currentTimeline
 
       node.style.pointerEvents = 'none'
       const pickedDOMNode = document.elementFromPoint(x, y)

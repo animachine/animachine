@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react'
 import {observer} from 'mobservable-react'
-import {createEaser} from 'animachine-connect'
 import {convertTimeToPosition} from '../utils'
 
 @observer

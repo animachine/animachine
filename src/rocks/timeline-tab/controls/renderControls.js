@@ -1,8 +1,9 @@
 import React from 'react'
 import QuickInterface from 'quick-interface'
 import createValueInputDescriber from './createValueInputDescriber'
+import KeyStepper from './KeyStepper'
 
-const createNameInputDescriber = paramOrTrack => () => ({
+const createNameInputDescriber = paramOrTrack => ({
   value: paramOrTrack.name,
   mod: {kind: 'stamp'},
   onChange: (value) => {
@@ -35,13 +36,13 @@ function handleToggleOpen(paramOrTrack) {
 
 
 function createTrackSettings(track) {
-  return () => ({
+  return {
     open: track.openInTimeline,
     onToggleOpen: handleToggleOpen.bind(null, track),
     describeRow: () => ({
       onClick: handleSelectClick.bind(null, track),
       items: [
-        {type: 'input', describe: createNameInputDescriber(track)},
+        {type: 'input', describe: () => createNameInputDescriber(track)},
         {
           type: 'button',
           describe: () => ({
@@ -92,27 +93,24 @@ function createTrackSettings(track) {
           }
         ]
       },
-      describeChildren() {
-        return track.params.map(param => (
-          <QuickInterface key={param.id} describe={createParamSetting(param)}/>
-        ))
-      }
-    })
-  })
-  const {getParentTimelineOfTrack} = BETON.require('project-manager').selectors
-  const parentTimeline = getParentTimelineOfTrack({trackId: id})
-  return
+    }),
+    describeChildren: () => track.params.map(param => (
+      <QuickInterface
+        key = {param.id}
+        describe = {() => createParamSettings(param)}/>
+    ))
+  }
 }
 
 function createParamSettings(param) {
-  return () => ({
+  return {
     open: param.openInTimeline,
     onToggleOpen: handleToggleOpen.bind(null, param),
     describeRow: () => ({
       onClick: handleSelectClick.bind(null, param),
       items: [
-        {type: 'input', describe: createNameInputDescriber(param)},
-        {type: 'input', describe: createValueInputDescriber(param)},
+        {type: 'input', describe: () => createNameInputDescriber(param)},
+        {type: 'input', describe: () => createValueInputDescriber(param)},
         {
           type: 'button',
           describe: () => ({
@@ -144,7 +142,7 @@ function createParamSettings(param) {
         ]
       }],
     })
-  })
+  }
 }
 
 
@@ -153,7 +151,7 @@ const renderTracks = tracks => {
     .map(track => (
       <QuickInterface {...{
         key: track.id,
-        describe: createTrackSettings(track)
+        describe: () => createTrackSettings(track)
       }}/>
     ))
 }

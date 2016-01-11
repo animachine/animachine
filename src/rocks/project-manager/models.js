@@ -1,13 +1,14 @@
 import {observable} from 'mobservable'
 import {registerId, createId} from './id-store'
+import {createEaser} from 'animachine-connect'
 
 import uniq from 'lodash/array/uniq'
 import flatten from 'lodash/array/flatten'
 import {getValueOfParamAtTime} from './getters'
 
-function mapSources(sources = [], Class, parent) {
+function mapSources(sources = [], ItemClass, parent) {
   return sources.map(source => {
-    const item = new Class(source)
+    const item = new ItemClass(source)
     item.parent = parent
     return item
   })
@@ -54,6 +55,8 @@ export class Ease {
   @observable get parentTrack() {return findParent(this, Track)}
   @observable get parentTimeline() {return findParent(this, Timeline)}
   @observable get parentProject() {return findParent(this, Project)}
+
+  @observable get easer() {return createEaser(this)}
 
   _deserialize(source) {
     this.id = source.id

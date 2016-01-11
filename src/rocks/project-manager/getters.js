@@ -1,5 +1,4 @@
-import {Track} from './models'
-import {createEaser} from 'animachine-connect'
+import {Track, Param} from './models'
 
 export function getValueOfTrackAtTime(
   track: Track,
@@ -9,50 +8,47 @@ export function getValueOfTrackAtTime(
 ) {
   const param: Param = track.params.find(param => param.name === name)
   if (param) {
-    let previousKey, nextKey, rightKey
-    param.keys && param.keys.forEach(key => {
-      if (key.time === time) {
-        rightKey = key
-      }
-      else if (key.time < time) {
-        if (!previousKey) {
-          previousKey = key
-        }
-        else if (previousKey.time < key.time) {
-          previousKey = key
-        }
-      }
-      else if (key.time > time) {
-        if (!nextKey) {
-          nextKey = key
-        }
-        else if (nextKey.time > key.time) {
-          nextKey = key
-        }
-      }
-    })
+    return getValueOfParamAtTime(param, time)
+  }
+}
 
-    if (rightKey) {
-      return rightKey.value
+export function getValueOfParamAtTime(param: Param, time: number) {
+  let previousKey, nextKey, exactKey
+  param.keys && param.keys.forEach(key => {
+    if (key.time === time) {
+      exactKey = key
+    }
+    else if (key.time < time) {
+      if (!previousKey || previousKey.time < key.time) {
+        previousKey = key
+      }
+    }
+    else if (key.time > time) {
+      if (!nextKey || nextKey.time > key.time) {
+        nextKey = key
+      }
+    }
+  })
+
+  if (exactKey) {
+    return exactKey.value
+  }
+  else {
+    if (previousKey && nextKey) {
+      const fullTime = nextKey.time - previousKey.time
+      const percent = (time - previousKey.time) / fullTime
+      const {easer} = nextKey.ease
+      const ratio = easer.getRatio(percent)
+      return previousKey.value + (nextKey.value - previousKey.value) * ratio
+    }
+    else if (previousKey) {
+      return previousKey.value
+    }
+    else if (nextKey) {
+      return nextKey.value
     }
     else {
-      if (previousKey && nextKey) {
-        const fullTime = nextKey.time - previousKey.time
-        const percent = (time - previousKey.time) / fullTime
-        const ease = getItemById({projectManager, id: nextKey.ease})
-        const easer = createEaser(ease)
-        const ratio = easer.getRatio(percent)
-        return previousKey.value + (nextKey.value - previousKey.value) * ratio
-      }
-      else if (previousKey) {
-        return previousKey.value
-      }
-      else if (nextKey) {
-        return nextKey.value
-      }
-      else {
-        return 0
-      }
+      return 0
     }
   }
 }
@@ -67,10 +63,6 @@ export function getTimelineLength(timeline: Timeline) {
   })
 
   return result
-}
-
-function getParent(Type: Class, item: object) {
-
 }
 
 export function getTargetNodesOfTrack(track) {

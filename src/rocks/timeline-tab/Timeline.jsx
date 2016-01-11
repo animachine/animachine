@@ -51,6 +51,7 @@ export default class Timeline extends React.Component {
   }
 
   componentDidMount() {
+    this.testOwnSize()
     this._testOwnSizeSetI = setInterval(() => this.testOwnSize(), 312)
   }
 
@@ -114,7 +115,7 @@ export default class Timeline extends React.Component {
     return <HotKeys
         keyMap = {hotkeyMap}
         handlers = {hotkeyHandlers}
-        style={{display: 'flex', pointerEvents: 'auto', overflow: 'hidden'}}>
+        style={{flex: 1, display: 'flex', pointerEvents: 'auto', overflow: 'hidden'}}>
       <div style={rootStyle}>
         <div style={{display: 'flex', height: headHeight}}>
           <Toolbar {...commonProps} style={{width: dividerPos}}/>

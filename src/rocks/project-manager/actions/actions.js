@@ -1,6 +1,6 @@
 /* @flow */
 
-import {Param, Track, Timeline, Project} from '../models'
+import {Key, Param, Track, Timeline, Project} from '../models'
 import state from '../state'
 import {recurseKeys, recurseParams} from '../recursers'
 import {getValueOfParamAtTime} from '../getters'
@@ -48,6 +48,19 @@ export function remove(parent: object, containerName: string, item: object) {
   )
 }
 
+export function createItem(type: string) {
+  switch (type) {
+    case 'ease': return new Ease()
+    case 'key': return new Key()
+    case 'param': return new Param()
+    case 'selector': return new Selector()
+    case 'track': return new Track()
+    case 'timeline': return new Timeline()
+    case 'project': return new Project()
+    default: throw `can't find item with the name "${type}"!`
+  }
+}
+
 export function loadProject(source: object) {
   const project = new Project(source)
   state.projects.push(project)
@@ -62,7 +75,7 @@ export function setValueOfParamAtTime(
   let key: Key = param.keys.find(key => key.time === time)
   if (!key) {
     key = new Key()
-    add(param.keys, key)
+    add(param, 'keys', key)
   }
   key.value = value
 }
@@ -76,7 +89,7 @@ export function setValueOfTrackAtTime(
   let param: Param = track.params.find(param => param.name === paramName)
   if (!param) {
     param = new Param()
-    add(track.params, param)
+    add(track, 'params', param)
   }
   setValueOfParamAtTime(param)
 }
@@ -102,7 +115,7 @@ export function selectKeysAtTime(keyHolder, time) {
   })
 }
 
-export function toggleKeysSelectionAtTime(keyHolder, time) {
+export function toggleKeysAtTime(keyHolder, time) {
   let allHasKey = true
 
   recurseParams(keyHolder, param => {

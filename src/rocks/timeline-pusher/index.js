@@ -12,14 +12,14 @@ function init({projectManager}) {
   //observe the length of the timeline so it don't have to recalculate it until
   // the time of the keys or the timeline don't changes
   const timelineLength = observable(() => {
-    if (state.selectedTimeline) {
-      return getters.getTimelineLength(state.selectedTimeline)
+    if (state.currentTimeline) {
+      return getters.getTimelineLength(state.currentTimeline)
     }
   })
 
   function push() {
     const time = performance.now()
-    const timeline = state.selectedTimeline
+    const timeline = state.currentTimeline
     if (timeline && timeline.isPlaying) {
       let nextTime = timeline.currentTime + time - lastTime
       nextTime %= timelineLength

@@ -169,7 +169,7 @@ export class Selector {
 
   @observable id: string = ''
   @observable type: string = 'css'
-  @observable value: string = ''
+  @observable query: any = null
 
   @observable parent: Track = null
   @observable get parentTrack() {return findParent(this, Track)}
@@ -179,14 +179,14 @@ export class Selector {
   _deserialize(source) {
     this.id = source.id
     this.type = source.type
-    this.value = source.value
+    this.query = source.query
   }
 
   serialize() {
     return {
       id: this.id,
       type: this.type,
-      value: this.value,
+      query: this.query,
     }
   }
 }

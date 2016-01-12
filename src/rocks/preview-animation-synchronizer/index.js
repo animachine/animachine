@@ -24,7 +24,15 @@ BETON.define({
 
       previews().forEach(({rootTarget, gsapAnimation}) => {
         //TODO do controller.replaceAnimationSource(animationSource) in react
-        gsapAnimation.clear().add(animationSource(rootTarget))
+        gsapAnimation.clear()
+        animationSource(rootTarget)
+          .pause()
+          .getChildren()
+          .forEach(child => gsapAnimation.add(child))
+        // gsapAnimation
+        //   .clear()
+        //   .pause()
+        //   .add(newGsapAnimation)
       })
     })
 
@@ -34,7 +42,9 @@ BETON.define({
         return
       }
       const time = timeline.currentTime
-      previews().forEach(({gsapAnimation}) => gsapAnimation.time(time))
+      global.delme = previews()[0]
+
+      previews().forEach(({gsapAnimation}) => gsapAnimation.seek(time))
     })
   }
 })

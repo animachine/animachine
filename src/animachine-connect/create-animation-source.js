@@ -116,7 +116,7 @@ export default function createAnimationSource(timeline, register) {
           rootTarget.querySelector(selector.query)
         }
         else if (selector.type === 'react') {
-          return target.findWithCommands(selector.query)
+          return rootTarget.findWithCommands(selector.query)
         }
       })
 

@@ -14,6 +14,8 @@ BETON.define({
       return result
     })
 
+    let lastUpdatedTime = 0
+
     autorun(() => {
       const timeline = projectManager.state.currentTimeline
       if (!timeline) {
@@ -24,15 +26,17 @@ BETON.define({
 
       previews().forEach(({rootTarget, gsapAnimation}) => {
         //TODO do controller.replaceAnimationSource(animationSource) in react
-        gsapAnimation.clear()
-        animationSource(rootTarget)
+        const trackTimelines = animationSource(rootTarget)
           .pause()
           .getChildren()
-          .forEach(child => gsapAnimation.add(child))
-        // gsapAnimation
-        //   .clear()
-        //   .pause()
-        //   .add(newGsapAnimation)
+// console.log('update at ', lastUpdatedTime)
+        gsapAnimation
+          .time(0)
+          .clear()
+          // .add(trackTimelines, 0, 'start')
+          .add(animationSource(rootTarget), 0, 'start')
+          .seek(lastUpdatedTime / 1000)
+          // .render()
       })
     })
 
@@ -41,10 +45,14 @@ BETON.define({
       if (!timeline) {
         return
       }
-      const time = timeline.currentTime
+      lastUpdatedTime = timeline.currentTime
       global.delme = previews()[0]
 
-      previews().forEach(({gsapAnimation}) => gsapAnimation.seek(time))
+      previews().forEach(({gsapAnimation}) => {
+        gsapAnimation
+          .pause()
+          .seek(lastUpdatedTime / 1000)
+      })
     })
   }
 })

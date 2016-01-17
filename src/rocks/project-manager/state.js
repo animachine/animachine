@@ -1,10 +1,33 @@
-import {observable} from 'mobservable'
+import {observable, fastArray} from 'mobservable'
 import {Key, Project} from './models'
 import {recurseKeyHolders, recurseKeys} from './recursers'
+
+export class HistoryFlag {
+  constructor(pair) {
+    this.pair = pair || new HistoryFlag(this)
+  }
+  isPair(pair) {
+    return this.pair === pair
+  }
+}
+
+export class HistortReg {
+  constructor(redo, undo) {
+    this.undo = undo
+    this.redo = redo
+  }
+}
+
+class History {
+  stack = fastArray()
+  @observable position = -1
+}
 
 class State {
   @observable projects: Array<Project> = []
   @observable currentProject: ?Project = null
+
+  history = new History()
 
   @observable get currentTimeline(): ?Timeline {
     const {currentProject} = this

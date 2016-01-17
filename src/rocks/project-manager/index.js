@@ -1,4 +1,4 @@
-import * as actions from './actions/actions'
+import * as actions from './actions'
 import * as getters from './getters'
 import state from './state'
 import {autorun, fastArray} from 'mobservable'

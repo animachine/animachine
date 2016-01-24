@@ -1,6 +1,6 @@
 import {observable, fastArray} from 'mobservable'
 import {Key, Project} from './models'
-import {recurseKeyHolders, recurseKeys} from './recursers'
+import {recurseKeyHolders, recurseKeys, recurseParams} from './recursers'
 
 export class HistoryFlag {
   constructor(pair) {
@@ -38,24 +38,10 @@ class State {
     }
   }
 
-  @observable get currentParam(): ?Param {
-    if (this.currentTimeline) {
-      const {currentParamId} = this.currentTimeline
-      let result
-      recurseParams(this.currentTimeline, param => {
-        if (param.id === currentParamId) {
-          result = param
-          return true //break
-        }
-      })
-      return result
-    }
-  }
-
   @observable get currentTrack(): ?Track {
-    if (this.currentParam) {
+    if (this.currentTimeline) {
       return this.currentTimeline.tracks.find(track =>
-        track.params.indexOf(this.currentParam) !== -1
+        track.id === this.currentTimeline.currentTrackId
       )
     }
   }
@@ -69,6 +55,15 @@ class State {
         }
       })
     }
+    return result
+  }
+
+  @observable get currentPreviews() {
+    const previewRegistry = BETON.require('preview-registry')
+    const timeline = this.currentTimeline
+    const result = timeline
+      ? previewRegistry.getters.getPreviewsOfTimeline(timeline)
+      : []
     return result
   }
 }

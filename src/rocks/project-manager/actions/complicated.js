@@ -13,7 +13,7 @@ export const setValueOfParamAtTime = wrap((
 ) => {
   let key: Key = param.keys.find(key => key.time === time)
   if (!key) {
-    key = new Key()
+    key = new Key({time})
     add(param, 'keys', key)
   }
   key.value = value
@@ -27,7 +27,7 @@ export const setValueOfTrackAtTime = wrap((
 ) => {
   let param: Param = track.params.find(param => param.name === paramName)
   if (!param) {
-    param = new Param()
+    param = new Param({name: paramName})
     add(track, 'params', param)
   }
   setValueOfParamAtTime(param)

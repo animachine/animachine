@@ -241,7 +241,7 @@ export class Timeline {
   @observable start: number = 0
   @observable startMargin: number = 6
   @observable tracks: Array<Track> = []
-  @observable selectedParamId: string = 'project'
+  @observable currentTrackId: string = ''
 
   @observable inlineEaseEditor = {
     top: 0,
@@ -265,7 +265,7 @@ export class Timeline {
     this.start = source.start
     this.startMargin = source.startMargin
     this.tracks = mapSources(source.tracks, Track, this)
-    this.selectedParamId = source.selectedParamId
+    this.currentTrackId = source.currentTrackId
   }
 
   serialize() {
@@ -281,7 +281,7 @@ export class Timeline {
       start: this.start,
       startMargin: this.startMargin,
       tracks: this.tracks.map(timeline => timeline.serialize()),
-      selectedParamId: this.selectedParamId,
+      currentTrackId: this.currentTrackId,
     }
   }
 

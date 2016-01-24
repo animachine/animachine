@@ -5,15 +5,6 @@ BETON.define({
   id: 'preview-animation-synchronizer',
   dependencies: ['project-manager', 'preview-registry'],
   init: ({projectManager, previewRegistry}) => {
-    const previews = observable(() => {
-      const timeline = projectManager.state.currentTimeline
-      const result = timeline
-        ? previewRegistry.getters.getPreviewsOfTimeline(timeline)
-        : []
-      console.log(':: prewiews:', result.slice(), result[0] && result[0].rootTarget, result[0] && result[0].gsapAnimation)
-      return result
-    })
-
     let lastUpdatedTime = 0
 
     autorun(() => {
@@ -21,14 +12,15 @@ BETON.define({
       if (!timeline) {
         return
       }
+      const previews = projectManager.state.currentPreviews
       const timelineSource = timeline.getProductionSource()
       const animationSource = createAnimationSource(timelineSource)
 
-      previews().forEach(({rootTarget, gsapAnimation}) => {
+      previews.forEach(({rootTarget, gsapAnimation}) => {
         //TODO do controller.replaceAnimationSource(animationSource) in react
-        const trackTimelines = animationSource(rootTarget)
-          .pause()
-          .getChildren()
+        // const trackTimelines = animationSource(rootTarget)
+        //   .pause()
+        //   .getChildren()
 // console.log('update at ', lastUpdatedTime)
         gsapAnimation
           .time(0)
@@ -45,10 +37,11 @@ BETON.define({
       if (!timeline) {
         return
       }
+      const previews = projectManager.state.currentPreviews
       lastUpdatedTime = timeline.currentTime
-      global.delme = previews()[0]
+      global.delme = previews[0]
 
-      previews().forEach(({gsapAnimation}) => {
+      previews.forEach(({gsapAnimation}) => {
         gsapAnimation
           .pause()
           .seek(lastUpdatedTime / 1000)

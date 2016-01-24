@@ -1,9 +1,11 @@
-import createEaser from './createEaser'
 import find from 'lodash/collection/find'
 import pluck from 'lodash/collection/pluck'
 import uniq from 'lodash/array/uniq'
 import flatten from 'lodash/array/flatten'
 import startsWith from 'lodash/string/startsWith'
+
+import createEaser from './createEaser'
+import createTargets from './createTargets'
 
 const sortKeys = (a, b) => a.time - b.time
 
@@ -111,13 +113,7 @@ export default function createAnimationSource(timeline, register) {
 
     timeline.tracks.forEach(track => {
       const targets = track.selectors.map(selector => {
-        if (selector.type === 'css') {
-          //TODO throw if rootTarget not a dom element
-          rootTarget.querySelector(selector.query)
-        }
-        else if (selector.type === 'react') {
-          return rootTarget.findWithCommands(selector.query)
-        }
+        return createTargets(rootTarget, selector)
       })
 
       addParamTimelines(track.params, targets, tlRoot)

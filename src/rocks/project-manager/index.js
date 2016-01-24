@@ -5,7 +5,7 @@ import {autorun, fastArray} from 'mobservable'
 
 BETON.define({
   id: 'project-manager',
-  dependencies: [],
+  dependencies: ['preview-registry'],
   init: () => {
     global.__animachineLoadProject = fastArray(
       global.__animachineLoadProject

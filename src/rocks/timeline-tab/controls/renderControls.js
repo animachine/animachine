@@ -16,17 +16,13 @@ function showItemSettingsDialog() {
   BETON.require('item-settings-dialog').show()
 }
 
-function handleSelectClick(param) {
+function handleSelectClick(paramOrTrack) {
   const {actions} = BETON.require('project-manager')
-  const {type} = selectors.getItemById({id})
-  const currentTrackId = type === 'track'
-    ? id
-    : selectors.getParentTrackOfParam(trackId).id
-  const timelineId =
-    selectors.getParentTimelineOfTrack({trackId: currentTrackId}).id
+  const currentTrackId = paramOrTrack.params
+    ? paramOrTrack.id
+    : paramOrTrack.parentTrack.id
 
-  actions.setLastSelectedItemId({itemId: id})
-  actions.setCurrentTrackIdOfTimeline({timelineId, currentTrackId})
+  actions.set(paramOrTrack.parentTimeline, 'currentTrackId', currentTrackId)
 }
 
 function handleToggleOpen(paramOrTrack) {

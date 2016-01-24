@@ -1,6 +1,8 @@
 import React from 'react'
+import {observable} from 'mobservable'
 import {observer} from 'mobservable-react'
 import {CSSTranshand} from 'transhand'
+import {createTargets} from 'animachine-connect'
 
 const key2ParamName = {
   tx: 'x',
@@ -15,8 +17,8 @@ const key2ParamName = {
 @observer
 export default class TransformTool extends React.Component {
   handleChange = (change) => {
-    const {actions, props} = BETON.require('project-manager')
-    const track = state.selectedTrack
+    const {actions, state} = BETON.require('project-manager')
+    const track = state.currentTrack
 
     Object.keys(change).forEach(key => {
       const paramName = key2ParamName[key]
@@ -28,25 +30,42 @@ export default class TransformTool extends React.Component {
         track,
         paramName,
         value,
-        currentTime
+        state.currentTimeline.currentTime
       )
     })
   }
 
+  @observable get target() {
+    const {state} = BETON.require('project-manager')
+    const track = state.currentTrack
+    const previews = state.currentPreviews
+
+    for (let i = 0; i < previews.length; ++i) {
+      for (let j = 0; j < track.selectors.length; ++j) {
+        const targets = createTargets(
+          previews[i].rootTarget,
+          track.selectors[j]
+        )
+        if (targets.length > 0) {
+          return targets[0]
+        }
+      }
+    }
+  }
+
   render() {
     const {state} = BETON.require('project-manager')
-    const track = state.selectedTrack
-    const target = track.selectedTargets[0]
-
+    const track = state.currentTrack
+    const target = this.target
     if (!track || !target) {
-      return {}
+      return <div hidden/>
     }
 
     const currentTime = state.currentTimeline.currentTime
 
     const getValue = (paramName, defaultValue) => {
       const param = track.params.find(param => param.name === paramName)
-      const value = param.currentValue
+      const value = param && param.currentValue
       return value === undefined ? defaultValue : value
     }
 

@@ -11,7 +11,7 @@ export class HistoryFlag {
   }
 }
 
-export class HistortReg {
+export class HistoryReg {
   constructor(redo, undo) {
     this.undo = undo
     this.redo = redo

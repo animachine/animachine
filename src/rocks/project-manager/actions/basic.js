@@ -2,6 +2,7 @@
 
 import {Key, Param, Track, Timeline, Project} from '../models'
 import {historySave} from './history'
+import state from '../state'
 
 export function set(target: object, name: string, value: any) {
   const oldValue = target[name]

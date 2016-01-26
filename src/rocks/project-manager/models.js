@@ -132,7 +132,7 @@ export class Key {
       id: this.id,
       time: this.time,
       value: this.value,
-      else: this.ease && this.ease.serialize(),
+      ease: this.ease && this.ease.serialize(),
       selected: this.selected,
     }
   }

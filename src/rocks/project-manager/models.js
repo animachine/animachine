@@ -18,6 +18,14 @@ function sortNum(a, b) {
   return a - b
 }
 
+function load(target, source, names) {
+  names.forEach(name => {
+    if (source.hasOwnProperty(name)) {
+      target[name] = source[name]
+    }
+  })
+}
+
 function constructor(source = {}) {
   this.id = source.id ? registerId(source.id) : createId()
   this._deserialize(source)
@@ -59,18 +67,20 @@ export class Ease {
   @observable get easer() {return createEaser(this)}
 
   _deserialize(source) {
-    this.id = source.id
-    this.easeType = source.easeType
-    this.pointAX = source.pointAX
-    this.pointAY = source.pointAY
-    this.pointBX = source.pointBX
-    this.pointBY = source.pointBY
-    this.roughEase = source.roughEase
-    this.roughStrength = source.roughStrength
-    this.roughPoints = source.roughPoints
-    this.roughClamp = source.roughClamp
-    this.roughRandomise = source.roughRandomise
-    this.roughTaper = source.roughTaper
+    load(this, source, [
+      'id',
+      'easeType',
+      'pointAX',
+      'pointAY',
+      'pointBX',
+      'pointBY',
+      'roughEase',
+      'roughStrength',
+      'roughPoints',
+      'roughClamp',
+      'roughRandomise',
+      'roughTaper',
+    ])
   }
 
   serialize() {
@@ -107,12 +117,14 @@ export class Key {
   @observable get parentProject() {return findParent(this, Project)}
 
   _deserialize(source) {
-    this.id = source.id
-    this.time = source.time
-    this.value = source.value
+    load(this, source, [
+      'id',
+      'time',
+      'value',
+      'selected',
+    ])
     this.ease = new Ease(source.ease)
     this.ease.parent = this
-    this.selected = source.selected
   }
 
   serialize() {
@@ -135,10 +147,12 @@ export class Param {
   @observable openInTimeline: boolean = true
 
   _deserialize(source) {
-    this.id = source.id
-    this.name = source.name
+    load(this, source, [
+      'id',
+      'name',
+      'openInTimeline',
+    ])
     this.keys = mapSources(source.keys, Key, this)
-    this.openInTimeline = source.openInTimeline
   }
 
   @observable parent: Track = null
@@ -177,9 +191,11 @@ export class Selector {
   @observable get parentProject() {return findParent(this, Project)}
 
   _deserialize(source) {
-    this.id = source.id
-    this.type = source.type
-    this.query = source.query
+    load(this, source, [
+      'id',
+      'type',
+      'query',
+    ])
   }
 
   serialize() {
@@ -209,11 +225,13 @@ export class Track {
   }
 
   _deserialize(source) {
-    this.id = source.id
-    this.name = source.name
+    load(this, source, [
+      'id',
+      'name',
+      'openInTimeline',
+    ])
     this.params = mapSources(source.params, Param, this)
     this.selectors = mapSources(source.selectors, Selector, this)
-    this.openInTimeline = source.openInTimeline
   }
 
   serialize() {
@@ -254,18 +272,20 @@ export class Timeline {
   @observable get parentProject() {return findParent(this, Project)}
 
   _deserialize(source) {
-    this.id = source.id
-    this.name = source.name
-    this.isPlaying = source.isPlaying
-    this.isSeeking = source.isSeeking
-    this.currentTime = source.currentTime
-    this.length = source.length
-    this.pxpms = source.pxpms
-    this.width = source.width
-    this.start = source.start
-    this.startMargin = source.startMargin
+    load(this, source, [
+      'id',
+      'name',
+      'isPlaying',
+      'isSeeking',
+      'currentTime',
+      'length',
+      'pxpms',
+      'width',
+      'start',
+      'startMargin',
+      'currentTrackId',
+    ])
     this.tracks = mapSources(source.tracks, Track, this)
-    this.currentTrackId = source.currentTrackId
   }
 
   serialize() {
@@ -309,10 +329,12 @@ export class Project {
   }
 
   _deserialize(source) {
-    this.id = source.id
-    this.name = source.name
+    load(this, source, [
+      'id',
+      'name',
+      'currentTimelineId',
+    ])
     this.timelines = mapSources(source.timelines, Timeline, this)
-    this.currentTimelineId = source.currentTimelineId
   }
 
   serialize() {

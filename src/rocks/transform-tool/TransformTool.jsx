@@ -26,6 +26,7 @@ export default class TransformTool extends React.Component {
       if (paramName === 'rotationZ') {
         value = value / Math.PI * 180
       }
+
       actions.setValueOfTrackAtTime(
         track,
         paramName,

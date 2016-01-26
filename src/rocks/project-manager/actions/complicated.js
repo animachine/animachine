@@ -30,7 +30,7 @@ export const setValueOfTrackAtTime = wrap((
     param = new Param({name: paramName})
     add(track, 'params', param)
   }
-  setValueOfParamAtTime(param)
+  setValueOfParamAtTime(param, value, time)
 })
 
 export const deselectAllKeys = wrap((keyHolder: object) => {

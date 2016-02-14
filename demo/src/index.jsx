@@ -6,13 +6,13 @@ require('./styles.css')
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {Router, Route, Redirect} from 'react-router'
+import {Router, Route, Redirect, browserHistory} from 'react-router'
 import App from './App'
 import About from './About'
 import Demo from './Demo'
 
 
-ReactDOM.render(<Router>
+ReactDOM.render(<Router history={browserHistory}>
   <Route component={App}>
     {/*<Route path="about" component={About}/>*/}
     <Route path="demo/:name" component={Demo}/>

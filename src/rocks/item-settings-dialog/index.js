@@ -1,5 +1,4 @@
 import React from 'react'
-import {Provider} from 'react-redux'
 import DialogComponent from './DialogComponent'
 
 BETON.define({
@@ -13,9 +12,7 @@ function init({projectManager, workspace}) {
     show() {
       workspace.dialogs.show({
         getElement({onClose}) {
-          return <Provider store={store}>
-            <DialogComponent onClose={onClose}/>
-          </Provider>
+          return <DialogComponent onClose={onClose}/>
         }
       })
     }

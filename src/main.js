@@ -1,7 +1,6 @@
 require('mobservable-react-devtools')
 
 require('./beton')
-require('./rocks/debugger-tab')
 // require('./rocks/dom-picker')
 require('./rocks/config')
 // require('./rocks/contact-layer')

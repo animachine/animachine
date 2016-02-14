@@ -13,7 +13,7 @@ This is the second alpha release completely rewritten using [React] and [Redux].
 
 *[Here](https://github.com/animachine/animachine/tree/first-alpha) you can check out the previous alpha version*
 
->**Update:** Currently stuck on performance issues... (And thinking on switching to [Elm](http://elm-lang.org/)) 
+>**Update:** Currently stuck on performance issues... (And thinking on switching to [Elm](http://elm-lang.org/))
 
 ###[Check out the quick start with React guide!](docs/quick-start-with-react.md)
 
@@ -26,7 +26,7 @@ Then you can pick elements from your page and start animating them.
 When it's done, you can save your animation as a .js file and include it in your page.  
 If you want to change your animation later just open your project and animachine again, it will recognize the animations, and offer to continue editing them.
 
-###Demos: 
+###Demos:
  - animations: [jumping thing][demo-jump], [pointless-robots][demo-robots]
  - components: [Zombie](https://github.com/azazdeaz/react-animated-topdown-zombie)
 
@@ -56,7 +56,7 @@ These separated modules are developed as part of animachine:
 - [react-gsap-enhancer](https://github.com/azazdeaz/react-gsap-enhancer)
 - [animachine-connect](https://github.com/animachine/animachine-connect)
 - [react-matterkit](https://github.com/azazdeaz/react-matterkit)
-- [json-vision](https://github.com/azazdeaz/json-vision)
+- [quick-interface](https://github.com/azazdeaz/quick-interface)
 - [spaceman](https://github.com/azazdeaz/spaceman)
 - [react-theme](https://github.com/azazdeaz/react-theme)
 - [custom-drag](https://github.com/azazdeaz/custom-drag)

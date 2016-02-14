@@ -1,21 +1,19 @@
 import React from 'react'
-import JsonVision from 'json-vision'
 import {DialogComp} from 'spaceman'
 import {Scrollable, Tabs} from 'react-matterkit'
 import Markdown from 'react-remarkable'
-import {connect} from 'react-redux'
 
 const URL_REACT_ANIMACHINE_ENHANCER = 'https://github.com/azazdeaz/animachine-connect'
 
-@connect(() => {
-  const {
-    getInspectedComponents,
-    getProjectSources,
-  } = BETON.require('component-inspector').selectors
-  const inspectedComponents = getInspectedComponents()
-  const projectSources = getProjectSources()
-  return {inspectedComponents, projectSources}
-})
+// @connect(() => {
+//   const {
+//     getInspectedComponents,
+//     getProjectSources,
+//   } = BETON.require('component-inspector').selectors
+//   const inspectedComponents = getInspectedComponents()
+//   const projectSources = getProjectSources()
+//   return {inspectedComponents, projectSources}
+// })
 export default class DialogComponent extends React.Component {
   renderNoComponentContent() {
     return <Markdown source={`
@@ -60,7 +58,7 @@ Check out [its readme](URL_REACT_ANIMACHINE_ENHANCER) for more info about this.`
         children: null
       }
     ]
-    return <JsonVision value={projectSources} settings={settings}/>
+    // return <JsonVision value={projectSources} settings={settings}/>
   }
 
   renderNewProjectContent({inspectedComponents}) {
@@ -113,7 +111,7 @@ Check out [its readme](URL_REACT_ANIMACHINE_ENHANCER) for more info about this.`
         }]
       }
     ]
-    return <JsonVision value={[PROJECT_NAME, TIMELINE_NAME, OPEN]} settings={settings}/>
+    // return <JsonVision value={[PROJECT_NAME, TIMELINE_NAME, OPEN]} settings={settings}/>
   }
 
   render() {

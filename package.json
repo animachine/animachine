@@ -34,8 +34,8 @@
     "custom-drag": "0.0.3",
     "event-emitter": "^0.3.3",
     "lodash": "^3.10.0",
-    "mobservable": "^1.2.1",
-    "mobservable-react": "^2.1.1",
+    "mobservable": "^1.2.4",
+    "mobservable-react": "^2.1.4",
     "putainde-localstorage": "^4.0.0",
     "randomstring": "^1.1.3",
     "react-dnd": "^1.1.8",
@@ -45,8 +45,8 @@
     "react-pure-render": "^1.0.2",
     "react-remarkable": "^1.1.1",
     "react-zeroclipboard": "^2.0.1",
-    "spaceman": "0.0.17",
-    "transhand": "^0.1.23"
+    "spaceman": "0.0.20",
+    "transhand": "^0.1.24"
   },
   "devDependencies": {
     "babel": "^5.8.21",

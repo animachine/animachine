@@ -1,6 +1,5 @@
 import React from 'react'
 import {Spaceman} from 'spaceman'
-import {connect} from 'react-redux'
 import matterkitTheme from './matterkitTheme'
 import LaunchButton from './LaunchButton'
 import state from './state'

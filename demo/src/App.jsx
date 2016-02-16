@@ -29,7 +29,7 @@ export default class App extends React.Component {
   // }
 
   static contextTypes = {
-    router: React.PropTypes.func
+    router: React.PropTypes.object
   }
 
   // getChildContext() {

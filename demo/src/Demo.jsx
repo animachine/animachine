@@ -6,7 +6,7 @@ import * as scenes from './scenes'
 
 export default class Demo extends React.Component {
   static contextTypes = {
-    router: React.PropTypes.func
+    router: React.PropTypes.object
   }
 
   constructor(params) {
@@ -20,8 +20,6 @@ export default class Demo extends React.Component {
     window.onNameParamChange = name => {
       this.setState({sceneName: name})
     }
-
-    // animachine.init()
   }
 
   render() {

@@ -1,11 +1,11 @@
 import React from 'react'
-import animachine from 'animachine-connect/react'
+import ReactDOM from 'react-dom'
 import animations from './jumping.am'
 
-@animachine()
 export default class Box extends React.Component {
   componentDidMount() {
-    this.addAnimation(animations.jumping)
+    const node = ReactDOM.findDOMNode(this)
+    animations.jumping(node)
   }
 
   render() {
@@ -14,6 +14,6 @@ export default class Box extends React.Component {
       width: '80px',
       height: '80px',
     }
-    return <div key='box' style={style}/>
+    return <div id='box' style={style}/>
   }
 }

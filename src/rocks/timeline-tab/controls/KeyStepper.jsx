@@ -2,8 +2,8 @@ import React from 'react'
 import {Button} from 'react-matterkit'
 import {observable} from 'mobservable'
 import {afflatus, createComputedValue} from 'afflatus'
-import find from 'lodash/collection/find'
-import findLast from 'lodash/collection/findLast'
+import find from 'lodash/find'
+import findLast from 'lodash/findLast'
 
 const stepperW = 12
 const stepperStyle = {

@@ -4,7 +4,7 @@ import Keyline from './Keyline'
 import PointerLine from './PointerLine'
 import {convertTimeToPosition, getVisibleTime} from '../utils'
 import {ContextMenu} from 'react-matterkit'
-import union from 'lodash/array/union'
+import union from 'lodash/union'
 
 @afflatus
 export default class Keylines extends React.Component {

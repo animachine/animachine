@@ -1,8 +1,7 @@
-import find from 'lodash/collection/find'
-import pluck from 'lodash/collection/pluck'
-import uniq from 'lodash/array/uniq'
-import flatten from 'lodash/array/flatten'
-import startsWith from 'lodash/string/startsWith'
+import find from 'lodash/find'
+import uniq from 'lodash/uniq'
+import flatten from 'lodash/flatten'
+import startsWith from 'lodash/startsWith'
 
 import createEaser from './createEaser'
 import createTargets from './createTargets'
@@ -17,7 +16,7 @@ const mergeTransformOriginParams = next => (params, targets, tlRoot) => {
   if (transformOriginX || transformOriginY || transformOriginZ) {
     //remove all the transform origin params
     params = params.filter(({name}) => !startsWith(name, 'transformOrigin'))
-    const getKeys = param => param ? pluck(param.keys, 'time') : []
+    const getKeys = param => param ? param.keys.map(key => key.time) : []
     const times = uniq(flatten(
       getKeys(transformOriginX),
       getKeys(transformOriginY),

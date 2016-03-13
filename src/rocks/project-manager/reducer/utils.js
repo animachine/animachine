@@ -1,6 +1,6 @@
 import createItem from '../createItem'
 import {getKeyOfParamAtTime} from '../selectors'
-import without from 'lodash/array/without'
+import without from 'lodash/without'
 
 export function setItem({projectManager, item}) {
   const {items} = projectManager

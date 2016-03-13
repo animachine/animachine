@@ -2,9 +2,9 @@ import {defineModel} from 'afflatus'
 import {registerId, createId} from './id-store'
 import {createEaser} from 'animachine-connect'
 
-import uniq from 'lodash/array/uniq'
-import flatten from 'lodash/array/flatten'
-import pick from 'lodash/object/pick'
+import uniq from 'lodash/uniq'
+import flatten from 'lodash/flatten'
+import pick from 'lodash/pick'
 import {getValueOfParamAtTime} from './getters'
 
 function mapSources(sources = [], ItemClass, parent) {

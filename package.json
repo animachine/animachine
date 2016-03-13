@@ -33,7 +33,7 @@
     "bezier-easing": "^1.1.0",
     "custom-drag": "0.0.3",
     "event-emitter": "^0.3.3",
-    "lodash": "^3.10.0",
+    "lodash": "^4.6.1",
     "mobservable": "^1.2.4",
     "mobservable-react": "^2.1.4",
     "putainde-localstorage": "^4.0.0",

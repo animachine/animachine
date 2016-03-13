@@ -1,6 +1,6 @@
-import filter from 'lodash/collection/filter'
-import find from 'lodash/collection/find'
-import capitalize from 'lodash/string/capitalize'
+import filter from 'lodash/filter'
+import find from 'lodash/find'
+import capitalize from 'lodash/capitalize'
 import createTypeSelector from './createTypeSelector'
 
 const getItems = () => BETON.require('project-manager').selectors.getItems()

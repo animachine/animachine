@@ -1,4 +1,4 @@
-import isArray from 'lodash/lang/isArray'
+import isArray from 'lodash/isArray'
 
 const combineds = new WeakMap()
 

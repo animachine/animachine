@@ -1,5 +1,5 @@
-import assign from 'lodash/object/assign'
-import camelCase from 'lodash/string/camelCase'
+import assign from 'lodash/assign'
+import camelCase from 'lodash/camelCase'
 const resolvedRocks = new Map()
 const waitingRocks = new Map()
 

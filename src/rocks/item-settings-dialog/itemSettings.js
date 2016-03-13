@@ -1,5 +1,5 @@
-import filter from 'lodash/collection/filter'
-import find from 'lodash/collection/find'
+import filter from 'lodash/filter'
+import find from 'lodash/find'
 import selectorSettings from './selectorSettings'
 
 const getWhitelist = type => {

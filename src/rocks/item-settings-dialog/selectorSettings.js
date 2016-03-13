@@ -1,6 +1,6 @@
-import filter from 'lodash/collection/filter'
-import find from 'lodash/collection/find'
-import without from 'lodash/array/without'
+import filter from 'lodash/filter'
+import find from 'lodash/find'
+import without from 'lodash/without'
 import createTypeSelector from './createTypeSelector'
 
 

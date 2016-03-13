@@ -1,9 +1,14 @@
-import {fastArray, observable, autorun} from 'mobservable'
+import {defineModel, createModel, createArray, autorun} from 'afflatus'
 
-class RunningTimeline {
-  @observable timeline = null
-  @observable previews = []
-}
+defineModel({
+  type: 'RunningTimeline',
+  simpleValues: {
+    timeline: {type: 'Timeline'},
+  },
+  arrayValues: {
+    previews: {},
+  }
+})
 
 class Preview {
   rootTarget = null
@@ -15,7 +20,7 @@ BETON.define({
   dependencies: [],
   init: () => {
     const state = {
-      runningTimelines: fastArray()
+      runningTimelines: createArray('RunningTimeline').get()
     }
 
     function registerRunningTimeline(timeline, rootTarget, gsapAnimation) {
@@ -26,8 +31,7 @@ BETON.define({
       )
 
       if (!runningTimeline) {
-        runningTimeline = new RunningTimeline()
-        runningTimeline.timeline = timeline
+        runningTimeline = createModel('RunningTimeline', {timeline})
         state.runningTimelines.push(runningTimeline)
       }
 
@@ -43,7 +47,8 @@ BETON.define({
       }
     }
 
-    global.__animachineRegisterRunningTimeline = fastArray(
+    global.__animachineRegisterRunningTimeline = createArray(
+      null,
       global.__animachineRegisterRunningTimeline
     )
     let pos = 0

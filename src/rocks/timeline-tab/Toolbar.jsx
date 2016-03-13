@@ -1,5 +1,5 @@
 import React from 'react'
-import {observer} from 'mobservable-react'
+import {afflatus} from 'afflatus'
 import {Button, Input} from 'react-matterkit'
 
 const PlayButton = observer(({timeline, onClick}) => (
@@ -18,7 +18,7 @@ const TimeInput = observer(({timeline, onChange}) => (
     prettifyValue = {formatTime}/>
 ))
 
-@observer
+@afflatus
 export default class Toolbar extends React.Component {
   handlePlayPauseClick = () => {
     const {timeline, actions} = this.props

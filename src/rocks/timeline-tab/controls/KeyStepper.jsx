@@ -1,7 +1,7 @@
 import React from 'react'
 import {Button} from 'react-matterkit'
 import {observable} from 'mobservable'
-import {observer} from 'mobservable-react'
+import {afflatus, createComputedValue} from 'afflatus'
 import find from 'lodash/collection/find'
 import findLast from 'lodash/collection/findLast'
 
@@ -15,7 +15,7 @@ const stepperStyle = {
   paddingRight: 0,
 }
 
-@observer
+@afflatus
 export default class KeyStepper extends React.Component {
   constructor(props) {
     super(props)
@@ -23,25 +23,20 @@ export default class KeyStepper extends React.Component {
     this.state = {
       hover: false
     }
-  }
 
-  @observable get hasKeyBefore() {
     const {state} = BETON.require('project-manager')
-    const keyTimes = this.props.keyHolder.keyTimes
     const timeline = state.currentTimeline
-    return keyTimes[0] < timeline.currentTime
-  }
-  @observable get hasKeyAfter() {
-    const {state} = BETON.require('project-manager')
-    const keyTimes = this.props.keyHolder.keyTimes
-    const timeline = state.currentTimeline
-    return timeline.currentTime < keyTimes[keyTimes.length - 1]
-  }
-  @observable get hasKeyNow() {
-    const {state} = BETON.require('project-manager')
-    const keyTimes = this.props.keyHolder.keyTimes
-    const timeline = state.currentTimeline
-    return keyTimes.indexOf(timeline.currentTime) !== -1
+    const keyTimes = props.keyHolder.keyTimes
+
+    this.hasKeyBefore(createComputedValue(() => {
+      return keyTimes.get(0) < timeline.currentTime
+    }))
+    this.hasKeyAfter(createComputedValue(() => {
+      return timeline.currentTime < keyTimes.get(keyTimes.length - 1)
+    }))
+    this.hasKeyNow(createComputedValue(() => {
+      return keyTimes.indexOf(timeline.currentTime) !== -1
+    }))
   }
 
   handleKeyClick = () => {

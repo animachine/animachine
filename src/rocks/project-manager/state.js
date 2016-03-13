@@ -18,54 +18,53 @@ export class HistoryReg {
   }
 }
 
-class History {
-  stack = fastArray()
-  @observable position = -1
-}
 
-class State {
-  @observable projects: Array<Project> = []
-  @observable currentProject: ?Project = null
-
-  history = new History()
-
-  @observable get currentTimeline(): ?Timeline {
-    const {currentProject} = this
-    if (currentProject) {
-      const {currentTimelineId} = currentProject
-      return currentProject.timelines.find(({id}) => id === currentTimelineId)
-        || null
-    }
+defineModel({
+  type: 'History',
+  simpleValues: {
+    position: {defaultValue: -1}
+  },
+  arrayValues: {
+    stack: {}
   }
+})
 
-  @observable get currentTrack(): ?Track {
-    if (this.currentTimeline) {
-      return this.currentTimeline.tracks.find(track =>
-        track.id === this.currentTimeline.currentTrackId
-      )
-    }
+defineModel({
+  type: 'State',
+  simpleValues: {
+    currentProject: {type: 'Project'},
+    history: {type: 'History'},
+  },
+  arrayValues: {
+    projects: {type: 'Project'},
+  },
+  computedValues: {
+    currentTimeline() {
+      return this.currentProject && this.currentProject.currnetTimeline
+    },
+    currentTrack() {
+      return this.currentTimeline && this.currnetTimeline.currentTrack
+    },
+    selectedKeys() {
+      const result = []
+      if (this.currentTimeline) {
+        recurseKeys(this.currentTimeline, key => {
+          if (key.selected) {
+            result.push(key)
+          }
+        })
+      }
+      return result
+    },
+    currentPreviews() {
+      const previewRegistry = BETON.require('preview-registry')
+      const timeline = this.currentTimeline
+      const result = timeline
+        ? previewRegistry.getters.getPreviewsOfTimeline(timeline)
+        : []
+      return result
+    },
   }
-
-  @observable get selectedKeys(): Array<Key> {
-    const result: Array<Key> = []
-    if (this.currentTimeline) {
-      recurseKeys(this.currentTimeline, key => {
-        if (key.selected) {
-          result.push(key)
-        }
-      })
-    }
-    return result
-  }
-
-  @observable get currentPreviews() {
-    const previewRegistry = BETON.require('preview-registry')
-    const timeline = this.currentTimeline
-    const result = timeline
-      ? previewRegistry.getters.getPreviewsOfTimeline(timeline)
-      : []
-    return result
-  }
-}
+})
 
 export default new State()

@@ -1,11 +1,11 @@
 import React, {PropTypes} from 'react'
-import {observer} from 'mobservable-react'
+import {afflatus} from 'afflatus'
 import state from './state'
 import {getPickedDOMNode} from './store/selectors'
 import {setPickedDOMNode} from './store/actions'
 import {Button} from 'react-matterkit'
 
-@observer
+@afflatus
 export default class DomPicker extends React.Component {
   static propTypes = {
     onChange: PropTypes.func,
@@ -28,6 +28,14 @@ export default class DomPicker extends React.Component {
   constructor(props) {
     super(props)
     this.state = {hover: false}
+
+    this.selector = createComputedValue(() => {
+      const generateSelector = BETON.require('generate-selector')
+      const node = state.pickedDOMNode
+      const selector = node && generateSelector({node})
+      console.log({selector})
+      return selector
+    })
   }
 
   handleMouseEnter = (e) => {
@@ -87,14 +95,6 @@ export default class DomPicker extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.updateSelector(nextProps)
-  }
-
-  @observable get selector() {
-    const generateSelector = BETON.require('generate-selector')
-    const node = state.pickedDOMNode
-    const selector = node && generateSelector({node})
-    console.log({selector})
-    return selector
   }
 
   render() {

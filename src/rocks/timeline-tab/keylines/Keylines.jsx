@@ -1,12 +1,12 @@
 import React from 'react'
-import {observer} from 'mobservable-react'
+import {afflatus} from 'afflatus'
 import Keyline from './Keyline'
 import PointerLine from './PointerLine'
 import {convertTimeToPosition, getVisibleTime} from '../utils'
 import {ContextMenu} from 'react-matterkit'
 import union from 'lodash/array/union'
 
-@observer
+@afflatus
 export default class Keylines extends React.Component {
   render() {
     const {timeline, actions, style} = this.props

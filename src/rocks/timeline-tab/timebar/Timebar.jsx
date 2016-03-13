@@ -1,10 +1,10 @@
 import React from 'react'
-import {observer} from 'mobservable-react'
+import {afflatus} from 'afflatus'
 import Pointer from './Pointer'
 import Timetape from './Timetape'
 import Navigator from './Navigator'
 
-@observer
+@afflatus
 export default class Timebar extends React.Component {
   render() {
     const {height, timeline, actions} = this.props

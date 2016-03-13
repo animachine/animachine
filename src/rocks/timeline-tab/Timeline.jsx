@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react'
-import {observer} from 'mobservable-react'
+import {afflatus} from 'afflatus'
 import ReactDOM from 'react-dom'
 import Controls from './controls/Controls'
 import Keylines from './keylines/Keylines'
@@ -30,7 +30,7 @@ const dragOptions = {
 @customDrag(dragOptions, connect => ({
   dragRef: connect.getDragRef()
 }))
-@observer
+@afflatus
 export default class Timeline extends React.Component {
   static propTypes = {
     timeline: PropTypes.object,

@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react'
 import ReactDOM from 'react-dom'
-import {observer} from 'mobservable-react'
+import {afflatus} from 'afflatus'
 import steps from './steps'
 import customDrag from 'custom-drag'
 import {convertPositionToTime, getVisibleTime} from '../utils'
@@ -68,7 +68,7 @@ const dragOptions = {
 @customDrag(dragOptions, connect => ({
   dragRef: connect.getDragRef()
 }))
-@observer
+@afflatus
 export default class Timetape extends React.Component {
   // static propTypes = {
   //   timeline: PropTypes.shape({

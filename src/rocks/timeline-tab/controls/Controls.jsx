@@ -1,9 +1,9 @@
 import React from 'react'
 import renderControls from './renderControls'
 import {ContextMenu, Button, Label} from 'react-matterkit'
-import {observer} from 'mobservable-react'
+import {afflatus} from 'afflatus'
 
-@observer
+@afflatus
 export default class Controls extends React.Component {
   renderPlaceholder() {
     return <div>

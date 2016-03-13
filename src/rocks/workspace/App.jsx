@@ -5,10 +5,10 @@ import LaunchButton from './LaunchButton'
 import state from './state'
 import HTML5Backend from 'react-dnd/modules/backends/HTML5'
 import {DragDropContext} from 'react-dnd'
-import {observer} from 'mobservable-react'
+import {afflatus} from 'afflatus'
 
 @DragDropContext(HTML5Backend)
-@observer
+@afflatus
 export default class App extends React.Component{
   static childContextTypes = {
     matterkitTheme: React.PropTypes.object

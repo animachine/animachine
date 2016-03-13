@@ -1,7 +1,7 @@
 /* @flow */
 
 import state, {HistoryReg, HistoryFlag} from '../state'
-import {transaction} from 'mobservable'
+import {transaction} from 'afflatus'
 
 export function startFlag() {
   const flag = new HistoryFlag()

@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react'
 import ReactDOM from 'react-dom'
-import {observer} from 'mobservable-react'
+import {afflatus} from 'afflatus'
 import customDrag from 'custom-drag'
 import sortBy from 'lodash/collection/sortBy'
 import {getTheme} from 'react-matterkit'
@@ -92,7 +92,7 @@ const dragOptions = {
 @customDrag(dragOptions, connect => ({
   dragRef: connect.getDragRef()
 }))
-@observer
+@afflatus
 export default class Keyline extends React.Component {
   static propTypes = {
     keyHolder: PropTypes.object.isRequired,

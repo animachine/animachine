@@ -1,4 +1,4 @@
-import {autorunUntil} from 'mobservable'
+import {autorun} from 'afflatus'
 
 BETON.define({
   id: 'hack-open-first-possible-project',
@@ -6,9 +6,10 @@ BETON.define({
   init: ({projectManager}) => {
 
     return () => {
-      const dispose = autorunUntil(
+      const dispose = autorun(
         () => {
           if (projectManager.state.projects.length !== 0) {
+            dispose()
             const project = projectManager.state.projects[0]
             projectManager.state.currentProject = project
 
@@ -16,8 +17,7 @@ BETON.define({
               project.currentTimelineId = project.timelines[0].id
             }
           }
-        },
-        () => !!projectManager.state.currentProject
+        }
       )
     }
   }

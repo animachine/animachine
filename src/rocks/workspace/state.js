@@ -1,9 +1,12 @@
-import {observable} from 'mobservable'
+import {defineModel, createModel} from 'afflatus'
 
-class State {
-  @observable collapsed = false
-  @observable launchButtonX = 0
-  @observable launchButtonY = 0
-}
+defineModel({
+  type: 'WorkspaceState',
+  simpleValues: {
+    collapsed: {defaultValue: false},
+    launchButtonX: {defaultValue: 0},
+    launchButtonY: {defaultValue: 0},
+  }
+})
 
-export default new State()
+export default createModel('WorkspaceState')

@@ -1,7 +1,10 @@
-import {observable} from 'mobservable'
+import {defineModel, createModel} from 'afflatus'
 
-class DomPickerState {
-  @observable pickedDOMNode = null
-}
+defineModel({
+  type: 'DomPickerState',
+  simpleValues: {
+    pickedDOMNode: {}
+  }
+})
 
-export default new DomPickerState()
+export default createModel('DomPickerState')

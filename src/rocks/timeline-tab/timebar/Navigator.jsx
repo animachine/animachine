@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react'
-import {observer} from 'mobservable-react'
+import {afflatus} from 'afflatus'
 import customDrag from 'custom-drag'
 import {getVisibleTime} from '../utils'
 import {getTheme} from 'react-matterkit'
@@ -59,7 +59,7 @@ const getDragArgs = (dragMode) => {
 @customDrag(...getDragArgs('move'))
 @customDrag(...getDragArgs('start'))
 @customDrag(...getDragArgs('end'))
-@observer
+@afflatus
 export default class Pointer extends React.Component {
   // static propTypes = {
   //   timeline: PropTypes.shape({

@@ -1,5 +1,3 @@
-require('mobservable-react-devtools')
-
 require('./beton')
 // require('./rocks/dom-picker')
 require('./rocks/config')
@@ -21,26 +19,6 @@ require('./rocks/transform-tool')
 // require('./rocks/welcome-dialog')
 // require('./rocks/welcome-process')
 require('./rocks/workspace')
-
-// import {Key, Param} from './rocks/project-manager/models'
-// import {autorun, transaction} from 'mobservable'
-// var key = new Key()
-// var param = new Param()
-// window.key = key
-// window.param = param
-// autorun(() => {
-//   console.log(`Key - value: ${key.value} | time: ${key.time}`)
-// })
-// autorun(() => {
-//   console.log(`Param keys - (${param.keys.length}) ${param.keys.map(key => key.time)}`)
-// })
-// key.time = 1000
-// key.value = '5px'
-// transaction(() => {
-//   key.time = 1200
-//   key.value = '15px'
-// })
-// param.keys.push(new Key())
 
 // if (!window.__ANIMACHINE_OPEN_FIRST__) {//HACK this flag is used by the demos
   BETON.require('hack-open-first-possible-project')()

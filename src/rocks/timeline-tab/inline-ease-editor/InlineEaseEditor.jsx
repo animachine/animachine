@@ -1,10 +1,10 @@
 import React from 'react'
-import {observer} from 'mobservable-react'
+import {afflatus} from 'afflatus'
 import ControlPoint from './ControlPoint'
 import {convertTimeToPosition} from '../utils'
 import ClickAway from 'react-matterkit/lib/utils/ClickAway'
 
-@observer
+@afflatus
 export default class InlineEaseEditor extends React.Component {
   static propTypes = {
     timeline: React.PropTypes.object,

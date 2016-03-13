@@ -1,8 +1,8 @@
 import React, {PropTypes} from 'react'
-import {observer} from 'mobservable-react'
+import {afflatus} from 'afflatus'
 import {getVisibleTime} from '../utils'
 
-@observer
+@afflatus
 export default class Pointer extends React.Component {
   // static propTypes = {
   //   timeline: PropTypes.shape({

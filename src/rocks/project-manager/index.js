@@ -1,13 +1,14 @@
 import * as actions from './actions'
 import * as getters from './getters'
 import state from './state'
-import {autorun, fastArray} from 'mobservable'
+import {autorun, createArray} from 'afflatus'
 
 BETON.define({
   id: 'project-manager',
   dependencies: ['preview-registry'],
   init: () => {
-    global.__animachineLoadProject = fastArray(
+    global.__animachineLoadProject = createArray(
+      null,
       global.__animachineLoadProject
     )
     let pos = 0

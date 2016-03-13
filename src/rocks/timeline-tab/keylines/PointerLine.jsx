@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react'
-import {observer} from 'mobservable-react'
+import {afflatus} from 'afflatus'
 import {convertTimeToPosition} from '../utils'
 
-@observer
+@afflatus
 export default class Ease extends React.Component {
   render () {
     const {timeline, height} = this.props

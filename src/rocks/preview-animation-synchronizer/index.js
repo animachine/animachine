@@ -1,5 +1,5 @@
 import {createAnimationSource} from 'animachine-connect'
-import {observable, autorun} from 'mobservable'
+import {autorun} from 'afflatus'
 
 BETON.define({
   id: 'preview-animation-synchronizer',

@@ -3,7 +3,7 @@ import {autorun} from 'afflatus'
 
 BETON.define({
   id: 'preview-animation-synchronizer',
-  dependencies: ['project-manager', 'preview-registry'],
+  dependencies: ['project-manager'],
   init: ({projectManager, previewRegistry}) => {
     let lastUpdatedTime = 0
 
@@ -12,11 +12,10 @@ BETON.define({
       if (!timeline) {
         return
       }
-      const previews = projectManager.state.currentPreviews
-      const timelineSource = timeline.getProductionSource()
+      const timelineSource = timeline.animationSource
       const animationSource = createAnimationSource(timelineSource)
 
-      previews.forEach(({rootTarget, gsapAnimation}) => {
+      timeline.previews.forEach(({rootTarget, gsapAnimation}) => {
         //TODO do controller.replaceAnimationSource(animationSource) in react
         // const trackTimelines = animationSource(rootTarget)
         //   .pause()
@@ -37,11 +36,9 @@ BETON.define({
       if (!timeline) {
         return
       }
-      const previews = projectManager.state.currentPreviews
       lastUpdatedTime = timeline.currentTime
-      global.delme = previews[0]
 
-      previews.forEach(({gsapAnimation}) => {
+      timeline.previews.forEach(({gsapAnimation}) => {
         gsapAnimation
           .pause()
           .seek(lastUpdatedTime / 1000)

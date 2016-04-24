@@ -29,53 +29,36 @@ var createAnimationSource = require('animachine-connect/create-animation-source'
 
 //TODO: remove in prod
 var projectSource = ${JSON.stringify(projectSource)}
-var project
-var registerRunningTimelineWaitingList = []
 
-function handleLoadProject(_project) {
-  project = _project
-  while (registerRunningTimelineWaitingList.length !== 0) {
-    registerRunningTimeline(
-      ...registerRunningTimelineWaitingList.pop()
-    )
-  }
-}
-
-function registerRunningTimeline(index, rootTarget, gsapSource) {
-  if (project) {
-    if (!window.__animachineRegisterRunningTimeline) {
-      window.__animachineRegisterRunningTimeline = []
+var loadProject = new Promise(function (resolve) {
+  var intervalID = setInterval(function () {
+    if (typeof window.__animachineLoadProject === 'function') {
+      clearInterval(intervalID)
+      var project = window.__animachineLoadProject(projectSource)
+      resolve(project)
     }
-
-    window.__animachineRegisterRunningTimeline.push([
-      project.timelines[index],
-      rootTarget,
-      gsapSource
-    ])
-  }
-  else {
-    registerRunningTimelineWaitingList.push(arguments)
-  }
-}
-
-if (!window.__animachineLoadProject) {
-  window.__animachineLoadProject = []
-}
-window.__animachineLoadProject.push(
-  [projectSource, handleLoadProject]
-)
+  }, 100)
+})
 
 var timelneSources = ${JSON.stringify(timelneSources)}
 var animations = {}
 
-timelineSources.forEach(function (timeline, index) {
+timelineSources.forEach(function (timelineSource, index) {
   var gsapSource = createAnimationSource(
-    timeline,
+    timelineSource,
+    //TODO remove in prod
     (rootTarget, gsapAnimation) => {
-      registerRunningTimeline(index, rootTarget, gsapAnimation)
+      loadProject
+        .then(function (project) {
+          project.timelines
+            .find(function (timeline) {
+              return timeline.name === timelineSource.name
+            })
+            .registerPreview(rootTarget, gsapAnimation)
+        })
     }
   )
-  animations[timeline.name] = gsapSource
+  animations[timelineSource.name] = gsapSource
 })
 
 module.exports = animations`

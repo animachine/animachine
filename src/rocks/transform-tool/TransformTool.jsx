@@ -20,7 +20,7 @@ export default class TransformTool extends React.Component {
     this.target = createComputedValue(() => {
       const {state} = BETON.require('project-manager')
       const track = state.currentTrack
-      const previews = state.currentPreviews
+      const {previews} = track.parent('Timeline')
 
       for (let i = 0; i < previews.length; ++i) {
         for (let j = 0; j < track.selectors.length; ++j) {

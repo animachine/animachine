@@ -2,21 +2,35 @@ import React from 'react'
 import {afflatus} from 'afflatus'
 import {Button, Input} from 'react-matterkit'
 
-const PlayButton = observer(({timeline, onClick}) => (
-  <Button
-    mod = {{kind: 'stamp'}}
-    icon = {timeline.isPlaying ? 'pause' : 'play'}
-    onClick = {onClick}/>
-))
+@afflatus
+class PlayButton extends React.Component {
+  render() {
+    const {timeline, onClick} = this.props
+    return (
+      <Button
+        mod = {{kind: 'stamp'}}
+        icon = {timeline.isPlaying ? 'pause' : 'play'}
+        onClick = {onClick}
+      />
+    )
+  }
+}
 
-const TimeInput = observer(({timeline, onChange}) => (
-  <Input
-    style={{maxWidth: 88}}
-    type = 'number'
-    value = {timeline.currentTime}
-    onChange = {onChange}
-    prettifyValue = {formatTime}/>
-))
+@afflatus
+class TimeInput extends React.Component {
+  render() {
+    const {timeline, onChange} = this.props
+    return (
+      <Input
+        style={{maxWidth: 88}}
+        type = 'number'
+        value = {timeline.currentTime}
+        onChange = {onChange}
+        prettifyValue = {formatTime}
+      />
+    )
+  }
+}
 
 @afflatus
 export default class Toolbar extends React.Component {

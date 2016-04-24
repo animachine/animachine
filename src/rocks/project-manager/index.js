@@ -5,22 +5,15 @@ import {autorun, createArray} from 'afflatus'
 
 BETON.define({
   id: 'project-manager',
-  dependencies: ['preview-registry'],
+  dependencies: [],
   init: () => {
-    global.__animachineLoadProject = createArray(
-      null,
-      global.__animachineLoadProject
-    )
-    let pos = 0
-    autorun(() => {
-      while(pos < global.__animachineLoadProject.length) {
-        const [projectSource, callback] = global.__animachineLoadProject[pos]
-        console.log('>> catch load project',projectSource, callback)
-        const project = actions.loadProject(projectSource)
-        callback(project)
-        ++pos
-      }
-    })
+    // Project boundle files use this method to load they project source in
+    //  animachine.
+
+    global.__animachineLoadProject = projectSource => {
+      const project = actions.loadProject(projectSource)
+      return project
+    }
 
     return {state, actions, getters}
   }

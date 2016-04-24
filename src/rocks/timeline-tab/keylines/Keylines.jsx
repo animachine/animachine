@@ -16,7 +16,7 @@ export default class Keylines extends React.Component {
 
     const renderKeyline = (keyHolder) => {
       children.push(<Keyline
-        key = {keyHolder.id}
+        key = {keyHolder.uid}
         keyHolder = {keyHolder}
         actions = {actions}
         top = {pos}

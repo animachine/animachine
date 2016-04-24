@@ -15,14 +15,14 @@ import {
 
 function getMouseTime(props, monitor) {
   const {x: position} = monitor.getSourceClientOffset()
-  const timeline = props.keyHolder.parentTimeline
+  const timeline = props.keyHolder.parent('Timeline')
   return convertPositionToTime(timeline, position)
 }
 
 const dragOptions = {
   onDown(props, monitor) {
     const {keyHolder, actions} = props
-    const {pxpms} = keyHolder.parentTimeline
+    const {pxpms} = keyHolder.parent('Timeline')
     const mouseTime = getMouseTime(props, monitor)
     const time = closestNumber(keyHolder.keyTimes, mouseTime)
 
@@ -36,7 +36,7 @@ const dragOptions = {
     const {shiftKey, ctrlKey} = monitor.getLastEvent().nativeEvent
 
     if (!shiftKey && !ctrlKey) {
-      actions.deselectAllKeys(keyHolder.parentTimeline)
+      actions.deselectAllKeys(keyHolder.parent('Timeline'))
     }
 
     if (shiftKey || ctrlKey) {
@@ -71,7 +71,7 @@ const dragOptions = {
 
     const {state} = BETON.require('project-manager')
     const {keyHolder, actions, top, height} = props
-    const timeline = keyHolder.parentTimeline
+    const timeline = keyHolder.parent('Timeline')
     const mouseTime = getMouseTime(props, monitor)
     const nextKeyTime = keyHolder.keyTimes.find(time => time > mouseTime)
     if (nextKeyTime === undefined) {
@@ -119,14 +119,14 @@ export default class Keyline extends React.Component {
 
   render() {
     const {height, top, dragRef, keyHolder} = this.props
-    const timeline = keyHolder.parentTimeline
+    const timeline = keyHolder.parent('Timeline')
     const colors = this.getColors()
     const isGroup = keyHolder.params
 
     function renderParam(param) {
-      const result = param.keys.map(key => (
+      const result = param.keys.map((key, index) => (
         <Key
-          key = {key.id}
+          key = {key.uid}
           _key = {key}
           isGroup = {isGroup}
           colors = {colors}
@@ -135,7 +135,7 @@ export default class Keyline extends React.Component {
       for (let i = 1; i < param.keys.length; ++i) {
         result.push(
           <Ease
-            key = {param.keys[i].ease.id}
+            key = {param.keys[i].ease.uid}
             height = {height}
             colors = {colors}
             ease = {param.keys[i].ease}/>

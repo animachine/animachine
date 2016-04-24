@@ -12,17 +12,17 @@ export default class Controls extends React.Component {
       <Button
         label = 'Create a new one!'
         mod = {{kind: 'colored'}}
-        onClick =  {() => {
-          const {actions} = BETON.require('project-manager')
-          const timelineId = this.props.timeline.id
-          actions.addTrackToTimeline({timelineId, childTrack: {name: 'new Track'}})
-        }}/>
+        onClick = {() => {
+          const {timeline} = this.props
+          timeline.addTrack({name: 'new track'})
+        }}
+      />
     </div>
   }
 
   render() {
     const {timeline} = this.props
-    return timeline.tracks.length === 0
+    return timeline.tracks.getLength() === 0
       ? this.renderPlaceholder()
       : renderControls(timeline.tracks)
   }

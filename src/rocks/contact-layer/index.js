@@ -49,9 +49,12 @@ BETON.define({
       }
     }
 
-    workspace.setTabContent('hole', <ContactLayer
-      ref = {handleRef}
-      onPick = {handlePick}/>)
+    workspace.setTabContent('hole', (
+      <ContactLayer
+        ref = {handleRef}
+        onPick = {handlePick}
+      />
+    ))
   }
 })
 

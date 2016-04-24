@@ -28,11 +28,11 @@ export default class InlineEaseEditor extends React.Component {
       return <div hidden/>
     }
     const {top, height, targetKey} = inlineEaseEditor
-    const keyPosition = targetKey.parentParam.keyTimes.indexOf(targetKey.time)
+    const keyPosition = targetKey.parent('Param').keyTimes.indexOf(targetKey.time)
     if (keyPosition === 0) {
       return <div hidden/>
     }
-    const previousKeyTime = targetKey.parentParam.keyTimes[keyPosition - 1]
+    const previousKeyTime = targetKey.parent('Param').keyTimes[keyPosition - 1]
     const startTime = previousKeyTime
     const endTime = targetKey.time
     const left = convertTimeToPosition(timeline, startTime)

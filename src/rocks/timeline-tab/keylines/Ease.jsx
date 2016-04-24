@@ -7,9 +7,9 @@ export default class Ease extends React.Component {
   render () {
     const {ease, height, colors} = this.props
     const easer = ease.easer
-    const timeline = ease.parentTimeline
-    const keyTimes = ease.parentParam.keyTimes
-    const endTime = ease.parentKey.time
+    const timeline = ease.parent('Timeline')
+    const keyTimes = ease.parent('Param').keyTimes
+    const endTime = ease.parent('Key').time
     const startTime = keyTimes[keyTimes.indexOf(endTime) - 1]
     const startPosition = convertTimeToPosition(timeline, startTime)
     const endPosition = convertTimeToPosition(timeline, endTime)

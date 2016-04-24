@@ -66,7 +66,7 @@ export function getTimelineLength(timeline: Timeline) {
 }
 
 export function getTargetNodesOfTrack(track) {
-  const previewComponents = getPreviewComponentsOfProject(track.parentProject)
+  const previewComponents = getPreviewComponentsOfProject(track.parent('Project'))
   let result = []
 
   track.selectors.forEach(selector => {

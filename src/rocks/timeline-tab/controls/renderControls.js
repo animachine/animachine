@@ -18,11 +18,11 @@ function showItemSettingsDialog() {
 
 function handleSelectClick(paramOrTrack) {
   const {actions} = BETON.require('project-manager')
-  const currentTrackId = paramOrTrack.params
-    ? paramOrTrack.id
-    : paramOrTrack.parentTrack.id
+  const currentTrack = paramOrTrack.type === 'Track'
+    ? paramOrTrack
+    : paramOrTrack.parent('Track')
 
-  actions.set(paramOrTrack.parentTimeline, 'currentTrackId', currentTrackId)
+  actions.set(paramOrTrack.parent('Timeline'), 'currentTrack', currentTrack)
 }
 
 function handleToggleOpen(paramOrTrack) {
@@ -52,7 +52,7 @@ function createTrackSettings(track) {
           }),
         }
       ],
-      highlighted: track.parentTimeline.currentTrackId === track.id,
+      highlighted: track.parent('Timeline').currentTrack === track,
       contextMenu: {
         items: [
           {
@@ -61,7 +61,7 @@ function createTrackSettings(track) {
             onClick: () => {
               const track = new Track()
               BETON.require('project-manager').actions.add(
-                track.parentTimeline,
+                track.parent('Timeline'),
                 'tracks',
                 track
               )
@@ -92,7 +92,7 @@ function createTrackSettings(track) {
     }),
     describeChildren: () => track.params.map(param => (
       <QuickInterface
-        key = {param.id}
+        key = {param.uid}
         describe = {() => createParamSettings(param)}/>
     ))
   }
@@ -146,7 +146,7 @@ const renderTracks = tracks => {
   return tracks
     .map(track => (
       <QuickInterface {...{
-        key: track.id,
+        key: track.uid,
         describe: () => createTrackSettings(track)
       }}/>
     ))

@@ -1,4 +1,4 @@
-import {observable, fastArray} from 'mobservable'
+import {defineModel, createModel} from 'afflatus'
 import {Key, Project} from './models'
 import {recurseKeyHolders, recurseKeys, recurseParams} from './recursers'
 
@@ -32,7 +32,7 @@ defineModel({
 defineModel({
   type: 'State',
   simpleValues: {
-    currentProject: {type: 'Project'},
+    currentProject: {type: 'Project', canBeNull: true},
     history: {type: 'History'},
   },
   arrayValues: {
@@ -40,10 +40,10 @@ defineModel({
   },
   computedValues: {
     currentTimeline() {
-      return this.currentProject && this.currentProject.currnetTimeline
+      return this.currentProject && this.currentProject.currentTimeline
     },
     currentTrack() {
-      return this.currentTimeline && this.currnetTimeline.currentTrack
+      return this.currentTimeline && this.currentTimeline.currentTrack
     },
     selectedKeys() {
       const result = []
@@ -56,15 +56,7 @@ defineModel({
       }
       return result
     },
-    currentPreviews() {
-      const previewRegistry = BETON.require('preview-registry')
-      const timeline = this.currentTimeline
-      const result = timeline
-        ? previewRegistry.getters.getPreviewsOfTimeline(timeline)
-        : []
-      return result
-    },
   }
 })
 
-export default new State()
+export default createModel('State')

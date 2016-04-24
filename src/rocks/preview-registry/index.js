@@ -50,10 +50,10 @@ BETON.define({
     global.__animachineRegisterRunningTimeline = createArray(
       null,
       global.__animachineRegisterRunningTimeline
-    )
+    ).get()
     let pos = 0
     autorun(() => {
-      while(pos < global.__animachineRegisterRunningTimeline.length) {
+      while(pos < global.__animachineRegisterRunningTimeline.getLength()) {
         const args = global.__animachineRegisterRunningTimeline[pos]
         registerRunningTimeline(...args)
         ++pos

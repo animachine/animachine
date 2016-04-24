@@ -1,10 +1,10 @@
-import {fastArray} from 'mobservable'
+import {createArray} from 'afflatus'
 
 BETON.define({
   id: 'toolbar',
   dependencies: [],
   init: () => {
-    const state = fastArray()
+    const state = createArray().get()
 
     return {
       state,

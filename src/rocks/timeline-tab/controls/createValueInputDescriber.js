@@ -6,7 +6,7 @@ export default function createParamSettings(param) {
   const input = {
     value: param.currentValue,
     onChange: v => (v) => {
-      const time = param.parentTimeline.currentTime
+      const time = param.parent('Timeline').currentTime
       actions.setValueOfParamAtTime(param, v, time)
     },
     style: {flex: 1}

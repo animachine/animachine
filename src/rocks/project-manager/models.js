@@ -1,6 +1,5 @@
 import {defineModel, createModel} from 'afflatus'
-import {registerId, createId} from './id-store'
-import {createEaser} from 'animachine-connect'
+import {createEaser, createTargets} from 'animachine-connect'
 
 import uniq from 'lodash/uniq'
 import flatten from 'lodash/flatten'
@@ -27,11 +26,6 @@ function load(target, source, names) {
   })
 }
 
-function constructor(source = {}) {
-  this.id = source.id ? registerId(source.id) : createId()
-  this._deserialize(source)
-}
-
 function findParent(item, ParentClass) {
   let parent = item.parent
   while (parent) {
@@ -39,6 +33,14 @@ function findParent(item, ParentClass) {
       return parent
     }
     parent = parent.parent
+  }
+}
+
+function createAdder(type, storeName) {
+  return function (source={}) {
+    const item = createModel(type, source, this)
+    this[storeName].push(item)
+    return item
   }
 }
 
@@ -57,6 +59,7 @@ defineModel({
   type: 'Timeline',
   simpleValues: {
     name: {type: 'string', defaultValue: 'unnamed timeline'},
+    currentTrack: {type: 'Track', canBeNull: true},
     isPlaying: {type: 'boolean', defaultValue: false},
     isSeeking: {type: 'boolean', defaultValue: false},
     currentTime: {type: 'number', defaultValue: 0},
@@ -81,11 +84,7 @@ defineModel({
     registerPreview(rootTarget, gsapAnimation) {
       this.previews.push({rootTarget, gsapAnimation})
     },
-    addTrack(source) {
-      const track = createModel('Track', source, this)
-      this.tracks.push(track)
-      return track
-    }
+    addTrack: createAdder('Track', 'tracks'),
   }
 })
 
@@ -108,8 +107,28 @@ defineModel({
         params: this.params.map(param => param.animationSource),
         selectors: this.selectors.map(selector => selector.animationSource),
       }
+    },
+    targets() {
+      const track = this
+      const {previews} = track.parent('Timeline')
+      const result = []
+
+      for (let i = 0; i < previews.length; ++i) {
+        for (let j = 0; j < track.selectors.getLength(); ++j) {
+          const targets = createTargets(
+            previews[i].rootTarget,
+            track.selectors[j]
+          )
+          result.push(...targets)
+        }
+      }
+      return result
     }
-  }
+  },
+  untrackedValues: {
+    addParam: createAdder('Param', 'params'),
+    addSelector: createAdder('Selector', 'selectors'),
+  },
 })
 
 defineModel({
@@ -146,6 +165,9 @@ defineModel({
         keys: this.keys.map(key => key.animationSource)
       }
     },
+  },
+  untrackedValues: {
+    addKey: createAdder('Key', 'keys'),
   }
 })
 
@@ -154,7 +176,7 @@ defineModel({
   simpleValues: {
     time: {type: 'int',  defaultValue: 0},
     value: {type: 'string',  defaultValue: '0'},
-    ease: {type: 'Ease',  defaultValue: null},
+    ease: {type: 'Ease',  defaultValue: {}},
     selected: {type: 'boolean',  defaultValue: false},
   },
   computedValues: {

@@ -44,7 +44,8 @@
     "react-remarkable": "^1.1.1",
     "react-zeroclipboard": "^2.0.1",
     "spaceman": "0.0.20",
-    "transhand": "^0.1.24"
+    "transhand": "^0.1.24",
+    "webpack": "^1.13.0"
   },
   "devDependencies": {
     "babel": "^5.8.21",

@@ -15,26 +15,6 @@ const key2ParamName = {
 
 @afflatus
 export default class TransformTool extends React.Component {
-  constructor() {
-    super()
-    this.target = createComputedValue(() => {
-      const {state} = BETON.require('project-manager')
-      const track = state.currentTrack
-      const {previews} = track.parent('Timeline')
-
-      for (let i = 0; i < previews.length; ++i) {
-        for (let j = 0; j < track.selectors.length; ++j) {
-          const targets = createTargets(
-            previews[i].rootTarget,
-            track.selectors[j]
-          )
-          if (targets.length > 0) {
-            return targets[0]
-          }
-        }
-      }
-    })
-  }
   handleChange = (change) => {
     const {actions, state} = BETON.require('project-manager')
     const track = state.currentTrack
@@ -58,8 +38,11 @@ export default class TransformTool extends React.Component {
   render() {
     const {state} = BETON.require('project-manager')
     const track = state.currentTrack
-    const target = this.target
-    if (!track || !target) {
+    if (!track) {
+      return <div hidden/>
+    }
+    const target = track.targets[0]
+    if (!target) {
       return <div hidden/>
     }
 

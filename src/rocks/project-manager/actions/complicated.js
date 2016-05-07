@@ -1,20 +1,18 @@
 /* @flow */
 
-import {Key, Param, Track, Timeline, Project} from '../models'
 import {recurseKeys, recurseParams} from '../recursers'
 import {getValueOfParamAtTime} from '../getters'
 import {wrap} from './history'
-import {set, add, remove, createItem} from './basic'
+import {set, remove, createItem} from './basic'
 
 export const setValueOfParamAtTime = wrap((
   param: Param,
   value: string,
   time: number
 ) => {
-  let key: Key = param.keys.find(key => key.time === time)
+  let key = param.keys.find(key => key.time === time)
   if (!key) {
-    key = new Key({time})
-    add(param, 'keys', key)
+    key = param.addKey({time})
   }
   key.value = value
 })
@@ -27,8 +25,7 @@ export const setValueOfTrackAtTime = wrap((
 ) => {
   let param: Param = track.params.find(param => param.name === paramName)
   if (!param) {
-    param = new Param({name: paramName})
-    add(track, 'params', param)
+    param = track.addParam({name: paramName})
   }
   setValueOfParamAtTime(param, value, time)
 })

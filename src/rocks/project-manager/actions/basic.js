@@ -13,18 +13,7 @@ export function set(target: object, name: string, value: any) {
   )
 }
 
-export function add(parent: object, containerName: string, item: object) {
-  historySave(
-    () => {
-      parent[containerName].push(item)
-      item.parent = parent
-    },
-    () => {
-      parent[containerName].remove(item)
-      item.parent = null
-    }
-  )
-}
+
 //
 // export function remove(parent: object, containerName: string, item: object) {
 //   historySave(
@@ -51,9 +40,3 @@ export function add(parent: object, containerName: string, item: object) {
 //     default: throw `can't find item with the name "${type}"!`
 //   }
 // }
-
-export function loadProject(source) {
-  const project = deserialise(source)
-  state.projects.push(project)
-  return project
-}

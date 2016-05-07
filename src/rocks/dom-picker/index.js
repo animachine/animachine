@@ -1,7 +1,7 @@
 import React from 'react'
 import DOMPicker from './DOMPicker'
 import state from './state'
-import actions from './actions'
+import * as actions from './actions'
 import {HotKeys} from 'react-hotkeys'
 
 BETON.define({

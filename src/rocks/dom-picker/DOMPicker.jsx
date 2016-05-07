@@ -1,8 +1,7 @@
 import React, {PropTypes} from 'react'
-import {afflatus} from 'afflatus'
+import {afflatus, createComputedValue} from 'afflatus'
 import state from './state'
-import {getPickedDOMNode} from './store/selectors'
-import {setPickedDOMNode} from './store/actions'
+import {setPickedDOMNode} from './actions'
 import {Button} from 'react-matterkit'
 
 @afflatus
@@ -47,14 +46,10 @@ export default class DomPicker extends React.Component {
   }
 
   addNewTrack(node) {
-    const {selectors, actions, normalize} = BETON.require('project-manager')
-    const timelineId = selectors.getCurrentTimelineId()
-    actions.addTrackToTimeline({
-      timelineId,
+    const {state} = BETON.require('project-manager')
+    state.currentTimeline.addTrack({
       name: 'new track',
-      childSource: {
-        selectors: [this.selector]
-      }
+      selectors: [{type: 'css', query: this.selector()}],
     })
   }
 
@@ -87,14 +82,6 @@ export default class DomPicker extends React.Component {
     }
 
     return {left, top, width, height}
-  }
-
-  componentWillMount() {
-    this.updateSelector(this.props)
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.updateSelector(nextProps)
   }
 
   render() {
@@ -136,7 +123,7 @@ export default class DomPicker extends React.Component {
     }
 
     function selectNode(nextNode) {
-      actions.setPickedDOMNode(nextNode)
+      setPickedDOMNode(nextNode)
     }
 
     function renderButton(icon, tooltip, onClick, originalStyle, hidden) {
@@ -208,7 +195,7 @@ export default class DomPicker extends React.Component {
         {renderButton(
           'times',
           'close',
-          () => actions.setPickedDOMNode(null),
+          () => setPickedDOMNode(null),
           {right: `-${buttonSize}px`, top: `-${buttonSize}px`, margin: [0, 0]}
         )}
         {renderButton(
@@ -216,7 +203,7 @@ export default class DomPicker extends React.Component {
           'create a new track with this node',
           () => this.addNewTrack(node),
           {},
-          !this.selector
+          !this.selector()
         )}
       </div>
     </div>

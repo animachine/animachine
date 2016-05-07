@@ -17,8 +17,8 @@ import {Scrollable} from 'react-matterkit'
 export default class DialogComponent extends React.Component {
   render() {
     const {items, lastSelectedItemId, actions, onClose} = this.props
-    const selectedItem = items.find(item => lastSelectedItemId === item.id)
-    console.log({selectedItem, lastSelectedItemId})
+    // const selectedItem = items.find(item => lastSelectedItemId === item.id)
+    // console.log({selectedItem, lastSelectedItemId})
 
     return <DialogComp
         title = 'Item settigns'

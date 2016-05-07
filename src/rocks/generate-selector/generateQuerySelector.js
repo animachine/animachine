@@ -4,6 +4,10 @@ function generate(de, root) {
 
     root = root || document
 
+    if (de === root) {
+      return ':root'
+    }
+
     var deCurr = de,
         rootCurr = root,
         qsCurr, qsParent = ''

@@ -45,8 +45,7 @@ function createTrackSettings(track) {
             icon: 'plus',
             tooltip: 'add a new param to this track',
             onClick: () => {
-              const param = new Param()
-              BETON.require('project-manager').actions.add(track, 'params', param)
+              track.addParam()
               showItemSettingsDialog()
             }
           }),
@@ -60,19 +59,14 @@ function createTrackSettings(track) {
             icon: 'plus',
             onClick: () => {
               const track = new Track()
-              BETON.require('project-manager').actions.add(
-                track.parent('Timeline'),
-                'tracks',
-                track
-              )
+              track.parent('Timeline').addTrack(track)
               showItemSettingsDialog()
             }
           }, {
             label: 'new param',
             icon: 'add',
             onClick: () => {
-              const param = new Param()
-              BETON.require('project-manager').actions.add(track, 'params', param)
+              track.addParam()
               showItemSettingsDialog()
             }
           }, {
@@ -113,8 +107,7 @@ function createParamSettings(param) {
             icon: 'plus',
             tooltip: 'add a new param to this track',
             onClick: () => {
-              const param = new Param()
-              BETON.require('project-manager').actions.add(track, 'params', param)
+              track.addParam()
               showItemSettingsDialog()
             }
           }),

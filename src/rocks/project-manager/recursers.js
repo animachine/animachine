@@ -1,4 +1,4 @@
-import {Ease, Key, Param, Track, Timeline, Project} from './models'
+
 
 export function recurseKeys(root: object, cb: Function) {
   return recurseParams(root, param => {
@@ -7,13 +7,13 @@ export function recurseKeys(root: object, cb: Function) {
 }
 
 export function recurseParams(root: object, cb: Function) {
-  if (root instanceof Timeline) {
+  if (root.type === 'Timeline') {
     return root.tracks.some(track => recurseParams(track, cb))
   }
-  else if (root instanceof Track) {
+  else if (root.type === 'Track') {
     return root.params.some(param => cb(param))
   }
-  else if (root instanceof Param) {
+  else if (root.type === 'Param') {
     return cb(root)
   }
 }
@@ -22,10 +22,10 @@ export function recurseKeyHolders(root: object, cb: Function) {
   if (cb(root) !== true) {
     return true
   }
-  if (root instanceof Timeline) {
+  if (root.type === 'Timeline') {
     return root.tracks.some(track => recurseKeyHolders(track, cb))
   }
-  if (root instanceof Track) {
+  if (root.type === 'Track') {
     return root.params.some(param => recurseKeyHolders(param, cb))
   }
 }
@@ -38,20 +38,20 @@ export function recurseAll(
   if (cb(root) !== true) {
     return true
   }
-  if (root instanceof Project) {
+  if (root.type === 'Project') {
     return root.timelines.some(timeline => recurseAll(timeline, cb))
   }
-  if (root instanceof Timeline) {
+  if (root.type === 'Timeline') {
     return root.tracks.some(track => recurseAll(track, cb))
   }
-  if (root instanceof Track) {
+  if (root.type === 'Track') {
     return root.params.some(param => recurseAll(param, cb))
       || root.selectors.some(selector => recurseAll(selector, cb))
   }
-  if (root instanceof Param) {
+  if (root.type === 'Param') {
     return root.keys.some(key => recurseAll(key, cb))
   }
-  if (root instanceof Key) {
+  if (root.type === 'Key') {
     return recurseAll(key, cb) || recurseAll(key.ease, cb)
   }
 }

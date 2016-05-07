@@ -1,6 +1,4 @@
-import {defineModel, createModel} from 'afflatus'
-import {Key, Project} from './models'
-import {recurseKeyHolders, recurseKeys, recurseParams} from './recursers'
+import {defineModel, createModel, deserialise} from 'afflatus'
 
 export class HistoryFlag {
   constructor(pair) {
@@ -44,18 +42,14 @@ defineModel({
     },
     currentTrack() {
       return this.currentTimeline && this.currentTimeline.currentTrack
-    },
-    selectedKeys() {
-      const result = []
-      if (this.currentTimeline) {
-        recurseKeys(this.currentTimeline, key => {
-          if (key.selected) {
-            result.push(key)
-          }
-        })
-      }
-      return result
-    },
+    }
+  },
+  untrackedValues: {
+    loadProject(source) {
+      const project = deserialise(source)
+      this.projects.push(project)
+      return project
+    }
   }
 })
 

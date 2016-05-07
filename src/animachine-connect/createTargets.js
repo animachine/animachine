@@ -1,14 +1,20 @@
 export default function(rootTarget, selector) {
-  if (selector.type === 'css') {
+  if (selector.selectorType === 'css') {
     //TODO throw if rootTarget not a dom element
     if (selector.query === ':root') {
-      return rootTarget
+      return [rootTarget]
     }
     else {
-      return rootTarget.querySelectorAll(selector.query)
+      try {
+        return [...rootTarget.querySelectorAll(selector.query)]
+      }
+      catch (e) {
+        console.warn(`error on using css sselector  "${selector.query}"`)
+        return []
+      }
     }
   }
-  else if (selector.type === 'react') {
+  else if (selector.selectorType === 'react') {
     return rootTarget.findWithCommands(selector.query)
   }
 }

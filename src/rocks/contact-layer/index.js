@@ -13,10 +13,8 @@ BETON.define({
     }
 
     function handlePick(e) {
+      const domPicker = BETON.require('dom-picker')
       const {setPickedDOMNode} = domPicker.actions
-      const {
-        getTargetNodesOfTrack,
-      } = projectManager.selectors
       const {clientX: x, clientY: y} = e
       const timeline = projectManager.state.currentTimeline
 
@@ -26,26 +24,22 @@ BETON.define({
 
       let isFindATrackBelongsToThePickedNode = false
       if (timeline) {
-        let selectedTrackId
-
-        timeline.tracks.forEach(trackId => {
-          const targets = getTargetNodesOfTrack({trackId})
-          if (targets.indexOf(pickedDOMNode) !== -1) {
-            selectedTrackId = trackId
-          }
+        const selectedTrack = timeline.tracks.find(track => {
+          return track.targets.indexOf(pickedDOMNode) !== -1
         })
 
-        if (selectedTrackId) {
+        if (selectedTrack) {
           isFindATrackBelongsToThePickedNode = true
-          projectManager.actions.setCurrentTrackIdOfTimeline({
-            currentTrackId: selectedTrackId,
-            timelineId: timeline.id
-          })
+          projectManager.actions.set(
+            selectedTrack.parent('Timeline'),
+            'currentTrack',
+            selectedTrack,
+          )
         }
       }
 
       if (!isFindATrackBelongsToThePickedNode) {
-        setPickedDOMNode({pickedDOMNode})
+        setPickedDOMNode(pickedDOMNode)
       }
     }
 

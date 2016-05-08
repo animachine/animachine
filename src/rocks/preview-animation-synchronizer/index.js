@@ -21,11 +21,12 @@ BETON.define({
         //   .pause()
         //   .getChildren()
 // console.log('update at ', lastUpdatedTime)
+
         gsapAnimation
           .time(0)
           .clear()
           // .add(trackTimelines, 0, 'start')
-          .add(animationSource(rootTarget), 0, 'start')
+          .add(animationSource(rootTarget), 0/*, 'start'*/)
           .seek(lastUpdatedTime / 1000)
           // .render()
       })

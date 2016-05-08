@@ -162,7 +162,8 @@ defineModel({
     },
     animationSource() {
       return {
-        keys: this.keys.map(key => key.animationSource)
+        keys: this.keys.map(key => key.animationSource),
+        name: this.name,
       }
     },
   },

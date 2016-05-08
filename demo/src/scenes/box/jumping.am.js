@@ -3,7 +3,12 @@ var createAnimationSource = require('animachine-connect/create-animation-source'
 //TODO: remove in prod
 var projectSource = [
   {$id: 0, type: 'Project', name: 'jumping-box', timelines: [1]},
-  {$id: 1, type: 'Timeline', name: 'jumping'},
+  {$id: 1, type: 'Timeline', name: 'jumping', tracks: [2]},
+  {$id: 2, type: 'Track', name: 'box', selectors: [3], params: [4]},
+  {$id: 3, type: 'Selector', selectorType: 'css', query: ':root'},
+  {$id: 4, type: 'Param', name: 'x', keys: [5, 6]},
+  {$id: 5, type: 'Key', time: 100, value: 200},
+  {$id: 6, type: 'Key', time: 1000, value: 500},
 ]
 
 var loadProject = new Promise(function (resolve) {

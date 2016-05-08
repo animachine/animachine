@@ -36,7 +36,9 @@
     "lodash": "^4.6.1",
     "putainde-localstorage": "^4.0.0",
     "randomstring": "^1.1.3",
+    "react": "^15.0.2",
     "react-dnd": "^1.1.8",
+    "react-dom": "^15.0.2",
     "react-gsap-enhancer": "^0.2.1",
     "react-hotkeys": "^0.7.1",
     "react-matterkit": "0.0.45",
@@ -44,7 +46,7 @@
     "react-remarkable": "^1.1.1",
     "react-zeroclipboard": "^2.0.1",
     "spaceman": "0.0.20",
-    "transhand": "^0.1.24",
+    "transhand": "^0.1.26",
     "webpack": "^1.13.0"
   },
   "devDependencies": {

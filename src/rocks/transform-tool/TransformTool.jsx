@@ -25,7 +25,7 @@ export default class TransformTool extends React.Component {
       if (paramName === 'rotationZ') {
         value = value / Math.PI * 180
       }
-
+console.log('change', paramName, value)
       actions.setValueOfTrackAtTime(
         track,
         paramName,
@@ -63,11 +63,11 @@ export default class TransformTool extends React.Component {
       ox: getValue('transformOriginX', 0.5),
       oy: getValue('transformOriginY', 0.5)
     }
-
+console.log(transform, target)
     return <CSSTranshand
       transform = {transform}
       deTarget = {target}
       onChange = {this.handleChange}
-      autoUpdateCoordinatorFrequency={1234}/>
+      autoUpdateCoordinatorFrequency={12345}/>
   }
 }

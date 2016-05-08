@@ -47,10 +47,12 @@ export default class DomPicker extends React.Component {
 
   addNewTrack(node) {
     const {state} = BETON.require('project-manager')
-    state.currentTimeline.addTrack({
+    const track = state.currentTimeline.addTrack({
       name: 'new track',
       selectors: [{type: 'css', query: this.selector()}],
     })
+    state.currentTimeline.currentTrack = track
+    setPickedDOMNode(null)
   }
 
   getRect() {

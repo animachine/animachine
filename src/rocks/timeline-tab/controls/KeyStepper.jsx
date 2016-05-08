@@ -27,15 +27,15 @@ export default class KeyStepper extends React.Component {
     const timeline = state.currentTimeline
     const keyTimes = props.keyHolder.keyTimes
 
-    this.hasKeyBefore(createComputedValue(() => {
+    this.hasKeyBefore = createComputedValue(() => {
       return keyTimes.get(0) < timeline.currentTime
-    }))
-    this.hasKeyAfter(createComputedValue(() => {
+    })
+    this.hasKeyAfter = createComputedValue(() => {
       return timeline.currentTime < keyTimes.get(keyTimes.length - 1)
-    }))
-    this.hasKeyNow(createComputedValue(() => {
+    })
+    this.hasKeyNow = createComputedValue(() => {
       return keyTimes.indexOf(timeline.currentTime) !== -1
-    }))
+    })
   }
 
   handleKeyClick = () => {

@@ -1,3 +1,5 @@
+import {serialise} from 'afflatus'
+
 BETON.define({
   id: 'create-bundle-file',
   dependencies: ['project-manager'],
@@ -6,19 +8,18 @@ BETON.define({
 
 function init({projectManager}) {
   return function() {
-    const {getters} = projectManager
-    const currentProject = getters.getCurrentProject()
-    const projectSource = currentProject.getSource()
+    const {currentProject} = projectManager.state
+    const projectSource = serialise(currentProject)
     const timelineSources = currentProject.timelines.map(timeline => {
       return {
         name: timeline.name,
-        source: timeline.getProductionSource(),
+        source: timeline.animationSource,
       }
     })
     const name = currentProject.name || 'unnamed'
     return {
       fileName: `${name}.am.js`,
-      source: create(timelneSources, projectSource)
+      source: create(timelineSources, projectSource)
     }
   }
 }
@@ -40,7 +41,7 @@ var loadProject = new Promise(function (resolve) {
   }, 100)
 })
 
-var timelneSources = ${JSON.stringify(timelneSources)}
+var timelineSources = ${JSON.stringify(timelineSources)}
 var animations = {}
 
 timelineSources.forEach(function (timelineSource, index) {

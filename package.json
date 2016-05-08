@@ -44,7 +44,7 @@
     "react-matterkit": "0.0.45",
     "react-pure-render": "^1.0.2",
     "react-remarkable": "^1.1.1",
-    "react-zeroclipboard": "^2.0.1",
+    "react-zeroclipboard": "^3.1.0",
     "spaceman": "0.0.20",
     "transhand": "^0.1.26",
     "webpack": "^1.13.0"

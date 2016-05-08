@@ -71,7 +71,7 @@ defineModel({
   },
   arrayValues: {
     tracks: {type: 'Track'},
-    previews: {},
+    previews: {dontSerialise: true},
   },
   computedValues: {
     animationSource() {

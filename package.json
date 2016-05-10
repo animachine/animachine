@@ -31,6 +31,7 @@
     "array.prototype.find": "^1.0.0",
     "array.prototype.findindex": "^1.0.0",
     "bezier-easing": "^1.1.0",
+    "clipboard": "^1.5.10",
     "custom-drag": "0.0.3",
     "event-emitter": "^0.3.3",
     "lodash": "^4.6.1",
@@ -44,7 +45,6 @@
     "react-matterkit": "0.0.45",
     "react-pure-render": "^1.0.2",
     "react-remarkable": "^1.1.1",
-    "react-zeroclipboard": "^3.1.0",
     "spaceman": "0.0.20",
     "transhand": "^0.1.26",
     "webpack": "^1.13.0"

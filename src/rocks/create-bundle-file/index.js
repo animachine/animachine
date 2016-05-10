@@ -31,15 +31,21 @@ var createAnimationSource = require('animachine-connect/create-animation-source'
 //TODO: remove in prod
 var projectSource = ${JSON.stringify(projectSource)}
 
-var loadProject = new Promise(function (resolve) {
-  var intervalID = setInterval(function () {
-    if (typeof window.__animachineLoadProject === 'function') {
-      clearInterval(intervalID)
-      var project = window.__animachineLoadProject(projectSource)
-      resolve(project)
-    }
-  }, 100)
-})
+var loadProjectPromise
+function loadProject() {
+  if (!loadProjectPromise) {
+    loadProjectPromise = new Promise(function (resolve) {
+      var intervalID = setInterval(function () {
+        if (typeof window.__animachineLoadProject === 'function') {
+          clearInterval(intervalID)
+          var project = window.__animachineLoadProject(projectSource)
+          resolve(project)
+        }
+      }, 100)
+    })
+  }
+  return loadProjectPromise
+}
 
 var timelineSources = ${JSON.stringify(timelineSources)}
 var animations = {}
@@ -49,7 +55,7 @@ timelineSources.forEach(function (timelineSource, index) {
     timelineSource,
     //TODO remove in prod
     (rootTarget, gsapAnimation) => {
-      loadProject
+      loadProject()
         .then(function (project) {
           project.timelines
             .find(function (timeline) {

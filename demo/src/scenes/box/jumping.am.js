@@ -11,15 +11,21 @@ var projectSource = [
   {$id: 6, type: 'Key', time: 1000, value: 500},
 ]
 
-var loadProject = new Promise(function (resolve) {
-  var intervalID = setInterval(function () {
-    if (typeof window.__animachineLoadProject === 'function') {
-      clearInterval(intervalID)
-      var project = window.__animachineLoadProject(projectSource)
-      resolve(project)
-    }
-  }, 100)
-})
+var loadProjectPromise
+function loadProject() {
+  if (!loadProjectPromise) {
+    loadProjectPromise = new Promise(function (resolve) {
+      var intervalID = setInterval(function () {
+        if (typeof window.__animachineLoadProject === 'function') {
+          clearInterval(intervalID)
+          var project = window.__animachineLoadProject(projectSource)
+          resolve(project)
+        }
+      }, 100)
+    })
+  }
+  return loadProjectPromise
+}
 
 var timelineSources = [{
   "name":"jumping",
@@ -39,7 +45,7 @@ timelineSources.forEach(function (timelineSource, index) {
     timelineSource,
     //TODO remove in prod
     (rootTarget, gsapAnimation) => {
-      loadProject
+      loadProject()
         .then(function (project) {
           project.timelines
             .find(function (timeline) {

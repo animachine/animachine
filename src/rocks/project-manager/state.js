@@ -1,4 +1,5 @@
 import {defineModel, createModel, deserialise} from 'afflatus'
+import {recurseKeys} from './recursers'
 
 export class HistoryFlag {
   constructor(pair) {
@@ -42,6 +43,15 @@ defineModel({
     },
     currentTrack() {
       return this.currentTimeline && this.currentTimeline.currentTrack
+    },
+    selectedKeys() {
+      const result = []
+      recurseKeys(this.currentTimeline, key => {
+        if (key.selected) {
+          result.push(key)
+        }
+      })
+      return result
     }
   },
   untrackedValues: {

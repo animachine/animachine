@@ -18,6 +18,7 @@ BETON.define({
       const {clientX: x, clientY: y} = e
       const timeline = projectManager.state.currentTimeline
 
+
       node.style.pointerEvents = 'none'
       const pickedDOMNode = document.elementFromPoint(x, y)
       node.style.pointerEvents = 'auto'
@@ -38,7 +39,15 @@ BETON.define({
         }
       }
 
-      if (!isFindATrackBelongsToThePickedNode) {
+      const isPickedNodeIsOrChildOfAPreviewNode =
+        timeline.previews.some(({rootTarget}) => {
+          return rootTarget.contains(pickedDOMNode)
+        })
+
+      if (
+        !isFindATrackBelongsToThePickedNode
+        && isPickedNodeIsOrChildOfAPreviewNode
+      ) {
         setPickedDOMNode(pickedDOMNode)
       }
     }

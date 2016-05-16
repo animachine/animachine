@@ -1,8 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-// import animations Emoty './jumping.am'
+import animachine from 'animachine'
 
 export default class Box extends React.Component {
+  componentDidMount() {
+    animachine.init()
+  }
 
   render() {
     var style = {

@@ -1,37 +1,35 @@
-require('./beton')
-require('./rocks/dom-picker')
-require('./rocks/config')
-require('./rocks/contact-layer')
-require('./rocks/create-bundle-file')
-require('./rocks/file-save')
-require('./rocks/generate-selector')
-require('./rocks/hack-open-first-possible-project')
-require('./rocks/item-settings-dialog')
-require('./rocks/open-project-dialog')
-require('./rocks/preview-animation-synchronizer')
-require('./rocks/preview-registry')
-require('./rocks/project-manager')
-require('./rocks/timeline-pusher')
-require('./rocks/timeline-tab')
-require('./rocks/toolbar')
-require('./rocks/tracker')
-require('./rocks/transform-tool')
-// require('./rocks/welcome-dialog')
-// require('./rocks/welcome-process')
-require('./rocks/workspace')
+function init() {
+  console.log('INIT ANIMACHINE')
+  require('./beton')
+  require('./rocks/dom-picker')
+  require('./rocks/config')
+  require('./rocks/contact-layer')
+  require('./rocks/create-bundle-file')
+  require('./rocks/file-save')
+  require('./rocks/generate-selector')
+  require('./rocks/hack-open-first-possible-project')
+  require('./rocks/item-settings-dialog')
+  // require('./rocks/open-project-dialog')
+  require('./rocks/preview-animation-synchronizer')
+  require('./rocks/preview-registry')
+  require('./rocks/project-manager')
+  require('./rocks/timeline-pusher')
+  require('./rocks/timeline-tab')
+  require('./rocks/toolbar')
+  require('./rocks/tracker')
+  require('./rocks/transform-tool')
+  require('./rocks/welcome-dialog')
+  // require('./rocks/welcome-process')
+  require('./rocks/workspace')
 
-// if (!window.__ANIMACHINE_OPEN_FIRST__) {//HACK this flag is used by the demos
+  BETON.require('welcome-dialog').show()
   BETON.require('hack-open-first-possible-project')()
-// }
-// else {
-//   BETON.require('welcome-process').start()
-// }
+}
 
 const animachine = {
-  init() {
-    //TODO start everithing on init
-  }
+  init
 }
+export default animachine
 
 import Perf from 'react-addons-perf'
 global.perfSeek = function () {
@@ -62,5 +60,3 @@ global.PPP = (function () {
     }
   }
 }())
-
-export default animachine

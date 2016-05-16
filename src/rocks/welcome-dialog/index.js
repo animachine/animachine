@@ -35,6 +35,6 @@ function init({workspace}) {
   }
 
   return {
-    showNext,
+    show: () => showNext(),
   }
 }

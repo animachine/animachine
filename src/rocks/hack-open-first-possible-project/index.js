@@ -1,24 +1,25 @@
-import {autorun} from 'afflatus'
-
 BETON.define({
   id: 'hack-open-first-possible-project',
   dependencies: ['project-manager'],
   init: ({projectManager}) => {
 
     return () => {
-      const dispose = autorun(
-        () => {
-          if (projectManager.state.projects.getLength() !== 0) {
-            dispose()
-            const project = projectManager.state.projects[0]
-            projectManager.state.currentProject = project
+      setTimeout(() => {//wait a bit so projects can load if they are present
+        console.log('OPEN FIRST PROJET')
+        if (projectManager.state.projects.getLength() !== 0) {
 
-            if (!project.currentTimeline && project.timelines[0]) {
-              project.currentTimeline = project.timelines[0]
-            }
+          const project = projectManager.state.projects[0]
+          projectManager.state.currentProject = project
+
+          if (!project.currentTimeline && project.timelines[0]) {
+            project.currentTimeline = project.timelines[0]
           }
         }
-      )
+        else {
+          const project = projectManager.state.createNewProject()
+          projectManager.state.currentProject = project
+        }
+      })
     }
   }
 })

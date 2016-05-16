@@ -1,7 +1,4 @@
-window.__ANIMACHINE_OPEN_FIRST__ = true
-
 import React from 'react'
-import animachine from 'animachine'
 import * as scenes from './scenes'
 
 export default class Demo extends React.Component {

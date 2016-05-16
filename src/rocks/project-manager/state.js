@@ -49,6 +49,15 @@ defineModel({
       const project = deserialise(source)
       this.projects.push(project)
       return project
+    },
+    createNewProject() {
+      const project = deserialise([
+        {$id: 0, type: 'Project', name: 'new project', timelines: [1], currentTimeline: 1},
+        {$id: 1, type: 'Timeline', name: 'new timeline'},
+      ])
+      project.currentTimeline.registerPreview(document.body, new TimelineMax())
+      this.projects.push(project)
+      return project
     }
   }
 })

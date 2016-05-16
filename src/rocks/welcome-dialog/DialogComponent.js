@@ -5,7 +5,7 @@ export default class DialogComponent extends React.Component {
   static defaultProps = {
     content: 'Message',
     title: 'Hello!',
-    buttons: [{label: 'got it!', onClick: 'close'}]
+    buttons: [{label: 'start', onClick: 'close'}]
   }
 
   render() {

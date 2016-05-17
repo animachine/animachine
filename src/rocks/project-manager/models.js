@@ -68,6 +68,7 @@ defineModel({
     width: {type: 'number', defaultValue: 2000},
     start: {type: 'number', defaultValue: 0},
     startMargin: {type: 'number', defaultValue: 6},
+    inlineEaseEditor: {type: 'object', defaultValue: null, dontSerialise: true},
   },
   arrayValues: {
     tracks: {type: 'Track'},

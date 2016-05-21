@@ -5,7 +5,7 @@ export default function createParamSettings(param) {
   const {actions, getters} = BETON.require('project-manager')
   const input = {
     value: param.currentValue,
-    onChange: v => (v) => {
+    onChange: v => {
       const time = param.parent('Timeline').currentTime
       actions.setValueOfParamAtTime(param, v, time)
     },

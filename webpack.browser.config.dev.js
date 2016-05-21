@@ -25,5 +25,10 @@ module.exports = {
         loaders: ['babel-loader']
       }
     ]
-  }
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      SKIP_AUTO_INIT_ANIMACHINE: false,
+    })
+  ],
 }

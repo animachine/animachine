@@ -29,6 +29,7 @@ module.exports = {
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.DefinePlugin({
+      SKIP_AUTO_INIT_ANIMACHINE: false,
       'process.env': {
         'NODE_ENV': JSON.stringify('production')
       }
@@ -38,5 +39,5 @@ module.exports = {
         warnings: false
       }
     })
-  ]
+  ],
 }

@@ -52,6 +52,9 @@ defineModel({
   },
   arrayValues: {
     timelines: {type: 'Timeline'}
+  },
+  untrackedValues: {
+    addTimeline: createAdder('Timeline', 'timelines')
   }
 })
 

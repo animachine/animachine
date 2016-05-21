@@ -1,6 +1,7 @@
 import React from 'react'
 import {afflatus} from 'afflatus'
 import {Button, Input} from 'react-matterkit'
+import TimelineName from './TimelineName'
 
 @afflatus
 class PlayButton extends React.Component {
@@ -72,6 +73,7 @@ export default class Toolbar extends React.Component {
       <TimeInput
         timeline = {timeline}
         onChange = {this.handleTimeInputChange}/>
+      <TimelineName/>
       <div style={{flex: 1}}/>
       {this.renderToolbarItems()}
     </div>

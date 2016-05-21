@@ -1,5 +1,5 @@
 import React from 'react'
-import {afflatus, createComputedValue} from 'afflatus'
+import {afflatus, createComputedValue, transaction} from 'afflatus'
 import {CSSTranshand} from 'transhand'
 import {createTargets} from 'animachine-connect'
 
@@ -19,19 +19,21 @@ export default class TransformTool extends React.Component {
     const {actions, state} = BETON.require('project-manager')
     const track = state.currentTrack
 
-    Object.keys(change).forEach(key => {
-      const paramName = key2ParamName[key]
-      let value = change[key]
-      if (paramName === 'rotationZ') {
-        value = value / Math.PI * 180
-      }
-console.log('change', paramName, value)
-      actions.setValueOfTrackAtTime(
-        track,
-        paramName,
-        value,
-        state.currentTimeline.currentTime
-      )
+    transaction(() => {
+      Object.keys(change).forEach(key => {
+        const paramName = key2ParamName[key]
+        let value = change[key]
+        if (paramName === 'rotationZ') {
+          value = value / Math.PI * 180
+        }
+
+        actions.setValueOfTrackAtTime(
+          track,
+          paramName,
+          value,
+          state.currentTimeline.currentTime
+        )
+      })
     })
   }
 

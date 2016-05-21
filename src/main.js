@@ -31,6 +31,10 @@ const animachine = {
 }
 export default animachine
 
+if (!window.SKIP_AUTO_INIT_ANIMACHINE) {
+  animachine.init()
+}
+
 import Perf from 'react-addons-perf'
 global.perfSeek = function () {
   PPP.clear()

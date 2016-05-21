@@ -37,12 +37,12 @@ class TimeInput extends React.Component {
 export default class Toolbar extends React.Component {
   handlePlayPauseClick = () => {
     const {timeline, actions} = this.props
-    actions.set(timeline, 'playing', !timeline.playing)
+    timeline.isPlaying = !timeline.isPlaying
   }
 
   handleTimeInputChange = (time) => {
     const {timeline, actions} = this.props
-    actions.set(timeline, 'currentTime', time)
+    timeline.currentTime = time
   }
 
   renderToolbarItems() {

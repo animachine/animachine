@@ -1,5 +1,6 @@
 import {defineModel, createModel} from 'afflatus'
 import {createEaser, createTargets} from 'animachine-connect'
+import {recurseKeys} from './recursers'
 
 import uniq from 'lodash/uniq'
 import flatten from 'lodash/flatten'
@@ -82,6 +83,15 @@ defineModel({
       return {
         tracks: this.tracks.map(track => track.animationSource)
       }
+    },
+    lastKeyTime() {
+      let result = 0
+      recurseKeys(this, key => {
+        if (key.time > result) {
+          result = key.time
+        }
+      })
+      return result
     }
   },
   untrackedValues: {

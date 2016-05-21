@@ -38,11 +38,9 @@ module.exports = {
   },
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
-    // new webpack.DefinePlugin({
-    //   'process.env': {
-    //     'NODE_ENV': JSON.stringify('production')
-    //   }
-    // }),
+    new webpack.DefinePlugin({
+      SKIP_AUTO_INIT_ANIMACHINE: true,
+    }),
     new webpack.optimize.UglifyJsPlugin({
       compressor: {
         warnings: false

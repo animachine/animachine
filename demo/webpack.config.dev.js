@@ -38,5 +38,9 @@ module.exports = {
       }
     ]
   },
-  plugins: []
+  plugins: [
+    new webpack.DefinePlugin({
+      SKIP_AUTO_INIT_ANIMACHINE: true,
+    })
+  ],
 }

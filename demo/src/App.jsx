@@ -32,10 +32,6 @@ export default class App extends React.Component {
     router: React.PropTypes.object
   }
 
-  componentWillMount() {
-    window.SKIP_AUTO_INIT_ANIMACHINE = true
-  }
-
   // getChildContext() {
   //   return {
   //     muiTheme: theme.getCurrentTheme()

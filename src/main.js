@@ -1,4 +1,12 @@
+let inited = false
+
 function init() {
+  debugger
+  if (inited) {
+    return
+  }
+  inited = true
+
   console.log('INIT ANIMACHINE')
   require('./beton')
   require('./rocks/dom-picker')
@@ -31,7 +39,7 @@ const animachine = {
 }
 export default animachine
 
-if (!window.SKIP_AUTO_INIT_ANIMACHINE) {
+if (!SKIP_AUTO_INIT_ANIMACHINE) {
   animachine.init()
 }
 

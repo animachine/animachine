@@ -54,11 +54,11 @@ export default function createParamSettings(param) {
     // .is('transformOriginX,perspectiveOriginX,scaleX,rotateX,textShadowX,boxShadowX,skeewX', () => settings.label = 'x')
     // .is('transformOriginY,perspectiveOriginY,scaleY,rotateY,textShadowY,boxShadowY,skeewY', () => settings.label = 'y')
     // .is('transformOriginZ,perspectiveOriginZ,scaleZ,rotateZ', () => settings.label = 'z')
-    .is('z,rotationX,rotationY,scaleZ', () => {
-      if(!track.show3d) {
-        settings.hidden = true
-      }
-    })
+    // .is('z,rotationX,rotationY,scaleZ', () => {
+    //   if(!track.show3d) {
+    //     settings.hidden = true
+    //   }
+    // })
 
   return input
 }

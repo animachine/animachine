@@ -16,7 +16,7 @@ const key2ParamName = {
 @afflatus
 export default class TransformTool extends React.Component {
   handleChange = (change) => {
-    const {actions, state} = BETON.require('project-manager')
+    const {state} = BETON.require('project-manager')
     const track = state.currentTrack
 
     transaction(() => {
@@ -27,8 +27,7 @@ export default class TransformTool extends React.Component {
           value = value / Math.PI * 180
         }
 
-        actions.setValueOfTrackAtTime(
-          track,
+        track.setValueAtTime(
           paramName,
           value,
           state.currentTimeline.currentTime
@@ -36,6 +35,15 @@ export default class TransformTool extends React.Component {
       })
     })
   }
+
+  handleStartDrag = () => {
+    const {state} = BETON.require('project-manager')
+    this.endFlag = state.currentProject.history.startFlag()
+  };
+
+  handleEndDrag = () => {
+    this.endFlag && this.endFlag()
+  };
 
   render() {
     const {state} = BETON.require('project-manager')
@@ -65,11 +73,13 @@ export default class TransformTool extends React.Component {
       ox: getValue('transformOriginX', 0.5),
       oy: getValue('transformOriginY', 0.5)
     }
-console.log(transform, target)
+
     return <CSSTranshand
       transform = {transform}
       deTarget = {target}
       onChange = {this.handleChange}
+      onStartDrag = {this.handleStartDrag}
+      onEndDrag = {this.handleEndDrag}
       autoUpdateCoordinatorFrequency={12345}/>
   }
 }

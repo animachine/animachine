@@ -1,16 +1,11 @@
-import {deserialise} from 'afflatus'
+// import {deserialise} from 'afflatus'
 
 // import {Key, Param, Track, Timeline, Project} from '../models'
-import {historySave} from './history'
-import state from '../state'
+// import {historySave} from './history'
+// import state from '../state'
 
 export function set(target: object, name: string, value: any) {
-  const oldValue = target[name]
-
-  historySave(
-    () => target[name] = value,
-    () => target[name] = oldValue
-  )
+  target[name] = value
 }
 
 

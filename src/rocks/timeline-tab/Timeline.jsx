@@ -125,7 +125,9 @@ export default class Timeline extends React.Component {
     const hotkeyHandlers = handlerWrapperPreventInputFireEvent({
       delete() {
         actions.removeSelectedKeysOfTimeline(timeline)
-      }
+      },
+      undo() {timeline.parent('Project').history.undo()},
+      redo() {timeline.parent('Project').history.redo()},
     })
     const commonProps = {timeline, actions}
 
@@ -134,7 +136,7 @@ export default class Timeline extends React.Component {
         handlers = {hotkeyHandlers}
         style={{flex: 1, display: 'flex', pointerEvents: 'auto', overflow: 'hidden'}}>
       <div style={rootStyle}>
-        <div style={{display: 'flex', height: headHeight}}>
+        <div style={{display: 'flex', height: headHeight, minHeight: headHeight}}>
           <Toolbar {...commonProps} style={{width: dividerPos}}/>
           <Timebar {...commonProps} height={headHeight}/>
         </div>

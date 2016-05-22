@@ -1,38 +1,38 @@
 import {defineModel, createModel, deserialise} from 'afflatus'
 import {recurseKeys} from './recursers'
 
-export class HistoryFlag {
-  constructor(pair) {
-    this.pair = pair || new HistoryFlag(this)
-  }
-  isPair(pair) {
-    return this.pair === pair
-  }
-}
-
-export class HistoryReg {
-  constructor(redo, undo) {
-    this.undo = undo
-    this.redo = redo
-  }
-}
-
-
-defineModel({
-  type: 'History',
-  simpleValues: {
-    position: {defaultValue: -1}
-  },
-  arrayValues: {
-    stack: {}
-  }
-})
+// export class HistoryFlag {
+//   constructor(pair) {
+//     this.pair = pair || new HistoryFlag(this)
+//   }
+//   isPair(pair) {
+//     return this.pair === pair
+//   }
+// }
+//
+// export class HistoryReg {
+//   constructor(redo, undo) {
+//     this.undo = undo
+//     this.redo = redo
+//   }
+// }
+//
+//
+// defineModel({
+//   type: 'History',
+//   simpleValues: {
+//     position: {defaultValue: -1}
+//   },
+//   arrayValues: {
+//     stack: {}
+//   }
+// })
 
 defineModel({
   type: 'State',
   simpleValues: {
     currentProject: {type: 'Project', canBeNull: true},
-    history: {type: 'History'},
+    // history: {type: 'History'},
   },
   arrayValues: {
     projects: {type: 'Project'},

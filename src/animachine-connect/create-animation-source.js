@@ -16,7 +16,6 @@ function uniq(items) {
       result.push(items[i])
     }
   }
-  console.log('uniq', result)
   return result
 }
 

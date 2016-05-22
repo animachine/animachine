@@ -55,7 +55,7 @@ export default class KeyStepper extends React.Component {
     let time = next
       ? find(keyTimes, t => t > currentTime)
       : findLast(keyTimes, t => t < currentTime)
-    actions.set(timeline, 'currentTime', time)
+    timeline.currentTime = time
   }
 
   render() {

@@ -42,7 +42,7 @@
     "react-dnd": "^1.1.8",
     "react-dom": "^15.0.2",
     "react-gsap-enhancer": "^0.2.1",
-    "react-hotkeys": "^0.7.1",
+    "react-hotkeys": "^0.8.0",
     "react-matterkit": "0.0.45",
     "react-pure-render": "^1.0.2",
     "react-remarkable": "^1.1.1",

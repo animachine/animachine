@@ -5,30 +5,30 @@ import {getValueOfParamAtTime} from '../getters'
 import {wrap} from './history'
 import {set, remove, createItem} from './basic'
 
-export const setValueOfParamAtTime = wrap((
-  param: Param,
-  value: string,
-  time: number
-) => {
-  let key = param.keys.find(key => key.time === time)
-  if (!key) {
-    key = param.addKey({time})
-  }
-  key.value = value
-})
-
-export const setValueOfTrackAtTime = wrap((
-  track: Track,
-  paramName: string,
-  value: string,
-  time: number
-) => {
-  let param: Param = track.params.find(param => param.name === paramName)
-  if (!param) {
-    param = track.addParam({name: paramName})
-  }
-  setValueOfParamAtTime(param, value, time)
-})
+// export const setValueOfParamAtTime = wrap((
+//   param: Param,
+//   value: string,
+//   time: number
+// ) => {
+//   let key = param.keys.find(key => key.time === time)
+//   if (!key) {
+//     key = param.addKey({time})
+//   }
+//   key.value = value
+// })
+//
+// export const setValueOfTrackAtTime = wrap((
+//   track: Track,
+//   paramName: string,
+//   value: string,
+//   time: number
+// ) => {
+//   let param: Param = track.params.find(param => param.name === paramName)
+//   if (!param) {
+//     param = track.addParam({name: paramName})
+//   }
+//   setValueOfParamAtTime(param, value, time)
+// })
 
 export const deselectAllKeys = wrap((keyHolder: object) => {
   recurseKeys(keyHolder, key => set(key, 'selected', false))

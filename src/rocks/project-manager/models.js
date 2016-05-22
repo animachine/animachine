@@ -1,10 +1,11 @@
-import {defineModel, createModel} from 'afflatus'
+import {defineModel, createModel, transaction} from 'afflatus'
 import {createEaser, createTargets} from 'animachine-connect'
 import {recurseKeys} from './recursers'
 
 import uniq from 'lodash/uniq'
 import flatten from 'lodash/flatten'
 import pick from 'lodash/pick'
+import remove from 'lodash/remove'
 import {getValueOfParamAtTime} from './getters'
 
 function mapSources(sources = [], ItemClass, parent) {
@@ -37,25 +38,174 @@ function findParent(item, ParentClass) {
   }
 }
 
-function createAdder(type, storeName) {
-  return function (source={}) {
-    const item = createModel(type, source, this)
-    this[storeName].push(item)
-    return item
+function getHistory(item) {
+  return item.parent('Project').history
+}
+
+export function createAdder(type, storeName) {
+  let history
+
+  return function (source) {
+    if (!history) {
+      history = getHistory(this)
+    }
+
+    return history.save(
+      () => {
+        const item = createModel(type, source, this)
+        this[storeName].push(item)
+        return item
+      },
+      () => remove(this[storeName], item),
+    )
   }
 }
+
+export function createRemover(storeName) {
+  let history
+
+  return function (item) {
+    if (!history) {
+      history = getHistory(this)
+    }
+
+    return history.save(
+      () => remove(this[storeName], item),
+      () => this[storeName].push(item),
+    )
+  }
+}
+
+function createSetter(paramName) {
+  let history
+
+  return function (value) {
+    if (!history) {
+      history = getHistory(this)
+    }
+
+    const oldValue = this[paramName]
+
+    if (oldValue === value) {
+      return
+    }
+
+    return history.save(
+      () => this[paramName] = value,
+      () => this[paramName] = oldValue,
+    )
+  }
+}
+
+export class HistoryFlag {
+  constructor(pair) {
+    this.pair = pair || new HistoryFlag(this)
+  }
+  isPair(pair) {
+    return this.pair === pair
+  }
+}
+
+export class HistoryReg {
+  constructor(redo, undo) {
+    this.undo = undo
+    this.redo = redo
+  }
+}
+
+
+defineModel({
+  type: 'History',
+  simpleValues: {
+    position: {defaultValue: -1}
+  },
+  arrayValues: {
+    stack: {}
+  },
+  untrackedValues: {
+    save(redo, undo) {
+      this.push(new HistoryReg(redo, undo))
+      return redo()
+    },
+    push(item) {
+      this.stack.splice(this.position + 1)
+      this.stack.push(item)
+      this.position += 1
+    },
+    startFlag() {
+      const flag = new HistoryFlag()
+      this.push(flag)
+      return () => this.push(flag.pair)
+    },
+    wrap(fn) {
+      const endFlag = this.startFlag()
+      const result = transaction(() => fn())
+      endFlag()
+      return result
+    },
+    undo() {
+      if (this.position < 0) {
+        return
+      }
+      const stepBack = () => {
+        const item = this.stack[this.position--]
+        if (item.undo) {
+          item.undo()
+        }
+        return item
+      }
+
+      transaction(() => {
+        const item = stepBack()
+        if (item instanceof HistoryFlag) {
+          const pairIndex = this.stack.indexOf(item.pair)
+          if (pairIndex <= this.position && pairIndex !== -1) {
+            while (this.position >= pairIndex) {
+              stepBack()
+            }
+          }
+        }
+      })
+    },
+    redo() {
+      if (this.position >= this.stack.length - 1) {
+        return
+      }
+      const stepForward = () => {
+        const item = this.stack[++this.position]
+        if (item.redo) {
+          item.redo()
+        }
+        return item
+      }
+
+      transaction(() => {
+        const item = stepForward()
+        if (item instanceof HistoryFlag) {
+          const pairIndex = this.stack.indexOf(item.pair)
+          if (pairIndex >= this.position && pairIndex !== -1) {
+            while (this.position < pairIndex) {
+              stepForward()
+            }
+          }
+        }
+      })
+    }
+  }
+})
 
 defineModel({
   type: 'Project',
   simpleValues: {
     name: {type: 'string', defaultValue: 'unnamed project'},
     currentTimeline: {type: 'Timeline', canBeNull: true},
+    history: {type: 'History', dontSerialise: true}
   },
   arrayValues: {
     timelines: {type: 'Timeline'}
   },
   untrackedValues: {
-    addTimeline: createAdder('Timeline', 'timelines')
+    addTimeline:  ('Timeline', 'timelines')
   }
 })
 
@@ -142,7 +292,18 @@ defineModel({
   },
   untrackedValues: {
     addParam: createAdder('Param', 'params'),
+    removeParam: createRemover('params'),
     addSelector: createAdder('Selector', 'selectors'),
+    removeSelector: createRemover('selectors'),
+    setValueAtTime(paramName, value, time) {
+      getHistory(this).wrap(() => {
+        let param = this.params.find(param => param.name === paramName)
+        if (!param) {
+          param = this.addParam({name: paramName})
+        }
+        param.setValueAtTime(value, time)
+      })
+    },
   },
 })
 
@@ -184,6 +345,16 @@ defineModel({
   },
   untrackedValues: {
     addKey: createAdder('Key', 'keys'),
+    removeKey: createRemover('keys'),
+    setValueAtTime(value, time) {
+      getHistory(this).wrap(() => {
+        let key = this.keys.find(key => key.time === time)
+        if (!key) {
+          key = this.addKey({time})
+        }
+        key.setValue(value)
+      })
+    }
   }
 })
 
@@ -203,6 +374,10 @@ defineModel({
         ease: this.ease.animationSource,
       }
     }
+  },
+  untrackedValues: {
+    setTime: createSetter('time'),
+    setValue: createSetter('value'),
   }
 })
 

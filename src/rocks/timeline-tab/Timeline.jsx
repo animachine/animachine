@@ -12,7 +12,24 @@ import hotkeyMap from './hotkeyMap'
 import {Scrollable, getTheme} from 'react-matterkit'
 import InlineEaseEditor from './inline-ease-editor/InlineEaseEditor'
 
-const projectManager = BETON.require('project-manager')
+function preventInputFireEvent(run) {
+  return (event) => {
+    if (event.path[0].localName !== 'input') {
+      event.preventDefault()
+      run(event)
+    }
+  }
+}
+
+function handlerWrapperPreventInputFireEvent(handler) {
+  const newHandler = {}
+  for (var key in handler) {
+    if (handler.hasOwnProperty(key)) {
+      newHandler[key] = preventInputFireEvent(handler[key])
+    }
+  }
+  return newHandler
+}
 
 const dragOptions = {
   onDown(props, monitor, component) {
@@ -105,11 +122,11 @@ export default class Timeline extends React.Component {
       flex: 1,
     }
 
-    const hotkeyHandlers = {
+    const hotkeyHandlers = handlerWrapperPreventInputFireEvent({
       delete() {
         actions.removeSelectedKeysOfTimeline(timeline)
       }
-    }
+    })
     const commonProps = {timeline, actions}
 
     return <HotKeys

@@ -81,6 +81,7 @@ defineModel({
   computedValues: {
     animationSource() {
       return {
+        name: this.name,
         tracks: this.tracks.map(track => track.animationSource)
       }
     },

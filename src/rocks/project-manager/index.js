@@ -8,7 +8,7 @@ BETON.define({
   id: 'project-manager',
   dependencies: [],
   init: () => {
-    // Project boundle files use this method to load they project source in
+    // Project bundle files use this method to load they project source in
     //  animachine.
 
     global.__animachineLoadProject = projectSource => {

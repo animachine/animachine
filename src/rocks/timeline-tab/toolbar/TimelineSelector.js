@@ -25,8 +25,8 @@ export default class TimelineSelector extends React.Component {
 
     function addTimeline(project) {
       transaction(() => {
-        const timeline = project.addTimeline({name: 'newTimeline'})
-        project.currentTimeline = timeline
+        const timeline = project.addTimeline({name: 'new-timeline'})
+        debugger
         selectProjectAndTimeline(timeline)
       })
 

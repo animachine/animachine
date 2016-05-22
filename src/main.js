@@ -1,7 +1,6 @@
 let inited = false
 
 function init() {
-  debugger
   if (inited) {
     return
   }

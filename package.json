@@ -12,6 +12,7 @@
     "test": "mocha --compilers js:babel/register",
     "test-debug": "node-debug _mocha --compilers js:babel/register",
     "build-browser": "rm -rf browser && webpack --config webpack.browser.config.prod.js",
+    "build-bundle": "webpack --config webpack.bundle.config.js",
     "build-demo": "rm -rf demo/dist && webpack --config demo/webpack.config.prod.js",
     "publish-browser": "npm run build-browser && gh-pages --dist browser --branch browser-dist",
     "publish-demo": "npm run build-demo && gh-pages --dist demo/dist"

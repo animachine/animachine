@@ -1,4 +1,5 @@
 import {serialise} from 'afflatus'
+const rawBundle = require('raw!./bundled/bundle.js')
 
 BETON.define({
   id: 'create-bundle-file',
@@ -6,67 +7,31 @@ BETON.define({
   init
 })
 
+function replacePlaceholder(source, name, value) {
+  const rx = new RegExp(`['|"]PLACEHOLDER_${name}['|"]`, `g`)
+  return source.replace(rx, value)
+}
+
+function stringify(obj) {
+  return JSON.stringify(obj)
+    .replace(/"/g, '\\"')
+}
+
 function init({projectManager}) {
   return function() {
     const {currentProject} = projectManager.state
     const projectSource = serialise(currentProject)
     const timelineSources = currentProject.timelines.map(timeline => {
-      return {
-        name: timeline.name,
-        source: timeline.animationSource,
-      }
+      return timeline.animationSource
     })
     const name = currentProject.name || 'unnamed'
+    let source = replacePlaceholder(rawBundle, 'LIBRARY_NAME', `'${name}'`)
+    source = replacePlaceholder(source, 'PROJECT_SOURCE', stringify(projectSource))
+    source = replacePlaceholder(source, 'TIMELINE_SOURCES', stringify(timelineSources))
+
     return {
       fileName: `${name}.am.js`,
-      source: create(timelineSources, projectSource)
+      source: source
     }
   }
-}
-
-function create(timelineSources, projectSource) {
-  return `
-var createAnimationSource = require('animachine-connect/create-animation-source')
-
-//TODO: remove in prod
-var projectSource = ${JSON.stringify(projectSource)}
-
-var loadProjectPromise
-function loadProject() {
-  if (!loadProjectPromise) {
-    loadProjectPromise = new Promise(function (resolve) {
-      var intervalID = setInterval(function () {
-        if (typeof window.__animachineLoadProject === 'function') {
-          clearInterval(intervalID)
-          var project = window.__animachineLoadProject(projectSource)
-          resolve(project)
-        }
-      }, 100)
-    })
-  }
-  return loadProjectPromise
-}
-
-var timelineSources = ${JSON.stringify(timelineSources)}
-var animations = {}
-
-timelineSources.forEach(function (timelineSource, index) {
-  var gsapSource = createAnimationSource(
-    timelineSource,
-    //TODO remove in prod
-    (rootTarget, gsapAnimation) => {
-      loadProject()
-        .then(function (project) {
-          project.timelines
-            .find(function (timeline) {
-              return timeline.name === timelineSource.name
-            })
-            .registerPreview(rootTarget, gsapAnimation)
-        })
-    }
-  )
-  animations[timelineSource.name] = gsapSource
-})
-
-module.exports = animations`
 }

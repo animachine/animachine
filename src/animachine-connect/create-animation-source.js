@@ -13,13 +13,14 @@ function uniq(items) {
   const result = []
   for (let i = 0; i < items.length; ++i) {
     if (result.indexOf(items[i]) === -1) {
-      return result.push(items[i])
+      result.push(items[i])
     }
   }
+  console.log('uniq', result)
   return result
 }
 
-function flatten(items) {
+function flatten(...items) {
   const result = []
   for (let i = 0; i < items.length; ++i) {
     result.push(...items[i])
@@ -43,6 +44,7 @@ const mergeTransformOriginParams = next => (params, targets, tlRoot) => {
       getKeys(transformOriginY),
       getKeys(transformOriginZ),
     ))
+
     let previousTransformOrigin = {x: 50, y: 50, z: 0}
     const getValue = (param, time, previousValue) => {
       const key = param && find(param.keys, 'time', time)

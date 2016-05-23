@@ -2,6 +2,7 @@ import React from 'react'
 import QuickInterface from 'quick-interface'
 import {transaction} from 'afflatus'
 import {Panel} from 'react-matterkit'
+import {createNameSettings} from '../utils'
 
 
 export default class TimelineSelector extends React.Component {
@@ -33,21 +34,13 @@ export default class TimelineSelector extends React.Component {
       onRequestClose()
     }
 
-    const createNameInputDescriber = item => ({
-      value: item.name,
-      mod: {kind: 'stamp'},
-      onChange: (value) => {
-        item.name = value
-      }
-    })
-
     function createTimelineSettings(timeline) {
       const {state} = BETON.require('project-manager')
       return {
         describeRow: () => ({
           onClick: () => selectProjectAndTimeline(timeline),
           items: [
-            {type: 'input', describe: () => createNameInputDescriber(timeline)},
+            createNameSettings(timeline),
             {
               type: 'button',
               describe: () => ({
@@ -57,7 +50,17 @@ export default class TimelineSelector extends React.Component {
               }),
             }
           ],
-          highlighted: state.currentTimeline === timeline
+          highlighted: state.currentTimeline === timeline,
+          contextMenu: {
+            items: [
+              {
+                label: 'rename',
+                onClick: () => {
+                  timeline.isRenaming = true
+                }
+              }
+            ]
+          }
         })
       }
     }
@@ -69,7 +72,7 @@ export default class TimelineSelector extends React.Component {
         describeRow: () => ({
           onClick: () => selectProjectAndTimeline(project),
           items: [
-            {type: 'input', describe: () => createNameInputDescriber(project)},
+            createNameSettings(project),
             {
               type: 'button',
               describe: () => ({
@@ -86,6 +89,11 @@ export default class TimelineSelector extends React.Component {
                 label: 'new timeline',
                 icon: 'plus',
                 onClick: () => addTimeline(project)
+              }, {
+                label: 'rename',
+                onClick: () => {
+                  project.isRenaming = true
+                }
               }
             ]
           },

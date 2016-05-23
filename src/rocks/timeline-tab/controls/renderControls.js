@@ -2,35 +2,7 @@ import React from 'react'
 import QuickInterface from 'quick-interface'
 import createValueInputDescriber from './createValueInputDescriber'
 import KeyStepper from './KeyStepper'
-
-const createNameSettings = paramOrTrack => {
-  if (paramOrTrack.isRenaming) {
-    return {
-      type: 'input',
-      describe: () => ({
-        value: paramOrTrack.name,
-        mod: {kind: 'stamp'},
-        forceFocus: true,
-        onChange: (value) => {
-          const {actions} = BETON.require('project-manager')
-          actions.set(paramOrTrack, 'name', value)
-        },
-        onBlur: () => {
-          paramOrTrack.isRenaming = false
-        }
-      })
-    }
-  }
-  else {
-    return {
-      type: 'label',
-      describe: () => ({
-        label: paramOrTrack.name,
-        style: {flex: 1}
-      })
-    }
-  }
-}
+import {createNameSettings} from '../utils'
 
 function showItemSettingsDialog() {
   BETON.require('item-settings-dialog').show()
@@ -146,7 +118,7 @@ function createParamSettings(param) {
             label: 'rename',
             icon: 'cog',
             onClick: () => {
-              track.isRenaming = true
+              param.isRenaming = true
             }
           }
         ]

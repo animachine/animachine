@@ -13,6 +13,35 @@ export function getVisibleTime(timeline) {
   return timeline.width / timeline.pxpms
 }
 
+export const createNameSettings = paramOrTrack => {
+  if (paramOrTrack.isRenaming) {
+    return {
+      type: 'input',
+      describe: () => ({
+        value: paramOrTrack.name,
+        // mod: {kind: 'stamp'},
+        forceFocus: true,
+        onChange: (value) => {
+          const {actions} = BETON.require('project-manager')
+          actions.set(paramOrTrack, 'name', value)
+        },
+        onBlur: () => {
+          paramOrTrack.isRenaming = false
+        }
+      })
+    }
+  }
+  else {
+    return {
+      type: 'label',
+      describe: () => ({
+        label: paramOrTrack.name,
+        style: {flex: 1}
+      })
+    }
+  }
+}
+
 //binary search closest index
 // export function bsci(arr, target) {
 //   var start = 0

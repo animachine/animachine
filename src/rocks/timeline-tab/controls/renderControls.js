@@ -3,14 +3,34 @@ import QuickInterface from 'quick-interface'
 import createValueInputDescriber from './createValueInputDescriber'
 import KeyStepper from './KeyStepper'
 
-const createNameInputDescriber = paramOrTrack => ({
-  value: paramOrTrack.name,
-  mod: {kind: 'stamp'},
-  onChange: (value) => {
-    const {actions} = BETON.require('project-manager')
-    actions.set(paramOrTrack, 'name', value)
+const createNameSettings = paramOrTrack => {
+  if (paramOrTrack.isRenaming) {
+    return {
+      type: 'input',
+      describe: () => ({
+        value: paramOrTrack.name,
+        mod: {kind: 'stamp'},
+        forceFocus: true,
+        onChange: (value) => {
+          const {actions} = BETON.require('project-manager')
+          actions.set(paramOrTrack, 'name', value)
+        },
+        onBlur: () => {
+          paramOrTrack.isRenaming = false
+        }
+      })
+    }
   }
-})
+  else {
+    return {
+      type: 'label',
+      describe: () => ({
+        label: paramOrTrack.name,
+        style: {flex: 1}
+      })
+    }
+  }
+}
 
 function showItemSettingsDialog() {
   BETON.require('item-settings-dialog').show()
@@ -38,7 +58,7 @@ function createTrackSettings(track) {
     describeRow: () => ({
       onClick: handleSelectClick.bind(null, track),
       items: [
-        {type: 'input', describe: () => createNameInputDescriber(track)},
+        createNameSettings(track),
         {
           type: 'button',
           describe: () => ({
@@ -70,16 +90,11 @@ function createTrackSettings(track) {
               showItemSettingsDialog()
             }
           }, {
-            items: [
-              {
-                label: 'settings',
-                icon: 'cog',
-                onClick: () => {
-                  handleSelectClick()
-                  showItemSettingsDialog()
-                }
-              }
-            ]
+            label: 'rename',
+            icon: 'cog',
+            onClick: () => {
+              track.isRenaming = true
+            }
           }
         ]
       },
@@ -99,7 +114,7 @@ function createParamSettings(param) {
     describeRow: () => ({
       onClick: handleSelectClick.bind(null, param),
       items: [
-        {type: 'input', describe: () => createNameInputDescriber(param)},
+        createNameSettings(param),
         {type: 'input', describe: () => createValueInputDescriber(param)},
         {
           type: 'button',
@@ -118,7 +133,7 @@ function createParamSettings(param) {
           })
         }
       ],
-      contextMenu: [{
+      contextMenu: {
         items: [
           {
             label: 'settings',
@@ -127,9 +142,15 @@ function createParamSettings(param) {
               handleSelectClick(param)
               showItemSettingsDialog()
             }
+          }, {
+            label: 'rename',
+            icon: 'cog',
+            onClick: () => {
+              track.isRenaming = true
+            }
           }
         ]
-      }],
+      },
     })
   }
 }

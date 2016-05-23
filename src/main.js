@@ -46,7 +46,7 @@ import Perf from 'react-addons-perf'
 global.perfSeek = function () {
   PPP.clear()
   Perf.start()
-  BETON.projectManager.actions.setCurrentTimeOfTimeline({timelineId: '142', currentTime: ~~(2000 * Math.random())})
+  BETON.projectManager.state.currentTimeline.currentTime = ~~(2000 * Math.random())
   setTimeout(function () {
     Perf.stop()
     Perf.printInclusive()

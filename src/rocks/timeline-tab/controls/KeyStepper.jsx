@@ -41,10 +41,7 @@ export default class KeyStepper extends React.Component {
   handleKeyClick = () => {
     const {state, actions} = BETON.require('project-manager')
     const {keyHolder} = this.props
-    actions.toggleKeysAtTime(
-      keyHolder,
-      state.currentTimeline.currentTime
-    )
+    keyHolder.toggleKeysAtTime(state.currentTimeline.currentTime)
   }
 
   handleStepTime = (next: boolean) => {

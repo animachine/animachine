@@ -21,7 +21,7 @@ function getMouseTime(props, monitor) {
 
 const dragOptions = {
   onDown(props, monitor) {
-    const {keyHolder, actions} = props
+    const {keyHolder} = props
     const {pxpms} = keyHolder.parent('Timeline')
     const mouseTime = getMouseTime(props, monitor)
     const time = closestNumber(keyHolder.keyTimes, mouseTime)
@@ -36,14 +36,14 @@ const dragOptions = {
     const {shiftKey, ctrlKey} = monitor.getLastEvent().nativeEvent
 
     if (!shiftKey && !ctrlKey) {
-      actions.deselectAllKeys(keyHolder.parent('Timeline'))
+      keyHolder.parent('Timeline').deselectAllKeys()
     }
 
     if (shiftKey || ctrlKey) {
-      actions.toggleKeysSelectionAtTime(keyHolder, time)
+      keyHolder.toggleKeysSelectionAtTime(time)
     }
     else {
-      actions.selectKeysAtTime(keyHolder, time)
+      keyHolder.selectKeysAtTime(time)
     }
 
     monitor.setData({
@@ -52,7 +52,7 @@ const dragOptions = {
   },
 
   onDrag(props, monitor) {
-    const {keyHolder, actions} = props
+    const {keyHolder} = props
     const mouseTime = getMouseTime(props, monitor)
     const offset = mouseTime - monitor.data.lastMouseTime
 
@@ -60,7 +60,7 @@ const dragOptions = {
       lastMouseTime: mouseTime
     })
 
-    actions.translateSelectedKeys(keyHolder, offset)
+    keyHolder.parent('Timeline').translateSelectedKeys(offset)
   },
 
   onClick(props, monitor) {
@@ -70,21 +70,24 @@ const dragOptions = {
     }
 
     const {state} = BETON.require('project-manager')
-    const {keyHolder, actions, top, height} = props
+    const {keyHolder, top, height} = props
     const timeline = keyHolder.parent('Timeline')
     const mouseTime = getMouseTime(props, monitor)
     const nextKeyTime = keyHolder.keyTimes.find(time => time > mouseTime)
     if (nextKeyTime === undefined) {
       return
     }
-    actions.deselectAllKeys(timeline)
-    actions.selectKeysAtTime(keyHolder, nextKeyTime)
 
-    actions.set(timeline, 'inlineEaseEditor', {
-      top,
-      height,
-      targetKey: state.selectedKeys[0],
-      controlledEases: state.selectedKeys.map(key => key.ease),
+    timeline.parent('Project').history.wrap(() => {
+      timeline.deselectAllKeys()
+      keyHolder.selectKeysAtTime(nextKeyTime)
+
+      timeline.inlineEaseEditor = {
+        top,
+        height,
+        targetKey: state.selectedKeys[0],
+        controlledEases: state.selectedKeys.map(key => key.ease),
+      }
     })
   }
 }

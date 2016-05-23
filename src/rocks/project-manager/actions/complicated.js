@@ -30,49 +30,51 @@ import {set, remove, createItem} from './basic'
 //   setValueOfParamAtTime(param, value, time)
 // })
 
-export const deselectAllKeys = wrap((keyHolder: object) => {
-  recurseKeys(keyHolder, key => set(key, 'selected', false))
-})
+// export const deselectAllKeys = wrap((keyHolder: object) => {
+//   recurseKeys(keyHolder, key => set(key, 'selected', false))
+// })
 
-export const translateSelectedKeys = wrap((keyHolder: object, offset) => {
-  recurseKeys(keyHolder, key => {
-    if (key.selected) {
-      set(key, 'time', key.time + offset)
-    }
-  })
-})
+// export const translateSelectedKeys = wrap((keyHolder: object, offset) => {
+//   recurseKeys(keyHolder, key => {
+//     if (key.selected) {
+//       set(key, 'time', key.time + offset)
+//     }
+//   })
+// })
 
-export const selectKeysAtTime = wrap((keyHolder, time) => {
-  recurseParams(keyHolder, param => {
-    const key = param.keys.find(key => key.time === time)
-    if (key) {
-      set(key, 'selected', true)
-    }
-  })
-})
+// toggleKeysSelectionAtTime
 
-export const toggleKeysAtTime = wrap((keyHolder, time) => {
-  let allHasKey = true
+// export const selectKeysAtTime = wrap((keyHolder, time) => {
+//   recurseParams(keyHolder, param => {
+//     const key = param.keys.find(key => key.time === time)
+//     if (key) {
+//       set(key, 'selected', true)
+//     }
+//   })
+// })
 
-  recurseParams(keyHolder, param => {
-    const key = param.keys.find(key => key.time === time)
-    if (!key) {
-      allHasKey = false
-    }
-  })
-
-  recurseParams(keyHolder, param => {
-    const key = param.keys.find(key => key.time === time)
-    if (allHasKey) {
-      if (key) {
-        remove(param.keys, key)
-      }
-    }
-    else {
-      if (!key) {
-        const value: string = getValueOfParamAtTime(param, time)
-        setValueOfParamAtTime(param, value, time)
-      }
-    }
-  })
-})
+// export const toggleKeysAtTime = wrap((keyHolder, time) => {
+//   let allHasKey = true
+//
+//   recurseParams(keyHolder, param => {
+//     const key = param.keys.find(key => key.time === time)
+//     if (!key) {
+//       allHasKey = false
+//     }
+//   })
+//
+//   recurseParams(keyHolder, param => {
+//     const key = param.keys.find(key => key.time === time)
+//     if (allHasKey) {
+//       if (key) {
+//         remove(param.keys, key)
+//       }
+//     }
+//     else {
+//       if (!key) {
+//         const value: string = getValueOfParamAtTime(param, time)
+//         setValueOfParamAtTime(param, value, time)
+//       }
+//     }
+//   })
+// })

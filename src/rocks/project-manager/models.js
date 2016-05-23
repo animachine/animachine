@@ -42,7 +42,7 @@ function getHistory(item) {
   return item.parent('Project').history
 }
 
-export function createAdder(type, storeName) {
+function createAdder(type, storeName) {
   let history
 
   return function (source) {
@@ -199,7 +199,8 @@ defineModel({
   simpleValues: {
     name: {type: 'string', defaultValue: 'unnamed project'},
     currentTimeline: {type: 'Timeline', canBeNull: true},
-    history: {type: 'History', dontSerialise: true}
+    history: {type: 'History', dontSerialise: true},
+    isRenaming: {type: 'boolean', defaultValue: false, dontSerialise: true},
   },
   arrayValues: {
     timelines: {type: 'Timeline'}
@@ -223,6 +224,7 @@ defineModel({
     start: {type: 'number', defaultValue: 0},
     startMargin: {type: 'number', defaultValue: 6},
     inlineEaseEditor: {type: 'object', defaultValue: null, dontSerialise: true},
+    isRenaming: {type: 'boolean', defaultValue: false, dontSerialise: true},
   },
   arrayValues: {
     tracks: {type: 'Track'},
@@ -243,13 +245,27 @@ defineModel({
         }
       })
       return result
-    }
+    },
   },
   untrackedValues: {
     registerPreview(rootTarget, gsapAnimation) {
       this.previews.push({rootTarget, gsapAnimation})
     },
     addTrack: createAdder('Track', 'tracks'),
+    deselectAllKeys() {
+      getHistory(this).wrap(() => {
+        recurseKeys(this, key => key.setSelected(false))
+      })
+    },
+    translateSelectedKeys(offset) {
+      getHistory(this).wrap(() => {
+        recurseKeys(this, key => {
+          if (key.selected) {
+            key.setTime(key.time + offset)
+          }
+        })
+      })
+    },
   }
 })
 
@@ -257,7 +273,8 @@ defineModel({
   type: 'Track',
   simpleValues: {
     name: {type: 'string', defaultValue: 'unnamed track'},
-    openInTimeline: {type: 'boolean', defaultValue: true}
+    openInTimeline: {type: 'boolean', defaultValue: true},
+    isRenaming: {type: 'boolean', defaultValue: false, dontSerialise: true},
   },
   arrayValues: {
     params: {type: 'Param'},
@@ -304,6 +321,48 @@ defineModel({
         param.setValueAtTime(value, time)
       })
     },
+    selectKeysAtTime(time) {
+      getHistory(this).wrap(() => {
+        this.params.forEach(param => {
+          param.selectKeysAtTime(time)
+        })
+      })
+    },
+    toggleKeysAtTime(time) {
+      getHistory(this).wrap(() => {
+        const keysAtTime = this.params
+          .map(param => param.keys.find(key => key.time === time))
+          .filter(key => Boolean(key))
+        const thereIsKeyless = keysAtTime.length < this.params.length
+        keysAtTime.forEach(key => {
+          key.setSelected(thereIsUnselected ? true : false)
+          if (thereIsKeyless) {
+            if (!key) {
+              param.addKey({
+                time,
+                value: param.getValueAtTime(time)
+              })
+            }
+          }
+          else {
+            if (key) {
+              param.removeKey(key)
+            }
+          }
+        })
+      })
+    },
+    toggleKeysSelectionAtTime(time) {
+      getHistory(this).wrap(() => {
+        const keysAtTime = this.params
+          .map(param => param.keys.find(key => key.time === time))
+          .filter(key => Boolean(key))
+        const thereIsUnselected = keysAtTime.find(key => key.selected === false)
+        keysAtTime.forEach(key => {
+          key.setSelected(thereIsUnselected ? true : false)
+        })
+      })
+    },
   },
 })
 
@@ -324,7 +383,8 @@ defineModel({
   type: 'Param',
   simpleValues: {
     name: {type: 'string', defaultValue: 'unnamed param'},
-    openInTimeline: {type: 'boolean', defaultValue: true}
+    openInTimeline: {type: 'boolean', defaultValue: true},
+    isRenaming: {type: 'boolean', defaultValue: false, dontSerialise: true},
   },
   arrayValues: {
     keys: {type: 'Key'},
@@ -354,7 +414,37 @@ defineModel({
         }
         key.setValue(value)
       })
-    }
+    },
+    toggleKeysAtTime(time) {
+      getHistory(this).wrap(() => {
+        const key = this.keys.find(key => key.time === time)
+        if (key) {
+          this.removeKey(key)
+        }
+        else {
+          this.addKey({
+            time,
+            value: this.getValueAtTime(time)
+          })
+        }
+      })
+    },
+    toggleKeysSelectionAtTime(time) {
+      getHistory(this).wrap(() => {
+        const key = this.keys.find(key => key.time === time)
+        if (key) {
+          key.setSelected(!key.selected)
+        }
+      })
+    },
+    selectKeysAtTime(time) {
+      getHistory(this).wrap(() => {
+        const key = this.keys.find(key => key.time === time)
+        if (key) {
+          key.setSelected(true)
+        }
+      })
+    },
   }
 })
 
@@ -378,6 +468,7 @@ defineModel({
   untrackedValues: {
     setTime: createSetter('time'),
     setValue: createSetter('value'),
+    setSelected: createSetter('selected'),
   }
 })
 

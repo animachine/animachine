@@ -1,4 +1,4 @@
-import {defineModel, createModel, transaction} from 'afflatus'
+import {defineModel, createModel, transaction, REFUSE_UPDATE} from 'afflatus'
 import {createEaser, createTargets} from 'animachine-connect'
 import {recurseKeys} from './recursers'
 
@@ -27,6 +27,10 @@ function load(target, source, names) {
     }
   })
 }
+
+const min = _min => value => Math.max(_min, value)
+const minmax = (min, max) => value => Math.min(max, Math.max(min, value))
+const notEmptyString = () => value => value ? value : REFUSE_UPDATE
 
 function findParent(item, ParentClass) {
   let parent = item.parent
@@ -197,7 +201,7 @@ defineModel({
 defineModel({
   type: 'Project',
   simpleValues: {
-    name: {type: 'string', defaultValue: 'unnamed project'},
+    name: {type: 'string', defaultValue: 'unnamed project', transform: notEmptyString()},
     currentTimeline: {type: 'Timeline', canBeNull: true},
     history: {type: 'History', dontSerialise: true},
     isRenaming: {type: 'boolean', defaultValue: false, dontSerialise: true},
@@ -213,11 +217,11 @@ defineModel({
 defineModel({
   type: 'Timeline',
   simpleValues: {
-    name: {type: 'string', defaultValue: 'unnamed timeline'},
+    name: {type: 'string', defaultValue: 'unnamed timeline', transform: notEmptyString()},
     currentTrack: {type: 'Track', canBeNull: true},
     isPlaying: {type: 'boolean', defaultValue: false},
     isSeeking: {type: 'boolean', defaultValue: false},
-    currentTime: {type: 'number', defaultValue: 0},
+    currentTime: {type: 'number', defaultValue: 0, transform: min(0)},
     length: {type: 'number', defaultValue: 60000},
     pxpms: {type: 'number', defaultValue: 1},
     width: {type: 'number', defaultValue: 2000},
@@ -272,7 +276,7 @@ defineModel({
 defineModel({
   type: 'Track',
   simpleValues: {
-    name: {type: 'string', defaultValue: 'unnamed track'},
+    name: {type: 'string', defaultValue: 'unnamed track', transform: notEmptyString()},
     openInTimeline: {type: 'boolean', defaultValue: true},
     isRenaming: {type: 'boolean', defaultValue: false, dontSerialise: true},
   },
@@ -382,7 +386,7 @@ defineModel({
 defineModel({
   type: 'Param',
   simpleValues: {
-    name: {type: 'string', defaultValue: 'unnamed param'},
+    name: {type: 'string', defaultValue: 'unnamed param', transform: notEmptyString()},
     openInTimeline: {type: 'boolean', defaultValue: true},
     isRenaming: {type: 'boolean', defaultValue: false, dontSerialise: true},
   },
@@ -451,7 +455,7 @@ defineModel({
 defineModel({
   type: 'Key',
   simpleValues: {
-    time: {type: 'int',  defaultValue: 0},
+    time: {type: 'int',  defaultValue: 0, transform: min(0)},
     value: {type: 'string',  defaultValue: '0'},
     ease: {type: 'Ease',  defaultValue: {}},
     selected: {type: 'boolean',  defaultValue: false},
@@ -476,9 +480,9 @@ defineModel({
   type: 'Ease',
   simpleValues: {
     easeType: {type: 'string', defaultValue: 'bezier'},
-    pointAX: {type: 'number', defaultValue: 0.3},
+    pointAX: {type: 'number', defaultValue: 0.3, transform: minmax(0, 1)},
     pointAY: {type: 'number', defaultValue: 0.3},
-    pointBX: {type: 'number', defaultValue: 0.7},
+    pointBX: {type: 'number', defaultValue: 0.7, transform: minmax(0, 1)},
     pointBY: {type: 'number', defaultValue: 0.7},
     roughEase: {type: 'number', defaultValue: false},
     roughStrength: {type: 'number', defaultValue: 1},

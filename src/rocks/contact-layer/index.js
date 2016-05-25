@@ -18,36 +18,80 @@ BETON.define({
       const {clientX: x, clientY: y} = e
       const timeline = projectManager.state.currentTimeline
 
+      if (!timeline) {
+        return
+      }
+
+      function isInPreview(node) {
+        return timeline.previews.some(({rootTarget}) => {
+          return rootTarget.contains(node)
+        })
+      }
+
+      function getOwnerTrack(node) {
+        return timeline.tracks.find(track => {
+          return track.targets.indexOf(pickedDOMNode) !== -1
+        })
+      }
 
       node.style.pointerEvents = 'none'
       const pickedDOMNode = document.elementFromPoint(x, y)
       node.style.pointerEvents = 'auto'
 
-      let isFindATrackBelongsToThePickedNode = false
-      if (timeline) {
-        const selectedTrack = timeline.tracks.find(track => {
-          return track.targets.indexOf(pickedDOMNode) !== -1
+      if (!isInPreview(pickedDOMNode)) {
+        setPickedDOMNode(null)
+        timeline.currentTrack = null
+        return
+      }
+
+      let selectedTrack
+
+      if (e.metaKey) { //select the first picked node
+        selectedTrack = getOwnerTrack(pickedDOMNode)
+      }
+      else if (false) {
+        //select the first track under straight the mouse
+        node.style.pointerEvents = 'none'
+        const testeds = []
+        let next = pickedDOMNode
+        while (!selectedTrack && isInPreview(next)) {
+          selectedTrack = getOwnerTrack(next)
+          if (!selectedTrack) {
+            testeds.push({node: next, pointerEvents: next.style.pointerEvents})
+            next.style.pointerEvents = 'none'
+            next = document.elementFromPoint(x, y)
+          }
+        }
+        testeds.forEach(({node, pointerEvents}) => {
+          node.style.pointerEvents = pointerEvents
+        })
+        node.style.pointerEvents = 'auto'
+      }
+      else {
+        const containers = []
+        timeline.tracks.forEach(track => {
+          track.targets.forEach((target) => {
+            if (target.contains(pickedDOMNode)) {
+              containers.push({target, track})
+            }
+          })
         })
 
-        if (selectedTrack) {
-          isFindATrackBelongsToThePickedNode = true
-          projectManager.actions.set(
-            selectedTrack.parent('Timeline'),
-            'currentTrack',
-            selectedTrack,
-          )
+        const closest = containers
+          .sort((a, b) => a.target.contains(b.target) ? 1 : -1)
+          .shift()
+
+        if (closest) {
+          selectedTrack = closest.track
         }
       }
 
-      const isPickedNodeIsOrChildOfAPreviewNode =
-        timeline.previews.some(({rootTarget}) => {
-          return rootTarget.contains(pickedDOMNode)
-        })
+      if (selectedTrack) {
+        selectedTrack.parent('Timeline').currentTrack = selectedTrack
+        setPickedDOMNode(null)
+      }
 
-      if (
-        !isFindATrackBelongsToThePickedNode
-        && isPickedNodeIsOrChildOfAPreviewNode
-      ) {
+      if (!selectedTrack) {
         setPickedDOMNode(pickedDOMNode)
       }
     }

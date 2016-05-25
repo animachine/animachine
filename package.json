@@ -13,9 +13,9 @@
     "test-debug": "node-debug _mocha --compilers js:babel/register",
     "build-browser": "rm -rf browser && webpack --config webpack.browser.config.prod.js",
     "build-bundle": "webpack --config webpack.bundle.config.js",
-    "build-demo": "rm -rf demo/dist && webpack --config demo/webpack.config.prod.js",
+    "build-demo": "npm run build-browser && rm -rf demo/dist && webpack --config demo/webpack.config.prod.js",
     "publish-browser": "npm run build-browser && gh-pages --dist browser --branch browser-dist",
-    "publish-demo": "npm run build-demo && gh-pages --dist demo/dist"
+    "publish-demo": "npm run build-demo && gh-pages --dist demo/dist --repo git@github.com:animachine/demos.git"
   },
   "repository": {
     "type": "git",
@@ -35,6 +35,7 @@
     "clipboard": "^1.5.10",
     "custom-drag": "0.0.3",
     "event-emitter": "^0.3.3",
+    "gh-pages": "^0.11.0",
     "lodash": "^4.6.1",
     "putainde-localstorage": "^4.0.0",
     "randomstring": "^1.1.3",

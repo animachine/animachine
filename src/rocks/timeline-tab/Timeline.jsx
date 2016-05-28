@@ -135,8 +135,8 @@ export default class Timeline extends React.Component {
       delete() {
         timeline.removeSelectedKeys()
       },
-      undo() {timeline.parent('Project').history.undo()},
-      redo() {timeline.parent('Project').history.redo()},
+      undo() {timeline.history.undo()},
+      redo() {timeline.history.redo()},
     })
     const commonProps = {timeline, actions}
 

@@ -26,31 +26,34 @@ export default class TimelineName extends React.Component {
     const {state: toolbar} = BETON.require('toolbar')
     return (
       <List>
-        {toolbar.map((toolbarItem, idx) => {
-          if (toolbarItem.getElement) {
-            // return toolbarItem.getElement()
-          }
-          else {
-            return (
-              <ListItem
-                key={idx}
-                {...toolbarItem}
-                onClick={() => {
-                  if (toolbarItem.onClick) {
-                    toolbarItem.onClick()
-                  }
-                  this.handleClickAway()
-                }}
-              />
-            )
-            const props = {
-              key: idx,
-              ...toolbarItem,
-              mod: {kind: 'stamp', ...toolbarItem.mod}
+        {toolbar
+          .slice()
+          .sort((a, b) => (a.order || 0) - (b.order || 0))
+          .map((toolbarItem, idx) => {
+            if (toolbarItem.getElement) {
+              // return toolbarItem.getElement()
             }
-            console.log('render item', props)
-            return <Button {...props}/>
-          }
+            else {
+              return (
+                <ListItem
+                  key={idx}
+                  {...toolbarItem}
+                  onClick={() => {
+                    if (toolbarItem.onClick) {
+                      toolbarItem.onClick()
+                    }
+                    this.handleClickAway()
+                  }}
+                />
+              )
+              const props = {
+                key: idx,
+                ...toolbarItem,
+                mod: {kind: 'stamp', ...toolbarItem.mod}
+              }
+              console.log('render item', props)
+              return <Button {...props}/>
+            }
         })}
       </List>
     )

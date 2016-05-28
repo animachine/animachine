@@ -42,7 +42,7 @@ function findParent(item, ParentClass) {
 }
 
 function getHistory(item) {
-  return item.parent('Project').history
+  return item.history || item.parent('Timeline').history
 }
 
 function removeItem(arr, item) {
@@ -209,7 +209,6 @@ defineModel({
   simpleValues: {
     name: {type: 'string', defaultValue: 'unnamed project', transform: notEmptyString()},
     currentTimeline: {type: 'Timeline', canBeNull: true},
-    history: {type: 'History', dontSerialise: true},
     isRenaming: {type: 'boolean', defaultValue: false, dontSerialise: true},
   },
   arrayValues: {
@@ -223,6 +222,7 @@ defineModel({
 defineModel({
   type: 'Timeline',
   simpleValues: {
+    history: {type: 'History', dontSerialise: true},
     name: {type: 'string', defaultValue: 'unnamed timeline', transform: notEmptyString()},
     currentTrack: {type: 'Track', canBeNull: true},
     isPlaying: {type: 'boolean', defaultValue: false},

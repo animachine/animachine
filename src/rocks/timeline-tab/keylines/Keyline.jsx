@@ -78,7 +78,7 @@ const dragOptions = {
       return
     }
 
-    timeline.parent('Project').history.wrap(() => {
+    timeline.history.wrap(() => {
       timeline.deselectAllKeys()
       keyHolder.selectKeysAtTime(nextKeyTime)
 

@@ -38,7 +38,7 @@ export default class TransformTool extends React.Component {
 
   handleStartDrag = () => {
     const {state} = BETON.require('project-manager')
-    this.endFlag = state.currentProject.history.startFlag()
+    this.endFlag = state.currentTimeline.history.startFlag()
   };
 
   handleEndDrag = () => {

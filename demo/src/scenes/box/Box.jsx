@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import animachine from 'animachine'
 import animations from './jumping.am'
+const image = require('url!./obj_cookiejar001.png')
 
 export default class Box extends React.Component {
   componentDidMount() {
@@ -17,6 +18,7 @@ export default class Box extends React.Component {
       width: '80px',
       height: '80px',
     }
+    return <img src={image}/>
     return <div id='box' style={style}/>
   }
 }

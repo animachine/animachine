@@ -37,7 +37,8 @@ function createTrackSettings(track) {
             icon: 'plus',
             tooltip: 'add a new param to this track',
             onClick: () => {
-              track.addParam()
+              const newParam = track.addParam()
+              newParam.isRenaming = true
             }
           }),
         }
@@ -99,15 +100,6 @@ function createParamSettings(param) {
         createNameSettings(param),
         {type: 'input', describe: () => createValueInputDescriber(param)},
         {
-          type: 'button',
-          describe: () => ({
-            icon: 'plus',
-            tooltip: 'add a new param to this track',
-            onClick: () => {
-              track.addParam()
-            }
-          }),
-        }, {
           type: 'button',
           describe: () => ({
             getElement: () => <KeyStepper keyHolder={param}/>

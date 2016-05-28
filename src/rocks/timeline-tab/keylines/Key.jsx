@@ -6,9 +6,14 @@ import {convertTimeToPosition} from '../utils'
 export default class Key extends React.Component {
   render () {
     const {_key: key, height, colors, isGroup} = this.props
+    // if (!key.firstParent) {
+    //   return <div hidden/>
+    // }
     const r = 2
     const position =
       parseInt(convertTimeToPosition(key.parent('Timeline'), key.time)) + 0.5
+
+    if (isNaN(position)) debugger
 
     if (isGroup) {
       return (

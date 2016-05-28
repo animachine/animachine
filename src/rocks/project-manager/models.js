@@ -5,7 +5,6 @@ import {recurseKeys} from './recursers'
 import uniq from 'lodash/uniq'
 import flatten from 'lodash/flatten'
 import pick from 'lodash/pick'
-import remove from 'lodash/remove'
 import {getValueOfParamAtTime} from './getters'
 
 function mapSources(sources = [], ItemClass, parent) {
@@ -46,6 +45,13 @@ function getHistory(item) {
   return item.parent('Project').history
 }
 
+function removeItem(arr, item) {
+  const index = arr.indexOf(item)
+  if (index >= 0) {
+    arr.splice(index, 1)
+  }
+}
+
 function createAdder(type, storeName) {
   let history
 
@@ -60,7 +66,7 @@ function createAdder(type, storeName) {
         this[storeName].push(item)
         return item
       },
-      () => remove(this[storeName], item),
+      () => removeItem(this[storeName], item),
     )
   }
 }
@@ -74,7 +80,7 @@ export function createRemover(storeName) {
     }
 
     return history.save(
-      () => remove(this[storeName], item),
+      () => removeItem(this[storeName], item),
       () => this[storeName].push(item),
     )
   }
@@ -223,7 +229,7 @@ defineModel({
     isSeeking: {type: 'boolean', defaultValue: false},
     currentTime: {type: 'number', defaultValue: 0, transform: min(0)},
     length: {type: 'number', defaultValue: 60000},
-    pxpms: {type: 'number', defaultValue: 1},
+    pxpms: {type: 'number', defaultValue: 1, transform: minmax(0.0001, 5)},
     width: {type: 'number', defaultValue: 2000},
     start: {type: 'number', defaultValue: 0},
     startMargin: {type: 'number', defaultValue: 6},
@@ -266,6 +272,16 @@ defineModel({
         recurseKeys(this, key => {
           if (key.selected) {
             key.setTime(key.time + offset)
+          }
+        })
+      })
+    },
+    removeSelectedKeys() {
+      getHistory(this).wrap(() => {
+        this.inlineEaseEditor = null
+        recurseKeys(this, key => {
+          if (key.selected) {
+            key.parent('Param').removeKey(key)
           }
         })
       })
@@ -398,7 +414,7 @@ defineModel({
       return this.keys.map(key => key.time).sort(sortNum)
     },
     currentValue() {
-      return getValueOfParamAtTime(this, this.parent('Timeline').currentTime)
+      return this.getValueAtTime(this.parent('Timeline').currentTime)
     },
     animationSource() {
       return {
@@ -410,8 +426,12 @@ defineModel({
   untrackedValues: {
     addKey: createAdder('Key', 'keys'),
     removeKey: createRemover('keys'),
+    getValueAtTime(time) {
+      return getValueOfParamAtTime(this, time)
+    },
     setValueAtTime(value, time) {
       getHistory(this).wrap(() => {
+        this.parent('Timeline').isPlaying = false
         let key = this.keys.find(key => key.time === time)
         if (!key) {
           key = this.addKey({time})

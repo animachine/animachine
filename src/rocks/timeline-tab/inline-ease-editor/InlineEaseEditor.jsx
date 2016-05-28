@@ -24,7 +24,11 @@ export default class InlineEaseEditor extends React.Component {
   render() {
     const {timeline, dividerPos, scrollPosition, actions} = this.props
     const {inlineEaseEditor} = timeline
-    if (!inlineEaseEditor || !inlineEaseEditor.targetKey) {
+    if (
+      !inlineEaseEditor
+      || !inlineEaseEditor.targetKey
+      || !inlineEaseEditor.targetKey.firstParent //HACK: fix if the key was removed
+    ) {
       return <div hidden/>
     }
     const {top, height, targetKey} = inlineEaseEditor

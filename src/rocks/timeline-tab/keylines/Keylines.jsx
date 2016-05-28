@@ -32,7 +32,7 @@ export default class Keylines extends React.Component {
 
     const menuItems = [
       {label: 'delete selected keys', onClick: () => {
-        actions.removeSelectedKeysOfTimeline(timeline)
+        timeline.removeSelectedKeys()
       }}
     ]
 

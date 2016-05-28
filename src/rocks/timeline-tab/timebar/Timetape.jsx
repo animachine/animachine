@@ -38,14 +38,15 @@ function handleMouse(props, monitor) {
 
 const dragOptions = {
   onDown(props, monitor) {
-    const {shiftKey, ctrlKey} = monitor.getLastEvent().nativeEvent
+    const event = monitor.getLastEvent().nativeEvent
+    const {shiftKey, ctrlKey, metaKey} = event
     const {timeline, actions} = props
     var dragMode
 
     if (shiftKey) {
       dragMode = 'translate'
     }
-    else if (ctrlKey) {
+    else if (ctrlKey || metaKey) {
       dragMode = 'scale'
     }
     else {

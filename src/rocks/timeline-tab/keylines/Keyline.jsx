@@ -135,7 +135,7 @@ export default class Keyline extends React.Component {
           colors = {colors}
           height = {height}/>
       ))
-      for (let i = 1; i < param.keys.length; ++i) {
+      for (let i = 0; i < param.keys.length; ++i) {
         result.push(
           <Ease
             key = {param.keys[i].ease.uid}

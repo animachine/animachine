@@ -21,11 +21,20 @@ function preventInputFireEvent(run) {
   }
 }
 
+function preventPropagation(run) {
+  return (event) => {
+    if (event.keyCode === 8) {
+      event.preventDefault()
+      run(event)
+    }
+  }
+}
+
 function handlerWrapperPreventInputFireEvent(handler) {
   const newHandler = {}
   for (var key in handler) {
     if (handler.hasOwnProperty(key)) {
-      newHandler[key] = preventInputFireEvent(handler[key])
+      newHandler[key] = preventPropagation(preventInputFireEvent(handler[key]))
     }
   }
   return newHandler
@@ -124,7 +133,7 @@ export default class Timeline extends React.Component {
 
     const hotkeyHandlers = handlerWrapperPreventInputFireEvent({
       delete() {
-        actions.removeSelectedKeysOfTimeline(timeline)
+        timeline.removeSelectedKeys()
       },
       undo() {timeline.parent('Project').history.undo()},
       redo() {timeline.parent('Project').history.redo()},

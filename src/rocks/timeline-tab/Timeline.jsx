@@ -24,7 +24,7 @@ function preventInputFireEvent(run) {
 function preventPropagation(run) {
   return (event) => {
     if (event.keyCode === 8) {
-      event.preventDefault()
+      // event.preventDefault()
       run(event)
     }
   }

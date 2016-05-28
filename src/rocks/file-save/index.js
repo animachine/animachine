@@ -15,6 +15,7 @@ BETON.define({
 function init({toolbar, projectManager, workspace, createBundleFile}) {
   toolbar.actions.addItem({
     icon: 'save',
+    label: 'save file',
     onClick: showSaveDialog,
   })
 

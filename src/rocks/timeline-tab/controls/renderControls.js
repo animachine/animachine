@@ -50,16 +50,15 @@ function createTrackSettings(track) {
             label: 'new track',
             icon: 'plus',
             onClick: () => {
-              const track = new Track()
-              track.parent('Timeline').addTrack(track)
-              showItemSettingsDialog()
+              const track = track.parent('Timeline').addTrack({})
+              track.isRenaming = true
             }
           }, {
             label: 'new param',
             icon: 'add',
             onClick: () => {
-              track.addParam()
-              showItemSettingsDialog()
+              const param = track.addParam({})
+              param.isRenaming = true
             }
           }, {
             label: 'rename',

@@ -3,6 +3,7 @@ import QuickInterface from 'quick-interface'
 import {transaction} from 'afflatus'
 import {Panel} from 'react-matterkit'
 import {createNameSettings} from '../utils'
+import OverlayPanel from './OverlayPanel'
 
 
 export default class TimelineSelector extends React.Component {
@@ -117,17 +118,14 @@ export default class TimelineSelector extends React.Component {
     }
 
     return (
-      <Panel style={{
-          position: 'absolute',
-          zIndex: 200,
-          boxShadow: '0px 0px 5px 0px rgba(107,182,196,0.75)',
-        }}>
+      <OverlayPanel>
         <QuickInterface
           describe={() => ({
             hiddenHead: true,
             describeChildren: () => renderProjects(state.projects)
-          })}/>
-      </Panel>
+          })}
+        />
+      </OverlayPanel>
     )
   }
 }

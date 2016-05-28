@@ -2,6 +2,7 @@ import React from 'react'
 import {afflatus} from 'afflatus'
 import {Button, Input} from 'react-matterkit'
 import TimelineName from './TimelineName'
+import Menu from './Menu'
 
 @afflatus
 class PlayButton extends React.Component {
@@ -45,24 +46,6 @@ export default class Toolbar extends React.Component {
     timeline.currentTime = time
   }
 
-  renderToolbarItems() {
-    const {state: toolbar} = BETON.require('toolbar')
-    return toolbar.map((toolbarItem, idx) => {
-      if (toolbarItem.getElement) {
-        return toolbarItem.getElement()
-      }
-      else {
-        const props = {
-          key: idx,
-          ...toolbarItem,
-          mod: {kind: 'stamp', ...toolbarItem.mod}
-        }
-        console.log('render item', props)
-        return <Button {...props}/>
-      }
-    })
-  }
-
   render() {
     const {timeline, style} = this.props
 
@@ -75,7 +58,7 @@ export default class Toolbar extends React.Component {
         onChange = {this.handleTimeInputChange}/>
       <TimelineName/>
       <div style={{flex: 1}}/>
-      {this.renderToolbarItems()}
+      <Menu/>
     </div>
   }
 }

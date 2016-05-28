@@ -14,6 +14,7 @@ BETON.define({
 
     toolbar.actions.addItem({
       icon: 'compress',
+      label: 'collapse ui',
       onClick: collapse,
     })
 

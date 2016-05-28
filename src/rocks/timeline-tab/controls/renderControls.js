@@ -4,8 +4,8 @@ import createValueInputDescriber from './createValueInputDescriber'
 import KeyStepper from './KeyStepper'
 import {createNameSettings} from '../utils'
 
-function showItemSettingsDialog() {
-  BETON.require('item-settings-dialog').show()
+function showSelectorEditorDialog(track) {
+  BETON.require('selector-editor-dialog').show(track)
 }
 
 function handleSelectClick(paramOrTrack) {
@@ -38,7 +38,6 @@ function createTrackSettings(track) {
             tooltip: 'add a new param to this track',
             onClick: () => {
               track.addParam()
-              showItemSettingsDialog()
             }
           }),
         }
@@ -59,6 +58,12 @@ function createTrackSettings(track) {
             onClick: () => {
               const param = track.addParam({})
               param.isRenaming = true
+            }
+          }, {
+            label: 'edit selectors',
+            icon: 'add',
+            onClick: () => {
+              showSelectorEditorDialog(track)
             }
           }, {
             label: 'rename',
@@ -94,7 +99,6 @@ function createParamSettings(param) {
             tooltip: 'add a new param to this track',
             onClick: () => {
               track.addParam()
-              showItemSettingsDialog()
             }
           }),
         }, {
@@ -111,7 +115,6 @@ function createParamSettings(param) {
             icon: 'cog',
             onClick: () => {
               handleSelectClick(param)
-              showItemSettingsDialog()
             }
           }, {
             label: 'rename',

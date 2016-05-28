@@ -8,7 +8,7 @@ BETON.define({
     'workspace',
     'project-manager',
     'toolbar',
-    'item-settings-dialog'
+    'selector-editor-dialog'
   ],
   init
 })

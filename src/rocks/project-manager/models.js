@@ -397,6 +397,11 @@ defineModel({
       return pick(this, ['selectorType', 'query'])
     }
   },
+  untrackedValues: {
+    setQuery: createSetter('query'),
+    addSelector: createAdder('Selector', 'selectors'),
+    removeSelector: createRemover('selectors'),
+  }
 })
 
 defineModel({

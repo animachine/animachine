@@ -15,7 +15,7 @@ function init() {
   require('./rocks/file-save')
   require('./rocks/generate-selector')
   require('./rocks/hack-open-first-possible-project')
-  require('./rocks/item-settings-dialog')
+  require('./rocks/selector-editor-dialog')
   // require('./rocks/open-project-dialog')
   require('./rocks/preview-animation-synchronizer')
   require('./rocks/preview-registry')

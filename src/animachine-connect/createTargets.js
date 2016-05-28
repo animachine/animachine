@@ -9,7 +9,7 @@ export default function(rootTarget, selector) {
         return [...rootTarget.querySelectorAll(selector.query)]
       }
       catch (e) {
-        console.warn(`error on using css sselector  "${selector.query}"`)
+        console.warn(`error on using css selector  "${selector.query}"`)
         return []
       }
     }

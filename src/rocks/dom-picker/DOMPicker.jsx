@@ -49,7 +49,7 @@ export default class DomPicker extends React.Component {
     const {state} = BETON.require('project-manager')
     const qurey = this.selector()
     const track = state.currentTimeline.addTrack({
-      name: query,
+      name: `new track for "${query}"`,
       selectors: [{type: 'css', query}],
     })
     state.currentTimeline.currentTrack = track

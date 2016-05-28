@@ -147,6 +147,22 @@ export default class Keyline extends React.Component {
       return result
     }
 
+    function renderBottomLine() {
+      const y = parseInt(height)
+      return (
+        <line
+          x1={0}
+          y1={y}
+          x2={timeline.width}
+          y2={y}
+          style={{
+            stroke: 'rgba(255,255,255, 0.23)',
+            strokeWidth: 1
+          }}
+        />
+      )
+    }
+
     return <svg
       ref = {dragRef}
       style = {{
@@ -156,6 +172,7 @@ export default class Keyline extends React.Component {
         width: timeline.width,
         height
       }}>
+        {renderBottomLine()}
         {isGroup
           ? keyHolder.params.map(param => renderParam(param))
           : renderParam(keyHolder)

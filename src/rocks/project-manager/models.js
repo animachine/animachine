@@ -262,6 +262,7 @@ defineModel({
       this.previews.push({rootTarget, gsapAnimation})
     },
     addTrack: createAdder('Track', 'tracks'),
+    removeTrack: createAdder('tracks'),
     deselectAllKeys() {
       getHistory(this).wrap(() => {
         recurseKeys(this, key => key.setSelected(false))
@@ -419,7 +420,10 @@ defineModel({
       return this.keys.map(key => key.time).sort(sortNum)
     },
     currentValue() {
-      return this.getValueAtTime(this.parent('Timeline').currentTime)
+      const timeline = this.parent('Timeline')
+      if (timeline) {
+        return this.getValueAtTime(timeline.currentTime)
+      }
     },
     animationSource() {
       return {

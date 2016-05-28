@@ -49,27 +49,33 @@ function createTrackSettings(track) {
             label: 'new track',
             icon: 'plus',
             onClick: () => {
-              const track = track.parent('Timeline').addTrack({})
-              track.isRenaming = true
+              const newTrack = track.parent('Timeline').addTrack({})
+              newTrack.isRenaming = true
             }
           }, {
             label: 'new param',
-            icon: 'add',
+            icon: 'plus',
             onClick: () => {
-              const param = track.addParam({})
-              param.isRenaming = true
+              const newParam = track.addParam({})
+              newParam.isRenaming = true
             }
           }, {
             label: 'edit selectors',
-            icon: 'add',
+            icon: 'bullseye',
             onClick: () => {
               showSelectorEditorDialog(track)
             }
           }, {
             label: 'rename',
-            icon: 'cog',
+            icon: 'pencil',
             onClick: () => {
               track.isRenaming = true
+            }
+          }, {
+            label: 'remove',
+            icon: 'close',
+            onClick: () => {
+              track.parent('Timeline').removeTrack(track)
             }
           }
         ]
@@ -111,16 +117,17 @@ function createParamSettings(param) {
       contextMenu: {
         items: [
           {
-            label: 'settings',
-            icon: 'cog',
-            onClick: () => {
-              handleSelectClick(param)
-            }
-          }, {
             label: 'rename',
-            icon: 'cog',
+            icon: 'pencil',
             onClick: () => {
               param.isRenaming = true
+            }
+          },
+          {
+            label: 'remove',
+            icon: 'close',
+            onClick: () => {
+              param.parent('Track').removeParam(param)
             }
           }
         ]

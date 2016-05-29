@@ -25,15 +25,17 @@ export default class KeyStepper extends React.Component {
 
     const {state} = BETON.require('project-manager')
     const timeline = state.currentTimeline
-    const keyTimes = props.keyHolder.keyTimes
 
     this.hasKeyBefore = createComputedValue(() => {
-      return keyTimes.get(0) < timeline.currentTime
+      const {keyTimes} = props.keyHolder
+      return keyTimes[0] < timeline.currentTime
     })
     this.hasKeyAfter = createComputedValue(() => {
-      return timeline.currentTime < keyTimes.get(keyTimes.length - 1)
+      const {keyTimes} = props.keyHolder
+      return timeline.currentTime < keyTimes[keyTimes.length - 1]
     })
     this.hasKeyNow = createComputedValue(() => {
+      const {keyTimes} = props.keyHolder
       return keyTimes.indexOf(timeline.currentTime) !== -1
     })
   }
@@ -63,13 +65,13 @@ export default class KeyStepper extends React.Component {
       onMouseEnter = {() => this.setState({hover: true})}
       onMouseLeave = {() => this.setState({hover: false})}>
 
-      {hover && this.hasKeyBefore && <Button
+      {hover && this.hasKeyBefore() && <Button
         icon = 'angle-left'
         style = {{...stepperStyle, left: -stepperW}}
         onClick = {() => {this.handleStepTime(false)}}/>
       }
 
-      {hover && this.hasKeyAfter && <Button
+      {hover && this.hasKeyAfter() && <Button
         icon = 'angle-right'
         style = {{...stepperStyle, right: -stepperW}}
         onClick = {() => this.handleStepTime(true)}/>
@@ -77,8 +79,8 @@ export default class KeyStepper extends React.Component {
 
       <Button
         icon = 'key'
-        style = {{opacity: this.hasKeyNow ? 1 : 0.4}}
-        onClick = {this.handleKeyClick}
+        style = {{opacity: this.hasKeyNow() ? 1 : 0.4}}
+        onClick = {() => this.handleKeyClick()}
         mod = {{kind: 'stamp'}}/>
     </div>
   }

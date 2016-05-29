@@ -41,6 +41,12 @@ function createTrackSettings(track) {
               newParam.isRenaming = true
             }
           }),
+        },
+        {
+          type: 'button',
+          describe: () => ({
+            getElement: () => <KeyStepper keyHolder={track}/>
+          })
         }
       ],
       highlighted: track.parent('Timeline').currentTrack === track,

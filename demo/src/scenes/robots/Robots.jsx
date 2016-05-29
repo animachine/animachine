@@ -10,6 +10,7 @@ export default class Robots extends React.Component {
     animations.task(node)
 
     animachine.init()
+    document.body.style.backgroundColor = '#E7EFEF'
   }
   render() {
     const pincerStyle = {
@@ -18,14 +19,14 @@ export default class Robots extends React.Component {
       left: -287,
       top: -255,
     }
-    const createBotStyle = (color, width, height, left=0, top=0) =>({
+    const createBotStyle = (color, width, height, left=0, top=0, radius) => ({
       position: 'absolute',
       left,
       top,
       width,
       height,
       backgroundColor: color,
-      borderRadius: height / 2
+      borderRadius: radius || height / 2
     })
     const createJoinStyle = (color, size, left=0, top=0) =>({
       borderStyle: 'solid',
@@ -46,6 +47,7 @@ export default class Robots extends React.Component {
     const armJoinStyle = createJoinStyle('#343434', 60, 470, 10)
     const forearmStyle = createBotStyle('#E9B400', 280, 40, 480, 20)
     const forearmJoinStyle = createJoinStyle('#E9B400', 60, 230, -10)
+    const baseStyle = createBotStyle('#343434', 283, 146, 16, 429, 8)
     return <div style={{transform: 'scale(0.5)'}}>
       <div className='shoulder' style={shoulderStyle}>
         <div className='armGroup' style={armStyle}>
@@ -60,6 +62,7 @@ export default class Robots extends React.Component {
         </div>
         <div style={shoulderJoinStyle}/>
       </div>
+      <div style={baseStyle}/>
       <svg style={{overflow: 'visible'}}>
         <g className='conveyorGroup'>
           <path className='conveyor' fill='none' stroke='#343434' strokeWidth='18' strokeMiterlimit='10' d='M724.8,568H496.9c-28.5,0-51.9-23.3-51.9-51.9v0

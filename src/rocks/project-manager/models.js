@@ -60,9 +60,11 @@ function createAdder(type, storeName) {
       history = getHistory(this)
     }
 
+    let item
+
     return history.save(
       () => {
-        const item = createModel(type, source, this)
+        item = createModel(type, source, this)
         this[storeName].push(item)
         return item
       },

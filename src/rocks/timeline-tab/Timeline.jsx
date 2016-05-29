@@ -143,7 +143,7 @@ export default class Timeline extends React.Component {
     return <HotKeys
         keyMap = {hotkeyMap}
         handlers = {hotkeyHandlers}
-        style={{flex: 1, display: 'flex', pointerEvents: 'auto', overflow: 'hidden'}}>
+        style={{outline: 0, flex: 1, display: 'flex', pointerEvents: 'auto', overflow: 'hidden'}}>
       <div style={rootStyle}>
         <div style={{display: 'flex', height: headHeight, minHeight: headHeight}}>
           <Toolbar {...commonProps} style={{width: dividerPos}}/>

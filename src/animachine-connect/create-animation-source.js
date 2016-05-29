@@ -77,10 +77,25 @@ const fixTransformOriginForSvgNodes = next => (params, targets, tlRoot) => {
   next(params, targets, tlRoot)
 }
 
+const makeAllRotationShort = next => (params, targets, tlRoot) => {
+  const rotationParams = [
+    find(params, 'name', 'rotation'),
+    find(params, 'name', 'rotationX'),
+    find(params, 'name', 'rotationY'),
+    find(params, 'name', 'rotationZ'),
+  ].filter(param => !!param)
+
+  rotationParams.forEach(param => {
+    param.keys.forEach(key => key.value = `${key.value}_short`)
+  })
+  next(params, targets, tlRoot)
+}
+
 
 const addParamTimelines =
 mergeTransformOriginParams(
 fixTransformOriginForSvgNodes(
+makeAllRotationShort(
   (params, targets, tlRoot) => {
     params.forEach(param => {
       const tlParam = new TimelineMax()
@@ -116,7 +131,7 @@ fixTransformOriginForSvgNodes(
       }
     })
   }
-))
+)))
 
 
 export default function createAnimationSource(timeline, register) {

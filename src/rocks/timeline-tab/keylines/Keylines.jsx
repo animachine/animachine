@@ -27,7 +27,9 @@ export default class Keylines extends React.Component {
 
     timeline.tracks.forEach(track => {
       renderKeyline(track)
-      track.params.forEach(param => renderKeyline(param))
+      if (track.openInTimeline) {
+        track.params.forEach(param => renderKeyline(param))
+      }
     })
 
     const menuItems = [

@@ -11,7 +11,7 @@ const color = {
 
 function handleMouse(props, monitor) {
   const {dragMode} = monitor.data
-  const {timeline, actions} = props
+  const {timeline} = props
   const {currentTime, pxpms} = timeline
   const {initStart, initPxpms} = monitor.data
   const offset = monitor.getDifferenceFromInitialOffset().x
@@ -19,20 +19,20 @@ function handleMouse(props, monitor) {
   if (dragMode === 'seek') {
     let {x: position} = monitor.getSourceClientOffset()
     let currentTime = convertPositionToTime(timeline, position)
-    actions.set(timeline, 'isPlaying', false)
-    actions.set(timeline, 'currentTime', currentTime)
+    timeline.isPlaying = false
+    timeline.currentTime = currentTime
   }
   else if (dragMode === 'translate') {
     let start = initStart + (offset / pxpms)
-    actions.set(timeline, 'start', start)
+    timeline.start = start
   }
   else if (dragMode === 'scale') {
     let pxpms = initPxpms + (offset / 100)
-    actions.set(timeline, 'pxpms', pxpms)
+    timeline.pxpms = pxpms
     //keep pointer in the same position
     let mdPos = (initStart + currentTime) * initPxpms
     let start = -((currentTime * pxpms) - mdPos) / pxpms
-    actions.set(timeline, 'start', start)
+    timeline.start = start
   }
 }
 
@@ -40,7 +40,7 @@ const dragOptions = {
   onDown(props, monitor) {
     const event = monitor.getLastEvent().nativeEvent
     const {shiftKey, ctrlKey, metaKey} = event
-    const {timeline, actions} = props
+    const {timeline} = props
     var dragMode
 
     if (shiftKey) {

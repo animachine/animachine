@@ -258,6 +258,9 @@ defineModel({
       })
       return result
     },
+    visibleTime() {
+      return (this.width / this.pxpms) || 0
+    }
   },
   untrackedValues: {
     registerPreview(rootTarget, gsapAnimation) {

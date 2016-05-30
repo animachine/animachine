@@ -1,14 +1,13 @@
 import React, {PropTypes} from 'react'
 import {afflatus} from 'afflatus'
 import customDrag from 'custom-drag'
-import {getVisibleTime} from '../utils'
 import {getTheme} from 'react-matterkit'
 
 const getDragArgs = (dragMode) => {
   const options = {
     onDown(props, monitor) {
       const {start, pxpms} = props.timeline
-      const visibleTime = getVisibleTime({timeline: props.timeline})
+      const visibleTime = props.timeline.visibleTime
       monitor.setData({start, visibleTime, pxpms})
     },
     onDrag(props, monitor) {
@@ -105,15 +104,15 @@ export default class Pointer extends React.Component {
   }
 
   render() {
+    return <div hidden/>
     const {timeline, startDragger, endDragger, moveDragger} = this.props
     const colors = getTheme(this).getStyle('colors')
     const {hover} = this.state
     const {start, length, width, startMargin} = timeline
-    const visibleTime = getVisibleTime({timeline})
     const scale = width / length
     const styleContainer = {
       left: ((-start * scale) + startMargin) + 'px',
-      width: (visibleTime * scale) + 'px',
+      width: (timeline.visibleTime * scale) + 'px',
       position: 'absolute',
       top: '0px',
       height: '7px',
@@ -132,10 +131,12 @@ export default class Pointer extends React.Component {
       backgroundColor: hover === 'move' ? colors.blue : 'transparent'
     }
 
-    return <div style={styleContainer}>
-      <div ref={moveDragger} style={stylePointer}/>
-      {this.renderHandler('start', startDragger)}
-      {this.renderHandler('end', endDragger)}
-    </div>
+    return (
+      <div style={styleContainer}>
+        <div ref={moveDragger} style={stylePointer}/>
+        {this.renderHandler('start', startDragger)}
+        {this.renderHandler('end', endDragger)}
+      </div>
+    )
   }
 }

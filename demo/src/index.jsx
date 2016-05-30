@@ -5,12 +5,17 @@ require('file?name=[name]!./CNAME')
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {Router, Route, Redirect, browserHistory} from 'react-router'
+import createHistory from 'history/lib/createHashHistory'
 import App from './App'
 import About from './About'
 import Demo from './Demo'
 
+const history = createHistory({
+  queryKey: false
+})
 
-ReactDOM.render(<Router history={browserHistory}>
+
+ReactDOM.render(<Router history={history}>
   <Route component={App}>
     {/*<Route path="about" component={About}/>*/}
     <Route path=":name" component={Demo}/>

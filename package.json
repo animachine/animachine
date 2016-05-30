@@ -14,7 +14,7 @@
     "build-browser": "rm -rf browser && webpack --config webpack.browser.config.prod.js",
     "build-bundle": "webpack --config webpack.bundle.config.js",
     "build-demo": "npm run build-browser && rm -rf demo/dist && webpack --config demo/webpack.config.prod.js",
-    "publish-browser": "npm run build-browser && gh-pages --dist browser --branch browser-dist",
+    "publish-browser": "npm run build-browser && gh-pages --dist browser --branch browser-dist --repo git@github.com:animachine/animachine.git",
     "publish-demo": "npm run build-demo && gh-pages --dist demo/dist --repo git@github.com:animachine/demos.git"
   },
   "repository": {

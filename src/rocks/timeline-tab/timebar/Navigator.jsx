@@ -6,13 +6,11 @@ import {getTheme} from 'react-matterkit'
 const getDragArgs = (dragMode) => {
   const options = {
     onDown(props, monitor) {
-      const {start, pxpms} = props.timeline
-      const visibleTime = props.timeline.visibleTime
+      const {start, pxpms, visibleTime} = props.timeline
       monitor.setData({start, visibleTime, pxpms})
     },
     onDrag(props, monitor) {
       const {timeline, actions} = props
-      const timelineId = timeline.id
       const {x: xInit} = monitor.getInitialClientOffset()
       const {x: xNow} = monitor.getClientOffset()
       const scale = timeline.width / timeline.length
@@ -21,23 +19,21 @@ const getDragArgs = (dragMode) => {
       const start = initial.start - move
 
       if (dragMode === 'move') {
-        actions.setStartOfTimeline({timelineId, start})
+        timeline.start = start
       }
       else if (dragMode === 'start') {
         let visibleTime = initial.visibleTime - move
-        actions.setStartOfTimeline({timelineId, start})
-        actions.setVisibleTimeOfTimeline({timelineId, visibleTime})
+
+        timeline.start = start
+        timeline.pxpms = timeline.width / visibleTime
       }
       else if (dragMode === 'end') {
         const {currentTime, pxpms} = timeline
         let visibleTime = initial.visibleTime + move
-        actions.setVisibleTimeOfTimeline({timelineId, visibleTime})
+        timeline.pxpms = timeline.width / visibleTime
 
         let mdPos = (initial.start + currentTime) * initial.pxpms
-        actions.setStartOfTimeline({
-          timelineId,
-          start: -((currentTime * pxpms) - mdPos) / pxpms
-        })
+        timeline.start = -((currentTime * pxpms) - mdPos) / pxpms
       }
     },
     onEnter(props, monitor, component) {
@@ -104,7 +100,6 @@ export default class Pointer extends React.Component {
   }
 
   render() {
-    return <div hidden/>
     const {timeline, startDragger, endDragger, moveDragger} = this.props
     const colors = getTheme(this).getStyle('colors')
     const {hover} = this.state

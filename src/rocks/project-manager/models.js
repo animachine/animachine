@@ -230,7 +230,7 @@ defineModel({
     isPlaying: {type: 'boolean', defaultValue: false},
     isSeeking: {type: 'boolean', defaultValue: false},
     currentTime: {type: 'number', defaultValue: 0, transform: min(0)},
-    length: {type: 'number', defaultValue: 60000},
+    // length: {type: 'number', defaultValue: 60000},
     pxpms: {type: 'number', defaultValue: 1, transform: minmax(0.0001, 5)},
     width: {type: 'number', defaultValue: 2000},
     start: {type: 'number', defaultValue: 0},
@@ -257,6 +257,9 @@ defineModel({
         }
       })
       return result
+    },
+    length() {
+      return this.lastKeyTime * 1.5
     },
     visibleTime() {
       return (this.width / this.pxpms) || 0

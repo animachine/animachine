@@ -87,11 +87,11 @@ export default class InlineEaseEditor extends React.Component {
       const y = controlEase[`point${pointName}Y`]
 
       return <ControlPoint
-        {...{x, y, spaceX, spaceY}}
+        {...{x, y, spaceX, spaceY, history: timeline.history}}
         onChange = {({x, y}) => {
           controlledEases.forEach(ease => {
-            actions.set(ease, `point${pointName}X`, x)
-            actions.set(ease, `point${pointName}Y`, y)
+            ease[`setPoint${pointName}X`](x)
+            ease[`setPoint${pointName}Y`](y)
           })
         }}/>
     }

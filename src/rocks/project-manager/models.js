@@ -535,4 +535,10 @@ defineModel({
       ])
     }
   },
+  untrackedValues: {
+    setPointAX: createSetter('pointAX'),
+    setPointAY: createSetter('pointAY'),
+    setPointBX: createSetter('pointBX'),
+    setPointBY: createSetter('pointBY'),
+  }
 })

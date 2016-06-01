@@ -3,13 +3,20 @@ import ifit from './ifit'
 
 export default function createParamSettings(param) {
   const {actions, getters} = BETON.require('project-manager')
+
   const input = {
     value: param.currentValue,
     onChange: v => {
       const time = param.parent('Timeline').currentTime
       param.setValueAtTime(v, time)
     },
-    style: {flex: 1}
+    style: {flex: 1},
+    onStartDrag() {
+      return param.parent('Timeline').history.startFlag()
+    },
+    onEndDrag(endFlag) {
+      endFlag()
+    },
   }
 
   ifit(param.name)

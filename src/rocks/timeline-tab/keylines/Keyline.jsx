@@ -33,6 +33,8 @@ const dragOptions = {
 
     monitor.setData({hitKeys: true})
 
+    const endFlag = keyHolder.parent('Timeline').history.startFlag()
+
     const {shiftKey, ctrlKey} = monitor.getLastEvent().nativeEvent
 
     if (!shiftKey && !ctrlKey) {
@@ -47,6 +49,7 @@ const dragOptions = {
     }
 
     monitor.setData({
+      endFlag,
       lastMouseTime: mouseTime
     })
   },
@@ -89,6 +92,10 @@ const dragOptions = {
         controlledEases: state.selectedKeys.map(key => key.ease),
       }
     })
+  },
+
+  onUp(props, monitor) {
+    monitor.getData().endFlag()
   }
 }
 

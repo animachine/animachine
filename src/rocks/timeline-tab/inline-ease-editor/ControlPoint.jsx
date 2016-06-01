@@ -6,7 +6,8 @@ const dragOptions = {
   onDown(props, monitor) {
     monitor.setData({
       initX: props.x,
-      initY: props.y
+      initY: props.y,
+      endFlag: props.history.startFlag()
     })
   },
   onDrag(props, monitor) {
@@ -24,6 +25,9 @@ const dragOptions = {
   },
   onLeave(props, monitor, component) {
     component.setState({hover: false})
+  },
+  onUp(props, monitor) {
+    monitor.getData().endFlag()
   },
 }
 

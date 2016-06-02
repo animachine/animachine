@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom'
 import {Button, Input} from 'react-matterkit'
 import {DialogComp} from 'spaceman'
 import Clipboard from 'clipboard'
-import download from './download'
 import {saveAs} from 'file-saver'
 
 class CopyButton extends React.Component {
@@ -49,7 +48,6 @@ export default class Dialog extends React.Component {
     const uri = 'data:application/javascript;charset=utf-8,' + encodeURIComponent(source)
     return <Button
       onClick = {() => {
-        // download({fileName, uri})
         var blob = new Blob([source], {type: "application/javascript;charset=utf-8"});
         saveAs(blob, fileName);
         onClose()

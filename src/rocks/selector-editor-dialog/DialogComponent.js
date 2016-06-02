@@ -24,7 +24,7 @@ class SelectorRow extends React.Component {
               {
                 type: 'button',
                 describe: () => ({
-                  icon: 'close',
+                  icon: 'trash',
                   onClick: () => selector.parent('Track').removeSelector(selector),
                   tooltip: 'remove this selector',
                 })

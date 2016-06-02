@@ -80,7 +80,7 @@ function createTrackSettings(track) {
             }
           }, {
             label: 'remove',
-            icon: 'close',
+            icon: 'trash',
             onClick: () => {
               track.parent('Timeline').removeTrack(track)
             }
@@ -123,7 +123,7 @@ function createParamSettings(param) {
           },
           {
             label: 'remove',
-            icon: 'close',
+            icon: 'trash',
             onClick: () => {
               param.parent('Track').removeParam(param)
             }

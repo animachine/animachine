@@ -39,7 +39,7 @@ export default class Keylines extends React.Component {
     ]
 
     return <ContextMenu items={menuItems}>
-      <div style={{...style, position: 'relative'}}>
+      <div style={{...style, position: 'relative', flex: 1}}>
         {children}
         <PointerLine timeline={timeline}/>
       </div>

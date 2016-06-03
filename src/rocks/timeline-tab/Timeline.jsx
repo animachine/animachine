@@ -145,20 +145,24 @@ export default class Timeline extends React.Component {
         handlers = {hotkeyHandlers}
         style={{outline: 0, flex: 1, display: 'flex', pointerEvents: 'auto', overflow: 'hidden'}}>
       <div style={rootStyle}>
-        <div style={{display: 'flex', height: headHeight, minHeight: headHeight}}>
+        <div style={{
+          display: 'flex',
+          height: headHeight,
+          minHeight: headHeight,
+        }}>
           <Toolbar {...commonProps} style={{width: dividerPos}}/>
           <Timebar {...commonProps} height={headHeight}/>
         </div>
+        <DividerLine ref={dragRef} position={dividerPos}/>
         <Scrollable
-          style = {{display: 'flex', flex: 1, alignItems: 'flex-start'}}
+          style = {{display: 'flex', flex: 1, alignItems: 'flex-start', flexDirection: 'row-reverse'}}
           onChangeVerticalScroll = {this.handleChangeScrollPosition}
           verticalScroll = {scrollPosition}>
+          <Keylines {...commonProps}/>
           <div style={{width: dividerPos}}>
             <Controls {...commonProps}/>
           </div>
-          <Keylines {...commonProps}/>
         </Scrollable>
-        <DividerLine ref={dragRef} position={dividerPos}/>
         <InlineEaseEditor {...{
             timeline,
             actions,

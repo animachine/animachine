@@ -38,15 +38,16 @@ BETON.define({
       const pickedDOMNode = document.elementFromPoint(x, y)
       node.style.pointerEvents = 'auto'
 
+      setPickedDOMNode(null)
+      timeline.currentTrack = null
+
       if (!isInPreview(pickedDOMNode)) {
-        setPickedDOMNode(null)
-        timeline.currentTrack = null
         return
       }
 
       let selectedTrack
 
-      if (e.metaKey) { //select the first picked node
+      if (e.metaKey || e.ctrlKey) { //select the first picked node
         selectedTrack = getOwnerTrack(pickedDOMNode)
       }
       else if (false) {
@@ -88,10 +89,9 @@ BETON.define({
 
       if (selectedTrack) {
         selectedTrack.parent('Timeline').currentTrack = selectedTrack
-        setPickedDOMNode(null)
+        // setPickedDOMNode(null)
       }
-
-      if (!selectedTrack) {
+      else {
         setPickedDOMNode(pickedDOMNode)
       }
     }

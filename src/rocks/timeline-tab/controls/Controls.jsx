@@ -7,7 +7,10 @@ import {afflatus} from 'afflatus'
 export default class Controls extends React.Component {
   renderPlaceholder() {
     return <div>
-      <Label label='Hi, there is no track to animate yet!'/>
+      <Label
+        style={{marginLeft: 4}}
+        label='Hi, there is no track to animate yet!'
+      />
       <br/>
       <Button
         label = 'Create a new one!'

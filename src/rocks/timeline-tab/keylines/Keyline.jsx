@@ -35,13 +35,13 @@ const dragOptions = {
 
     const endFlag = keyHolder.parent('Timeline').history.startFlag()
 
-    const {shiftKey, ctrlKey} = monitor.getLastEvent().nativeEvent
+    const {shiftKey} = monitor.getLastEvent().nativeEvent
 
-    if (!shiftKey && !ctrlKey) {
+    if (!shiftKey) {
       keyHolder.parent('Timeline').deselectAllKeys()
     }
 
-    if (shiftKey || ctrlKey) {
+    if (shiftKey) {
       keyHolder.toggleKeysSelectionAtTime(time)
     }
     else {

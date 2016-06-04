@@ -104,7 +104,7 @@ export default class DomPicker extends React.Component {
       borderStyle: 'solid',
       borderColor: '#eee',
       borderWidth: borderSize,
-      pointerEvents: 'auto',
+      pointerEvents: 'none',
     }
     const dashedStyle = {
       width: '100%',
@@ -139,7 +139,8 @@ export default class DomPicker extends React.Component {
         margin: null,
         width: buttonSize,
         height: buttonSize,
-        textShadow: '0 0 2px #555, 0 0 2px #555'
+        textShadow: '0 0 2px #555, 0 0 2px #555',
+        pointerEvents: 'auto',
       }
 
       if (originalStyle.margin) {
@@ -164,7 +165,8 @@ export default class DomPicker extends React.Component {
     return <div
       style = {baseStyle}
       onMouseEnter = {this.handleMouseEnter}
-      onMouseLeave = {this.handleMouseLeave}>
+      onMouseLeave = {this.handleMouseLeave}
+      >
       <div style={dashedStyle}/>
       <div style={buttonContainerStyle} hidden={!this.state.hover}>
         {renderButton(

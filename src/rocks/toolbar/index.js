@@ -5,6 +5,14 @@ BETON.define({
   dependencies: [],
   init: () => {
     const state = createArray().get()
+    state.push({
+      icon: 'bullhorn',
+      label: 'feedback',
+      order: 20,
+      onClick: () => {
+        window.open('https://github.com/animachine/animachine/issues', '_blank')
+      },
+    })
 
     return {
       state,

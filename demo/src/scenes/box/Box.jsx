@@ -1,39 +1,41 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import animachine from 'animachine'
-import animations from './jumping.am'
-const image = require('url!./obj_cookiejar001.png')
-const artist = require('url!./2dgame.png')
+import animations from './new-project.am'
 
-const style = {
-  link: {
-    position: 'fixed'
+const styles = {
+  root: {
+    display: 'flex',
+    flex: 1,
+    justifyContent: 'center'
+  },
+  box: {
+    marginTop: 50,
+    width: 80,
+    height: 80,
   }
 }
 
-export default class Box extends React.Component {
-  componentDidMount() {
-    const node = ReactDOM.findDOMNode(this)
-    animations.jumping(node)
+function Box({color, className}) {
+  return <div
+    className={className}
+    style={{...styles.box, backgroundColor: color}}
+  />
+}
 
-    animachine.init()
-  }
-
+export default class Scene extends React.Component {
+  // handleRoot = (comp) => {
+  //   if (comp) {
+  //     const node = ReactDOM.findDOMNode(comp)
+  //     animations['new timeline'](node)
+  //
+  //     animachine.init()
+  //   }
+  // };
   render() {
-    var style = {
-      backgroundColor: '#0074D9',
-      width: '80px',
-      height: '80px',
-    }
     return (
-      <div>
-        <a
-          style={{position: 'fixed', top: 0, right: 0}}
-          href='http://2dgameartforfree.blogspot.hu/'
-        >
-          <img style={{width: 123}} src={artist}/>
-        </a>
-        <img className='jar' src={image}/>
+      <div style={styles.root} className='root'>
+        <Box color='#39CCCC' className='box'/>
       </div>
     )
   }

@@ -52,25 +52,8 @@ export default class App extends React.Component {
 
   render () {
     return (
-      <div>
-        {/*<AppBar
-          title="Demos for react-gsap-enhancer"
-          iconElementLeft={
-            <IconButton
-              iconClassName='fa fa-github'
-              onClick={this.handleClickGithub}/>
-          }>
-          <DropDownMenu
-            selectedIndex = {findIndex(menuItems, item => {
-              var {name} = this.context.router.getCurrentParams()
-              return item.name === name
-            })}
-            onChange = {this.handleNavChange}
-            menuItems = {menuItems} />
-        </AppBar>*/}
-        <div style={{display: 'flex'}}>
-          {this.props.children}
-        </div>
+      <div style={{display: 'flex', height: '100%'}}>
+        {this.props.children}
       </div>
     )
   }

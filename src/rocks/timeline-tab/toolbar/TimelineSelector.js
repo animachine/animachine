@@ -13,6 +13,11 @@ export default class TimelineSelector extends React.Component {
 
     function selectProjectAndTimeline(item) {
       const {state} = BETON.require('project-manager')
+
+      if (item.type === 'Project' && state.currentProject === item) {
+        return
+      }
+
       const [project, timeline] = item.type === 'Project'
         ? [item, item.timelines[0]]
         : [item.parent('Project'), item]
@@ -28,7 +33,6 @@ export default class TimelineSelector extends React.Component {
     function addTimeline(project) {
       transaction(() => {
         const timeline = project.addTimeline({name: 'new-timeline'})
-        debugger
         selectProjectAndTimeline(timeline)
       })
 

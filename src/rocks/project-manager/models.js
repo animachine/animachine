@@ -217,7 +217,11 @@ defineModel({
     timelines: {type: 'Timeline'}
   },
   untrackedValues: {
-    addTimeline:  ('Timeline', 'timelines')
+    addTimeline(source) {
+      const timeline = createModel('Timeline', source, this)
+      this.timelines.push(timeline)
+      return timeline
+    }
   }
 })
 

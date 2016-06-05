@@ -97,13 +97,12 @@ export default class Timetape extends React.Component {
   }
 
   componentDidUpdate() {
-    //HACK i dont know why but it triggers Timeline update without the timeout
-    setTimeout(() => this.postRender())
+    this.postRender()
   }
 
   render() {
     const {width, height, style, dragRef, timeline} = this.props
-    //HACK to make it update
+    //HACK to make it update (this params are used in the postRender)
     //TODO fix it!
     const {start, pxpms, width: _} = timeline
     return <canvas ref={dragRef}  width={width} height={height} style={style}/>

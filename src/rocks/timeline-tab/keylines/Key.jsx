@@ -6,12 +6,9 @@ import {convertTimeToPosition} from '../utils'
 export default class Key extends React.Component {
   render () {
     const {_key: key, height, colors, isGroup} = this.props
-    // if (!key.firstParent) {
-    //   return <div hidden/>
-    // }
     const r = 2
     const position =
-      parseInt(convertTimeToPosition(key.parent('Timeline'), key.time)) + 0.5
+      parseInt(key.parent('Timeline').pxpms * key.time) + 0.5
 
     if (isNaN(position)) debugger
 
@@ -21,7 +18,8 @@ export default class Key extends React.Component {
           fill = {key.selected ? colors.selected : colors.normal}
           cx = {position}
           cy = {height / 2}
-          r = {r}/>
+          r = {r}
+        />
       )
     }
     else {

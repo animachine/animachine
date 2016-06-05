@@ -180,10 +180,28 @@ export default class Keyline extends React.Component {
         height
       }}>
         {renderBottomLine()}
-        {isGroup
-          ? keyHolder.params.map(param => renderParam(param))
-          : renderParam(keyHolder)
-        }
+        <TranslateKeylines timeline={timeline}>
+          {isGroup
+            ? keyHolder.params.map(param => renderParam(param))
+            : renderParam(keyHolder)
+          }
+        </TranslateKeylines>
       </svg>
+  }
+}
+
+
+@afflatus
+class TranslateKeylines extends React.Component {
+  render() {
+    const {timeline, children} = this.props
+    const style = {
+      transform: `translateX(${timeline.start * timeline.pxpms}px)`
+    }
+    return (
+      <g style={style}>
+        {children}
+      </g>
+    )
   }
 }

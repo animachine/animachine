@@ -27,16 +27,17 @@ export default class TimelineSelector extends React.Component {
         project.currentTimeline = timeline
       })
 
-      onRequestClose()
+      // onRequestClose()
     }
 
     function addTimeline(project) {
       transaction(() => {
         const timeline = project.addTimeline({name: 'new-timeline'})
+        timeline.isRenaming = true
         selectProjectAndTimeline(timeline)
       })
 
-      onRequestClose()
+      // onRequestClose()
     }
 
     function createTimelineSettings(timeline) {

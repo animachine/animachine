@@ -21,6 +21,10 @@ export function getValueOfParamAtTime(param: Param, time: number) {
   }
   else {
     if (previousKey && nextKey) {
+      if (typeof previousKey.value === 'string') {// don't try to ease string values
+        return previousKey.value
+      }
+
       const fullTime = nextKey.time - previousKey.time
       const percent = (time - previousKey.time) / fullTime
       const {easer} = nextKey.ease

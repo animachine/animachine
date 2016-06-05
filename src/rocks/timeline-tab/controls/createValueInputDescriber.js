@@ -5,6 +5,7 @@ export default function createParamSettings(param) {
   const {actions, getters} = BETON.require('project-manager')
 
   const input = {
+    type: 'string',
     value: param.currentValue,
     onChange: v => {
       const time = param.parent('Timeline').currentTime
@@ -31,15 +32,18 @@ export default function createParamSettings(param) {
       input.precision = 2
     })
     .is('rotationX,rotationY,rotationZ', () => {
+      input.type = 'number'
       input.addonLabel = 'deg'
       input.precision = 1
     })
     .is('transformOriginX,transformOriginY', () => {
+      input.type = 'number'
       input.addonLabel = '%'
       input.dragSpeed = 0.01
       input.precision = 5
     })
     .is('xPercent,yPercent', () => {
+      input.type = 'number'
       input.dragSpeed = 1
       input.precision = 1
     })
@@ -47,6 +51,7 @@ export default function createParamSettings(param) {
       input.type = 'color'
     })
     .is('borderWidth,top,right,bottom,left,width,height', () => {
+      input.type = 'number'
       input.addonLabel = 'px'
     })
     .is('opacity', () => {

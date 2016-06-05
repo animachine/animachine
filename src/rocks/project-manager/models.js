@@ -219,6 +219,7 @@ defineModel({
   untrackedValues: {
     addTimeline(source) {
       const timeline = createModel('Timeline', source, this)
+      timeline.registerPreview(document.body, new TimelineMax())
       this.timelines.push(timeline)
       return timeline
     }
@@ -274,7 +275,7 @@ defineModel({
       this.previews.push({rootTarget, gsapAnimation})
     },
     addTrack: createAdder('Track', 'tracks'),
-    removeTrack: createAdder('tracks'),
+    removeTrack: createRemover('tracks'),
     deselectAllKeys() {
       getHistory(this).wrap(() => {
         recurseKeys(this, key => key.setSelected(false))
@@ -324,6 +325,7 @@ defineModel({
       }
     },
     targets() {
+      if (!this.firstParent) return []// HACK
       const track = this
       const {previews} = track.parent('Timeline')
       const result = []
@@ -432,6 +434,7 @@ defineModel({
       return this.keys.map(key => key.time).sort(sortNum)
     },
     currentValue() {
+      if (!this.firstParent || !this.firstParent.firstParent) return //HACK
       const timeline = this.parent('Timeline')
       if (timeline) {
         return this.getValueAtTime(timeline.currentTime)

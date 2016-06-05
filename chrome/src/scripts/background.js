@@ -21,8 +21,10 @@ chrome.browserAction.onClicked.addListener(function (tab) {
   chrome.tabs.executeScript(tab.id, {code: "if (this.am) {am.toggle();console.log('have am');} else { chrome.runtime.sendMessage({subject:\'embed\', id:"+tab.id+"});console.log('no am'); }"})
 })
 
-chrome.browserAction.setBadgeText({text: 'α2'})
-chrome.browserAction.setBadgeBackgroundColor({color: isDevMode() ? '#F00' : '#000'})
+if (isDevMode()) {
+  chrome.browserAction.setBadgeText({text: 'dev'})
+  chrome.browserAction.setBadgeBackgroundColor({color: '#F00'})
+}
 
 chrome.runtime.onMessage.addListener(function (request) {
   if (request.subject === 'embed') {

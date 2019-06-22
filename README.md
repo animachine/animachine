@@ -1,4 +1,4 @@
-# [animachine](http://animachine.org/)
+# [animachine](https://animachine.github.io/site/)
 
 ## build demo
 ```
